@@ -10,3 +10,12 @@ dependencies {
     implementation(project(":block"))
     api(project(":admin-client"))
 }
+
+tasks.jacocoTestReport {
+    mustRunAfter(":admin-client:jacocoTestReport")
+    mustRunAfter(":block:jacocoTestReport")
+    mustRunAfter(":client:jacocoTestReport")
+    mustRunAfter(":codegen:jacocoTestReport")
+    mustRunAfter(":model:jacocoTestReport")
+    mustRunAfter(":test-tools:jacocoTestReport")
+}

@@ -31,3 +31,8 @@ dependencies {
 
     testApi project(":test-tools")
 }
+
+jacocoTestReport {
+    mustRunAfter(":admin-client:jacocoTestReport")
+    mustRunAfter(":block:jacocoTestReport")
+}

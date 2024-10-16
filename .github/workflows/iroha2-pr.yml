@@ -5,7 +5,10 @@ on:
     branches: [ iroha2-dev, iroha2-main ]
 jobs:
   build:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
+    
+    env:
+      IROHA_IMAGE_TAG: "2.0.0-pre-rc.22.2" # Place "dev" to run on the last iroha
 
     steps:
       - uses: actions/checkout@v3

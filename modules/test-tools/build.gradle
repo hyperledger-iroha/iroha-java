@@ -18,6 +18,10 @@ dependencies {
     testImplementation "org.jetbrains.kotlin:kotlin-test:$kotlinVer"
 }
 
-test {
-    useJUnitPlatform()
+jacocoTestReport {
+    mustRunAfter(":admin-client:jacocoTestReport")
+    mustRunAfter(":block:jacocoTestReport")
+    mustRunAfter(":client:jacocoTestReport")
+    mustRunAfter(":codegen:jacocoTestReport")
+    mustRunAfter(":model:jacocoTestReport")
 }
