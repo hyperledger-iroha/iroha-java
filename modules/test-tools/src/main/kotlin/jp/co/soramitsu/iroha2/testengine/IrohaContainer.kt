@@ -154,9 +154,10 @@ open class IrohaContainer : GenericContainer<IrohaContainer> {
     companion object {
         private fun IrohaConfig.getFullImageName() = when (this.imageTag.contains("sha256")) {
             true -> "${this.imageName}@${this.imageTag}"
-            false -> "${this.imageName}:${this.imageTag}"
+            false -> "${this.imageName}@${this.imageTagDef}"
         }.let { DockerImageName.parse(it) }
 
+        const val CUSTOM_IMAGE_TAG = "iroha-dev"
         const val NETWORK_ALIAS = "iroha"
         const val DEFAULT_IMAGE_TAG = "2.0.0-pre-rc.22.2"
         const val DEFAULT_IMAGE_NAME = "hyperledger/iroha"
