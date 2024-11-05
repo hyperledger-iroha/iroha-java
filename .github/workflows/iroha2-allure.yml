@@ -47,7 +47,7 @@ jobs:
           allure-project-id: 1
       - name: Build with Gradle
         run: |
-          allurectl watch -- ./gradlew clean test --continue
+          ./gradlew clean test --continue
           printenv | grep GITHUB_TESTS_
         env:
           GITHUB_TESTS_ENDPOINT: ${{ github.event.inputs.GITHUB_TESTS_ENDPOINT }}
