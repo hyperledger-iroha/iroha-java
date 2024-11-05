@@ -1,6 +1,8 @@
 name: Iroha2-java upload tests results to Soramitsu TestOps
 
 on:
+  pull_request:
+    branches: [ iroha2-dev, iroha2-main ]
   workflow_dispatch:
     inputs:
       GITHUB_TESTS_ENDPOINT:
