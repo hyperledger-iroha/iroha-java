@@ -21,6 +21,7 @@ on:
         required: false
 
 env:
+  ALLURE_TOKEN: ${{ secrets.ALLURE_TOKEN }}
   ALLURE_RESULTS: "${{ github.workspace }}/modules/client/build/allure-results"
   GITHUB_TESTS_ENDPOINT: ${{ github.event.inputs.GITHUB_TESTS_ENDPOINT || 'https://soramitsu.testops.cloud' }}
   GITHUB_TESTS_BROWSER: ${{ github.event.inputs.GITHUB_TESTS_BROWSER || 'chrome' }}
