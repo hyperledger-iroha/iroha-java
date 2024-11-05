@@ -22,7 +22,11 @@ on:
 
 env:
   ALLURE_RESULTS: "${{ github.workspace }}/modules/client/build/allure-results"
-  ALLURE_JOB_RUN_ID: ${{ github.event.inputs.ALLURE_JOB_RUN_ID }}
+  GITHUB_TESTS_ENDPOINT: ${{ github.event.inputs.GITHUB_TESTS_ENDPOINT || 'https://soramitsu.testops.cloud' }}
+  GITHUB_TESTS_BROWSER: ${{ github.event.inputs.GITHUB_TESTS_BROWSER || 'chrome' }}
+  ALLURE_JOB_RUN_ID: ${{ github.event.inputs.ALLURE_JOB_RUN_ID || '' }}
+  ALLURE_USERNAME: ${{ github.event.inputs.ALLURE_USERNAME || '' }}
+
 
 jobs:
   java-sdk-tests:
