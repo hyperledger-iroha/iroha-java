@@ -23,7 +23,6 @@ env:
   ALLURE_RESULTS: "${{ github.workspace }}/modules/client/build/allure-results"
   ALLURE_JOB_RUN_ID: ${{ github.event.inputs.ALLURE_JOB_RUN_ID }}
 
-
 jobs:
   java-sdk-tests:
     runs-on: [iroha-ubuntu-latest]
