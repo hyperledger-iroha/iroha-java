@@ -147,9 +147,9 @@ class QueryBuilder<R>(private val query: QueryBox, private val extractor: Result
                 AssetPredicateBox.Id(
                     AssetIdPredicateBox.AccountId(
                         AccountIdPredicateBox.DomainId(
-                            DomainIdPredicateBox.Equals(domainId)
-                        )
-                    )
+                            DomainIdPredicateBox.Equals(domainId),
+                        ),
+                    ),
                 ),
             )
             return QueryBuilder(Queries.findAssets(predicate), AssetsExtractor)

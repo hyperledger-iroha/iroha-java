@@ -22,8 +22,8 @@ import jp.co.soramitsu.iroha2.testengine.AliceHasPermissionToRegisterDomain
 import jp.co.soramitsu.iroha2.testengine.AliceHasPermissionToUnregisterDomain
 import jp.co.soramitsu.iroha2.testengine.BOB_ACCOUNT_ID
 import jp.co.soramitsu.iroha2.testengine.BOB_KEYPAIR
-import jp.co.soramitsu.iroha2.testengine.BobHasPermissionToRegisterDomain
 import jp.co.soramitsu.iroha2.testengine.BobHasPermissionToModifyDomainMetadata
+import jp.co.soramitsu.iroha2.testengine.BobHasPermissionToRegisterDomain
 import jp.co.soramitsu.iroha2.testengine.DEFAULT_ASSET_DEFINITION_ID
 import jp.co.soramitsu.iroha2.testengine.DEFAULT_ASSET_ID
 import jp.co.soramitsu.iroha2.testengine.DEFAULT_DOMAIN_ID
@@ -380,7 +380,10 @@ class InstructionsTest : IrohaTest<Iroha2Client>() {
     @Story("Account sets key value pair")
     @Permission("CanSetKeyValueInDomain")
     @SdkTestId("set_key_value_pair_for_another_account_domain_definition")
-    @WithIroha([BobHasPermissionToRegisterDomain::class, BobHasPermissionToModifyDomainMetadata::class], configs = ["LOG_LEVEL${IROHA_CONFIG_DELIMITER}TRACE"])
+    @WithIroha(
+        [BobHasPermissionToRegisterDomain::class, BobHasPermissionToModifyDomainMetadata::class],
+        configs = ["LOG_LEVEL${IROHA_CONFIG_DELIMITER}TRACE"],
+    )
     fun `domain metadata set key value with permissions`(): Unit = runBlocking {
         val domainId = DomainId(randomAlphabetic(10).asName())
         client.tx(BOB_ACCOUNT_ID, BOB_KEYPAIR) {

@@ -139,7 +139,7 @@ public sealed class QueryBox : ModelEnum {
      */
     public data class FindAssetsDefinitions(
         public val queryWithFilterOfFindAssetsDefinitionsAndAssetDefinitionPredicateBox:
-            QueryWithFilterOfFindAssetsDefinitionsAndAssetDefinitionPredicateBox,
+        QueryWithFilterOfFindAssetsDefinitionsAndAssetDefinitionPredicateBox,
     ) : QueryBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
@@ -251,7 +251,7 @@ public sealed class QueryBox : ModelEnum {
      */
     public data class FindPermissionsByAccountId(
         public val queryWithFilterOfFindPermissionsByAccountIdAndPermissionPredicateBox:
-            QueryWithFilterOfFindPermissionsByAccountIdAndPermissionPredicateBox,
+        QueryWithFilterOfFindPermissionsByAccountIdAndPermissionPredicateBox,
     ) : QueryBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
@@ -326,7 +326,7 @@ public sealed class QueryBox : ModelEnum {
      */
     public data class FindAccountsWithAsset(
         public val queryWithFilterOfFindAccountsWithAssetAndAccountPredicateBox:
-            QueryWithFilterOfFindAccountsWithAssetAndAccountPredicateBox,
+        QueryWithFilterOfFindAccountsWithAssetAndAccountPredicateBox,
     ) : QueryBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
@@ -401,7 +401,7 @@ public sealed class QueryBox : ModelEnum {
      */
     public data class FindActiveTriggerIds(
         public val queryWithFilterOfFindActiveTriggerIdsAndTriggerIdPredicateBox:
-            QueryWithFilterOfFindActiveTriggerIdsAndTriggerIdPredicateBox,
+        QueryWithFilterOfFindActiveTriggerIdsAndTriggerIdPredicateBox,
     ) : QueryBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
@@ -476,7 +476,7 @@ public sealed class QueryBox : ModelEnum {
      */
     public data class FindTransactions(
         public val queryWithFilterOfFindTransactionsAndCommittedTransactionPredicateBox:
-            QueryWithFilterOfFindTransactionsAndCommittedTransactionPredicateBox,
+        QueryWithFilterOfFindTransactionsAndCommittedTransactionPredicateBox,
     ) : QueryBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
