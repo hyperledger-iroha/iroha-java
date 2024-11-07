@@ -1,8 +1,6 @@
 name: Iroha2-java upload tests results to Soramitsu TestOps
 
 on:
-  pull_request:
-    branches: [ iroha2-dev, iroha2-main ]
   workflow_dispatch:
     inputs:
       GITHUB_TESTS_ENDPOINT:
@@ -21,12 +19,9 @@ on:
         required: false
 
 env:
-  ALLURE_TOKEN: ${{ secrets.ALLURE_TOKEN }}
+  IROHA_IMAGE_TAG: "dev"
   ALLURE_RESULTS: "${{ github.workspace }}/modules/client/build/allure-results"
-  GITHUB_TESTS_ENDPOINT: ${{ github.event.inputs.GITHUB_TESTS_ENDPOINT || 'https://soramitsu.testops.cloud' }}
-  GITHUB_TESTS_BROWSER: ${{ github.event.inputs.GITHUB_TESTS_BROWSER || 'chrome' }}
-  ALLURE_JOB_RUN_ID: ${{ github.event.inputs.ALLURE_JOB_RUN_ID || '' }}
-  ALLURE_USERNAME: ${{ github.event.inputs.ALLURE_USERNAME || '' }}
+  ALLURE_JOB_RUN_ID: ${{ github.event.inputs.ALLURE_JOB_RUN_ID }}
 
 
 jobs:
@@ -47,7 +42,7 @@ jobs:
           allure-project-id: 1
       - name: Build with Gradle
         run: |
-          ./gradlew clean test --continue
+          allurectl watch -- ./gradlew clean test --continue
           printenv | grep GITHUB_TESTS_
         env:
           GITHUB_TESTS_ENDPOINT: ${{ github.event.inputs.GITHUB_TESTS_ENDPOINT }}
