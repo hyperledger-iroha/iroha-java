@@ -28,8 +28,7 @@ class IrohaConfig(
     var logConsumer: Consumer<OutputFrame> = Slf4jLogConsumer(getLogger(IrohaContainer::class.java)),
     var genesisPath: String? = null, // first option
     var genesis: Genesis? = null, // second option
-    var imageTag: String = IrohaContainer.CUSTOM_IMAGE_TAG,
-    var imageTagDef: String = IrohaContainer.DEFAULT_IMAGE_TAG,
+    var imageTag: String = IrohaContainer.DEFAULT_IMAGE_TAG,
     var imageName: String = IrohaContainer.DEFAULT_IMAGE_NAME,
     var pullPolicy: ImagePullPolicy = PullPolicy.ageBased(Duration.ofMinutes(10)),
     var alias: String = IrohaContainer.NETWORK_ALIAS + DEFAULT_P2P_PORT,
