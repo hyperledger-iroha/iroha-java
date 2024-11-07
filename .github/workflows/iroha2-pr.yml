@@ -8,7 +8,7 @@ jobs:
     runs-on: self-hosted
     
     env:
-      IROHA_IMAGE_TAG: "2.0.0-pre-rc.22.2" # Place "dev" to check on the last iroha
+      IROHA_IMAGE_TAG: "2.0.0-pre-rc.22.2" # Place "dev" to run on the last iroha
 
     steps:
       - uses: actions/checkout@v3
