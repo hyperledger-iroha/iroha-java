@@ -8,7 +8,7 @@ jobs:
     runs-on: self-hosted
     
     env:
-      IROHA_IMAGE_TAG: "iroha-dev"
+      IROHA_IMAGE_TAG: "dev"
 
     steps:
       - uses: actions/checkout@v3
