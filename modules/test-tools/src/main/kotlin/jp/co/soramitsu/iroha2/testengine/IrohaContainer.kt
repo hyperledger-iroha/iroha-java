@@ -152,10 +152,23 @@ open class IrohaContainer : GenericContainer<IrohaContainer> {
     private fun String.readStatusBlocks() = JSON_SERDE.readTree(this).get("blocks")?.doubleValue()
 
     companion object {
-        private fun IrohaConfig.getFullImageName() = when (this.imageTag.contains("sha256")) {
-            true -> "${this.imageName}@${this.imageTag}"
-            false -> "${this.imageName}@${this.imageTagDef}"
-        }.let { DockerImageName.parse(it) }
+        private fun IrohaConfig.getFullImageName(): DockerImageName {
+            val imageTag = System.getenv("IROHA_IMAGE_TAG") ?: DEFAULT_IMAGE_TAG
+            return when (imageTag.contains("sha256")) {
+                true -> "${this.imageName}@$imageTag"
+                false -> "${this.imageName}:$imageTag"
+            }.let { DockerImageName.parse(it) }
+        }
+
+    const val NETWORK_ALIAS = "iroha"
+    const val DEFAULT_IMAGE_TAG = "2.0.0-pre-rc.22.2"
+    const val DEFAULT_IMAGE_NAME = "hyperledger/iroha"
+    const val DEFAULT_EXECUTOR_FILE_NAME = "executor.wasm"
+    const val DEFAULT_GENESIS_FILE_NAME = "genesis.json"
+    const val DEFAULT_CONFIG_DIR = "config"
+    val CONTAINER_STARTUP_TIMEOUT: Duration = Duration.ofSeconds(60)
+}
+
 
         const val CUSTOM_IMAGE_TAG = "iroha-dev"
         const val NETWORK_ALIAS = "iroha"
