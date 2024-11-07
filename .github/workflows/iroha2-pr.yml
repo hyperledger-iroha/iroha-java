@@ -6,6 +6,9 @@ on:
 jobs:
   build:
     runs-on: self-hosted
+    
+    env:
+      IROHA_IMAGE_TAG: "iroha-dev"
 
     steps:
       - uses: actions/checkout@v3
