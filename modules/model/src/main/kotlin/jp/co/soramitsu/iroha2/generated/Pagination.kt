@@ -8,6 +8,7 @@ import jp.co.soramitsu.iroha2.codec.ScaleCodecWriter
 import jp.co.soramitsu.iroha2.codec.ScaleReader
 import jp.co.soramitsu.iroha2.codec.ScaleWriter
 import jp.co.soramitsu.iroha2.wrapException
+import java.math.BigInteger
 import kotlin.Unit
 
 /**
@@ -16,22 +17,22 @@ import kotlin.Unit
  * Generated from 'Pagination' regular structure
  */
 public data class Pagination(
-    public val limit: NonZeroOfu32? = null,
-    public val start: NonZeroOfu64? = null,
+    public val limit: NonZeroOfu64? = null,
+    public val offset: BigInteger,
 ) {
     public companion object : ScaleReader<Pagination>, ScaleWriter<Pagination> {
         override fun read(reader: ScaleCodecReader): Pagination = try {
             Pagination(
-                reader.readNullable(NonZeroOfu32) as NonZeroOfu32?,
                 reader.readNullable(NonZeroOfu64) as NonZeroOfu64?,
+                reader.readUint64(),
             )
         } catch (ex: Exception) {
             throw wrapException(ex)
         }
 
         override fun write(writer: ScaleCodecWriter, instance: Pagination): Unit = try {
-            writer.writeNullable(NonZeroOfu32, instance.limit)
-            writer.writeNullable(NonZeroOfu64, instance.start)
+            writer.writeNullable(NonZeroOfu64, instance.limit)
+            writer.writeUint64(instance.offset)
         } catch (ex: Exception) {
             throw wrapException(ex)
         }

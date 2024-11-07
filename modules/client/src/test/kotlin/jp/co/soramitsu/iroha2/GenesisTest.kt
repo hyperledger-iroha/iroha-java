@@ -45,15 +45,16 @@ class GenesisTest : IrohaTest<Iroha2Client>() {
         val definitionId = AssetDefinitionId(DEFAULT_DOMAIN_ID, "XSTUSD".asName())
         client.tx { registerAssetDefinition(definitionId, AssetType.numeric()) }
 
-        QueryBuilder.findAssetDefinitionById(definitionId)
+        QueryBuilder.findAssetsDefinitions()
             .account(super.account)
             .buildSigned(super.keyPair)
             .let { query -> client.sendQuery(query) }
+            .first { it.id == definitionId }
             .also { assetDefinition -> assertEquals(assetDefinition.id, definitionId) }
     }
 
     private suspend fun Iroha2Client.checkAliceAndBobExists() {
-        QueryBuilder.findAllAccounts()
+        QueryBuilder.findAccounts()
             .account(ALICE_ACCOUNT_ID)
             .buildSigned(ALICE_KEYPAIR)
             .let { query -> this.sendQuery(query) }

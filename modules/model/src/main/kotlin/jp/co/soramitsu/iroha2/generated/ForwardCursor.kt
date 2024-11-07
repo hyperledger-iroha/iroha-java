@@ -17,22 +17,22 @@ import kotlin.Unit
  * Generated from 'ForwardCursor' regular structure
  */
 public data class ForwardCursor(
-    public val query: String? = null,
-    public val cursor: NonZeroOfu64? = null,
+    public val query: String,
+    public val cursor: NonZeroOfu64,
 ) {
     public companion object : ScaleReader<ForwardCursor>, ScaleWriter<ForwardCursor> {
         override fun read(reader: ScaleCodecReader): ForwardCursor = try {
             ForwardCursor(
-                reader.readNullable(),
-                reader.readNullable(NonZeroOfu64) as NonZeroOfu64?,
+                reader.readString(),
+                NonZeroOfu64.read(reader),
             )
         } catch (ex: Exception) {
             throw wrapException(ex)
         }
 
         override fun write(writer: ScaleCodecWriter, instance: ForwardCursor): Unit = try {
-            writer.writeNullable(instance.query)
-            writer.writeNullable(NonZeroOfu64, instance.cursor)
+            writer.writeAsList(instance.query.toByteArray(Charsets.UTF_8))
+            NonZeroOfu64.write(writer, instance.cursor)
         } catch (ex: Exception) {
             throw wrapException(ex)
         }

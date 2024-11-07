@@ -16,19 +16,19 @@ open class Query(
 ) {
 
     suspend fun findAllDomains(queryFilter: GenericPredicateBox<QueryOutputPredicate>? = null) = QueryBuilder
-        .findAllDomains(queryFilter)
+        .findDomains(queryFilter)
         .account(admin)
         .buildSigned(keyPair)
         .let { client.sendQuery(it) }
 
     suspend fun findAllAccounts(queryFilter: GenericPredicateBox<QueryOutputPredicate>? = null) = QueryBuilder
-        .findAllAccounts(queryFilter)
+        .findAccounts(queryFilter)
         .account(admin)
         .buildSigned(keyPair)
         .let { client.sendQuery(it) }
 
     suspend fun findAllAssets(queryFilter: GenericPredicateBox<QueryOutputPredicate>? = null) = QueryBuilder
-        .findAllAssets(queryFilter)
+        .findAssets(queryFilter)
         .account(admin)
         .buildSigned(keyPair)
         .let { client.sendQuery(it) }

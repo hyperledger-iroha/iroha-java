@@ -18,13 +18,13 @@ import kotlin.Unit
  */
 public data class Permission(
     public val name: String,
-    public val payload: String,
+    public val payload: Json,
 ) {
     public companion object : ScaleReader<Permission>, ScaleWriter<Permission> {
         override fun read(reader: ScaleCodecReader): Permission = try {
             Permission(
                 reader.readString(),
-                reader.readString(),
+                Json.read(reader),
             )
         } catch (ex: Exception) {
             throw wrapException(ex)
@@ -32,7 +32,7 @@ public data class Permission(
 
         override fun write(writer: ScaleCodecWriter, instance: Permission): Unit = try {
             writer.writeAsList(instance.name.toByteArray(Charsets.UTF_8))
-            writer.writeAsList(instance.payload.toByteArray(Charsets.UTF_8))
+            Json.write(writer, instance.payload)
         } catch (ex: Exception) {
             throw wrapException(ex)
         }

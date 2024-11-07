@@ -8,7 +8,6 @@ import jp.co.soramitsu.iroha2.codec.ScaleCodecWriter
 import jp.co.soramitsu.iroha2.codec.ScaleReader
 import jp.co.soramitsu.iroha2.codec.ScaleWriter
 import jp.co.soramitsu.iroha2.wrapException
-import kotlin.String
 import kotlin.Unit
 
 /**
@@ -19,14 +18,14 @@ import kotlin.Unit
 public data class SetKeyValueOfAsset(
     public val `object`: AssetId,
     public val key: Name,
-    public val `value`: String,
+    public val `value`: Json,
 ) {
     public companion object : ScaleReader<SetKeyValueOfAsset>, ScaleWriter<SetKeyValueOfAsset> {
         override fun read(reader: ScaleCodecReader): SetKeyValueOfAsset = try {
             SetKeyValueOfAsset(
                 AssetId.read(reader),
                 Name.read(reader),
-                reader.readString(),
+                Json.read(reader),
             )
         } catch (ex: Exception) {
             throw wrapException(ex)
@@ -35,7 +34,7 @@ public data class SetKeyValueOfAsset(
         override fun write(writer: ScaleCodecWriter, instance: SetKeyValueOfAsset): Unit = try {
             AssetId.write(writer, instance.`object`)
             Name.write(writer, instance.key)
-            writer.writeAsList(instance.`value`.toByteArray(Charsets.UTF_8))
+            Json.write(writer, instance.`value`)
         } catch (ex: Exception) {
             throw wrapException(ex)
         }

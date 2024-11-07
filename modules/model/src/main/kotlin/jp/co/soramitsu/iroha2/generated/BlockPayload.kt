@@ -18,15 +18,13 @@ import kotlin.collections.List
  */
 public data class BlockPayload(
     public val `header`: BlockHeader,
-    public val transactions: List<CommittedTransaction>,
-    public val eventRecommendations: List<EventBox>,
+    public val transactions: List<SignedTransaction>,
 ) {
     public companion object : ScaleReader<BlockPayload>, ScaleWriter<BlockPayload> {
         override fun read(reader: ScaleCodecReader): BlockPayload = try {
             BlockPayload(
                 BlockHeader.read(reader),
-                reader.readVec(reader.readCompactInt()) { CommittedTransaction.read(reader) },
-                reader.readVec(reader.readCompactInt()) { EventBox.read(reader) },
+                reader.readVec(reader.readCompactInt()) { SignedTransaction.read(reader) },
             )
         } catch (ex: Exception) {
             throw wrapException(ex)
@@ -36,11 +34,7 @@ public data class BlockPayload(
             BlockHeader.write(writer, instance.`header`)
             writer.writeCompact(instance.transactions.size)
             instance.transactions.forEach { value ->
-                CommittedTransaction.write(writer, value)
-            }
-            writer.writeCompact(instance.eventRecommendations.size)
-            instance.eventRecommendations.forEach { value ->
-                EventBox.write(writer, value)
+                SignedTransaction.write(writer, value)
             }
         } catch (ex: Exception) {
             throw wrapException(ex)

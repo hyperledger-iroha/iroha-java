@@ -37,15 +37,13 @@ import jp.co.soramitsu.iroha2.client.blockstream.BlockStreamStorage
 import jp.co.soramitsu.iroha2.client.blockstream.BlockStreamSubscription
 import jp.co.soramitsu.iroha2.extract
 import jp.co.soramitsu.iroha2.extractBlock
-import jp.co.soramitsu.iroha2.generated.BatchedResponse
-import jp.co.soramitsu.iroha2.generated.BatchedResponseV1
 import jp.co.soramitsu.iroha2.generated.BlockMessage
 import jp.co.soramitsu.iroha2.generated.EventBox
 import jp.co.soramitsu.iroha2.generated.EventMessage
 import jp.co.soramitsu.iroha2.generated.EventSubscriptionRequest
 import jp.co.soramitsu.iroha2.generated.ForwardCursor
 import jp.co.soramitsu.iroha2.generated.PipelineEventBox
-import jp.co.soramitsu.iroha2.generated.QueryOutputBox
+import jp.co.soramitsu.iroha2.generated.QueryResponse
 import jp.co.soramitsu.iroha2.generated.SignedQuery
 import jp.co.soramitsu.iroha2.generated.SignedTransaction
 import jp.co.soramitsu.iroha2.generated.TransactionRejectionReason
@@ -86,7 +84,9 @@ open class Iroha2Client(
     open val eventReadTimeoutInMills: Long = 250,
     open val eventReadMaxAttempts: Int = 10,
     override val coroutineContext: CoroutineContext = Dispatchers.IO + SupervisorJob(),
-) : AutoCloseable, CoroutineScope, RoundRobinStrategy(urls) {
+) : RoundRobinStrategy(urls),
+    AutoCloseable,
+    CoroutineScope {
 
     constructor(
         url: IrohaUrls,
@@ -183,26 +183,13 @@ open class Iroha2Client(
     /**
      * Send a request to Iroha2 and extract paginated payload
      */
-    suspend fun <T> sendQuery(
-        queryAndExtractor: QueryAndExtractor<T>,
-        cursor: ForwardCursor? = null,
-    ): T {
+    suspend fun <T> sendQuery(queryAndExtractor: QueryAndExtractor<T>, cursor: ForwardCursor? = null): T {
         logger.debug("Sending query")
-        val responseDecoded = sendQueryRequest(queryAndExtractor, cursor)
-        val decodedCursor = responseDecoded.cast<BatchedResponse.V1>().batchedResponseV1.cursor
-        val finalResult = when (decodedCursor.cursor) {
-            null -> responseDecoded.let { queryAndExtractor.resultExtractor.extract(it) }
-            else -> {
-                val resultList = getQueryResultWithCursor(queryAndExtractor, decodedCursor)
-                resultList.addAll(
-                    responseDecoded.cast<BatchedResponse.V1>()
-                        .batchedResponseV1.batch.cast<QueryOutputBox.Vec>().vec,
-                )
-                BatchedResponse.V1(
-                    BatchedResponseV1(QueryOutputBox.Vec(resultList), ForwardCursor()),
-                ).let { queryAndExtractor.resultExtractor.extract(it) }
-            }
-        }
+        val query = queryAndExtractor.query
+        val extractor = queryAndExtractor.extractor
+
+        val responseDecoded = sendQueryRequest(query, cursor)
+        val finalResult = responseDecoded.let { extractor.extract(it) }
         return finalResult
     }
 
@@ -226,9 +213,7 @@ open class Iroha2Client(
     /**
      * Send a transaction to an Iroha peer and wait until it is committed or rejected.
      */
-    suspend fun sendTransaction(
-        transaction: TransactionBuilder.() -> SignedTransaction,
-    ): CompletableDeferred<ByteArray> = coroutineScope {
+    suspend fun sendTransaction(transaction: TransactionBuilder.() -> SignedTransaction): CompletableDeferred<ByteArray> = coroutineScope {
         val signedTransaction = transaction(TransactionBuilder())
 
         val lock = Mutex(locked = true)
@@ -320,48 +305,42 @@ open class Iroha2Client(
      */
     fun subscribeToTransactionStatus(hash: ByteArray) = subscribeToTransactionStatus(hash, null)
 
-    private suspend fun <T> sendQueryRequest(
-        queryAndExtractor: QueryAndExtractor<T>,
-        cursor: ForwardCursor? = null,
-    ): BatchedResponse<QueryOutputBox> {
+    private suspend fun sendQueryRequest(query: SignedQuery, cursor: ForwardCursor? = null): QueryResponse {
         val response: HttpResponse = client.post("${getApiUrl()}$QUERY_ENDPOINT") {
             if (cursor != null) {
                 parameter("query", cursor.query)
-                parameter("cursor", cursor.cursor?.u64)
+                parameter("cursor", cursor.cursor.u64)
             } else {
-                setBody(SignedQuery.encode(queryAndExtractor.query))
+                setBody(SignedQuery.encode(query))
             }
         }
-        return response.body<ByteArray>().let { BatchedResponse.decode(it) }.cast<BatchedResponse<QueryOutputBox>>()
+        return response.body<ByteArray>().let { QueryResponse.decode(it) }.cast<QueryResponse>()
     }
 
-    private suspend fun <T> getQueryResultWithCursor(
-        queryAndExtractor: QueryAndExtractor<T>,
-        queryCursor: ForwardCursor? = null,
-    ): MutableList<QueryOutputBox> {
-        val resultList = mutableListOf<QueryOutputBox>()
-        val responseDecoded = sendQueryRequest(queryAndExtractor, queryCursor)
-        resultList.addAll(
-            responseDecoded.cast<BatchedResponse.V1>().batchedResponseV1.batch.cast<QueryOutputBox.Vec>().vec,
-        )
-        val cursor = responseDecoded.cast<BatchedResponse.V1>().batchedResponseV1.cursor
-        return when (cursor.cursor) {
-            null -> resultList
-            else -> {
-                resultList.addAll(getQueryResultWithCursor(queryAndExtractor, cursor))
-                resultList
-            }
-        }
-    }
+//    private suspend fun <T> getQueryResultWithCursor(
+//        queryAndExtractor: QueryAndExtractor<T>,
+//        queryCursor: ForwardCursor? = null,
+//    ): MutableList<QueryOutputBatchBox> {
+//        val resultList = mutableListOf<QueryOutputBatchBox>()
+//        val responseDecoded = sendQueryRequest(queryAndExtractor.query, queryCursor)
+//        resultList.addAll(
+//            queryAndExtractor.extractor.extract(responseDecoded.cast<QueryResponse.Iterable>()),
+//        )
+//        val cursor = responseDecoded.cast<QueryResponse.Iterable>().queryOutput.continueCursor
+//        return when (cursor?.cursor) {
+//            null -> resultList
+//            else -> {
+//                resultList.addAll(getQueryResultWithCursor(queryAndExtractor, cursor))
+//                resultList
+//            }
+//        }
+//    }
 
     /**
      * @param hash - Signed transaction hash
      * @param afterSubscription - Expression that is invoked after subscription
      */
-    private fun subscribeToTransactionStatus(
-        hash: ByteArray,
-        afterSubscription: (() -> Unit)? = null,
-    ): CompletableDeferred<ByteArray> {
+    private fun subscribeToTransactionStatus(hash: ByteArray, afterSubscription: (() -> Unit)? = null): CompletableDeferred<ByteArray> {
         val hexHash = hash.toHex()
         logger.debug("Creating subscription to transaction status: {}", hexHash)
 
@@ -462,9 +441,7 @@ open class Iroha2Client(
         )
     }
 
-    private fun eventSubscriberMessageOf(
-        hash: ByteArray,
-    ) = EventSubscriptionRequest(
+    private fun eventSubscriberMessageOf(hash: ByteArray) = EventSubscriptionRequest(
         listOf(Filters.pipelineTransaction(hash)),
     )
 

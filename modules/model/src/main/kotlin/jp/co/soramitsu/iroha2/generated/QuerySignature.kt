@@ -16,19 +16,19 @@ import kotlin.Unit
  * Generated from 'QuerySignature' regular structure
  */
 public data class QuerySignature(
-    public val signatureOfOfClientQueryPayload: SignatureOf<ClientQueryPayload>,
+    public val signatureOfOfQueryRequestWithAuthority: SignatureOf<QueryRequestWithAuthority>,
 ) {
     public companion object : ScaleReader<QuerySignature>, ScaleWriter<QuerySignature> {
         override fun read(reader: ScaleCodecReader): QuerySignature = try {
             QuerySignature(
-                SignatureOf.read(reader) as SignatureOf<ClientQueryPayload>,
+                SignatureOf.read(reader) as SignatureOf<QueryRequestWithAuthority>,
             )
         } catch (ex: Exception) {
             throw wrapException(ex)
         }
 
         override fun write(writer: ScaleCodecWriter, instance: QuerySignature): Unit = try {
-            SignatureOf.write(writer, instance.signatureOfOfClientQueryPayload)
+            SignatureOf.write(writer, instance.signatureOfOfQueryRequestWithAuthority)
         } catch (ex: Exception) {
             throw wrapException(ex)
         }

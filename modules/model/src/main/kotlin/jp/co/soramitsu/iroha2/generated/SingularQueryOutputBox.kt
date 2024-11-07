@@ -10,7 +10,6 @@ import jp.co.soramitsu.iroha2.codec.ScaleReader
 import jp.co.soramitsu.iroha2.codec.ScaleWriter
 import jp.co.soramitsu.iroha2.wrapException
 import kotlin.Int
-import kotlin.String
 import kotlin.Unit
 
 /**
@@ -89,21 +88,21 @@ public sealed class SingularQueryOutputBox : ModelEnum {
     }
 
     /**
-     * 'JsonString' variant
+     * 'Json' variant
      */
-    public data class JsonString(
-        public val string: String,
+    public data class Json(
+        public val json: jp.co.soramitsu.iroha2.generated.Json,
     ) : SingularQueryOutputBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
-            ScaleReader<jp.co.soramitsu.iroha2.generated.SingularQueryOutputBox.JsonString>,
-            ScaleWriter<jp.co.soramitsu.iroha2.generated.SingularQueryOutputBox.JsonString> {
+            ScaleReader<jp.co.soramitsu.iroha2.generated.SingularQueryOutputBox.Json>,
+            ScaleWriter<jp.co.soramitsu.iroha2.generated.SingularQueryOutputBox.Json> {
             public const val DISCRIMINANT: Int = 2
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.SingularQueryOutputBox.JsonString = try {
-                JsonString(
-                    reader.readString(),
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.SingularQueryOutputBox.Json = try {
+                Json(
+                    jp.co.soramitsu.iroha2.generated.Json.read(reader),
                 )
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -111,9 +110,9 @@ public sealed class SingularQueryOutputBox : ModelEnum {
 
             override fun write(
                 writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.SingularQueryOutputBox.JsonString,
+                instance: jp.co.soramitsu.iroha2.generated.SingularQueryOutputBox.Json,
             ): Unit = try {
-                writer.writeAsList(instance.string.toByteArray(Charsets.UTF_8))
+                jp.co.soramitsu.iroha2.generated.Json.write(writer, instance.json)
             } catch (ex: Exception) {
                 throw wrapException(ex)
             }
@@ -188,7 +187,7 @@ public sealed class SingularQueryOutputBox : ModelEnum {
      * 'Transaction' variant
      */
     public data class Transaction(
-        public val transactionQueryOutput: TransactionQueryOutput,
+        public val committedTransaction: CommittedTransaction,
     ) : SingularQueryOutputBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
@@ -199,7 +198,7 @@ public sealed class SingularQueryOutputBox : ModelEnum {
 
             override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.SingularQueryOutputBox.Transaction = try {
                 Transaction(
-                    TransactionQueryOutput.read(reader),
+                    CommittedTransaction.read(reader),
                 )
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -209,7 +208,7 @@ public sealed class SingularQueryOutputBox : ModelEnum {
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.SingularQueryOutputBox.Transaction,
             ): Unit = try {
-                TransactionQueryOutput.write(writer, instance.transactionQueryOutput)
+                CommittedTransaction.write(writer, instance.committedTransaction)
             } catch (ex: Exception) {
                 throw wrapException(ex)
             }
@@ -255,7 +254,7 @@ public sealed class SingularQueryOutputBox : ModelEnum {
         ) {
             0 -> Numeric.read(reader)
             1 -> ExecutorDataModel.read(reader)
-            2 -> JsonString.read(reader)
+            2 -> Json.read(reader)
             3 -> Trigger.read(reader)
             4 -> Parameters.read(reader)
             5 -> Transaction.read(reader)
@@ -267,7 +266,7 @@ public sealed class SingularQueryOutputBox : ModelEnum {
             when (val discriminant = instance.discriminant()) {
                 0 -> Numeric.write(writer, instance as Numeric)
                 1 -> ExecutorDataModel.write(writer, instance as ExecutorDataModel)
-                2 -> JsonString.write(writer, instance as JsonString)
+                2 -> Json.write(writer, instance as Json)
                 3 -> Trigger.write(writer, instance as Trigger)
                 4 -> Parameters.write(writer, instance as Parameters)
                 5 -> Transaction.write(writer, instance as Transaction)

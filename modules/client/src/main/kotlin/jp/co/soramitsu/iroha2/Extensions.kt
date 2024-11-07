@@ -1,3 +1,5 @@
+@file:Suppress("ktlint:standard:no-wildcard-imports")
+
 package jp.co.soramitsu.iroha2
 
 import com.fasterxml.jackson.databind.JsonNode
@@ -5,7 +7,47 @@ import com.fasterxml.jackson.databind.node.NullNode
 import com.fasterxml.jackson.databind.node.TextNode
 import com.google.gson.GsonBuilder
 import io.ktor.websocket.Frame
-import jp.co.soramitsu.iroha2.generated.* // ktlint-disable no-wildcard-imports
+import jp.co.soramitsu.iroha2.generated.Account
+import jp.co.soramitsu.iroha2.generated.AccountId
+import jp.co.soramitsu.iroha2.generated.Algorithm
+import jp.co.soramitsu.iroha2.generated.Asset
+import jp.co.soramitsu.iroha2.generated.AssetDefinition
+import jp.co.soramitsu.iroha2.generated.AssetDefinitionId
+import jp.co.soramitsu.iroha2.generated.AssetId
+import jp.co.soramitsu.iroha2.generated.AssetType
+import jp.co.soramitsu.iroha2.generated.AssetValue
+import jp.co.soramitsu.iroha2.generated.BlockMessage
+import jp.co.soramitsu.iroha2.generated.BlockPayload
+import jp.co.soramitsu.iroha2.generated.BlockSubscriptionRequest
+import jp.co.soramitsu.iroha2.generated.Domain
+import jp.co.soramitsu.iroha2.generated.DomainId
+import jp.co.soramitsu.iroha2.generated.EventFilterBox
+import jp.co.soramitsu.iroha2.generated.Executable
+import jp.co.soramitsu.iroha2.generated.ExecutionTime
+import jp.co.soramitsu.iroha2.generated.FindError
+import jp.co.soramitsu.iroha2.generated.GrantBox
+import jp.co.soramitsu.iroha2.generated.Hash
+import jp.co.soramitsu.iroha2.generated.HashOf
+import jp.co.soramitsu.iroha2.generated.IdBox
+import jp.co.soramitsu.iroha2.generated.InstructionBox
+import jp.co.soramitsu.iroha2.generated.Json
+import jp.co.soramitsu.iroha2.generated.Metadata
+import jp.co.soramitsu.iroha2.generated.Name
+import jp.co.soramitsu.iroha2.generated.NonZeroOfu64
+import jp.co.soramitsu.iroha2.generated.Numeric
+import jp.co.soramitsu.iroha2.generated.NumericSpec
+import jp.co.soramitsu.iroha2.generated.RegisterBox
+import jp.co.soramitsu.iroha2.generated.Role
+import jp.co.soramitsu.iroha2.generated.RoleId
+import jp.co.soramitsu.iroha2.generated.SetKeyValueBox
+import jp.co.soramitsu.iroha2.generated.Signature
+import jp.co.soramitsu.iroha2.generated.SignatureOf
+import jp.co.soramitsu.iroha2.generated.SignedBlock
+import jp.co.soramitsu.iroha2.generated.SignedTransaction
+import jp.co.soramitsu.iroha2.generated.SocketAddr
+import jp.co.soramitsu.iroha2.generated.SocketAddrHost
+import jp.co.soramitsu.iroha2.generated.Trigger
+import jp.co.soramitsu.iroha2.generated.TriggerId
 import jp.co.soramitsu.iroha2.transaction.TransactionBuilder
 import net.i2p.crypto.eddsa.EdDSAEngine
 import org.bouncycastle.jcajce.provider.digest.Blake2b
@@ -79,9 +121,7 @@ fun String.fromHex(): ByteArray = try {
 /**
  * Convert a public key to an Iroha public key
  */
-fun PublicKey.toIrohaPublicKey(): IrohaPublicKey {
-    return IrohaPublicKey(Algorithm.Ed25519(), this.bytes())
-}
+fun PublicKey.toIrohaPublicKey(): IrohaPublicKey = IrohaPublicKey(Algorithm.Ed25519(), this.bytes())
 
 /**
  * Sign the [message] using the given private key
@@ -134,10 +174,8 @@ fun SignedTransaction.hash() = SignedTransaction.encode(this).hash()
 /**
  * Cast to another type
  */
-inline fun <reified B> Any.cast(): B {
-    return this as? B
-        ?: throw ClassCastException("Could not cast `${this::class.qualifiedName}` to `${B::class.qualifiedName}`")
-}
+inline fun <reified B> Any.cast(): B = this as? B
+    ?: throw ClassCastException("Could not cast `${this::class.qualifiedName}` to `${B::class.qualifiedName}`")
 
 fun AssetId.asString(withPrefix: Boolean = true) = this.definition.asString() + ASSET_ID_DELIMITER + this.account.asString(withPrefix)
 
@@ -146,17 +184,22 @@ fun AssetId.asJsonString(withPrefix: Boolean = true) = "{\"asset\": " +
 
 fun AssetDefinitionId.asString() = this.name.string + ASSET_ID_DELIMITER + this.domain.name.string
 
-fun AssetDefinitionId.asJsonString() = "{\"asset_definition\": " +
-    "\"${this.name.string + ASSET_ID_DELIMITER + this.domain.name.string}\"}"
+fun AssetDefinitionId.asJsonString(): Json =
+    "{\"asset_definition\": \"${this.name.string + ASSET_ID_DELIMITER + this.domain.name.string}\"}"
+        .asIrohaJson()
 
 fun AccountId.asString(withPrefix: Boolean = true) = this.signatory.payload.toHex(withPrefix) +
     ACCOUNT_ID_DELIMITER + this.domain.name.string
 
-fun AccountId.asJsonString(withPrefix: Boolean = true) = "{\"account\": \"${this.signatory.payload.toHex(withPrefix) + ACCOUNT_ID_DELIMITER + this.domain.name.string}\"}"
+fun AccountId.asJsonString(withPrefix: Boolean = true): Json =
+    "{\"account\": \"${this.signatory.payload.toHex(withPrefix) + ACCOUNT_ID_DELIMITER + this.domain.name.string}\"}"
+        .asIrohaJson()
+
+fun String.asIrohaJson() = Json(this)
 
 fun DomainId.asString() = this.name.string
 
-fun DomainId.asJsonString() = "{\"domain\": \"${this.name.string}\"}"
+fun DomainId.asJsonString() = "{\"domain\": \"${this.name.string}\"}".asIrohaJson()
 
 fun RoleId.asString() = this.name.string
 

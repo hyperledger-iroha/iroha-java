@@ -110,7 +110,7 @@ class PeerTest : IrohaTest<AdminIroha2Client>() {
 
             delay(5000)
 
-            val peersCount = QueryBuilder.findAllPeers()
+            val peersCount = QueryBuilder.findPeers()
                 .account(ALICE_ACCOUNT_ID)
                 .buildSigned(ALICE_KEYPAIR)
                 .let { client.sendQuery(it) }
@@ -118,7 +118,7 @@ class PeerTest : IrohaTest<AdminIroha2Client>() {
 
             repeat(5) {
                 runCatching {
-                    QueryBuilder.findAllPeers()
+                    QueryBuilder.findPeers()
                         .account(ALICE_ACCOUNT_ID)
                         .buildSigned(ALICE_KEYPAIR)
                         .let {
@@ -139,7 +139,7 @@ class PeerTest : IrohaTest<AdminIroha2Client>() {
     @WithIroha([DefaultGenesis::class], amount = PEER_AMOUNT)
     fun `round-robin load balancing test`(): Unit = runBlocking {
         repeat(PEER_AMOUNT + 1) {
-            assertEquals(findDomain(DEFAULT_DOMAIN_ID).id, DEFAULT_DOMAIN_ID)
+            assertEquals(findDomain(DEFAULT_DOMAIN_ID)?.id, DEFAULT_DOMAIN_ID)
         }
     }
 
@@ -167,22 +167,17 @@ class PeerTest : IrohaTest<AdminIroha2Client>() {
         address: String,
         payload: ByteArray,
         keyPair: KeyPair = ALICE_KEYPAIR,
-    ): Boolean {
-        return QueryBuilder.findAllPeers()
-            .account(ALICE_ACCOUNT_ID)
-            .buildSigned(keyPair)
-            .let { query ->
-                client.sendQuery(query)
-            }.any { peer ->
-                val peerAddr = peer.id.address.cast<SocketAddr.Host>().socketAddrHost
-                "${peerAddr.host}:${peerAddr.port}" == address && peer.id.publicKey.payload.contentEquals(payload)
-            }
-    }
+    ): Boolean = QueryBuilder.findPeers()
+        .account(ALICE_ACCOUNT_ID)
+        .buildSigned(keyPair)
+        .let { query ->
+            client.sendQuery(query)
+        }.any { peer ->
+            val peerAddr = peer.id.address.cast<SocketAddr.Host>().socketAddrHost
+            "${peerAddr.host}:${peerAddr.port}" == address && peer.id.publicKey.payload.contentEquals(payload)
+        }
 
-    private suspend fun unregisterPeer(
-        peerId: PeerId,
-        keyPair: KeyPair = ALICE_KEYPAIR,
-    ) {
+    private suspend fun unregisterPeer(peerId: PeerId, keyPair: KeyPair = ALICE_KEYPAIR) {
         client.sendTransaction {
             account(ALICE_ACCOUNT_ID)
             unregisterPeer(peerId)

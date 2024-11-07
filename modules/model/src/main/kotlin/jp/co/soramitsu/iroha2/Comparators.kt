@@ -83,7 +83,7 @@ fun SignatureOf.Companion.comparator() = Comparator<SignatureOf<*>> { o1, o2 ->
 fun Permission.Companion.comparator() = compareBy<Permission> {
     it.name
 }.thenComparator { o1, o2 ->
-    o1.payload?.compareTo(o2.payload ?: "") ?: 0
+    o1.payload.string.compareTo(o2.payload.string)
 }
 
 /**

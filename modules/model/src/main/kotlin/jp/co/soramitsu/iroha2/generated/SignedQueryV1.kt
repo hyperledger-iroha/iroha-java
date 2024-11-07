@@ -17,13 +17,13 @@ import kotlin.Unit
  */
 public data class SignedQueryV1(
     public val signature: QuerySignature,
-    public val payload: ClientQueryPayload,
+    public val payload: QueryRequestWithAuthority,
 ) {
     public companion object : ScaleReader<SignedQueryV1>, ScaleWriter<SignedQueryV1> {
         override fun read(reader: ScaleCodecReader): SignedQueryV1 = try {
             SignedQueryV1(
                 QuerySignature.read(reader),
-                ClientQueryPayload.read(reader),
+                QueryRequestWithAuthority.read(reader),
             )
         } catch (ex: Exception) {
             throw wrapException(ex)
@@ -31,7 +31,7 @@ public data class SignedQueryV1(
 
         override fun write(writer: ScaleCodecWriter, instance: SignedQueryV1): Unit = try {
             QuerySignature.write(writer, instance.signature)
-            ClientQueryPayload.write(writer, instance.payload)
+            QueryRequestWithAuthority.write(writer, instance.payload)
         } catch (ex: Exception) {
             throw wrapException(ex)
         }

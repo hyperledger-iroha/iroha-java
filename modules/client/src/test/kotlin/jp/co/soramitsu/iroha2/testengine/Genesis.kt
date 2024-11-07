@@ -3,6 +3,7 @@ package jp.co.soramitsu.iroha2.testengine
 import jp.co.soramitsu.iroha2.Genesis
 import jp.co.soramitsu.iroha2.Permissions
 import jp.co.soramitsu.iroha2.asDomainId
+import jp.co.soramitsu.iroha2.asIrohaJson
 import jp.co.soramitsu.iroha2.asJsonString
 import jp.co.soramitsu.iroha2.asName
 import jp.co.soramitsu.iroha2.generateKeyPair
@@ -11,17 +12,21 @@ import jp.co.soramitsu.iroha2.generated.AccountId
 import jp.co.soramitsu.iroha2.generated.AssetDefinitionId
 import jp.co.soramitsu.iroha2.generated.AssetId
 import jp.co.soramitsu.iroha2.generated.AssetType
+import jp.co.soramitsu.iroha2.generated.BlockParameters
 import jp.co.soramitsu.iroha2.generated.ChainId
 import jp.co.soramitsu.iroha2.generated.DomainId
 import jp.co.soramitsu.iroha2.generated.InstructionBox
 import jp.co.soramitsu.iroha2.generated.Metadata
+import jp.co.soramitsu.iroha2.generated.Name
 import jp.co.soramitsu.iroha2.generated.NonZeroOfu64
-import jp.co.soramitsu.iroha2.generated.Parameter
+import jp.co.soramitsu.iroha2.generated.Parameters
 import jp.co.soramitsu.iroha2.generated.Permission
 import jp.co.soramitsu.iroha2.generated.RawGenesisTransaction
 import jp.co.soramitsu.iroha2.generated.Repeats
 import jp.co.soramitsu.iroha2.generated.RoleId
-import jp.co.soramitsu.iroha2.generated.SmartContractParameter
+import jp.co.soramitsu.iroha2.generated.SmartContractParameters
+import jp.co.soramitsu.iroha2.generated.SumeragiParameters
+import jp.co.soramitsu.iroha2.generated.TransactionParameters
 import jp.co.soramitsu.iroha2.generated.TriggerId
 import jp.co.soramitsu.iroha2.numeric
 import jp.co.soramitsu.iroha2.toIrohaPublicKey
@@ -36,6 +41,33 @@ import kotlin.random.Random.Default.nextDouble
  * Create a default genesis where there is just one domain with only Alice and Bob in it
  */
 open class DefaultGenesis(transaction: RawGenesisTransaction? = null) : Genesis(transaction ?: rawGenesisTx())
+
+open class BobHasPermissionToRegisterDomain : Genesis(
+    rawGenesisTx(
+        Instructions.grantPermissionToken(
+            Permissions.CanRegisterDomain,
+            destinationId = BOB_ACCOUNT_ID,
+        ),
+    ),
+)
+
+open class BobHasPermissionToModifyDomainMetadata : Genesis(
+    rawGenesisTx(
+        Instructions.grantPermissionToken(
+            Permissions.CanModifyDomainMetadata,
+            destinationId = BOB_ACCOUNT_ID,
+        ),
+    ),
+)
+
+open class AliceHasPermissionToRegisterDomain : Genesis(
+    rawGenesisTx(
+        Instructions.grantPermissionToken(
+            Permissions.CanRegisterDomain,
+            destinationId = ALICE_ACCOUNT_ID,
+        ),
+    ),
+)
 
 open class AliceCanUpgradeExecutor : Genesis(
     rawGenesisTx(
@@ -120,6 +152,7 @@ fun registerDomains(count: Int): Array<InstructionBox> {
 open class AliceHasRoleWithAccessToBobsMetadata : Genesis(
     rawGenesisTx(
         Instructions.registerRole(
+            ALICE_ACCOUNT_ID,
             ROLE_ID,
             Permission(
                 Permissions.CanSetKeyValueInAccount.type,
@@ -155,13 +188,28 @@ open class AliceHas100XorAndPermissionToMintAndBurn : Genesis(
             DEFAULT_ASSET_DEFINITION_ID.asJsonString(),
             ALICE_ACCOUNT_ID,
         ),
-        params = listOf(
-            Parameter.SmartContract(
-                SmartContractParameter.Fuel(NonZeroOfu64(BigInteger.valueOf(5500000000))),
+        params = Parameters(
+            sumeragi = SumeragiParameters(
+                blockTimeMs = BigInteger.valueOf(2000),
+                commitTimeMs = BigInteger.valueOf(4000),
+                maxClockDriftMs = BigInteger.valueOf(1000),
             ),
-            Parameter.Executor(
-                SmartContractParameter.Fuel(NonZeroOfu64(BigInteger.valueOf(5500000000))),
+            block = BlockParameters(
+                maxTransactions = NonZeroOfu64(BigInteger.valueOf(4096)),
             ),
+            smartContract = SmartContractParameters(
+                fuel = NonZeroOfu64(BigInteger.valueOf(5500000000)),
+                memory = NonZeroOfu64(BigInteger.valueOf(55000000)),
+            ),
+            executor = SmartContractParameters(
+                fuel = NonZeroOfu64(BigInteger.valueOf(5500000000)),
+                memory = NonZeroOfu64(BigInteger.valueOf(55000000)),
+            ),
+            transaction = TransactionParameters(
+                maxInstructions = NonZeroOfu64(BigInteger.valueOf(4096)),
+                smartContractSize = NonZeroOfu64(BigInteger.valueOf(4194304)),
+            ),
+            custom = emptyMap(),
         ),
     ),
 )
@@ -233,7 +281,7 @@ open class StoreAssetWithMetadata : Genesis(
         Instructions.registerAssetDefinition(
             DEFINITION_ID,
             AssetType.Store(),
-            Metadata(mapOf(ASSET_KEY to ASSET_VALUE)),
+            Metadata(mapOf(ASSET_KEY to ASSET_VALUE.asIrohaJson())),
         ),
         Instructions.setKeyValue(ASSET_ID, ASSET_KEY, ASSET_VALUE),
     ),
@@ -281,7 +329,7 @@ open class NewAccountWithMetadata : Genesis(
     rawGenesisTx(
         Instructions.registerAccount(
             id = ACCOUNT_ID,
-            metadata = Metadata(mapOf(KEY to VALUE)),
+            metadata = Metadata(mapOf(KEY to VALUE.asIrohaJson())),
         ),
     ),
 ) {
@@ -301,26 +349,22 @@ open class NewDomainWithMetadata : Genesis(
     rawGenesisTx(
         Instructions.registerDomain(
             domainId = DOMAIN_ID,
-            metadata = mapOf(KEY to VALUE),
+            metadata = mapOf(KEY to VALUE.asIrohaJson()),
         ),
         Instructions.transferDomainOwnership(GENESIS_ACCOUNT, DOMAIN_ID, ALICE_ACCOUNT_ID),
     ),
 ) {
     companion object {
-        val KEY = "key".asName()
-        val VALUE = "value"
-        val DOMAIN_ID = DomainId("foo_domain".asName())
+        val KEY: Name = "key".asName()
+        val VALUE: String = "value"
+        val DOMAIN_ID: DomainId = DomainId("foo_domain".asName())
     }
 }
 
 /**
  * Create a new domain
  */
-open class NewDomain : Genesis(
-    rawGenesisTx(
-        Instructions.registerDomain(DOMAIN_ID),
-    ),
-) {
+open class NewDomain : Genesis(rawGenesisTx(Instructions.registerDomain(DOMAIN_ID))) {
     companion object {
         val DOMAIN_ID = "foo_domain".asDomainId()
     }
@@ -333,15 +377,15 @@ open class RubbishToTestMultipleGenesis : Genesis(
     rawGenesisTx(
         Instructions.registerDomain(
             DEFAULT_DOMAIN_ID,
-            mapOf(DOMAIN_KEY_VALUE.asName() to DOMAIN_KEY_VALUE),
+            mapOf(DOMAIN_KEY_VALUE.asName() to DOMAIN_KEY_VALUE.asIrohaJson()),
         ),
         Instructions.registerAccount(
             ALICE_ACCOUNT_ID,
-            Metadata(mapOf(ALICE_KEY_VALUE.asName() to ALICE_KEY_VALUE)),
+            Metadata(mapOf(ALICE_KEY_VALUE.asName() to ALICE_KEY_VALUE.asIrohaJson())),
         ),
         Instructions.registerAccount(
             BOB_ACCOUNT_ID,
-            Metadata(mapOf(BOB_KEY_VALUE.asName() to BOB_KEY_VALUE)),
+            Metadata(mapOf(BOB_KEY_VALUE.asName() to BOB_KEY_VALUE.asIrohaJson())),
         ),
     ),
 ) {
@@ -359,11 +403,11 @@ open class FatGenesis : Genesis(
     rawGenesisTx(
         Instructions.registerDomain(
             randomAlphabetic(10).asDomainId(),
-            mapOf(randomAlphabetic(10).asName() to randomAlphabetic(10)),
+            mapOf(randomAlphabetic(10).asName() to randomAlphabetic(10).asIrohaJson()),
         ),
         Instructions.registerAccount(
             AccountId(domain = DEFAULT_DOMAIN_ID, signatory = generatePublicKey()),
-            Metadata(mapOf(randomAlphabetic(10).asName() to randomAlphabetic(10))),
+            Metadata(mapOf(randomAlphabetic(10).asName() to randomAlphabetic(10).asIrohaJson())),
         ),
         Instructions.registerAssetDefinition(DEFAULT_ASSET_DEFINITION_ID, AssetType.numeric()),
         Instructions.grantPermissionToken(
@@ -379,9 +423,10 @@ open class FatGenesis : Genesis(
         Instructions.registerAssetDefinition(
             DEFINITION_ID,
             AssetType.Store(),
-            Metadata(mapOf(randomAlphabetic(10).asName() to randomAlphabetic(10))),
+            Metadata(mapOf(randomAlphabetic(10).asName() to randomAlphabetic(10).asIrohaJson())),
         ),
         Instructions.registerRole(
+            BOB_ACCOUNT_ID,
             ROLE_ID,
             Permission(
                 Permissions.CanSetKeyValueInAccount.type,
@@ -441,12 +486,12 @@ open class BobCanUnregisterAnyRole : Genesis(
  */
 fun rawGenesisTx(
     vararg isi: InstructionBox,
-    params: List<Parameter> = emptyList(),
+    params: Parameters? = null,
     transferTo: AccountId = ALICE_ACCOUNT_ID,
 ) = RawGenesisTransaction(
     chain = ChainId("00000000-0000-0000-0000-000000000000"),
     executor = Genesis.EXECUTOR_FILE_NAME,
-    parameters = params,
+    parameters = params ?: DEFAULT_GENESIS_PARAMETERS,
     instructions = listOf(
         Instructions.registerDomain(DEFAULT_DOMAIN_ID),
         Instructions.registerAccount(ALICE_ACCOUNT_ID, Metadata(emptyMap())),
@@ -454,5 +499,7 @@ fun rawGenesisTx(
         Instructions.transferDomainOwnership(GENESIS_ACCOUNT, DEFAULT_DOMAIN_ID, transferTo),
         *isi,
     ),
+    wasmDir = "libs",
+    wasmTriggers = emptyList(),
     topology = emptyList(),
 )

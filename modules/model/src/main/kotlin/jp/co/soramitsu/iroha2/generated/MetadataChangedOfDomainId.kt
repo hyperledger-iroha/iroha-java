@@ -8,7 +8,6 @@ import jp.co.soramitsu.iroha2.codec.ScaleCodecWriter
 import jp.co.soramitsu.iroha2.codec.ScaleReader
 import jp.co.soramitsu.iroha2.codec.ScaleWriter
 import jp.co.soramitsu.iroha2.wrapException
-import kotlin.String
 import kotlin.Unit
 
 /**
@@ -19,7 +18,7 @@ import kotlin.Unit
 public data class MetadataChangedOfDomainId(
     public val target: DomainId,
     public val key: Name,
-    public val `value`: String,
+    public val `value`: Json,
 ) {
     public companion object :
         ScaleReader<MetadataChangedOfDomainId>,
@@ -28,7 +27,7 @@ public data class MetadataChangedOfDomainId(
             MetadataChangedOfDomainId(
                 DomainId.read(reader),
                 Name.read(reader),
-                reader.readString(),
+                Json.read(reader),
             )
         } catch (ex: Exception) {
             throw wrapException(ex)
@@ -37,7 +36,7 @@ public data class MetadataChangedOfDomainId(
         override fun write(writer: ScaleCodecWriter, instance: MetadataChangedOfDomainId): Unit = try {
             DomainId.write(writer, instance.target)
             Name.write(writer, instance.key)
-            writer.writeAsList(instance.`value`.toByteArray(Charsets.UTF_8))
+            Json.write(writer, instance.`value`)
         } catch (ex: Exception) {
             throw wrapException(ex)
         }

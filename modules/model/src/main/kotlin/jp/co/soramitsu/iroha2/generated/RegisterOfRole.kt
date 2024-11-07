@@ -16,19 +16,19 @@ import kotlin.Unit
  * Generated from 'RegisterOfRole' regular structure
  */
 public data class RegisterOfRole(
-    public val `object`: Role,
+    public val `object`: NewRole,
 ) {
     public companion object : ScaleReader<RegisterOfRole>, ScaleWriter<RegisterOfRole> {
         override fun read(reader: ScaleCodecReader): RegisterOfRole = try {
             RegisterOfRole(
-                Role.read(reader),
+                NewRole.read(reader),
             )
         } catch (ex: Exception) {
             throw wrapException(ex)
         }
 
         override fun write(writer: ScaleCodecWriter, instance: RegisterOfRole): Unit = try {
-            Role.write(writer, instance.`object`)
+            NewRole.write(writer, instance.`object`)
         } catch (ex: Exception) {
             throw wrapException(ex)
         }

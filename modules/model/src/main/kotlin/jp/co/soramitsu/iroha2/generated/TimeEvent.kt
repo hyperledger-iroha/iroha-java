@@ -16,13 +16,11 @@ import kotlin.Unit
  * Generated from 'TimeEvent' regular structure
  */
 public data class TimeEvent(
-    public val prevInterval: TimeInterval? = null,
     public val interval: TimeInterval,
 ) {
     public companion object : ScaleReader<TimeEvent>, ScaleWriter<TimeEvent> {
         override fun read(reader: ScaleCodecReader): TimeEvent = try {
             TimeEvent(
-                reader.readNullable(TimeInterval) as TimeInterval?,
                 TimeInterval.read(reader),
             )
         } catch (ex: Exception) {
@@ -30,7 +28,6 @@ public data class TimeEvent(
         }
 
         override fun write(writer: ScaleCodecWriter, instance: TimeEvent): Unit = try {
-            writer.writeNullable(TimeInterval, instance.prevInterval)
             TimeInterval.write(writer, instance.interval)
         } catch (ex: Exception) {
             throw wrapException(ex)

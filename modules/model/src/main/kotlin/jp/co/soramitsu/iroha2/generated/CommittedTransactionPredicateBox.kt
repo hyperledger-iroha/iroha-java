@@ -24,6 +24,38 @@ public sealed class CommittedTransactionPredicateBox : ModelEnum {
     public abstract fun discriminant(): Int
 
     /**
+     * 'BlockHash' variant
+     */
+    public data class BlockHash(
+        public val blockHashPredicateBox: BlockHashPredicateBox,
+    ) : CommittedTransactionPredicateBox() {
+        override fun discriminant(): Int = DISCRIMINANT
+
+        public companion object :
+            ScaleReader<jp.co.soramitsu.iroha2.generated.CommittedTransactionPredicateBox.BlockHash>,
+            ScaleWriter<jp.co.soramitsu.iroha2.generated.CommittedTransactionPredicateBox.BlockHash> {
+            public const val DISCRIMINANT: Int = 0
+
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.CommittedTransactionPredicateBox.BlockHash = try {
+                BlockHash(
+                    BlockHashPredicateBox.read(reader),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
+
+            override fun write(
+                writer: ScaleCodecWriter,
+                instance: jp.co.soramitsu.iroha2.generated.CommittedTransactionPredicateBox.BlockHash,
+            ): Unit = try {
+                BlockHashPredicateBox.write(writer, instance.blockHashPredicateBox)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
+        }
+    }
+
+    /**
      * 'Value' variant
      */
     public data class Value(
@@ -34,7 +66,7 @@ public sealed class CommittedTransactionPredicateBox : ModelEnum {
         public companion object :
             ScaleReader<jp.co.soramitsu.iroha2.generated.CommittedTransactionPredicateBox.Value>,
             ScaleWriter<jp.co.soramitsu.iroha2.generated.CommittedTransactionPredicateBox.Value> {
-            public const val DISCRIMINANT: Int = 0
+            public const val DISCRIMINANT: Int = 1
 
             override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.CommittedTransactionPredicateBox.Value = try {
                 Value(
@@ -67,7 +99,7 @@ public sealed class CommittedTransactionPredicateBox : ModelEnum {
         public companion object :
             ScaleReader<jp.co.soramitsu.iroha2.generated.CommittedTransactionPredicateBox.Error>,
             ScaleWriter<jp.co.soramitsu.iroha2.generated.CommittedTransactionPredicateBox.Error> {
-            public const val DISCRIMINANT: Int = 1
+            public const val DISCRIMINANT: Int = 2
 
             override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.CommittedTransactionPredicateBox.Error = try {
                 Error(
@@ -96,15 +128,17 @@ public sealed class CommittedTransactionPredicateBox : ModelEnum {
             val
             discriminant = reader.readUByte()
         ) {
-            0 -> Value.read(reader)
-            1 -> Error.read(reader)
+            0 -> BlockHash.read(reader)
+            1 -> Value.read(reader)
+            2 -> Error.read(reader)
             else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
 
         override fun write(writer: ScaleCodecWriter, instance: CommittedTransactionPredicateBox) {
             writer.directWrite(instance.discriminant())
             when (val discriminant = instance.discriminant()) {
-                0 -> Value.write(writer, instance as Value)
-                1 -> Error.write(writer, instance as Error)
+                0 -> BlockHash.write(writer, instance as BlockHash)
+                1 -> Value.write(writer, instance as Value)
+                2 -> Error.write(writer, instance as Error)
                 else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
         }
     }

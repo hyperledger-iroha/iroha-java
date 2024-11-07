@@ -5,9 +5,16 @@ import jp.co.soramitsu.iroha2.asName
 import jp.co.soramitsu.iroha2.generated.AccountId
 import jp.co.soramitsu.iroha2.generated.AssetDefinitionId
 import jp.co.soramitsu.iroha2.generated.AssetId
+import jp.co.soramitsu.iroha2.generated.BlockParameters
+import jp.co.soramitsu.iroha2.generated.NonZeroOfu64
+import jp.co.soramitsu.iroha2.generated.Parameters
+import jp.co.soramitsu.iroha2.generated.SmartContractParameters
+import jp.co.soramitsu.iroha2.generated.SumeragiParameters
+import jp.co.soramitsu.iroha2.generated.TransactionParameters
 import jp.co.soramitsu.iroha2.keyPairFromHex
 import jp.co.soramitsu.iroha2.publicKeyFromHex
 import jp.co.soramitsu.iroha2.toIrohaPublicKey
+import java.math.BigInteger
 
 const val DEFAULT_DOMAIN = "wonderland"
 const val GENESIS_DOMAIN = "genesis"
@@ -19,6 +26,30 @@ val GENESIS_ACCOUNT = AccountId(GENESIS_DOMAIN.asDomainId(), publicKeyFromHex(GE
 
 @JvmField
 val DEFAULT_DOMAIN_ID = DEFAULT_DOMAIN.asDomainId()
+
+val DEFAULT_GENESIS_PARAMETERS = Parameters(
+    sumeragi = SumeragiParameters(
+        blockTimeMs = BigInteger.valueOf(2000),
+        commitTimeMs = BigInteger.valueOf(4000),
+        maxClockDriftMs = BigInteger.valueOf(1000),
+    ),
+    block = BlockParameters(
+        maxTransactions = NonZeroOfu64(BigInteger.valueOf(4096)),
+    ),
+    smartContract = SmartContractParameters(
+        fuel = NonZeroOfu64(BigInteger.valueOf(5500000000)),
+        memory = NonZeroOfu64(BigInteger.valueOf(55000000)),
+    ),
+    executor = SmartContractParameters(
+        fuel = NonZeroOfu64(BigInteger.valueOf(5500000000)),
+        memory = NonZeroOfu64(BigInteger.valueOf(55000000)),
+    ),
+    transaction = TransactionParameters(
+        maxInstructions = NonZeroOfu64(BigInteger.valueOf(4096)),
+        smartContractSize = NonZeroOfu64(BigInteger.valueOf(4194304)),
+    ),
+    custom = emptyMap(),
+)
 
 @JvmField
 val ALICE_KEYPAIR = keyPairFromHex(

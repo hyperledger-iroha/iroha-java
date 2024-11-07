@@ -14,7 +14,7 @@ import kotlin.Unit
 /**
  * HashOf
  *
- * Generated from 'HashOf<SignedTransaction>' regular structure
+ * Generated from 'HashOf<Vec<InstructionBox>>' regular structure
  */
 public data class HashOf<T0>(
     public val hash: Hash,

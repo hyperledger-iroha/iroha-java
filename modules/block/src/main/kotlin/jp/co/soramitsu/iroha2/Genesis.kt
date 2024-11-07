@@ -6,7 +6,7 @@ import jp.co.soramitsu.iroha2.generated.Metadata
 import jp.co.soramitsu.iroha2.generated.NewAccount
 import jp.co.soramitsu.iroha2.generated.NewAssetDefinition
 import jp.co.soramitsu.iroha2.generated.NewDomain
-import jp.co.soramitsu.iroha2.generated.Parameter
+import jp.co.soramitsu.iroha2.generated.Parameters
 import jp.co.soramitsu.iroha2.generated.RawGenesisTransaction
 import jp.co.soramitsu.iroha2.generated.RegisterBox
 import jp.co.soramitsu.iroha2.generated.RegisterOfAccount
@@ -33,35 +33,43 @@ open class Genesis(open val transaction: RawGenesisTransaction) {
     /**
      * Represent genesis as JSON
      */
-    fun asJson(): String = JSON_SERDE.writeValueAsString(this.transaction)
+    fun asJson(): String = JSON_SERDE.writeValueAsString(this.transaction).also { genesis ->
+        println("GENESIS: $genesis")
+    }
 
     companion object {
 
-        const val EXECUTOR_FILE_NAME = "executor.wasm"
+        const val EXECUTOR_FILE_NAME = "./executor.wasm"
 
         /**
          * List of genesis blocks to single block with unique instructions
          */
         fun List<Genesis>.toSingle(): Genesis {
             val uniqueIsi: MutableSet<InstructionBox> = mutableSetOf()
-            val uniqueParams: MutableSet<Parameter> = mutableSetOf()
+            val uniqueParams: MutableSet<Parameters> = mutableSetOf()
 
             this.forEach { genesis ->
                 uniqueIsi.addAll(genesis.transaction.instructions)
-                uniqueParams.addAll(genesis.transaction.parameters)
+                genesis.transaction.parameters?.also { uniqueParams.add(it) }
             }
             return Genesis(
                 RawGenesisTransaction(
                     ChainId("00000000-0000-0000-0000-000000000000"),
                     EXECUTOR_FILE_NAME,
-                    uniqueParams.toList(),
-                    uniqueIsi.mergeMetadata().toList(),
+                    uniqueParams.merge(),
+                    uniqueIsi.merge().toList(),
+                    "libs",
+                    emptyList(),
                     emptyList(),
                 ),
             )
         }
 
-        private fun MutableSet<InstructionBox>.mergeMetadata(): List<InstructionBox> {
+        private fun MutableSet<Parameters>.merge(): Parameters? {
+            return this.firstOrNull() // TODO
+        }
+
+        private fun MutableSet<InstructionBox>.merge(): List<InstructionBox> {
             // entity id to its metadata
             val metadataMap = mutableMapOf<Any, Metadata>()
 
@@ -123,10 +131,7 @@ open class Genesis(open val transaction: RawGenesisTransaction) {
         }
 
         private fun MutableMap<Any, Metadata>.putMergedMetadata(idBox: RegisterBox) {
-            fun MutableMap<Any, Metadata>.putOrMerge(
-                id: Any,
-                metadata: Metadata,
-            ) = when (val value = this[id]) {
+            fun MutableMap<Any, Metadata>.putOrMerge(id: Any, metadata: Metadata) = when (val value = this[id]) {
                 null -> this[id] = metadata
                 else -> {
                     metadata.sortedMapOfName.forEach { (k, v) ->

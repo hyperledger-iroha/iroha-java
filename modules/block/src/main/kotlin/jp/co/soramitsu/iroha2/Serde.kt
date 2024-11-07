@@ -49,11 +49,11 @@ import jp.co.soramitsu.iroha2.generated.GrantOfPermissionAndRole
 import jp.co.soramitsu.iroha2.generated.GrantOfRoleIdAndAccount
 import jp.co.soramitsu.iroha2.generated.Hash
 import jp.co.soramitsu.iroha2.generated.IdBox
-import jp.co.soramitsu.iroha2.generated.IdentifiableBox
 import jp.co.soramitsu.iroha2.generated.InstructionBox
 import jp.co.soramitsu.iroha2.generated.IpfsPath
 import jp.co.soramitsu.iroha2.generated.Ipv4Addr
 import jp.co.soramitsu.iroha2.generated.Ipv6Addr
+import jp.co.soramitsu.iroha2.generated.Json
 import jp.co.soramitsu.iroha2.generated.Log
 import jp.co.soramitsu.iroha2.generated.Metadata
 import jp.co.soramitsu.iroha2.generated.MintBox
@@ -64,6 +64,7 @@ import jp.co.soramitsu.iroha2.generated.Name
 import jp.co.soramitsu.iroha2.generated.NewAccount
 import jp.co.soramitsu.iroha2.generated.NewAssetDefinition
 import jp.co.soramitsu.iroha2.generated.NewDomain
+import jp.co.soramitsu.iroha2.generated.NewRole
 import jp.co.soramitsu.iroha2.generated.NonZeroOfu64
 import jp.co.soramitsu.iroha2.generated.Numeric
 import jp.co.soramitsu.iroha2.generated.NumericSpec
@@ -99,7 +100,6 @@ import jp.co.soramitsu.iroha2.generated.SocketAddr
 import jp.co.soramitsu.iroha2.generated.SumeragiParameter
 import jp.co.soramitsu.iroha2.generated.TimeEventFilter
 import jp.co.soramitsu.iroha2.generated.TransactionParameter
-import jp.co.soramitsu.iroha2.generated.TransactionQueryOutput
 import jp.co.soramitsu.iroha2.generated.TransferBox
 import jp.co.soramitsu.iroha2.generated.TransferOfAccountAndAssetDefinitionIdAndAccount
 import jp.co.soramitsu.iroha2.generated.TransferOfAccountAndDomainIdAndAccount
@@ -184,7 +184,6 @@ public val JSON_SERDE by lazy {
         module.addSerializer(PublicKey::class.java, PublicKeySerializer)
         module.addSerializer(ModelEnum::class.java, EnumerationSerializer)
         module.addSerializer(Metadata::class.java, MetadataSerializer)
-        module.addSerializer(IdentifiableBox.NewRole::class.java, IdentifiableBoxNewRoleSerializer)
         module.addSerializer(Parameter::class.java, ParameterSerializer)
         module.addSerializer(TimeEventFilter::class.java, TimeEventFilterSerializer)
         module.addSerializer(Schedule::class.java, ScheduleSerializer)
@@ -221,9 +220,8 @@ public val JSON_SERDE by lazy {
  * Deserializer for [Iroha Special Instructions][InstructionBox]
  */
 object InstructionDeserializer : JsonDeserializer<InstructionBox>() {
-    override fun deserialize(p: JsonParser, ctxt: DeserializationContext): InstructionBox {
-        return deserializeInstruction(p.readValueAsTree(), JSON_SERDE)
-    }
+    override fun deserialize(p: JsonParser, ctxt: DeserializationContext): InstructionBox =
+        deserializeInstruction(p.readValueAsTree(), JSON_SERDE)
 
     private fun deserializeInstruction(jsonNode: JsonNode, mapper: ObjectMapper): InstructionBox {
         val node = jsonNode.fields().next()
@@ -252,22 +250,18 @@ object GrantBoxDeserializer : JsonDeserializer<GrantBox>() {
         return get(JSON_SERDE.convertValue(node.fields().next().value, paramClass))
     }
 
-    private fun String.toArg(): Class<*> {
-        return when (this) {
-            "Permission" -> GrantOfPermissionAndAccount::class.java
-            "Role" -> GrantOfRoleIdAndAccount::class.java
-            "RolePermission" -> GrantOfPermissionAndRole::class.java
-            else -> throw DeserializationException("Unknown type: $this")
-        }
+    private fun String.toArg(): Class<*> = when (this) {
+        "Permission" -> GrantOfPermissionAndAccount::class.java
+        "Role" -> GrantOfRoleIdAndAccount::class.java
+        "RolePermission" -> GrantOfPermissionAndRole::class.java
+        else -> throw DeserializationException("Unknown type: $this")
     }
 
-    private fun get(arg: Any): GrantBox {
-        return when (arg) {
-            is GrantOfPermissionAndAccount -> GrantBox.Permission(arg)
-            is GrantOfRoleIdAndAccount -> GrantBox.Role(arg)
-            is GrantOfPermissionAndRole -> GrantBox.RolePermission(arg)
-            else -> throw DeserializationException("Grant box `$arg` not found")
-        }
+    private fun get(arg: Any): GrantBox = when (arg) {
+        is GrantOfPermissionAndAccount -> GrantBox.Permission(arg)
+        is GrantOfRoleIdAndAccount -> GrantBox.Role(arg)
+        is GrantOfPermissionAndRole -> GrantBox.RolePermission(arg)
+        else -> throw DeserializationException("Grant box `$arg` not found")
     }
 }
 
@@ -285,9 +279,7 @@ object AssetValueDeserializer : JsonDeserializer<AssetValue>() {
  * Deserializer for [IdBox]
  */
 object IdBoxDeserializer : JsonDeserializer<IdBox>() {
-    override fun deserialize(p: JsonParser, ctxt: DeserializationContext): IdBox {
-        return sealedDeserializeIdBox(p, JSON_SERDE)
-    }
+    override fun deserialize(p: JsonParser, ctxt: DeserializationContext): IdBox = sealedDeserializeIdBox(p, JSON_SERDE)
 }
 
 object RegisterBoxDeserializer : JsonDeserializer<RegisterBox>() {
@@ -300,30 +292,26 @@ object RegisterBoxDeserializer : JsonDeserializer<RegisterBox>() {
         return getRegisterBox(value)
     }
 
-    private fun String.toArg(): Class<*> {
-        return when (this) {
-            "Domain" -> NewDomain::class.java
-            "Peer" -> Peer::class.java
-            "Account" -> NewAccount::class.java
-            "AssetDefinition" -> NewAssetDefinition::class.java
-            "Asset" -> Asset::class.java
-            "Trigger" -> Trigger::class.java
-            "Role" -> Role::class.java
-            else -> throw DeserializationException("Unknown string type: $this")
-        }
+    private fun String.toArg(): Class<*> = when (this) {
+        "Domain" -> NewDomain::class.java
+        "Peer" -> Peer::class.java
+        "Account" -> NewAccount::class.java
+        "AssetDefinition" -> NewAssetDefinition::class.java
+        "Asset" -> Asset::class.java
+        "Trigger" -> Trigger::class.java
+        "Role" -> Role::class.java
+        else -> throw DeserializationException("Unknown string type: $this")
     }
 
-    private fun getRegisterBox(arg: Any): RegisterBox {
-        return when (arg) {
-            is NewDomain -> RegisterBox.Domain(RegisterOfDomain(arg))
-            is NewAccount -> RegisterBox.Account(RegisterOfAccount(arg))
-            is Peer -> RegisterBox.Peer(RegisterOfPeer(arg))
-            is NewAssetDefinition -> RegisterBox.AssetDefinition(RegisterOfAssetDefinition(arg))
-            is Asset -> RegisterBox.Asset(RegisterOfAsset(arg))
-            is Trigger -> RegisterBox.Trigger(RegisterOfTrigger(arg))
-            is Role -> RegisterBox.Role(RegisterOfRole(arg))
-            else -> throw DeserializationException("Register box `$arg` not found")
-        }
+    private fun getRegisterBox(arg: Any): RegisterBox = when (arg) {
+        is NewDomain -> RegisterBox.Domain(RegisterOfDomain(arg))
+        is NewAccount -> RegisterBox.Account(RegisterOfAccount(arg))
+        is Peer -> RegisterBox.Peer(RegisterOfPeer(arg))
+        is NewAssetDefinition -> RegisterBox.AssetDefinition(RegisterOfAssetDefinition(arg))
+        is Asset -> RegisterBox.Asset(RegisterOfAsset(arg))
+        is Trigger -> RegisterBox.Trigger(RegisterOfTrigger(arg))
+        is NewRole -> RegisterBox.Role(RegisterOfRole(arg))
+        else -> throw DeserializationException("Register box `$arg` not found")
     }
 }
 
@@ -338,20 +326,16 @@ object BurnBoxDeserializer : JsonDeserializer<BurnBox>() {
         return get(JSON_SERDE.convertValue(node.fields().next().value, paramClass))
     }
 
-    private fun String.toArg(): Class<*> {
-        return when (this) {
-            "Asset" -> BurnOfNumericAndAsset::class.java
-            "TriggerRepetitions" -> BurnOfu32AndTrigger::class.java
-            else -> throw DeserializationException("Unknown type: $this")
-        }
+    private fun String.toArg(): Class<*> = when (this) {
+        "Asset" -> BurnOfNumericAndAsset::class.java
+        "TriggerRepetitions" -> BurnOfu32AndTrigger::class.java
+        else -> throw DeserializationException("Unknown type: $this")
     }
 
-    private fun get(arg: Any): BurnBox {
-        return when (arg) {
-            is BurnOfNumericAndAsset -> BurnBox.Asset(arg)
-            is BurnOfu32AndTrigger -> BurnBox.TriggerRepetitions(arg)
-            else -> throw DeserializationException("Burn box `$arg` not found")
-        }
+    private fun get(arg: Any): BurnBox = when (arg) {
+        is BurnOfNumericAndAsset -> BurnBox.Asset(arg)
+        is BurnOfu32AndTrigger -> BurnBox.TriggerRepetitions(arg)
+        else -> throw DeserializationException("Burn box `$arg` not found")
     }
 }
 
@@ -363,20 +347,16 @@ object MintBoxDeserializer : JsonDeserializer<MintBox>() {
         return get(JSON_SERDE.convertValue(node.fields().next().value, paramClass))
     }
 
-    private fun String.toArg(): Class<*> {
-        return when (this) {
-            "Asset" -> MintOfNumericAndAsset::class.java
-            "TriggerRepetitions" -> MintOfu32AndTrigger::class.java
-            else -> throw DeserializationException("Unknown type: $this")
-        }
+    private fun String.toArg(): Class<*> = when (this) {
+        "Asset" -> MintOfNumericAndAsset::class.java
+        "TriggerRepetitions" -> MintOfu32AndTrigger::class.java
+        else -> throw DeserializationException("Unknown type: $this")
     }
 
-    private fun get(arg: Any): MintBox {
-        return when (arg) {
-            is MintOfNumericAndAsset -> MintBox.Asset(arg)
-            is MintOfu32AndTrigger -> MintBox.TriggerRepetitions(arg)
-            else -> throw DeserializationException("Mint box `$arg` not found")
-        }
+    private fun get(arg: Any): MintBox = when (arg) {
+        is MintOfNumericAndAsset -> MintBox.Asset(arg)
+        is MintOfu32AndTrigger -> MintBox.TriggerRepetitions(arg)
+        else -> throw DeserializationException("Mint box `$arg` not found")
     }
 }
 
@@ -386,20 +366,16 @@ object EventFilterBoxDeserializer : JsonDeserializer<EventFilterBox>() {
         return getBox(JSON_SERDE.convertValue(node.value, node.key.toArg()))
     }
 
-    private fun String.toArg(): Class<*> {
-        return when (this) {
-            "ExecuteTrigger" -> ExecuteTriggerEventFilter::class.java
-            "Time" -> TimeEventFilter::class.java
-            else -> throw DeserializationException("Unknown type `$this`")
-        }
+    private fun String.toArg(): Class<*> = when (this) {
+        "ExecuteTrigger" -> ExecuteTriggerEventFilter::class.java
+        "Time" -> TimeEventFilter::class.java
+        else -> throw DeserializationException("Unknown type `$this`")
     }
 
-    private fun getBox(arg: Any): EventFilterBox {
-        return when (arg) {
-            is ExecuteTriggerEventFilter -> EventFilterBox.ExecuteTrigger(arg)
-            is TimeEventFilter -> EventFilterBox.Time(arg)
-            else -> throw DeserializationException("Unknown type `$this`")
-        }
+    private fun getBox(arg: Any): EventFilterBox = when (arg) {
+        is ExecuteTriggerEventFilter -> EventFilterBox.ExecuteTrigger(arg)
+        is TimeEventFilter -> EventFilterBox.Time(arg)
+        else -> throw DeserializationException("Unknown type `$this`")
     }
 }
 
@@ -418,22 +394,18 @@ object TransferBoxDeserializer : JsonDeserializer<TransferBox>() {
         return get(JSON_SERDE.convertValue(node.fields().next().value, paramClass))
     }
 
-    private fun String.toArg(): Class<*> {
-        return when (this) {
-            "Domain" -> TransferOfAccountAndDomainIdAndAccount::class.java
-            "Asset" -> AssetTransferBox::class.java
-            "AssetDefinition" -> TransferOfAccountAndAssetDefinitionIdAndAccount::class.java
-            else -> throw DeserializationException("Unknown type: $this")
-        }
+    private fun String.toArg(): Class<*> = when (this) {
+        "Domain" -> TransferOfAccountAndDomainIdAndAccount::class.java
+        "Asset" -> AssetTransferBox::class.java
+        "AssetDefinition" -> TransferOfAccountAndAssetDefinitionIdAndAccount::class.java
+        else -> throw DeserializationException("Unknown type: $this")
     }
 
-    private fun get(arg: Any): TransferBox {
-        return when (arg) {
-            is TransferOfAccountAndDomainIdAndAccount -> TransferBox.Domain(arg)
-            is AssetTransferBox -> TransferBox.Asset(arg)
-            is TransferOfAccountAndAssetDefinitionIdAndAccount -> TransferBox.AssetDefinition(arg)
-            else -> throw DeserializationException("SetKeyValue box `$arg` not found")
-        }
+    private fun get(arg: Any): TransferBox = when (arg) {
+        is TransferOfAccountAndDomainIdAndAccount -> TransferBox.Domain(arg)
+        is AssetTransferBox -> TransferBox.Asset(arg)
+        is TransferOfAccountAndAssetDefinitionIdAndAccount -> TransferBox.AssetDefinition(arg)
+        else -> throw DeserializationException("SetKeyValue box `$arg` not found")
     }
 }
 
@@ -445,26 +417,22 @@ object SetKeyValueBoxDeserializer : JsonDeserializer<SetKeyValueBox>() {
         return get(JSON_SERDE.convertValue(node.fields().next().value, paramClass))
     }
 
-    private fun String.toArg(): Class<*> {
-        return when (this) {
-            "Domain" -> SetKeyValueOfDomain::class.java
-            "Account" -> SetKeyValueOfAccount::class.java
-            "Asset" -> SetKeyValueOfAsset::class.java
-            "AssetDefinition" -> SetKeyValueOfAssetDefinition::class.java
-            "Trigger" -> SetKeyValueOfTrigger::class.java
-            else -> throw DeserializationException("Unknown type: $this")
-        }
+    private fun String.toArg(): Class<*> = when (this) {
+        "Domain" -> SetKeyValueOfDomain::class.java
+        "Account" -> SetKeyValueOfAccount::class.java
+        "Asset" -> SetKeyValueOfAsset::class.java
+        "AssetDefinition" -> SetKeyValueOfAssetDefinition::class.java
+        "Trigger" -> SetKeyValueOfTrigger::class.java
+        else -> throw DeserializationException("Unknown type: $this")
     }
 
-    private fun get(arg: Any): SetKeyValueBox {
-        return when (arg) {
-            is SetKeyValueOfDomain -> SetKeyValueBox.Domain(arg)
-            is SetKeyValueOfAccount -> SetKeyValueBox.Account(arg)
-            is SetKeyValueOfAsset -> SetKeyValueBox.Asset(arg)
-            is SetKeyValueOfAssetDefinition -> SetKeyValueBox.AssetDefinition(arg)
-            is SetKeyValueOfTrigger -> SetKeyValueBox.Trigger(arg)
-            else -> throw DeserializationException("SetKeyValue box `$arg` not found")
-        }
+    private fun get(arg: Any): SetKeyValueBox = when (arg) {
+        is SetKeyValueOfDomain -> SetKeyValueBox.Domain(arg)
+        is SetKeyValueOfAccount -> SetKeyValueBox.Account(arg)
+        is SetKeyValueOfAsset -> SetKeyValueBox.Asset(arg)
+        is SetKeyValueOfAssetDefinition -> SetKeyValueBox.AssetDefinition(arg)
+        is SetKeyValueOfTrigger -> SetKeyValueBox.Trigger(arg)
+        else -> throw DeserializationException("SetKeyValue box `$arg` not found")
     }
 }
 
@@ -472,9 +440,7 @@ object SetKeyValueBoxDeserializer : JsonDeserializer<SetKeyValueBox>() {
  * Deserializer for [Metadata]
  */
 object MetadataDeserializer : JsonDeserializer<Metadata>() {
-    override fun deserialize(p: JsonParser, ctxt: DeserializationContext): Metadata {
-        return deserializeMetadata(p, JSON_SERDE)
-    }
+    override fun deserialize(p: JsonParser, ctxt: DeserializationContext): Metadata = deserializeMetadata(p, JSON_SERDE)
 
     private fun deserializeMetadata(p: JsonParser, mapper: ObjectMapper): Metadata {
         val nodeMetadata = p.readValueAsTree<JsonNode>().fields()
@@ -484,7 +450,7 @@ object MetadataDeserializer : JsonDeserializer<Metadata>() {
         val node = nodeMetadata.next()
         val key = node.key.asName()
         val value = node.value.asStringOrNull() ?: ""
-        return Metadata(mapOf(Pair(key, value)))
+        return Metadata(mapOf(Pair(key, Json(value))))
     }
 }
 
@@ -492,12 +458,10 @@ object MetadataDeserializer : JsonDeserializer<Metadata>() {
  * Deserializer for [AssetType]
  */
 object AssetTypeDeserializer : JsonDeserializer<AssetType>() {
-    override fun deserialize(p: JsonParser, ctxt: DeserializationContext): AssetType {
-        return when (p.readValueAsTree<TextNode>().textValue()) {
-            AssetType.Numeric::class.simpleName -> AssetType.Numeric(NumericSpec())
-            AssetType.Store::class.simpleName -> AssetType.Store()
-            else -> throw DeserializationException("Unknown type: $this")
-        }
+    override fun deserialize(p: JsonParser, ctxt: DeserializationContext): AssetType = when (p.readValueAsTree<TextNode>().textValue()) {
+        AssetType.Numeric::class.simpleName -> AssetType.Numeric(NumericSpec())
+        AssetType.Store::class.simpleName -> AssetType.Store()
+        else -> throw DeserializationException("Unknown type: $this")
     }
 }
 
@@ -505,18 +469,15 @@ object AssetTypeDeserializer : JsonDeserializer<AssetType>() {
  * Deserializer for [NumericSpec]
  */
 object NumericSpecDeserializer : JsonDeserializer<NumericSpec>() {
-    override fun deserialize(p: JsonParser, ctxt: DeserializationContext): NumericSpec {
-        return NumericSpec(p.readValueAsTree<LongNode>().longValue())
-    }
+    override fun deserialize(p: JsonParser, ctxt: DeserializationContext): NumericSpec =
+        NumericSpec(p.readValueAsTree<LongNode>().longValue())
 }
 
 /**
  * Deserializer for [Numeric]
  */
 object NumericDeserializer : JsonDeserializer<Numeric>() {
-    override fun deserialize(p: JsonParser, ctxt: DeserializationContext): Numeric {
-        return p.readValueAs(String::class.java).asNumeric()
-    }
+    override fun deserialize(p: JsonParser, ctxt: DeserializationContext): Numeric = p.readValueAs(String::class.java).asNumeric()
 }
 
 /**
@@ -530,7 +491,7 @@ object PermissionDeserializer : JsonDeserializer<Permission>() {
             true -> payloadValue = "null"
             else -> {}
         }
-        return Permission(node.get("name").asText(), payloadValue)
+        return Permission(node.get("name").asText(), Json(payloadValue))
     }
 }
 
@@ -538,9 +499,7 @@ object PermissionDeserializer : JsonDeserializer<Permission>() {
  * Deserializer for [ChainId]
  */
 object ChainIdDeserializer : JsonDeserializer<ChainId>() {
-    override fun deserialize(p: JsonParser, ctxt: DeserializationContext): ChainId {
-        return ChainId(p.readValueAs(String::class.java))
-    }
+    override fun deserialize(p: JsonParser, ctxt: DeserializationContext): ChainId = ChainId(p.readValueAs(String::class.java))
 }
 
 /**
@@ -628,20 +587,16 @@ object ExecutableDeserializer : JsonDeserializer<Executable>() {
         return getExecutable(value)
     }
 
-    private fun String.toArg(): Class<*> {
-        return when (this) {
-            "Wasm" -> WasmSmartContract::class.java
-            "Instructions" -> List::class.java
-            else -> throw DeserializationException("Unknown type: $this")
-        }
+    private fun String.toArg(): Class<*> = when (this) {
+        "Wasm" -> WasmSmartContract::class.java
+        "Instructions" -> List::class.java
+        else -> throw DeserializationException("Unknown type: $this")
     }
 
-    private fun getExecutable(arg: Any): Executable {
-        return when (arg) {
-            is WasmSmartContract -> Executable.Wasm(arg)
-            is List<*> -> Executable.Instructions(arg as List<InstructionBox>)
-            else -> throw DeserializationException("Executable `$arg` not found")
-        }
+    private fun getExecutable(arg: Any): Executable = when (arg) {
+        is WasmSmartContract -> Executable.Wasm(arg)
+        is List<*> -> Executable.Instructions(arg as List<InstructionBox>)
+        else -> throw DeserializationException("Executable `$arg` not found")
     }
 }
 
@@ -649,25 +604,21 @@ object ExecutableDeserializer : JsonDeserializer<Executable>() {
  * Deserializer for [IpfsPath]
  */
 object IpfsPathDeserializer : JsonDeserializer<IpfsPath>() {
-    override fun deserialize(p: JsonParser, ctxt: DeserializationContext): IpfsPath {
-        return IpfsPath(p.readValueAs(String::class.java))
-    }
+    override fun deserialize(p: JsonParser, ctxt: DeserializationContext): IpfsPath = IpfsPath(p.readValueAs(String::class.java))
 }
 
 /**
  * Deserializer for [Repeats]
  */
 object RepeatsDeserializer : JsonDeserializer<Repeats>() {
-    override fun deserialize(p: JsonParser, ctxt: DeserializationContext): Repeats {
-        return when (val node = p.readValueAsTree<JsonNode>()) {
-            is TextNode -> Repeats.Indefinitely()
-            is ObjectNode -> {
-                val field = node.fields().next()
-                Repeats.Exactly(JSON_SERDE.convertValue(field.value, Long::class.java))
-            }
-
-            else -> throw DeserializationException("Unknown type: $this")
+    override fun deserialize(p: JsonParser, ctxt: DeserializationContext): Repeats = when (val node = p.readValueAsTree<JsonNode>()) {
+        is TextNode -> Repeats.Indefinitely()
+        is ObjectNode -> {
+            val field = node.fields().next()
+            Repeats.Exactly(JSON_SERDE.convertValue(field.value, Long::class.java))
         }
+
+        else -> throw DeserializationException("Unknown type: $this")
     }
 }
 
@@ -680,28 +631,24 @@ object ParameterDeserializer : JsonDeserializer<Parameter>() {
         return get(JSON_SERDE.convertValue(node.value, node.key.toArg()), node.key)
     }
 
-    private fun String.toArg(): Class<*> {
-        return when (this) {
-            "Sumeragi" -> SumeragiParameter::class.java
-            "Block" -> BlockParameter::class.java
-            "Transaction" -> TransactionParameter::class.java
-            "SmartContract" -> SmartContractParameter::class.java
-            "Executor" -> SmartContractParameter::class.java
-            "Custom" -> CustomParameter::class.java
-            else -> throw DeserializationException("Unknown type: $this")
-        }
+    private fun String.toArg(): Class<*> = when (this) {
+        "Sumeragi" -> SumeragiParameter::class.java
+        "Block" -> BlockParameter::class.java
+        "Transaction" -> TransactionParameter::class.java
+        "SmartContract" -> SmartContractParameter::class.java
+        "Executor" -> SmartContractParameter::class.java
+        "Custom" -> CustomParameter::class.java
+        else -> throw DeserializationException("Unknown type: $this")
     }
 
-    private fun get(arg: Any, type: String): Parameter {
-        return when (type) {
-            "Sumeragi" -> Parameter.Sumeragi(arg as SumeragiParameter)
-            "Block" -> Parameter.Block(arg as BlockParameter)
-            "Transaction" -> Parameter.Transaction(arg as TransactionParameter)
-            "Executor" -> Parameter.Executor(arg as SmartContractParameter)
-            "SmartContract" -> Parameter.SmartContract(arg as SmartContractParameter)
-            "CustomParameter" -> Parameter.Custom(arg as CustomParameter)
-            else -> throw DeserializationException("Unknown type: $this")
-        }
+    private fun get(arg: Any, type: String): Parameter = when (type) {
+        "Sumeragi" -> Parameter.Sumeragi(arg as SumeragiParameter)
+        "Block" -> Parameter.Block(arg as BlockParameter)
+        "Transaction" -> Parameter.Transaction(arg as TransactionParameter)
+        "Executor" -> Parameter.Executor(arg as SmartContractParameter)
+        "SmartContract" -> Parameter.SmartContract(arg as SmartContractParameter)
+        "CustomParameter" -> Parameter.Custom(arg as CustomParameter)
+        else -> throw DeserializationException("Unknown type: $this")
     }
 }
 
@@ -715,12 +662,10 @@ object SumeragiParameterDeserializer : JsonDeserializer<SumeragiParameter>() {
         return get(arg, node.key)
     }
 
-    private fun get(arg: BigInteger, type: String): SumeragiParameter {
-        return when (type) {
-            "BlockTimeMs" -> SumeragiParameter.BlockTimeMs(arg)
-            "CommitTimeMs" -> SumeragiParameter.CommitTimeMs(arg)
-            else -> throw DeserializationException("Unknown type: $this")
-        }
+    private fun get(arg: BigInteger, type: String): SumeragiParameter = when (type) {
+        "BlockTimeMs" -> SumeragiParameter.BlockTimeMs(arg)
+        "CommitTimeMs" -> SumeragiParameter.CommitTimeMs(arg)
+        else -> throw DeserializationException("Unknown type: $this")
     }
 }
 
@@ -745,12 +690,10 @@ object TransactionParameterDeserializer : JsonDeserializer<TransactionParameter>
         return get(arg, node.key)
     }
 
-    private fun get(arg: BigInteger, type: String): TransactionParameter {
-        return when (type) {
-            "MaxInstructions" -> TransactionParameter.MaxInstructions(NonZeroOfu64(arg))
-            "SmartContractSize" -> TransactionParameter.SmartContractSize(NonZeroOfu64(arg))
-            else -> throw DeserializationException("Unknown type: $this")
-        }
+    private fun get(arg: BigInteger, type: String): TransactionParameter = when (type) {
+        "MaxInstructions" -> TransactionParameter.MaxInstructions(NonZeroOfu64(arg))
+        "SmartContractSize" -> TransactionParameter.SmartContractSize(NonZeroOfu64(arg))
+        else -> throw DeserializationException("Unknown type: $this")
     }
 }
 
@@ -764,12 +707,10 @@ object SmartContractParameterDeserializer : JsonDeserializer<SmartContractParame
         return get(arg, node.key)
     }
 
-    private fun get(arg: BigInteger, type: String): SmartContractParameter {
-        return when (type) {
-            "Fuel" -> SmartContractParameter.Fuel(NonZeroOfu64(arg))
-            "Memory" -> SmartContractParameter.Memory(NonZeroOfu64(arg))
-            else -> throw DeserializationException("Unknown type: $this")
-        }
+    private fun get(arg: BigInteger, type: String): SmartContractParameter = when (type) {
+        "Fuel" -> SmartContractParameter.Fuel(NonZeroOfu64(arg))
+        "Memory" -> SmartContractParameter.Memory(NonZeroOfu64(arg))
+        else -> throw DeserializationException("Unknown type: $this")
     }
 }
 
@@ -790,12 +731,10 @@ object ScheduleDeserializer : JsonDeserializer<Schedule>() {
  * Deserializer for [ExecutionTime]
  */
 object ExecutionTimeDeserializer : JsonDeserializer<ExecutionTime>() {
-    override fun deserialize(p: JsonParser, ctxt: DeserializationContext): ExecutionTime {
-        return when (val node = p.readValueAsTree<JsonNode>()) {
-            is TextNode -> ExecutionTime.PreCommit()
-            is ObjectNode -> ExecutionTime.Schedule(JSON_SERDE.convertValue(node, Schedule::class.java))
-            else -> throw DeserializationException("Unknown type: $this")
-        }
+    override fun deserialize(p: JsonParser, ctxt: DeserializationContext): ExecutionTime = when (val node = p.readValueAsTree<JsonNode>()) {
+        is TextNode -> ExecutionTime.PreCommit()
+        is ObjectNode -> ExecutionTime.Schedule(JSON_SERDE.convertValue(node, Schedule::class.java))
+        else -> throw DeserializationException("Unknown type: $this")
     }
 }
 
@@ -823,22 +762,18 @@ object PublicKeyDeserializer : JsonDeserializer<PublicKey>() {
  * Deserializer for [Name]
  */
 object NameDeserializer : JsonDeserializer<Name>() {
-    override fun deserialize(p: JsonParser, ctxt: DeserializationContext): Name {
-        return Name(p.readValueAs(String::class.java))
-    }
+    override fun deserialize(p: JsonParser, ctxt: DeserializationContext): Name = Name(p.readValueAs(String::class.java))
 }
 
 /**
  * Deserializer for [Mintable]
  */
 object MintableDeserializer : JsonDeserializer<Mintable>() {
-    override fun deserialize(p: JsonParser, ctxt: DeserializationContext): Mintable {
-        return when (val value = p.readValueAs(String::class.java)) {
-            Mintable.Once::class.simpleName -> Mintable.Once()
-            Mintable.Not::class.simpleName -> Mintable.Not()
-            Mintable.Infinitely::class.simpleName -> Mintable.Infinitely()
-            else -> throw DeserializationException("Unknown Mintable type: $value")
-        }
+    override fun deserialize(p: JsonParser, ctxt: DeserializationContext): Mintable = when (val value = p.readValueAs(String::class.java)) {
+        Mintable.Once::class.simpleName -> Mintable.Once()
+        Mintable.Not::class.simpleName -> Mintable.Not()
+        Mintable.Infinitely::class.simpleName -> Mintable.Infinitely()
+        else -> throw DeserializationException("Unknown Mintable type: $value")
     }
 }
 
@@ -846,81 +781,65 @@ object MintableDeserializer : JsonDeserializer<Mintable>() {
  * Deserializer for [asset ID][AssetId]
  */
 object AssetIdDeserializer : JsonDeserializer<AssetId>() {
-    override fun deserialize(p: JsonParser, ctxt: DeserializationContext): AssetId {
-        return p.readValueAs(String::class.java).asAssetId()
-    }
+    override fun deserialize(p: JsonParser, ctxt: DeserializationContext): AssetId = p.readValueAs(String::class.java).asAssetId()
 }
 
 /**
  * Deserializer for [asset definition ID][AssetDefinitionId]
  */
 object AssetDefinitionIdDeserializer : JsonDeserializer<AssetDefinitionId>() {
-    override fun deserialize(p: JsonParser, ctxt: DeserializationContext): AssetDefinitionId {
-        return p.readValueAs(String::class.java).asAssetDefinitionId()
-    }
+    override fun deserialize(p: JsonParser, ctxt: DeserializationContext): AssetDefinitionId =
+        p.readValueAs(String::class.java).asAssetDefinitionId()
 }
 
 /**
  * Deserializer for [account ID][AccountId]
  */
 object AccountIdDeserializer : JsonDeserializer<AccountId>() {
-    override fun deserialize(p: JsonParser, ctxt: DeserializationContext): AccountId {
-        return p.readValueAs(String::class.java).asAccountId()
-    }
+    override fun deserialize(p: JsonParser, ctxt: DeserializationContext): AccountId = p.readValueAs(String::class.java).asAccountId()
 }
 
 /**
  * Deserializer for [role ID][RoleId]
  */
 object RoleIdDeserializer : JsonDeserializer<RoleId>() {
-    override fun deserialize(p: JsonParser, ctxt: DeserializationContext): RoleId {
-        return p.readValueAs(String::class.java).asRoleId()
-    }
+    override fun deserialize(p: JsonParser, ctxt: DeserializationContext): RoleId = p.readValueAs(String::class.java).asRoleId()
 }
 
 /**
  * Deserializer for [domain ID][DomainId]
  */
 object DomainIdDeserializer : JsonDeserializer<DomainId>() {
-    override fun deserialize(p: JsonParser, ctxt: DeserializationContext): DomainId {
-        return p.readValueAs(String::class.java).asDomainId()
-    }
+    override fun deserialize(p: JsonParser, ctxt: DeserializationContext): DomainId = p.readValueAs(String::class.java).asDomainId()
 }
 
 /**
  * Deserializer for [asset definition ID][AssetDefinitionId]
  */
 object AssetDefinitionIdKeyDeserializer : KeyDeserializer() {
-    override fun deserializeKey(key: String?, ctxt: DeserializationContext?): AssetDefinitionId? {
-        return JSON_SERDE.readValue(key, AssetDefinitionId::class.java)
-    }
+    override fun deserializeKey(key: String?, ctxt: DeserializationContext?): AssetDefinitionId? =
+        JSON_SERDE.readValue(key, AssetDefinitionId::class.java)
 }
 
 /**
  * Deserializer for [account ID][AccountId]
  */
 object AccountIdKeyDeserializer : KeyDeserializer() {
-    override fun deserializeKey(key: String?, ctxt: DeserializationContext?): AccountId? {
-        return JSON_SERDE.readValue(key, AccountId::class.java)
-    }
+    override fun deserializeKey(key: String?, ctxt: DeserializationContext?): AccountId? = JSON_SERDE.readValue(key, AccountId::class.java)
 }
 
 /**
  * Deserializer for [asset ID][AssetId]
  */
 object AssetIdKeyDeserializer : KeyDeserializer() {
-    override fun deserializeKey(key: String, ctxt: DeserializationContext?): AssetId? {
-        return JSON_SERDE.readValue(key, AssetId::class.java)
-    }
+    override fun deserializeKey(key: String, ctxt: DeserializationContext?): AssetId? = JSON_SERDE.readValue(key, AssetId::class.java)
 }
 
 /**
  * Deserializer for [domain ID][DomainId]
  */
 object DomainIdKeyDeserializer : KeyDeserializer() {
-    override fun deserializeKey(key: String, ctxt: DeserializationContext?): DomainId? {
-        return JSON_SERDE.readValue(key, DomainId::class.java)
-    }
+    override fun deserializeKey(key: String, ctxt: DeserializationContext?): DomainId? = JSON_SERDE.readValue(key, DomainId::class.java)
 }
 
 // ==================================================
@@ -929,7 +848,11 @@ object DomainIdKeyDeserializer : KeyDeserializer() {
  * Serializer for [RawGenesisTransaction]
  */
 object RawGenesisTransactionSerializer : JsonSerializer<RawGenesisTransaction>() {
-    override fun serialize(tx: RawGenesisTransaction, gen: JsonGenerator, serializers: SerializerProvider) {
+    override fun serialize(
+        tx: RawGenesisTransaction,
+        gen: JsonGenerator,
+        serializers: SerializerProvider,
+    ) {
         gen.writeStartObject()
         gen.writeObjectField("chain", tx.chain.string)
         gen.writeObjectField("executor", tx.executor)
@@ -938,6 +861,8 @@ object RawGenesisTransactionSerializer : JsonSerializer<RawGenesisTransaction>()
             true -> gen.writeObjectField("instructions", listOf<InstructionBox>())
             false -> gen.writeObjectField("instructions", tx.instructions)
         }
+        gen.writeObjectField("wasm_dir", tx.wasmDir)
+        gen.writeObjectField("wasm_triggers", tx.wasmTriggers)
         gen.writeObjectField("topology", tx.topology)
         gen.writeEndObject()
     }
@@ -947,7 +872,11 @@ object RawGenesisTransactionSerializer : JsonSerializer<RawGenesisTransaction>()
  * Serializer for [AssetDefinitionId]
  */
 object AssetDefinitionIdSerializer : JsonSerializer<AssetDefinitionId>() {
-    override fun serialize(value: AssetDefinitionId, gen: JsonGenerator, serializers: SerializerProvider) {
+    override fun serialize(
+        value: AssetDefinitionId,
+        gen: JsonGenerator,
+        serializers: SerializerProvider,
+    ) {
         gen.writeString(value.asString())
     }
 }
@@ -956,7 +885,11 @@ object AssetDefinitionIdSerializer : JsonSerializer<AssetDefinitionId>() {
  * Serializer for [AssetId]
  */
 object AssetIdSerializer : JsonSerializer<AssetId>() {
-    override fun serialize(value: AssetId, gen: JsonGenerator, serializers: SerializerProvider) {
+    override fun serialize(
+        value: AssetId,
+        gen: JsonGenerator,
+        serializers: SerializerProvider,
+    ) {
         gen.writeString(value.asString(true))
     }
 }
@@ -965,7 +898,11 @@ object AssetIdSerializer : JsonSerializer<AssetId>() {
  * Serializer for [AccountId]
  */
 object AccountIdSerializer : JsonSerializer<AccountId>() {
-    override fun serialize(value: AccountId, gen: JsonGenerator, serializers: SerializerProvider) {
+    override fun serialize(
+        value: AccountId,
+        gen: JsonGenerator,
+        serializers: SerializerProvider,
+    ) {
         gen.writeString(value.asString(true))
     }
 }
@@ -974,7 +911,11 @@ object AccountIdSerializer : JsonSerializer<AccountId>() {
  * Serializer for [DomainId]
  */
 object DomainIdSerializer : JsonSerializer<DomainId>() {
-    override fun serialize(value: DomainId, gen: JsonGenerator, serializers: SerializerProvider) {
+    override fun serialize(
+        value: DomainId,
+        gen: JsonGenerator,
+        serializers: SerializerProvider,
+    ) {
         gen.writeString(value.asString())
     }
 }
@@ -983,13 +924,21 @@ object DomainIdSerializer : JsonSerializer<DomainId>() {
  * Serializer for [RoleId]
  */
 object RoleIdSerializer : JsonSerializer<RoleId>() {
-    override fun serialize(value: RoleId, gen: JsonGenerator, serializers: SerializerProvider) {
+    override fun serialize(
+        value: RoleId,
+        gen: JsonGenerator,
+        serializers: SerializerProvider,
+    ) {
         gen.writeString(value.asString())
     }
 }
 
 object SocketAddrSerializer : JsonSerializer<SocketAddr>() {
-    override fun serialize(value: SocketAddr, gen: JsonGenerator, serializers: SerializerProvider) {
+    override fun serialize(
+        value: SocketAddr,
+        gen: JsonGenerator,
+        serializers: SerializerProvider,
+    ) {
         gen.writeString(value.asString())
     }
 }
@@ -998,7 +947,11 @@ object SocketAddrSerializer : JsonSerializer<SocketAddr>() {
  * Serializer for [TriggerId]
  */
 object TriggerIdSerializer : JsonSerializer<TriggerId>() {
-    override fun serialize(value: TriggerId, gen: JsonGenerator, serializers: SerializerProvider) {
+    override fun serialize(
+        value: TriggerId,
+        gen: JsonGenerator,
+        serializers: SerializerProvider,
+    ) {
         gen.writeString(value.asString())
     }
 }
@@ -1007,7 +960,11 @@ object TriggerIdSerializer : JsonSerializer<TriggerId>() {
  * Serializer for [TimeEventFilter]
  */
 object TimeEventFilterSerializer : JsonSerializer<TimeEventFilter>() {
-    override fun serialize(value: TimeEventFilter, gen: JsonGenerator, serializers: SerializerProvider) {
+    override fun serialize(
+        value: TimeEventFilter,
+        gen: JsonGenerator,
+        serializers: SerializerProvider,
+    ) {
         value.serializeEnum(gen)
     }
 }
@@ -1016,7 +973,11 @@ object TimeEventFilterSerializer : JsonSerializer<TimeEventFilter>() {
  * Serializer for [Schedule]
  */
 object ScheduleSerializer : JsonSerializer<Schedule>() {
-    override fun serialize(value: Schedule, gen: JsonGenerator, serializers: SerializerProvider) {
+    override fun serialize(
+        value: Schedule,
+        gen: JsonGenerator,
+        serializers: SerializerProvider,
+    ) {
         val schedule = mapOf(Pair("start_ms", value.startMs), Pair("period_ms", value.periodMs))
         gen.writeObject(schedule)
     }
@@ -1026,7 +987,11 @@ object ScheduleSerializer : JsonSerializer<Schedule>() {
  * Serializer for [Name] as key
  */
 object NameAsKeySerializer : JsonSerializer<Name>() {
-    override fun serialize(value: Name, gen: JsonGenerator, serializers: SerializerProvider) {
+    override fun serialize(
+        value: Name,
+        gen: JsonGenerator,
+        serializers: SerializerProvider,
+    ) {
         gen.writeFieldName(value.string)
     }
 }
@@ -1035,7 +1000,11 @@ object NameAsKeySerializer : JsonSerializer<Name>() {
  * Serializer for [Name]
  */
 object NameSerializer : JsonSerializer<Name>() {
-    override fun serialize(value: Name, gen: JsonGenerator, serializers: SerializerProvider) {
+    override fun serialize(
+        value: Name,
+        gen: JsonGenerator,
+        serializers: SerializerProvider,
+    ) {
         gen.writeString(value.string)
     }
 }
@@ -1044,7 +1013,11 @@ object NameSerializer : JsonSerializer<Name>() {
  * Serializer for [Executor]
  */
 object ExecutorSerializer : JsonSerializer<Executor>() {
-    override fun serialize(value: Executor, gen: JsonGenerator, serializers: SerializerProvider) {
+    override fun serialize(
+        value: Executor,
+        gen: JsonGenerator,
+        serializers: SerializerProvider,
+    ) {
         when (value) {
 //            is Executor -> gen.writeString(value.wasm)
             else -> throw IrohaSdkException("Unsupported type ${this::class}")
@@ -1056,7 +1029,11 @@ object ExecutorSerializer : JsonSerializer<Executor>() {
  * Serializer for [InstructionBox]
  */
 object InstructionBoxSerializer : JsonSerializer<InstructionBox>() {
-    override fun serialize(value: InstructionBox, gen: JsonGenerator, serializers: SerializerProvider) {
+    override fun serialize(
+        value: InstructionBox,
+        gen: JsonGenerator,
+        serializers: SerializerProvider,
+    ) {
         when (value) {
             is InstructionBox.Register -> value.serializeBox<RegisterBox>(gen)
             is InstructionBox.SetKeyValue -> value.serializeBox<SetKeyValueBox>(gen)
@@ -1073,7 +1050,11 @@ object InstructionBoxSerializer : JsonSerializer<InstructionBox>() {
  * Serializer for [RegisterOfDomain]
  */
 object RegisterOfDomainSerializer : JsonSerializer<RegisterOfDomain>() {
-    override fun serialize(value: RegisterOfDomain, gen: JsonGenerator, serializers: SerializerProvider) {
+    override fun serialize(
+        value: RegisterOfDomain,
+        gen: JsonGenerator,
+        serializers: SerializerProvider,
+    ) {
         gen.writeObject(value.`object`)
     }
 }
@@ -1082,7 +1063,11 @@ object RegisterOfDomainSerializer : JsonSerializer<RegisterOfDomain>() {
  * Serializer for [RegisterOfTrigger]
  */
 object RegisterOfTriggerSerializer : JsonSerializer<RegisterOfTrigger>() {
-    override fun serialize(value: RegisterOfTrigger, gen: JsonGenerator, serializers: SerializerProvider) {
+    override fun serialize(
+        value: RegisterOfTrigger,
+        gen: JsonGenerator,
+        serializers: SerializerProvider,
+    ) {
         gen.writeObject(value.`object`)
     }
 }
@@ -1091,7 +1076,11 @@ object RegisterOfTriggerSerializer : JsonSerializer<RegisterOfTrigger>() {
  * Serializer for [RegisterOfRole]
  */
 object RegisterOfRoleSerializer : JsonSerializer<RegisterOfRole>() {
-    override fun serialize(value: RegisterOfRole, gen: JsonGenerator, serializers: SerializerProvider) {
+    override fun serialize(
+        value: RegisterOfRole,
+        gen: JsonGenerator,
+        serializers: SerializerProvider,
+    ) {
         gen.writeObject(value.`object`)
     }
 }
@@ -1100,7 +1089,11 @@ object RegisterOfRoleSerializer : JsonSerializer<RegisterOfRole>() {
  * Serializer for [RegisterOfAsset]
  */
 object RegisterOfAssetSerializer : JsonSerializer<RegisterOfAsset>() {
-    override fun serialize(value: RegisterOfAsset, gen: JsonGenerator, serializers: SerializerProvider) {
+    override fun serialize(
+        value: RegisterOfAsset,
+        gen: JsonGenerator,
+        serializers: SerializerProvider,
+    ) {
         gen.writeObject(value.`object`)
     }
 }
@@ -1109,7 +1102,11 @@ object RegisterOfAssetSerializer : JsonSerializer<RegisterOfAsset>() {
  * Serializer for [RegisterOfAssetDefinition]
  */
 object RegisterOfAssetDefinitionSerializer : JsonSerializer<RegisterOfAssetDefinition>() {
-    override fun serialize(value: RegisterOfAssetDefinition, gen: JsonGenerator, serializers: SerializerProvider) {
+    override fun serialize(
+        value: RegisterOfAssetDefinition,
+        gen: JsonGenerator,
+        serializers: SerializerProvider,
+    ) {
         gen.writeObject(value.`object`)
     }
 }
@@ -1118,7 +1115,11 @@ object RegisterOfAssetDefinitionSerializer : JsonSerializer<RegisterOfAssetDefin
  * Serializer for [RegisterOfPeer]
  */
 object RegisterOfPeerSerializer : JsonSerializer<RegisterOfPeer>() {
-    override fun serialize(value: RegisterOfPeer, gen: JsonGenerator, serializers: SerializerProvider) {
+    override fun serialize(
+        value: RegisterOfPeer,
+        gen: JsonGenerator,
+        serializers: SerializerProvider,
+    ) {
         gen.writeObject(value.`object`)
     }
 }
@@ -1127,7 +1128,11 @@ object RegisterOfPeerSerializer : JsonSerializer<RegisterOfPeer>() {
  * Serializer for [RegisterOfAccount]
  */
 object RegisterOfAccountSerializer : JsonSerializer<RegisterOfAccount>() {
-    override fun serialize(value: RegisterOfAccount, gen: JsonGenerator, serializers: SerializerProvider) {
+    override fun serialize(
+        value: RegisterOfAccount,
+        gen: JsonGenerator,
+        serializers: SerializerProvider,
+    ) {
         gen.writeObject(value.`object`)
     }
 }
@@ -1136,7 +1141,11 @@ object RegisterOfAccountSerializer : JsonSerializer<RegisterOfAccount>() {
  * Serializer for [AssetTransferBox]
  */
 object AssetTransferBoxSerializer : JsonSerializer<AssetTransferBox>() {
-    override fun serialize(value: AssetTransferBox, gen: JsonGenerator, serializers: SerializerProvider) {
+    override fun serialize(
+        value: AssetTransferBox,
+        gen: JsonGenerator,
+        serializers: SerializerProvider,
+    ) {
         when (value) {
             is AssetTransferBox.Numeric -> gen.writeObject(value.transferOfAssetAndNumericAndAccount)
             is AssetTransferBox.Store -> gen.writeObject(value.transferOfAssetAndMetadataAndAccount)
@@ -1149,7 +1158,11 @@ object AssetTransferBoxSerializer : JsonSerializer<AssetTransferBox>() {
  * Serializer for [NonZeroOfu64]
  */
 object NonZeroOfu64Serializer : JsonSerializer<NonZeroOfu64>() {
-    override fun serialize(value: NonZeroOfu64, gen: JsonGenerator, serializers: SerializerProvider) {
+    override fun serialize(
+        value: NonZeroOfu64,
+        gen: JsonGenerator,
+        serializers: SerializerProvider,
+    ) {
         gen.writeObject(value.u64)
     }
 }
@@ -1158,7 +1171,11 @@ object NonZeroOfu64Serializer : JsonSerializer<NonZeroOfu64>() {
  * Serializer for [Executable.Instructions]
  */
 object ExecutableInstructionsSerializer : JsonSerializer<Executable.Instructions>() {
-    override fun serialize(value: Executable.Instructions, gen: JsonGenerator, serializers: SerializerProvider) {
+    override fun serialize(
+        value: Executable.Instructions,
+        gen: JsonGenerator,
+        serializers: SerializerProvider,
+    ) {
         gen.writeStartObject()
         gen.writeObjectField(Executable.Instructions::class.simpleName, value.vec)
         gen.writeEndObject()
@@ -1169,7 +1186,11 @@ object ExecutableInstructionsSerializer : JsonSerializer<Executable.Instructions
  * Serializer for [ExecuteTriggerEventFilter]
  */
 object ExecuteTriggerEventFilterSerializer : JsonSerializer<ExecuteTriggerEventFilter>() {
-    override fun serialize(value: ExecuteTriggerEventFilter, gen: JsonGenerator, serializers: SerializerProvider) {
+    override fun serialize(
+        value: ExecuteTriggerEventFilter,
+        gen: JsonGenerator,
+        serializers: SerializerProvider,
+    ) {
         gen.writeStartObject()
         gen.writeObjectField("trigger", value.triggerId)
         gen.writeObjectField("authority", value.authority)
@@ -1181,7 +1202,11 @@ object ExecuteTriggerEventFilterSerializer : JsonSerializer<ExecuteTriggerEventF
  * Serializer for [AssetType]
  */
 object AssetTypeSerializer : JsonSerializer<AssetType>() {
-    override fun serialize(value: AssetType, gen: JsonGenerator, serializers: SerializerProvider) {
+    override fun serialize(
+        value: AssetType,
+        gen: JsonGenerator,
+        serializers: SerializerProvider,
+    ) {
         gen.writeObject(value::class.simpleName)
     }
 }
@@ -1190,7 +1215,11 @@ object AssetTypeSerializer : JsonSerializer<AssetType>() {
  * Serializer for [Numeric]
  */
 object NumericSerializer : JsonSerializer<Numeric>() {
-    override fun serialize(value: Numeric, gen: JsonGenerator, serializers: SerializerProvider) {
+    override fun serialize(
+        value: Numeric,
+        gen: JsonGenerator,
+        serializers: SerializerProvider,
+    ) {
         gen.writeObject(value.asString())
     }
 }
@@ -1199,8 +1228,12 @@ object NumericSerializer : JsonSerializer<Numeric>() {
  * Serializer for [Permission]
  */
 object PermissionSerializer : JsonSerializer<Permission>() {
-    override fun serialize(value: Permission, gen: JsonGenerator, serializers: SerializerProvider) {
-        val payload = JSON_SERDE.readTree(value.payload)
+    override fun serialize(
+        value: Permission,
+        gen: JsonGenerator,
+        serializers: SerializerProvider,
+    ) {
+        val payload = JSON_SERDE.readTree(value.payload.string)
         gen.writeStartObject()
         gen.writeObjectField(Permission::name.name, value.name)
         gen.writeObjectField(Permission::payload.name, payload)
@@ -1212,7 +1245,11 @@ object PermissionSerializer : JsonSerializer<Permission>() {
  * Custom serializer for [UInt]
  */
 object UIntSerializer : JsonSerializer<UInt>() {
-    override fun serialize(value: UInt, gen: JsonGenerator, serializers: SerializerProvider) {
+    override fun serialize(
+        value: UInt,
+        gen: JsonGenerator,
+        serializers: SerializerProvider,
+    ) {
         gen.writeNumber(value.toLong())
     }
 }
@@ -1221,7 +1258,11 @@ object UIntSerializer : JsonSerializer<UInt>() {
  * Custom serializer for [PublicKey]
  */
 object PublicKeySerializer : JsonSerializer<PublicKey>() {
-    override fun serialize(value: PublicKey, gen: JsonGenerator, serializers: SerializerProvider) {
+    override fun serialize(
+        value: PublicKey,
+        gen: JsonGenerator,
+        serializers: SerializerProvider,
+    ) {
         val res = ByteArrayOutputStream()
         Multihash.putUvarint(res, Ed25519.index.toLong())
         Multihash.putUvarint(res, value.payload.size.toLong())
@@ -1234,21 +1275,16 @@ object PublicKeySerializer : JsonSerializer<PublicKey>() {
  * Custom serializer for [Metadata]
  */
 object MetadataSerializer : JsonSerializer<Metadata>() {
-    override fun serialize(value: Metadata, gen: JsonGenerator, serializers: SerializerProvider) {
+    override fun serialize(
+        value: Metadata,
+        gen: JsonGenerator,
+        serializers: SerializerProvider,
+    ) {
         gen.writeStartObject()
         value.sortedMapOfName.forEach { (k, v) ->
-            gen.writeStringField(k.string, v)
+            gen.writeStringField(k.string, v.string)
         }
         gen.writeEndObject()
-    }
-}
-
-/**
- * Custom serializer for [IdentifiableBox.NewRole]
- */
-object IdentifiableBoxNewRoleSerializer : JsonSerializer<IdentifiableBox.NewRole>() {
-    override fun serialize(value: IdentifiableBox.NewRole, gen: JsonGenerator, serializers: SerializerProvider) {
-        serializeSingleMember(gen, value.role)
     }
 }
 
@@ -1256,7 +1292,11 @@ object IdentifiableBoxNewRoleSerializer : JsonSerializer<IdentifiableBox.NewRole
  * Custom serializer for [Parameter]
  */
 object ParameterSerializer : JsonSerializer<Parameter>() {
-    override fun serialize(value: Parameter, gen: JsonGenerator, serializers: SerializerProvider) {
+    override fun serialize(
+        value: Parameter,
+        gen: JsonGenerator,
+        serializers: SerializerProvider,
+    ) {
         gen.writeStartObject()
         when (value) {
             is Parameter.Block -> gen.writeObjectField(Parameter.Block::class.simpleName, value.blockParameter)
@@ -1279,7 +1319,11 @@ object ParameterSerializer : JsonSerializer<Parameter>() {
  * Custom serializer for Iroha2 enumeration types
  */
 object EnumerationSerializer : JsonSerializer<ModelEnum>() {
-    override fun serialize(value: ModelEnum, gen: JsonGenerator, serializers: SerializerProvider) {
+    override fun serialize(
+        value: ModelEnum,
+        gen: JsonGenerator,
+        serializers: SerializerProvider,
+    ) {
         when (value) {
             is InstructionBox.Grant -> value.serialize(gen)
             is InstructionBox.Burn -> value.serialize(gen)
@@ -1321,9 +1365,7 @@ private inline fun <reified B> InstructionBox.serializeBox(gen: JsonGenerator) {
     }
 }
 
-private inline fun <reified B> B.serializeBox(
-    gen: JsonGenerator,
-) = when (B::class) {
+private inline fun <reified B> B.serializeBox(gen: JsonGenerator) = when (B::class) {
     BurnBox::class -> this?.cast<BurnBox>()?.serializeBox(gen)
     MintBox::class -> this?.cast<MintBox>()?.serializeBox(gen)
     GrantBox::class -> this?.cast<GrantBox>()?.serializeBox(gen)
@@ -1396,28 +1438,24 @@ private fun String.asClass() = runCatching {
     }
 } ?: throw DeserializationException("Class $this not found")
 
-private fun getClazzByParam(param: String): KClass<out Any> {
-    return when (param) {
-        "SetKeyValue" -> SetKeyValueBox::class
-        "Bool" -> Boolean::class
-        "String" -> String::class
-        "Name" -> Name::class
-        "LimitedMetadata" -> Metadata::class
-        "Id" -> IdBox::class
-        "Identifiable" -> IdentifiableBox::class
-        "PublicKey" -> PublicKey::class
-        "TransactionQueryOutput" -> TransactionQueryOutput::class
-        "Hash" -> Hash::class
-        "Block" -> SignedBlock::class
-        "BlockHeader" -> BlockHeader::class
-        "Ipv4Addr" -> Ipv4Addr::class
-        "Ipv6Addr" -> Ipv6Addr::class
-        "U32" -> Numeric::class
-        "U64" -> Numeric::class
-        "U128" -> Numeric::class
-        "Fixed" -> Numeric::class
-        else -> throw DeserializationException("Value key $param not found")
-    }
+private fun getClazzByParam(param: String): KClass<out Any> = when (param) {
+    "SetKeyValue" -> SetKeyValueBox::class
+    "Bool" -> Boolean::class
+    "String" -> String::class
+    "Name" -> Name::class
+    "LimitedMetadata" -> Metadata::class
+    "Id" -> IdBox::class
+    "PublicKey" -> PublicKey::class
+    "Hash" -> Hash::class
+    "Block" -> SignedBlock::class
+    "BlockHeader" -> BlockHeader::class
+    "Ipv4Addr" -> Ipv4Addr::class
+    "Ipv6Addr" -> Ipv6Addr::class
+    "U32" -> Numeric::class
+    "U64" -> Numeric::class
+    "U128" -> Numeric::class
+    "Fixed" -> Numeric::class
+    else -> throw DeserializationException("Value key $param not found")
 }
 
 private fun sealedDeserializeIdBox(p: JsonParser, mapper: ObjectMapper): IdBox {
@@ -1436,29 +1474,25 @@ private fun sealedDeserializeIdBox(p: JsonParser, mapper: ObjectMapper): IdBox {
     return subtype.primaryConstructor?.call(arg) as IdBox
 }
 
-private fun getTriggerId(triggerName: String): TriggerId {
-    return when (triggerName.contains("$")) {
-        true -> TriggerId(name = triggerName.split("$")[0].asName())
-        false -> TriggerId(name = triggerName.asName())
-    }
+private fun getTriggerId(triggerName: String): TriggerId = when (triggerName.contains("$")) {
+    true -> TriggerId(name = triggerName.split("$")[0].asName())
+    false -> TriggerId(name = triggerName.asName())
 }
 
-private fun Any.toInstructionBox(): InstructionBox {
-    return when (this) {
-        is GrantBox -> InstructionBox.Grant(this)
-        is RevokeBox -> InstructionBox.Revoke(this)
-        is ExecuteTrigger -> InstructionBox.ExecuteTrigger(this)
-        is SetParameter -> InstructionBox.SetParameter(this)
-        is Upgrade -> InstructionBox.Upgrade(this)
-        is Log -> InstructionBox.Log(this)
-        is CustomInstruction -> InstructionBox.Custom(this)
-        is SetKeyValueBox -> InstructionBox.SetKeyValue(this)
-        is RemoveKeyValueBox -> InstructionBox.RemoveKeyValue(this)
-        is TransferBox -> InstructionBox.Transfer(this)
-        is BurnBox -> InstructionBox.Burn(this)
-        is MintBox -> InstructionBox.Mint(this)
-        is RegisterBox -> InstructionBox.Register(this)
-        is UnregisterBox -> InstructionBox.Unregister(this)
-        else -> throw DeserializationException("Unknown type: $this")
-    }
+private fun Any.toInstructionBox(): InstructionBox = when (this) {
+    is GrantBox -> InstructionBox.Grant(this)
+    is RevokeBox -> InstructionBox.Revoke(this)
+    is ExecuteTrigger -> InstructionBox.ExecuteTrigger(this)
+    is SetParameter -> InstructionBox.SetParameter(this)
+    is Upgrade -> InstructionBox.Upgrade(this)
+    is Log -> InstructionBox.Log(this)
+    is CustomInstruction -> InstructionBox.Custom(this)
+    is SetKeyValueBox -> InstructionBox.SetKeyValue(this)
+    is RemoveKeyValueBox -> InstructionBox.RemoveKeyValue(this)
+    is TransferBox -> InstructionBox.Transfer(this)
+    is BurnBox -> InstructionBox.Burn(this)
+    is MintBox -> InstructionBox.Mint(this)
+    is RegisterBox -> InstructionBox.Register(this)
+    is UnregisterBox -> InstructionBox.Unregister(this)
+    else -> throw DeserializationException("Unknown type: $this")
 }

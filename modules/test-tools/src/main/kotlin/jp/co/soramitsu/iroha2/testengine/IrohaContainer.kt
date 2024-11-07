@@ -40,6 +40,8 @@ open class IrohaContainer : GenericContainer<IrohaContainer> {
         val genesisPublicKey = config.genesisKeyPair.public.bytes().toHex()
         val genesisPrivateKey = config.genesisKeyPair.private.bytes().toHex()
 
+        val topology = config.trustedPeers.map { it.publicKey.payload.toHex(true) }
+
         this.p2pPort = config.ports[IrohaConfig.P2P_PORT_IDX]
         this.apiPort = config.ports[IrohaConfig.API_PORT_IDX]
 
@@ -51,6 +53,7 @@ open class IrohaContainer : GenericContainer<IrohaContainer> {
             .withEnv("PUBLIC_KEY", "ed0120$publicKey")
             .withEnv("PRIVATE_KEY", "802620$privateKey")
             .withEnv("GENESIS_PUBLIC_KEY", "ed0120$genesisPublicKey")
+            .withEnv("P2P_PUBLIC_ADDRESS", "${config.alias}:$p2pPort")
             .withEnv("P2P_ADDRESS", "${config.alias}:$p2pPort")
             .withEnv("API_ADDRESS", "${config.alias}:$apiPort")
             .withEnv("TORII_FETCH_SIZE", config.fetchSize.toString())
@@ -59,7 +62,7 @@ open class IrohaContainer : GenericContainer<IrohaContainer> {
                 if (config.submitGenesis) {
                     container.withEnv("GENESIS_PRIVATE_KEY", "802620$genesisPrivateKey")
                     container.withEnv("GENESIS", "/tmp/genesis.signed.scale")
-                    container.withEnv("TOPOLOGY", JSON_SERDE.writeValueAsString(config.trustedPeers))
+                    container.withEnv("TOPOLOGY", JSON_SERDE.writeValueAsString(topology))
                 }
             }
             .also { container -> config.envs.forEach { (k, v) -> container.withEnv(k, v) } }
@@ -73,8 +76,7 @@ open class IrohaContainer : GenericContainer<IrohaContainer> {
             .withCopyToContainer(
                 forHostPath(configDirLocation),
                 "/app/.cache/wasmtime",
-            )
-            .also {
+            ).also {
                 config.genesis?.writeToFile(genesisFileLocation)
                 config.genesisPath?.also { path -> Files.copy(Path(path).toAbsolutePath(), genesisFileLocation) }
 
@@ -87,8 +89,7 @@ open class IrohaContainer : GenericContainer<IrohaContainer> {
                         executorFileLocation.toFile().writeBytes(content)
                     }
                 }
-            }
-            .also { container ->
+            }.also { container ->
                 if (config.submitGenesis) {
                     container.withCopyFileToContainer(
                         MountableFile.forClasspathResource("start.sh"),
@@ -158,7 +159,7 @@ open class IrohaContainer : GenericContainer<IrohaContainer> {
         }.let { DockerImageName.parse(it) }
 
         const val NETWORK_ALIAS = "iroha"
-        const val DEFAULT_IMAGE_TAG = "2.0.0-pre-rc.22.2"
+        const val DEFAULT_IMAGE_TAG = "dev-nightly-b1256807b0fb3c5a0e364abf86412d295509fb5f"
         const val DEFAULT_IMAGE_NAME = "hyperledger/iroha"
         const val DEFAULT_EXECUTOR_FILE_NAME = "executor.wasm"
         const val DEFAULT_GENESIS_FILE_NAME = "genesis.json"

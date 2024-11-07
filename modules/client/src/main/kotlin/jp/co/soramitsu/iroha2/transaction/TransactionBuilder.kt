@@ -1,11 +1,43 @@
+@file:Suppress("ktlint:standard:no-wildcard-imports")
+
 package jp.co.soramitsu.iroha2.transaction
 
 import jp.co.soramitsu.iroha2.IrohaClientException
 import jp.co.soramitsu.iroha2.Permissions
 import jp.co.soramitsu.iroha2.U32_MAX_VALUE
+import jp.co.soramitsu.iroha2.asIrohaJson
 import jp.co.soramitsu.iroha2.asName
 import jp.co.soramitsu.iroha2.asSignatureOf
-import jp.co.soramitsu.iroha2.generated.* // ktlint-disable no-wildcard-imports
+import jp.co.soramitsu.iroha2.generated.AccountId
+import jp.co.soramitsu.iroha2.generated.AssetDefinitionId
+import jp.co.soramitsu.iroha2.generated.AssetId
+import jp.co.soramitsu.iroha2.generated.AssetType
+import jp.co.soramitsu.iroha2.generated.AssetValue
+import jp.co.soramitsu.iroha2.generated.ChainId
+import jp.co.soramitsu.iroha2.generated.DomainId
+import jp.co.soramitsu.iroha2.generated.EventFilterBox
+import jp.co.soramitsu.iroha2.generated.Executable
+import jp.co.soramitsu.iroha2.generated.ExecutionTime
+import jp.co.soramitsu.iroha2.generated.InstructionBox
+import jp.co.soramitsu.iroha2.generated.IpfsPath
+import jp.co.soramitsu.iroha2.generated.Json
+import jp.co.soramitsu.iroha2.generated.Metadata
+import jp.co.soramitsu.iroha2.generated.Mintable
+import jp.co.soramitsu.iroha2.generated.Name
+import jp.co.soramitsu.iroha2.generated.NonZeroOfu32
+import jp.co.soramitsu.iroha2.generated.NonZeroOfu64
+import jp.co.soramitsu.iroha2.generated.PeerId
+import jp.co.soramitsu.iroha2.generated.Permission
+import jp.co.soramitsu.iroha2.generated.PublicKey
+import jp.co.soramitsu.iroha2.generated.Repeats
+import jp.co.soramitsu.iroha2.generated.RoleId
+import jp.co.soramitsu.iroha2.generated.Signature
+import jp.co.soramitsu.iroha2.generated.SignedTransaction
+import jp.co.soramitsu.iroha2.generated.SignedTransactionV1
+import jp.co.soramitsu.iroha2.generated.TimeEventFilter
+import jp.co.soramitsu.iroha2.generated.TransactionPayload
+import jp.co.soramitsu.iroha2.generated.TransactionSignature
+import jp.co.soramitsu.iroha2.generated.TriggerId
 import jp.co.soramitsu.iroha2.sign
 import java.math.BigDecimal
 import java.math.BigInteger
@@ -24,7 +56,7 @@ class TransactionBuilder(builder: TransactionBuilder.() -> Unit = {}) {
     var creationTimeMillis: BigInteger?
     var timeToLiveMillis: BigInteger?
     var nonce: Long?
-    var metadata: Lazy<HashMap<Name, String>>
+    var metadata: Lazy<HashMap<Name, Json>>
 
     init {
         chainId = ChainId("00000000-0000-0000-0000-000000000000")
@@ -45,8 +77,7 @@ class TransactionBuilder(builder: TransactionBuilder.() -> Unit = {}) {
 
     fun instructions(vararg instructions: InstructionBox) = this.apply { this.instructions.value.addAll(instructions) }
 
-    fun instructions(instructions: Iterable<InstructionBox>) =
-        this.apply { this.instructions.value.addAll(instructions) }
+    fun instructions(instructions: Iterable<InstructionBox>) = this.apply { this.instructions.value.addAll(instructions) }
 
     fun instruction(instruction: InstructionBox) = this.apply { this.instructions.value.add(instruction) }
 
@@ -215,25 +246,21 @@ class TransactionBuilder(builder: TransactionBuilder.() -> Unit = {}) {
         )
     }
 
-    fun grantRole(
-        roleId: RoleId,
-        accountId: AccountId,
-    ) = this.apply { instructions.value.add(Instructions.grantRole(roleId, accountId)) }
+    fun grantRole(roleId: RoleId, accountId: AccountId) = this.apply { instructions.value.add(Instructions.grantRole(roleId, accountId)) }
 
     fun registerRole(
+        grantTo: AccountId,
         id: RoleId,
         vararg tokens: Permission,
-    ) = this.apply { instructions.value.add(Instructions.registerRole(id, *tokens)) }
+    ) = this.apply {
+        instructions.value.add(Instructions.registerRole(grantTo, id, *tokens))
+    }
 
-    fun unregisterRole(
-        id: RoleId,
-    ) = this.apply { instructions.value.add(Instructions.unregisterRole(id)) }
+    fun unregisterRole(id: RoleId) = this.apply { instructions.value.add(Instructions.unregisterRole(id)) }
 
     @JvmOverloads
-    fun registerAccount(
-        id: AccountId,
-        metadata: Metadata = Metadata(mapOf()),
-    ) = this.apply { instructions.value.add(Instructions.registerAccount(id, metadata)) }
+    fun registerAccount(id: AccountId, metadata: Metadata = Metadata(mapOf())) =
+        this.apply { instructions.value.add(Instructions.registerAccount(id, metadata)) }
 
     @JvmOverloads
     fun registerAssetDefinition(
@@ -260,10 +287,8 @@ class TransactionBuilder(builder: TransactionBuilder.() -> Unit = {}) {
         )
     }
 
-    fun registerAsset(
-        id: AssetId,
-        assetValue: AssetValue,
-    ) = this.apply { instructions.value.add(Instructions.registerAsset(id, assetValue)) }
+    fun registerAsset(id: AssetId, assetValue: AssetValue) =
+        this.apply { instructions.value.add(Instructions.registerAsset(id, assetValue)) }
 
     fun setKeyValue(
         assetId: AssetId,
@@ -301,29 +326,17 @@ class TransactionBuilder(builder: TransactionBuilder.() -> Unit = {}) {
         value: String,
     ) = this.apply { instructions.value.add(Instructions.setKeyValue(domainId, key, value)) }
 
-    fun removeKeyValue(
-        assetId: AssetId,
-        key: Name,
-    ) = this.apply { instructions.value.add(Instructions.removeKeyValue(assetId, key)) }
+    fun removeKeyValue(assetId: AssetId, key: Name) = this.apply { instructions.value.add(Instructions.removeKeyValue(assetId, key)) }
 
-    fun removeKeyValue(
-        assetId: AssetId,
-        key: String,
-    ) = removeKeyValue(assetId, key.asName())
+    fun removeKeyValue(assetId: AssetId, key: String) = removeKeyValue(assetId, key.asName())
 
-    fun executeTrigger(
-        triggerId: TriggerId,
-    ) = this.apply { instructions.value.add(Instructions.executeTrigger(triggerId)) }
+    fun executeTrigger(triggerId: TriggerId, args: String) = this.apply {
+        instructions.value.add(Instructions.executeTrigger(triggerId, Json(args)))
+    }
 
-    fun mintAsset(
-        assetId: AssetId,
-        quantity: Int,
-    ) = this.apply { instructions.value.add(Instructions.mintAsset(assetId, quantity)) }
+    fun mintAsset(assetId: AssetId, quantity: Int) = this.apply { instructions.value.add(Instructions.mintAsset(assetId, quantity)) }
 
-    fun mintAsset(
-        assetId: AssetId,
-        quantity: BigDecimal,
-    ) = this.apply { instructions.value.add(Instructions.mintAsset(assetId, quantity)) }
+    fun mintAsset(assetId: AssetId, quantity: BigDecimal) = this.apply { instructions.value.add(Instructions.mintAsset(assetId, quantity)) }
 
     @JvmOverloads
     fun registerDomain(
@@ -334,7 +347,7 @@ class TransactionBuilder(builder: TransactionBuilder.() -> Unit = {}) {
         instructions.value.add(
             Instructions.registerDomain(
                 domainId,
-                metadata,
+                metadata.mapValues { Json(it.value) },
                 logo,
             ),
         )
@@ -342,11 +355,19 @@ class TransactionBuilder(builder: TransactionBuilder.() -> Unit = {}) {
 
     fun registerPeer(peerId: PeerId) = this.apply { instructions.value.add(Instructions.registerPeer(peerId)) }
 
-    fun unregisterPeer(
-        peerId: PeerId,
-    ) = this.apply { instructions.value.add(Instructions.unregisterPeer(peerId)) }
+    fun unregisterPeer(peerId: PeerId) = this.apply { instructions.value.add(Instructions.unregisterPeer(peerId)) }
 
-    fun grantPermissionToken(permission: Permissions, payload: String, target: AccountId) = this.apply {
+    fun grantPermissionToken(
+        permission: Permissions,
+        payload: String,
+        target: AccountId,
+    ) = grantPermissionToken(permission, payload.asIrohaJson(), target)
+
+    fun grantPermissionToken(
+        permission: Permissions,
+        payload: Json,
+        target: AccountId,
+    ) = this.apply {
         instructions.value.add(Instructions.grantPermissionToken(permission, payload, target))
     }
 
@@ -358,11 +379,19 @@ class TransactionBuilder(builder: TransactionBuilder.() -> Unit = {}) {
         instructions.value.add(Instructions.burnAsset(assetId, value))
     }
 
-    fun transferAsset(sourceId: AssetId, value: Int, destinationId: AccountId) = this.apply {
+    fun transferAsset(
+        sourceId: AssetId,
+        value: Int,
+        destinationId: AccountId,
+    ) = this.apply {
         instructions.value.add(Instructions.transferAsset(sourceId, value, destinationId))
     }
 
-    fun transferDomainOwnership(sourceId: AccountId, value: DomainId, destinationId: AccountId) = this.apply {
+    fun transferDomainOwnership(
+        sourceId: AccountId,
+        value: DomainId,
+        destinationId: AccountId,
+    ) = this.apply {
         instructions.value.add(Instructions.transferDomainOwnership(sourceId, value, destinationId))
     }
 
@@ -375,10 +404,7 @@ class TransactionBuilder(builder: TransactionBuilder.() -> Unit = {}) {
     fun revokeSetKeyValueDomain(domainId: DomainId, target: AccountId) =
         this.apply { instructions.value.add(Instructions.revokeSetKeyValueDomain(domainId, target)) }
 
-    fun revokeRole(
-        roleId: RoleId,
-        accountId: AccountId,
-    ) = this.apply { instructions.value.add(Instructions.revokeRole(roleId, accountId)) }
+    fun revokeRole(roleId: RoleId, accountId: AccountId) = this.apply { instructions.value.add(Instructions.revokeRole(roleId, accountId)) }
 
     private fun fallbackCreationTime() = System.currentTimeMillis().toBigInteger()
 

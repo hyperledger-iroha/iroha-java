@@ -2,6 +2,7 @@ package jp.co.soramitsu.iroha2
 
 enum class Permissions(val type: String) {
     CanBurnUserTrigger("CanBurnUserTrigger"),
+    CanRegisterDomain("CanRegisterDomain"),
     CanUnregisterAccount("CanUnregisterAccount"),
     CanMintUserPublicKeys("CanMintUserPublicKeys"),
     CanBurnUserPublicKeys("CanBurnUserPublicKeys"),
@@ -22,8 +23,7 @@ enum class Permissions(val type: String) {
     CanSetKeyValueInAssetDefinition("CanSetKeyValueInAssetDefinition"),
     CanRemoveKeyValueInAssetDefinition("CanRemoveKeyValueInAssetDefinition"),
     CanUnregisterDomain("CanUnregisterDomain"),
-    CanSetKeyValueInDomain("CanSetKeyValueInDomain"),
-    CanRemoveKeyValueInDomain("CanRemoveKeyValueInDomain"),
+    CanModifyDomainMetadata("CanModifyDomainMetadata"),
     CanGrantPermissionToCreateParameters("CanGrantPermissionToCreateParameters"),
     CanRevokePermissionToCreateParameters("CanRevokePermissionToCreateParameters"),
     CanCreateParameters("CanCreateParameters"),

@@ -8,7 +8,6 @@ import jp.co.soramitsu.iroha2.codec.ScaleCodecWriter
 import jp.co.soramitsu.iroha2.codec.ScaleReader
 import jp.co.soramitsu.iroha2.codec.ScaleWriter
 import jp.co.soramitsu.iroha2.wrapException
-import kotlin.String
 import kotlin.Unit
 
 /**
@@ -18,13 +17,13 @@ import kotlin.Unit
  */
 public data class ExecuteTrigger(
     public val trigger: TriggerId,
-    public val args: String? = null,
+    public val args: Json,
 ) {
     public companion object : ScaleReader<ExecuteTrigger>, ScaleWriter<ExecuteTrigger> {
         override fun read(reader: ScaleCodecReader): ExecuteTrigger = try {
             ExecuteTrigger(
                 TriggerId.read(reader),
-                reader.readNullable(),
+                Json.read(reader),
             )
         } catch (ex: Exception) {
             throw wrapException(ex)
@@ -32,7 +31,7 @@ public data class ExecuteTrigger(
 
         override fun write(writer: ScaleCodecWriter, instance: ExecuteTrigger): Unit = try {
             TriggerId.write(writer, instance.trigger)
-            writer.writeNullable(instance.args)
+            Json.write(writer, instance.args)
         } catch (ex: Exception) {
             throw wrapException(ex)
         }

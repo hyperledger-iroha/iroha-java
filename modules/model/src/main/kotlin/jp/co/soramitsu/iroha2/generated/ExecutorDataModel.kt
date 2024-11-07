@@ -23,7 +23,7 @@ public data class ExecutorDataModel(
     public val parameters: Map<CustomParameterId, CustomParameter>,
     public val instructions: List<String>,
     public val permissions: List<String>,
-    public val schema: String,
+    public val schema: Json,
 ) {
     public companion object : ScaleReader<ExecutorDataModel>, ScaleWriter<ExecutorDataModel> {
         override fun read(reader: ScaleCodecReader): ExecutorDataModel = try {
@@ -35,7 +35,7 @@ public data class ExecutorDataModel(
                 ),
                 reader.readVec(reader.readCompactInt()) { reader.readString() },
                 reader.readVec(reader.readCompactInt()) { reader.readString() },
-                reader.readString(),
+                Json.read(reader),
             )
         } catch (ex: Exception) {
             throw wrapException(ex)
@@ -61,7 +61,7 @@ public data class ExecutorDataModel(
             ).forEach { value ->
                 writer.writeAsList(value.toByteArray(Charsets.UTF_8))
             }
-            writer.writeAsList(instance.schema.toByteArray(Charsets.UTF_8))
+            Json.write(writer, instance.schema)
         } catch (ex: Exception) {
             throw wrapException(ex)
         }

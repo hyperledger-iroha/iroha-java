@@ -274,7 +274,7 @@ public sealed class QueryOutputBatchBox : ModelEnum {
      * 'Transaction' variant
      */
     public data class Transaction(
-        public val vec: List<TransactionQueryOutput>,
+        public val vec: List<CommittedTransaction>,
     ) : QueryOutputBatchBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
@@ -285,7 +285,7 @@ public sealed class QueryOutputBatchBox : ModelEnum {
 
             override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.Transaction = try {
                 Transaction(
-                    reader.readVec(reader.readCompactInt()) { TransactionQueryOutput.read(reader) },
+                    reader.readVec(reader.readCompactInt()) { CommittedTransaction.read(reader) },
                 )
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -297,7 +297,7 @@ public sealed class QueryOutputBatchBox : ModelEnum {
             ): Unit = try {
                 writer.writeCompact(instance.vec.size)
                 instance.vec.forEach { value ->
-                    TransactionQueryOutput.write(writer, value)
+                    CommittedTransaction.write(writer, value)
                 }
             } catch (ex: Exception) {
                 throw wrapException(ex)

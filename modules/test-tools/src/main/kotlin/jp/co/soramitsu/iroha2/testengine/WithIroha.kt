@@ -44,8 +44,9 @@ annotation class WithIrohaManual(
 /**
  * Empty genesis with no instructions
  */
-open class EmptyGenesis : Genesis(
-    RawGenesisTransaction(ChainId(UUID.randomUUID().toString()), EXECUTOR_FILE_NAME, emptyList(), emptyList(), emptyList()),
-)
+open class EmptyGenesis :
+    Genesis(
+        RawGenesisTransaction(ChainId(UUID.randomUUID().toString()), EXECUTOR_FILE_NAME, null, emptyList(), "", emptyList(), emptyList()),
+    )
 
 const val IROHA_CONFIG_DELIMITER = "="
