@@ -19,6 +19,7 @@ on:
         required: false
 
 env:
+  IROHA_IMAGE_TAG: "dev"
   ALLURE_RESULTS: "${{ github.workspace }}/modules/client/build/allure-results"
   ALLURE_JOB_RUN_ID: ${{ github.event.inputs.ALLURE_JOB_RUN_ID }}
 
