@@ -17,6 +17,8 @@ on:
       ALLURE_USERNAME:
         description: "ALLURE_USERNAME service parameter. Leave blank"
         required: false
+  repository_dispatch:
+    types: [allure-upload-trigger]
 
 env:
   IROHA_IMAGE_TAG: "dev"
