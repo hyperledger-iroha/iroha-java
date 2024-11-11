@@ -1,6 +1,6 @@
 services:
   irohad0:
-    image: hyperledger/iroha:dev-nightly-b1256807b0fb3c5a0e364abf86412d295509fb5f
+    image: hyperledger/iroha:dev
     platform: linux/amd64
     environment:
       CHAIN: 00000000-0000-0000-0000-000000000000
@@ -46,7 +46,7 @@ services:
           exec irohad
       "
   irohad1:
-    image: hyperledger/iroha:dev-nightly-b1256807b0fb3c5a0e364abf86412d295509fb5f
+    image: hyperledger/iroha:dev
     platform: linux/amd64
     environment:
       CHAIN: 00000000-0000-0000-0000-000000000000
@@ -70,7 +70,7 @@ services:
       retries: 30
       start_period: 4s
   irohad2:
-    image: hyperledger/iroha:dev-nightly-b1256807b0fb3c5a0e364abf86412d295509fb5f
+    image: hyperledger/iroha:dev
     platform: linux/amd64
     environment:
       CHAIN: 00000000-0000-0000-0000-000000000000
@@ -94,7 +94,7 @@ services:
       retries: 30
       start_period: 4s
   irohad3:
-    image: hyperledger/iroha:dev-nightly-b1256807b0fb3c5a0e364abf86412d295509fb5f
+    image: hyperledger/iroha:dev
     platform: linux/amd64
     environment:
       CHAIN: 00000000-0000-0000-0000-000000000000
