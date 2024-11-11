@@ -309,7 +309,7 @@ public sealed class QueryOutputBatchBox : ModelEnum {
      * 'Peer' variant
      */
     public data class Peer(
-        public val vec: List<jp.co.soramitsu.iroha2.generated.Peer>,
+        public val vec: List<PeerId>,
     ) : QueryOutputBatchBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
@@ -320,7 +320,7 @@ public sealed class QueryOutputBatchBox : ModelEnum {
 
             override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.Peer = try {
                 Peer(
-                    reader.readVec(reader.readCompactInt()) { jp.co.soramitsu.iroha2.generated.Peer.read(reader) },
+                    reader.readVec(reader.readCompactInt()) { PeerId.read(reader) },
                 )
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -332,7 +332,7 @@ public sealed class QueryOutputBatchBox : ModelEnum {
             ): Unit = try {
                 writer.writeCompact(instance.vec.size)
                 instance.vec.forEach { value ->
-                    jp.co.soramitsu.iroha2.generated.Peer.write(writer, value)
+                    PeerId.write(writer, value)
                 }
             } catch (ex: Exception) {
                 throw wrapException(ex)

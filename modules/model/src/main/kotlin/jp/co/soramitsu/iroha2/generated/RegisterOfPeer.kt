@@ -16,19 +16,19 @@ import kotlin.Unit
  * Generated from 'RegisterOfPeer' regular structure
  */
 public data class RegisterOfPeer(
-    public val `object`: Peer,
+    public val `object`: PeerId,
 ) {
     public companion object : ScaleReader<RegisterOfPeer>, ScaleWriter<RegisterOfPeer> {
         override fun read(reader: ScaleCodecReader): RegisterOfPeer = try {
             RegisterOfPeer(
-                Peer.read(reader),
+                PeerId.read(reader),
             )
         } catch (ex: Exception) {
             throw wrapException(ex)
         }
 
         override fun write(writer: ScaleCodecWriter, instance: RegisterOfPeer): Unit = try {
-            Peer.write(writer, instance.`object`)
+            PeerId.write(writer, instance.`object`)
         } catch (ex: Exception) {
             throw wrapException(ex)
         }

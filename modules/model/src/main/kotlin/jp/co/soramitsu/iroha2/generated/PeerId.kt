@@ -16,13 +16,11 @@ import kotlin.Unit
  * Generated from 'PeerId' regular structure
  */
 public data class PeerId(
-    public val address: SocketAddr,
     public val publicKey: PublicKey,
 ) {
     public companion object : ScaleReader<PeerId>, ScaleWriter<PeerId> {
         override fun read(reader: ScaleCodecReader): PeerId = try {
             PeerId(
-                SocketAddr.read(reader),
                 PublicKey.read(reader),
             )
         } catch (ex: Exception) {
@@ -30,7 +28,6 @@ public data class PeerId(
         }
 
         override fun write(writer: ScaleCodecWriter, instance: PeerId): Unit = try {
-            SocketAddr.write(writer, instance.address)
             PublicKey.write(writer, instance.publicKey)
         } catch (ex: Exception) {
             throw wrapException(ex)

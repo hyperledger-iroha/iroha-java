@@ -22,25 +22,23 @@ public data class QueryWithFilterOfFindBlockHeadersAndBlockHeaderPredicateBox(
     public companion object :
         ScaleReader<QueryWithFilterOfFindBlockHeadersAndBlockHeaderPredicateBox>,
         ScaleWriter<QueryWithFilterOfFindBlockHeadersAndBlockHeaderPredicateBox> {
-        override fun read(reader: ScaleCodecReader): QueryWithFilterOfFindBlockHeadersAndBlockHeaderPredicateBox =
-            try {
-                QueryWithFilterOfFindBlockHeadersAndBlockHeaderPredicateBox(
-                    FindBlockHeaders.read(reader),
-                    CompoundPredicateOfBlockHeaderPredicateBox.read(reader),
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+        override fun read(reader: ScaleCodecReader): QueryWithFilterOfFindBlockHeadersAndBlockHeaderPredicateBox = try {
+            QueryWithFilterOfFindBlockHeadersAndBlockHeaderPredicateBox(
+                FindBlockHeaders.read(reader),
+                CompoundPredicateOfBlockHeaderPredicateBox.read(reader),
+            )
+        } catch (ex: Exception) {
+            throw wrapException(ex)
+        }
 
         override fun write(
             writer: ScaleCodecWriter,
             instance: QueryWithFilterOfFindBlockHeadersAndBlockHeaderPredicateBox,
-        ): Unit =
-            try {
-                FindBlockHeaders.write(writer, instance.query)
-                CompoundPredicateOfBlockHeaderPredicateBox.write(writer, instance.predicate)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+        ): Unit = try {
+            FindBlockHeaders.write(writer, instance.query)
+            CompoundPredicateOfBlockHeaderPredicateBox.write(writer, instance.predicate)
+        } catch (ex: Exception) {
+            throw wrapException(ex)
+        }
     }
 }
