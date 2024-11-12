@@ -6,7 +6,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    
+
     env:
       IROHA_IMAGE_TAG: "2.0.0-pre-rc.22.2" # Place "dev" to run on the last iroha
 
