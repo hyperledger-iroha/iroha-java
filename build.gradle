@@ -112,7 +112,7 @@ subprojects {
 
     sonar {
         properties {
-            property "sonar.projectKey", "hyperledger-iroha:iroha-java"
+            property "sonar.projectKey", "iroha-java"
             property "sonar.host.url", "https://sonar.katana.soramitsu.co.jp"
             property "sonar.java.coveragePlugin", "jacoco"
             property "sonar.projectName", "${project.group}:${rootProject.name}.${project.name}"

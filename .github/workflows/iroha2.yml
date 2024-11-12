@@ -25,10 +25,10 @@ jobs:
             ${{ runner.os }}-gradle-
       - name: Build with Gradle & Sonarqube analysis
         run: |
-          ./gradlew build --info
-          ./gradlew test --info
-          ./gradlew jacocoTestReport --info
-          ./gradlew sonar -Dsonar.token=${{ secrets.SONAR_TOKEN }} --info
+          ./gradlew build
+          ./gradlew test
+          ./gradlew jacocoTestReport
+          ./gradlew sonar -Dsonar.token=${{ secrets.SONAR_TOKEN }}
       - name: DefectDojo
         if: always()
         uses: C4tWithShell/defectdojo-action@1.0.5
