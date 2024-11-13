@@ -1,7 +1,29 @@
 {
   "chain": "00000000-0000-0000-0000-000000000000",
   "executor": "./executor.wasm",
-  "parameters": [],
+  "parameters": {
+    "sumeragi": {
+      "block_time_ms": 1,
+      "commit_time_ms": 2,
+      "max_clock_drift_ms": 3
+    },
+    "block": {
+      "max_transactions": 4
+    },
+    "transaction": {
+      "max_instructions": 5,
+      "smart_contract_size": 6
+    },
+    "executor": {
+      "fuel": 7,
+      "memory": 8
+    },
+    "smart_contract": {
+      "fuel": 9,
+      "memory": 10
+    },
+    "custom": {}
+  },
   "instructions": [
     {
       "Register": {
@@ -41,5 +63,7 @@
       }
     }
   ],
+  "wasm_dir": "libs",
+  "wasm_triggers": [],
   "topology": []
 }

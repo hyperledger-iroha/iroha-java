@@ -3,25 +3,26 @@
   "executor": "./executor.wasm",
   "parameters": {
     "sumeragi": {
-      "block_time_ms": 2000,
-      "commit_time_ms": 4000,
-      "max_clock_drift_ms": 1000
+      "block_time_ms": 1,
+      "commit_time_ms": 2,
+      "max_clock_drift_ms": 3
     },
     "block": {
-      "max_transactions": 512
+      "max_transactions": 4
     },
     "transaction": {
-      "max_instructions": 4096,
-      "smart_contract_size": 4194304
+      "max_instructions": 5,
+      "smart_contract_size": 6
     },
     "executor": {
-      "fuel": 55000000,
-      "memory": 55000000
+      "fuel": 7,
+      "memory": 8
     },
     "smart_contract": {
-      "fuel": 55000000,
-      "memory": 55000000
-    }
+      "fuel": 9,
+      "memory": 10
+    },
+    "custom": {}
   },
   "instructions": [
     {

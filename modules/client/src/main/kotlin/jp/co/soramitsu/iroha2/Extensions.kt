@@ -334,7 +334,7 @@ fun FindError.extract() = when (this) {
     is FindError.Role -> this.roleId.asString()
     is FindError.Block -> this.hashOf.hash.arrayOfU8.toHex()
     is FindError.MetadataKey -> this.name.string
-    is FindError.Peer -> this.peerId.address.toString()
+    is FindError.Peer -> this.peerId.toString()
     is FindError.Permission -> this.permission.name
     is FindError.PublicKey -> this.publicKey.payload.toString()
     is FindError.Trigger -> this.triggerId.asString()

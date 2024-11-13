@@ -224,7 +224,10 @@ class IrohaRunnerExtension : InvocationInterceptor, BeforeEachCallback {
         }
         val peerIds = keyPairs.mapIndexed { i: Int, kp: KeyPair ->
             val p2pPort = portsList[i][IrohaConfig.P2P_PORT_IDX]
-            kp.toPeerId(IrohaContainer.NETWORK_ALIAS + p2pPort, p2pPort)
+            Pair(
+                SocketAddr.Host(SocketAddrHost(IrohaContainer.NETWORK_ALIAS + p2pPort, p2pPort)),
+                kp.toPeerId(),
+            )
         }
         val deferredSet = mutableSetOf<Deferred<*>>()
         val containers = Collections.synchronizedList(ArrayList<IrohaContainer>(withIroha.amount))
@@ -268,8 +271,7 @@ class IrohaRunnerExtension : InvocationInterceptor, BeforeEachCallback {
         containers
     }
 
-    private fun KeyPair.toPeerId(host: String, port: Int) = PeerId(
-        SocketAddr.Host(SocketAddrHost(host, port)),
+    private fun KeyPair.toPeerId() = PeerId(
         this.public.toIrohaPublicKey(),
     )
 

@@ -2,11 +2,17 @@ package jp.co.soramitsu.iroha2
 
 import jp.co.soramitsu.iroha2.generated.AssetDefinitionId
 import jp.co.soramitsu.iroha2.generated.AssetId
+import jp.co.soramitsu.iroha2.generated.BlockParameters
 import jp.co.soramitsu.iroha2.generated.ChainId
 import jp.co.soramitsu.iroha2.generated.Metadata
 import jp.co.soramitsu.iroha2.generated.Name
+import jp.co.soramitsu.iroha2.generated.NonZeroOfu64
+import jp.co.soramitsu.iroha2.generated.Parameters
 import jp.co.soramitsu.iroha2.generated.RawGenesisTransaction
 import jp.co.soramitsu.iroha2.generated.Repeats
+import jp.co.soramitsu.iroha2.generated.SmartContractParameters
+import jp.co.soramitsu.iroha2.generated.SumeragiParameters
+import jp.co.soramitsu.iroha2.generated.TransactionParameters
 import jp.co.soramitsu.iroha2.generated.TriggerId
 import jp.co.soramitsu.iroha2.transaction.EventFilters
 import jp.co.soramitsu.iroha2.transaction.Instructions
@@ -21,21 +27,52 @@ class SerializerTest {
             RawGenesisTransaction(
                 ChainId("00000000-0000-0000-0000-000000000000"),
                 Genesis.EXECUTOR_FILE_NAME,
-                emptyList(),
+                Parameters(
+                    SumeragiParameters(BigInteger.valueOf(1), BigInteger.valueOf(2), BigInteger.valueOf(3)),
+                    BlockParameters(NonZeroOfu64(BigInteger.valueOf(4))),
+                    TransactionParameters(NonZeroOfu64(BigInteger.valueOf(5)), NonZeroOfu64(BigInteger.valueOf(6))),
+                    SmartContractParameters(NonZeroOfu64(BigInteger.valueOf(7)), NonZeroOfu64(BigInteger.valueOf(8))),
+                    SmartContractParameters(NonZeroOfu64(BigInteger.valueOf(9)), NonZeroOfu64(BigInteger.valueOf(10))),
+                    emptyMap(),
+                ),
                 Instructions.grantPermissionToken(
                     Permissions.CanUnregisterAccount,
                     "ed012004FF5B81046DDCCF19E2E451C45DFB6F53759D4EB30FA2EFA807284D1CC33016${ACCOUNT_ID_DELIMITER}wonderland".asAccountId()
                         .asJsonString(withPrefix = true),
                     "ed0120CE7FA46C9DCE7EA4B125E2E36BDB63EA33073E7590AC92816AE1E861B7048B03${ACCOUNT_ID_DELIMITER}wonderland".asAccountId(),
                 ).let { listOf(it) },
+                "",
+                emptyList(),
                 emptyList(),
             ),
         )
         val expectedJson = """
             {
               "chain": "00000000-0000-0000-0000-000000000000",
-              "executor": "executor.wasm",
-              "parameters": [],
+              "executor": "./executor.wasm",
+              "parameters": {
+                "sumeragi": {
+                  "block_time_ms": 1,
+                  "commit_time_ms": 2,
+                  "max_clock_drift_ms": 3
+                },
+                "block": {
+                  "max_transactions": 4
+                },
+                "transaction": {
+                  "max_instructions": 5,
+                  "smart_contract_size": 6
+                },
+                "executor": {
+                  "fuel": 7,
+                  "memory": 8
+                },
+                "smart_contract": {
+                  "fuel": 9,
+                  "memory": 10
+                },
+                "custom": {}
+              },
               "instructions": [
                 {
                   "Grant": {
@@ -51,6 +88,8 @@ class SerializerTest {
                   }
                 }
               ],
+              "wasm_dir": "",
+              "wasm_triggers": [],
               "topology": []
             }
         """.trimIndent()
@@ -72,7 +111,14 @@ class SerializerTest {
             RawGenesisTransaction(
                 ChainId("00000000-0000-0000-0000-000000000000"),
                 Genesis.EXECUTOR_FILE_NAME,
-                emptyList(),
+                Parameters(
+                    SumeragiParameters(BigInteger.valueOf(1), BigInteger.valueOf(2), BigInteger.valueOf(3)),
+                    BlockParameters(NonZeroOfu64(BigInteger.valueOf(4))),
+                    TransactionParameters(NonZeroOfu64(BigInteger.valueOf(5)), NonZeroOfu64(BigInteger.valueOf(6))),
+                    SmartContractParameters(NonZeroOfu64(BigInteger.valueOf(7)), NonZeroOfu64(BigInteger.valueOf(8))),
+                    SmartContractParameters(NonZeroOfu64(BigInteger.valueOf(9)), NonZeroOfu64(BigInteger.valueOf(10))),
+                    emptyMap(),
+                ),
                 listOf(
                     Instructions.mintAsset(assetId, 100),
                     Instructions.setKeyValue(assetId, "key".asName(), "value"),
@@ -88,14 +134,38 @@ class SerializerTest {
                         ),
                     ),
                 ),
+                "",
+                emptyList(),
                 emptyList(),
             ),
         )
         val expectedJson = """
             {
               "chain": "00000000-0000-0000-0000-000000000000",
-              "executor": "executor.wasm",
-              "parameters": [],
+              "executor": "./executor.wasm",
+              "parameters": {
+                "sumeragi": {
+                  "block_time_ms": 1,
+                  "commit_time_ms": 2,
+                  "max_clock_drift_ms": 3
+                },
+                "block": {
+                  "max_transactions": 4
+                },
+                "transaction": {
+                  "max_instructions": 5,
+                  "smart_contract_size": 6
+                },
+                "executor": {
+                  "fuel": 7,
+                  "memory": 8
+                },
+                "smart_contract": {
+                  "fuel": 9,
+                  "memory": 10
+                },
+                "custom": {}
+              },
               "instructions": [
                 {
                   "Mint": {
@@ -110,7 +180,9 @@ class SerializerTest {
                     "Asset": {
                       "object": "xor#wonderland#ed0120ce7fa46c9dce7ea4b125e2e36bdb63ea33073e7590ac92816ae1e861b7048b03@wonderland",
                       "key": "key",
-                      "value": "value"
+                      "value": {
+                        "string": "value"
+                      }
                     }
                   }
                 },
@@ -145,6 +217,8 @@ class SerializerTest {
                   }
                 }
               ],
+              "wasm_dir": "",
+              "wasm_triggers": [],
               "topology": []
             }
         """.trimIndent()

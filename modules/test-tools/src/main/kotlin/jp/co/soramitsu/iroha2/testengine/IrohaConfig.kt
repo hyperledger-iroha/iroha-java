@@ -34,8 +34,8 @@ class IrohaConfig(
     var alias: String = IrohaContainer.NETWORK_ALIAS + DEFAULT_P2P_PORT,
     var keyPair: KeyPair = generateKeyPair(),
     var genesisKeyPair: KeyPair = keyPairFromHex(GENESIS_ADDRESS, GENESIS_PRIVATE_KEY),
-    var trustedPeers: List<PeerId> = listOf(
-        PeerId(SocketAddr.Host(SocketAddrHost(alias, DEFAULT_P2P_PORT)), keyPair.public.toIrohaPublicKey()),
+    var trustedPeers: List<Pair<SocketAddr, PeerId>> = listOf(
+        Pair(SocketAddr.Host(SocketAddrHost(alias, DEFAULT_P2P_PORT)), PeerId(keyPair.public.toIrohaPublicKey())),
     ),
     var ports: List<Int> = listOf(DEFAULT_P2P_PORT, DEFAULT_API_PORT),
     var shouldCloseNetwork: Boolean = true,
