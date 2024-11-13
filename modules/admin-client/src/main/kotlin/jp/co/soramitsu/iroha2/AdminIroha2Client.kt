@@ -1,6 +1,7 @@
 package jp.co.soramitsu.iroha2
 
 import io.ktor.client.call.body
+import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.request.get
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
@@ -18,33 +19,33 @@ import java.net.URL
 @Suppress("unused")
 open class AdminIroha2Client(
     urls: List<IrohaUrls>,
-    log: Boolean = false,
+    httpLogLevel: LogLevel = LogLevel.NONE,
     credentials: String? = null,
     private val balancingHealthCheck: Boolean = true,
-) : Iroha2Client(urls, log, credentials) {
+) : Iroha2Client(urls, httpLogLevel, credentials) {
 
     constructor(
         url: IrohaUrls,
-        log: Boolean = false,
+        httpLogLevel: LogLevel = LogLevel.NONE,
         credentials: String? = null,
         balancingHealthCheck: Boolean = true,
-    ) : this(mutableListOf(url), log, credentials, balancingHealthCheck)
+    ) : this(mutableListOf(url), httpLogLevel, credentials, balancingHealthCheck)
 
     constructor(
         apiUrl: URL,
         peerUrl: URL,
-        log: Boolean = false,
+        httpLogLevel: LogLevel = LogLevel.NONE,
         credentials: String? = null,
         balancingHealthCheck: Boolean = true,
-    ) : this(IrohaUrls(apiUrl, peerUrl), log, credentials, balancingHealthCheck)
+    ) : this(IrohaUrls(apiUrl, peerUrl), httpLogLevel, credentials, balancingHealthCheck)
 
     constructor(
         apiUrl: String,
         peerUrl: String,
-        log: Boolean = false,
+        httpLogLevel: LogLevel = LogLevel.NONE,
         credentials: String? = null,
         balancingHealthCheck: Boolean = true,
-    ) : this(URL(apiUrl), URL(peerUrl), log, credentials, balancingHealthCheck)
+    ) : this(URL(apiUrl), URL(peerUrl), httpLogLevel, credentials, balancingHealthCheck)
 
     /**
      * Send metrics request

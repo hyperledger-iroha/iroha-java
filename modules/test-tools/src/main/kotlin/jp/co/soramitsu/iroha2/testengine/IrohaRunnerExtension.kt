@@ -111,7 +111,6 @@ class IrohaRunnerExtension : InvocationInterceptor, BeforeEachCallback {
         setPropertyValue(properties, testInstance) {
             Iroha2Client(
                 containers.map { IrohaUrls(it.getApiUrl(), it.getP2pUrl()) }.toMutableList(),
-                true,
             ).also { utilizedResources.add(it) }
         }
 
@@ -119,7 +118,6 @@ class IrohaRunnerExtension : InvocationInterceptor, BeforeEachCallback {
         setPropertyValue(properties, testInstance) {
             AdminIroha2Client(
                 containers.map { IrohaUrls(it.getApiUrl(), it.getP2pUrl()) }.toMutableList(),
-                true,
             ).also { utilizedResources.add(it) }
         }
 
@@ -127,7 +125,6 @@ class IrohaRunnerExtension : InvocationInterceptor, BeforeEachCallback {
         setPropertyValue(properties, testInstance) {
             Iroha2AsyncClient(
                 containers.map { IrohaUrls(it.getApiUrl(), it.getP2pUrl()) }.toMutableList(),
-                true,
             ).also { utilizedResources.add(it) }
         }
 
@@ -135,7 +132,6 @@ class IrohaRunnerExtension : InvocationInterceptor, BeforeEachCallback {
         setPropertyValue(properties, testInstance) {
             AdminIroha2AsyncClient(
                 containers.map { IrohaUrls(it.getApiUrl(), it.getP2pUrl()) }.toMutableList(),
-                true,
             ).also { utilizedResources.add(it) }
         }
 

@@ -1,5 +1,6 @@
 package jp.co.soramitsu.iroha2.client
 
+import io.ktor.client.plugins.logging.LogLevel
 import jp.co.soramitsu.iroha2.generated.SignedTransaction
 import jp.co.soramitsu.iroha2.model.IrohaUrls
 import jp.co.soramitsu.iroha2.query.QueryAndExtractor
@@ -14,11 +15,11 @@ import java.util.concurrent.CompletableFuture
 @Suppress("unused")
 class Iroha2AsyncClient @JvmOverloads constructor(
     urls: List<IrohaUrls>,
-    log: Boolean = false,
+    httpLogLevel: LogLevel = LogLevel.NONE,
     credentials: String? = null,
     eventReadTimeoutInMills: Long = 250,
     eventReadMaxAttempts: Int = 10,
-) : Iroha2Client(urls, log, credentials, eventReadTimeoutInMills, eventReadMaxAttempts) {
+) : Iroha2Client(urls, httpLogLevel, credentials, eventReadTimeoutInMills, eventReadMaxAttempts) {
 
     /**
      * Send a request to Iroha2 and extract payload.
