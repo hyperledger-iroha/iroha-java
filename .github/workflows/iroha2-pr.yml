@@ -7,7 +7,7 @@ on:
     branches: [ test/gradle-merged ]
 jobs:
   build:
-    runs-on: self-hosted,s4
+    runs-on: [self-hosted, s4]
 
     env:
       IROHA_IMAGE_TAG: "2.0.0-pre-rc.22.2" # Place "dev" to run on the last iroha
