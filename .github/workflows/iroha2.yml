@@ -5,7 +5,7 @@ on:
     branches: [ iroha2-dev, iroha2-main, test/gradle-merged ]
 jobs:
   build:
-    runs-on: [self-hosted, Linux, iroha2]
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
