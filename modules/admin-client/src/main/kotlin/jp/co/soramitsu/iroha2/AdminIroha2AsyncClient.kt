@@ -1,5 +1,6 @@
 package jp.co.soramitsu.iroha2
 
+import io.ktor.client.plugins.logging.LogLevel
 import jp.co.soramitsu.iroha2.model.IrohaUrls
 import kotlinx.coroutines.future.future
 
@@ -9,9 +10,9 @@ import kotlinx.coroutines.future.future
 @Suppress("unused")
 class AdminIroha2AsyncClient @JvmOverloads constructor(
     urls: List<IrohaUrls>,
-    log: Boolean = false,
+    httpLogLevel: LogLevel = LogLevel.NONE,
     credentials: String? = null,
-) : AdminIroha2Client(urls, log, credentials) {
+) : AdminIroha2Client(urls, httpLogLevel, credentials) {
 
     /**
      * Send health check request

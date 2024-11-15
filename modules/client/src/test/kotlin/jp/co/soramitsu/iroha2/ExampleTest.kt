@@ -27,7 +27,7 @@ class ExampleTest {
             this.genesis = DefaultGenesis::class.createInstance()
         }.also { it.start() }
 
-        val client = Iroha2Client(container.getApiUrl(), container.getTelemetryUrl(), container.getP2pUrl(), true)
+        val client = Iroha2Client(container.getApiUrl(), container.getTelemetryUrl(), container.getP2pUrl())
 
         val domainId = "new_domain_name".asDomainId()
         client.sendTransaction {

@@ -15,7 +15,7 @@ fun main(args: Array<String>): Unit = runBlocking {
         "9ac47abf59b356e0bd7dcbbbb4dec080e302156a48ca907e47cb6aea1d32719e",
     )
 
-    val client = AdminIroha2Client(URL(peerUrl), URL(peerUrl), URL(telemetryUrl), log = true)
+    val client = AdminIroha2Client(URL(peerUrl), URL(peerUrl), URL(telemetryUrl))
     val query = Query(client, admin, adminKeyPair)
     query.findAllDomains()
         .also { println("ALL DOMAINS: ${it.map { d -> d.id.asString() }}") }
