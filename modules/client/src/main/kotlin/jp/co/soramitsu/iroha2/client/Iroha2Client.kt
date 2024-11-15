@@ -17,6 +17,7 @@ import io.ktor.client.plugins.auth.Auth
 import io.ktor.client.plugins.auth.providers.BasicAuthCredentials
 import io.ktor.client.plugins.auth.providers.basic
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.plugins.websocket.WebSockets
 import io.ktor.client.plugins.websocket.webSocket
@@ -81,7 +82,7 @@ import kotlin.coroutines.CoroutineContext
 @Suppress("unused")
 open class Iroha2Client(
     open val urls: List<IrohaUrls>,
-    open val log: Boolean = false,
+    open val httpLogLevel: LogLevel = LogLevel.NONE,
     open val credentials: String? = null,
     open val eventReadTimeoutInMills: Long = 250,
     open val eventReadMaxAttempts: Int = 10,
@@ -90,22 +91,22 @@ open class Iroha2Client(
 
     constructor(
         url: IrohaUrls,
-        log: Boolean = false,
+        httpLogLevel: LogLevel = LogLevel.NONE,
         credentials: String? = null,
         eventReadTimeoutInMills: Long = 250,
         eventReadMaxAttempts: Int = 10,
-    ) : this(mutableListOf(url), log, credentials, eventReadTimeoutInMills, eventReadMaxAttempts)
+    ) : this(mutableListOf(url), httpLogLevel, credentials, eventReadTimeoutInMills, eventReadMaxAttempts)
 
     constructor(
         apiUrl: URL,
         peerUrl: URL,
-        log: Boolean = false,
+        httpLogLevel: LogLevel = LogLevel.NONE,
         credentials: String? = null,
         eventReadTimeoutInMills: Long = 250,
         eventReadMaxAttempts: Int = 10,
     ) : this(
         IrohaUrls(apiUrl, peerUrl),
-        log,
+        httpLogLevel,
         credentials,
         eventReadTimeoutInMills,
         eventReadMaxAttempts,
@@ -114,14 +115,14 @@ open class Iroha2Client(
     constructor(
         apiUrl: String,
         peerUrl: String,
-        log: Boolean = true,
+        httpLogLevel: LogLevel = LogLevel.NONE,
         credentials: String? = null,
         eventReadTimeoutInMills: Long = 250,
         eventReadMaxAttempts: Int = 10,
     ) : this(
         URL(apiUrl),
         URL(peerUrl),
-        log,
+        httpLogLevel,
         credentials,
         eventReadTimeoutInMills,
         eventReadMaxAttempts,
@@ -145,8 +146,8 @@ open class Iroha2Client(
     open val client by lazy {
         HttpClient(CIO) {
             expectSuccess = true
-            if (log) {
-                install(Logging)
+            install(Logging) {
+                level = httpLogLevel
             }
             install(WebSockets)
             install(ContentNegotiation) {
