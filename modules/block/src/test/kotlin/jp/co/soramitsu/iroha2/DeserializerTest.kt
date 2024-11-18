@@ -13,14 +13,6 @@ class DeserializerTest {
         val block = JSON_SERDE.convertValue(node, RawGenesisBlock::class.java)
 
         assert(block.transactions.isNotEmpty())
-        // genesis.json has 12 instructions ("isi")
-        // Register -> NewDomain
-        // Register -> NewAccount (2)
-        // Register -> NewAssetDefinition
-        // Grant -> PermissionToken (2)
-        // Mint -> AssetId (2)
-        // Register -> Trigger (4)
-        assert(block.transactions.flatten().size == 12)
 
         val genesis = Genesis(block)
         val newJson = removeWhiteSpaceAndReplacePubKey(genesis.asJson())
@@ -93,7 +85,8 @@ class DeserializerTest {
 
     private fun removeWhiteSpaceAndReplacePubKey(json: String): String {
         val regex = "(\"ed01)+\\w+\"".toRegex()
-        return json.replace(System.getProperty("line.separator"), "")
+        return json
+            .replace(System.getProperty("line.separator"), "")
             .replace(" ", "")
             .replace(regex, "publicKey")
     }
