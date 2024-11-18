@@ -3,10 +3,11 @@ name: Iroha2-java main branch workflow
 on:
   push:
     branches: [ iroha2-dev, iroha2-main ]
+  workflow_dispatch:
+
 jobs:
   build:
-    runs-on: ubuntu-latest
-
+    runs-on: [self-hosted, Linux, iroha2]
     steps:
       - uses: actions/checkout@v4
       - name: Set up JDK 17
