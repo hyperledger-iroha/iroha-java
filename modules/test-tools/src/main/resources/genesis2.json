@@ -1,6 +1,6 @@
 {
   "chain": "00000000-0000-0000-0000-000000000000",
-  "executor": "./executor.wasm",
+  "executor": "executor.wasm",
   "parameters": {
     "sumeragi": {
       "block_time_ms": 1,
@@ -232,7 +232,7 @@
       "Grant": {
         "Permission": {
           "object": {
-            "name": "CanSetKeyValueInUserAssets",
+            "name": "CanModifyAssetMetadata",
             "payload": {
               "asset": "123#test#ed0120CE7FA46C9DCE7EA4B125E2E36BDB63EA33073E7590AC92816AE1E861B7048B03@wonderland"
             }

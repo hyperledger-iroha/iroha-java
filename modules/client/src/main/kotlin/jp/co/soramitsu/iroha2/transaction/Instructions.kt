@@ -179,7 +179,7 @@ object Instructions {
      * Register a peer
      */
     fun registerPeer(peerId: PeerId) = InstructionBox.Register(
-        RegisterBox.Peer(RegisterOfPeer(Peer(peerId))),
+        RegisterBox.Peer(RegisterOfPeer(peerId)),
     )
 
     /**
@@ -348,7 +348,7 @@ object Instructions {
      */
     fun revokeSetKeyValueAsset(assetId: AssetId, target: AccountId): InstructionBox = revokeSome(target) {
         Permission(
-            name = Permissions.CanSetKeyValueInUserAsset.type,
+            name = Permissions.CanModifyAssetMetadata.type,
             payload = Json(assetId.asJsonString()),
         )
     }
@@ -358,7 +358,7 @@ object Instructions {
      */
     fun revokeSetKeyValueAccount(accountId: AccountId, target: AccountId): InstructionBox = revokeSome(target) {
         Permission(
-            name = Permissions.CanSetKeyValueInAccount.type,
+            name = Permissions.CanModifyAccountMetadata.type,
             payload = accountId.asJsonString(),
         )
     }

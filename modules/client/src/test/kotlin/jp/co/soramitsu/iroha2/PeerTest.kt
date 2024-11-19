@@ -9,6 +9,7 @@ import jp.co.soramitsu.iroha2.annotations.SdkTestId
 import jp.co.soramitsu.iroha2.client.Iroha2Client
 import jp.co.soramitsu.iroha2.generated.AccountId
 import jp.co.soramitsu.iroha2.generated.DomainId
+import jp.co.soramitsu.iroha2.generated.Peer
 import jp.co.soramitsu.iroha2.generated.PeerId
 import jp.co.soramitsu.iroha2.generated.SocketAddr
 import jp.co.soramitsu.iroha2.generated.SocketAddrHost
@@ -65,7 +66,7 @@ class PeerTest : IrohaTest<AdminIroha2Client>() {
             startNewContainer(keyPair, alias, PEER_AMOUNT)
         }
         val registerJob = async {
-            registerPeer(PeerId(SocketAddr.Host(SocketAddrHost(address, p2pPort)), keyPair.public.toIrohaPublicKey()))
+            registerPeer(PeerId(keyPair.public.toIrohaPublicKey()))
         }
         containerJob.await()
         registerJob.await()
@@ -87,10 +88,10 @@ class PeerTest : IrohaTest<AdminIroha2Client>() {
         val payload = keyPair.public.bytes()
 
         startNewContainer(keyPair, alias, PEER_AMOUNT).use {
-            registerPeer(PeerId(SocketAddr.Host(SocketAddrHost(address, p2pPort)), keyPair.public.toIrohaPublicKey()))
+            registerPeer(PeerId(keyPair.public.toIrohaPublicKey()))
             repeat(PEER_AMOUNT) { assertTrue(isPeerAvailable(address, payload)) }
 
-            unregisterPeer(PeerId(SocketAddr.Host(SocketAddrHost(address, p2pPort)), keyPair.public.toIrohaPublicKey()))
+            unregisterPeer(PeerId(keyPair.public.toIrohaPublicKey()))
             repeat(PEER_AMOUNT) { assertFalse(isPeerAvailable(address, payload)) }
         }
     }
@@ -105,7 +106,7 @@ class PeerTest : IrohaTest<AdminIroha2Client>() {
         val payload = keyPair.public.bytes()
 
         startNewContainer(keyPair, alias, PEER_AMOUNT).use { container ->
-            registerPeer(PeerId(SocketAddr.Host(SocketAddrHost(address, p2pPort)), keyPair.public.toIrohaPublicKey()))
+            registerPeer(PeerId(keyPair.public.toIrohaPublicKey()))
             assertTrue(isPeerAvailable(address, payload))
 
             delay(5000)
@@ -155,7 +156,7 @@ class PeerTest : IrohaTest<AdminIroha2Client>() {
             this.networkToJoin = containers.first().network ?: throw IrohaSdkException("Container network not found")
             this.submitGenesis = false
             this.ports = listOf(DEFAULT_P2P_PORT + amount, DEFAULT_API_PORT + amount)
-            this.trustedPeers = containers.map { it.extractPeerId() }
+            this.trustedPeers = containers.map { it.extractPeer() }
         }.also {
             withContext(Dispatchers.IO) {
                 it.start()
@@ -173,7 +174,7 @@ class PeerTest : IrohaTest<AdminIroha2Client>() {
         .let { query ->
             client.sendQuery(query)
         }.any { peer ->
-            val peerAddr = peer.id.address.cast<SocketAddr.Host>().socketAddrHost
+            val peerAddr = peer.address.cast<SocketAddr.Host>().socketAddrHost
             "${peerAddr.host}:${peerAddr.port}" == address && peer.id.publicKey.payload.contentEquals(payload)
         }
 
@@ -201,14 +202,14 @@ class PeerTest : IrohaTest<AdminIroha2Client>() {
         }
     }
 
-    private fun IrohaContainer.extractPeerId() = PeerId(
+    private fun IrohaContainer.extractPeer() = Peer(
         SocketAddr.Host(
             SocketAddrHost(
                 this.config.alias,
                 this.config.ports[IrohaConfig.P2P_PORT_IDX],
             ),
         ),
-        this.config.keyPair.public.toIrohaPublicKey(),
+        PeerId(this.config.keyPair.public.toIrohaPublicKey()),
     )
 
     private suspend fun findDomain(id: DomainId = DEFAULT_DOMAIN_ID) = QueryBuilder

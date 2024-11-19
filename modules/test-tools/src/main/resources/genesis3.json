@@ -1,6 +1,6 @@
 {
   "chain": "00000000-0000-0000-0000-000000000000",
-  "executor": "./executor.wasm",
+  "executor": "executor.wasm",
   "parameters": {
     "sumeragi": {
       "block_time_ms": 1,
@@ -129,13 +129,7 @@
           "id": "USER_METADATA_ACCESS",
           "permissions": [
             {
-              "name": "CanSetKeyValueInUserAsset",
-              "payload": {
-                "account": "ed0120CE7FA46C9DCE7EA4B125E2E36BDB63EA33073E7590AC92816AE1E861B7048B03@wonderland"
-              }
-            },
-            {
-              "name": "CanRemoveKeyValueInUserAsset",
+              "name": "CanModifyAssetMetadata",
               "payload": {
                 "account": "ed0120CE7FA46C9DCE7EA4B125E2E36BDB63EA33073E7590AC92816AE1E861B7048B03@wonderland"
               }

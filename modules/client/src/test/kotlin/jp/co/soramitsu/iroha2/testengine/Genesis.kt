@@ -51,15 +51,6 @@ open class BobHasPermissionToRegisterDomain : Genesis(
     ),
 )
 
-open class BobHasPermissionToModifyDomainMetadata : Genesis(
-    rawGenesisTx(
-        Instructions.grantPermissionToken(
-            Permissions.CanModifyDomainMetadata,
-            destinationId = BOB_ACCOUNT_ID,
-        ),
-    ),
-)
-
 open class AliceHasPermissionToRegisterDomain : Genesis(
     rawGenesisTx(
         Instructions.grantPermissionToken(
@@ -92,23 +83,8 @@ open class WithDomainTransferredToBob : Genesis(
 open class AliceCanUnregisterAnyPeer : Genesis(
     rawGenesisTx(
         Instructions.grantPermissionToken(
-            Permissions.CanUnregisterAnyPeer,
+            Permissions.CanManagePeers,
             destinationId = ALICE_ACCOUNT_ID,
-        ),
-    ),
-)
-
-open class AliceAndBobHasPermissionToMintPublicKeys : Genesis(
-    rawGenesisTx(
-        Instructions.grantPermissionToken(
-            Permissions.CanMintUserPublicKeys,
-            ALICE_ACCOUNT_ID.asJsonString(),
-            ALICE_ACCOUNT_ID,
-        ),
-        Instructions.grantPermissionToken(
-            Permissions.CanMintUserPublicKeys,
-            BOB_ACCOUNT_ID.asJsonString(),
-            BOB_ACCOUNT_ID,
         ),
     ),
 )
@@ -155,11 +131,7 @@ open class AliceHasRoleWithAccessToBobsMetadata : Genesis(
             ALICE_ACCOUNT_ID,
             ROLE_ID,
             Permission(
-                Permissions.CanSetKeyValueInAccount.type,
-                BOB_ACCOUNT_ID.asJsonString(true),
-            ),
-            Permission(
-                Permissions.CanRemoveKeyValueInAccount.type,
+                Permissions.CanModifyAccountMetadata.type,
                 BOB_ACCOUNT_ID.asJsonString(true),
             ),
         ),
@@ -429,11 +401,7 @@ open class FatGenesis : Genesis(
             BOB_ACCOUNT_ID,
             ROLE_ID,
             Permission(
-                Permissions.CanSetKeyValueInAccount.type,
-                BOB_ACCOUNT_ID.asJsonString(true),
-            ),
-            Permission(
-                Permissions.CanRemoveKeyValueInAccount.type,
+                Permissions.CanModifyAccountMetadata.type,
                 BOB_ACCOUNT_ID.asJsonString(true),
             ),
         ),
@@ -467,19 +435,6 @@ open class FatGenesis : Genesis(
         val ROLE_ID = RoleId("USER_METADATA_ACCESS".asName())
     }
 }
-
-/**
- * Grant permission token to unregister any role
- */
-open class BobCanUnregisterAnyRole : Genesis(
-    rawGenesisTx(
-        Instructions.grantPermissionToken(
-            permission = Permissions.CanUnregisterAnyRole,
-            destinationId = BOB_ACCOUNT_ID,
-        ),
-        transferTo = BOB_ACCOUNT_ID,
-    ),
-)
 
 /**
  * Return [RawGenesisTransaction] with instructions to init genesis

@@ -8,6 +8,7 @@ import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
 import jp.co.soramitsu.iroha2.client.Iroha2Client
+import jp.co.soramitsu.iroha2.generated.Peer
 import jp.co.soramitsu.iroha2.model.IrohaUrls
 import kotlinx.coroutines.runBlocking
 import java.net.URL
@@ -59,12 +60,17 @@ open class AdminIroha2Client(
     /**
      * Send health check request
      */
-    suspend fun health(peerUrl: URL): Int = client.get("$peerUrl$HEALTH_ENDPOINT").status.value
+    private suspend fun health(peerUrl: URL): Int = client.get("$peerUrl$HEALTH_ENDPOINT").status.value
 
     /**
      * Send status check request
      */
     suspend fun status(): PeerStatus = client.get("${getApiUrl()}$STATUS_ENDPOINT").body()
+
+    /**
+     * Send peers request
+     */
+    suspend fun peers(): List<Peer> = client.get("${getApiUrl()}$PEERS_ENDPOINT").body()
 
     /**
      * Send schema request

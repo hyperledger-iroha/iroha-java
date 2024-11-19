@@ -135,6 +135,7 @@ open class Iroha2Client(
         const val WS_ENDPOINT_BLOCK_STREAM = "/block/stream"
         const val HEALTH_ENDPOINT = "/health"
         const val STATUS_ENDPOINT = "/status"
+        const val PEERS_ENDPOINT = "/peers"
         const val SCHEMA_ENDPOINT = "/schema"
         const val METRICS_ENDPOINT = "/metrics"
         const val CONFIGURATION_ENDPOINT = "/configuration"

@@ -306,7 +306,7 @@ object RegisterBoxDeserializer : JsonDeserializer<RegisterBox>() {
     private fun getRegisterBox(arg: Any): RegisterBox = when (arg) {
         is NewDomain -> RegisterBox.Domain(RegisterOfDomain(arg))
         is NewAccount -> RegisterBox.Account(RegisterOfAccount(arg))
-        is Peer -> RegisterBox.Peer(RegisterOfPeer(arg))
+        is Peer -> RegisterBox.Peer(RegisterOfPeer(arg.id))
         is NewAssetDefinition -> RegisterBox.AssetDefinition(RegisterOfAssetDefinition(arg))
         is Asset -> RegisterBox.Asset(RegisterOfAsset(arg))
         is Trigger -> RegisterBox.Trigger(RegisterOfTrigger(arg))

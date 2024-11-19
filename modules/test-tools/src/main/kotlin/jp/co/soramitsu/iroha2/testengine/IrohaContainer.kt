@@ -40,7 +40,7 @@ open class IrohaContainer : GenericContainer<IrohaContainer> {
         val genesisPublicKey = config.genesisKeyPair.public.bytes().toHex()
         val genesisPrivateKey = config.genesisKeyPair.private.bytes().toHex()
 
-        val topology = config.trustedPeers.map { it.second.publicKey.payload.toHex(true) }
+        val topology = config.trustedPeers.map { it.id.publicKey.payload.toHex(true) }
 
         this.p2pPort = config.ports[IrohaConfig.P2P_PORT_IDX]
         this.apiPort = config.ports[IrohaConfig.API_PORT_IDX]
@@ -53,7 +53,7 @@ open class IrohaContainer : GenericContainer<IrohaContainer> {
                 "TRUSTED_PEERS",
                 "[" +
                     config.trustedPeers.joinToString(",") {
-                        JSON_SERDE.writeValueAsString(it.second.publicKey).trimEnd('"') + "@" + JSON_SERDE.writeValueAsString(it.first).trimStart(
+                        JSON_SERDE.writeValueAsString(it.id.publicKey).trimEnd('"') + "@" + JSON_SERDE.writeValueAsString(it.address).trimStart(
                             '"',
                         )
                     } + "]",

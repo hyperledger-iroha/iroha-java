@@ -8,27 +8,28 @@ import jp.co.soramitsu.iroha2.codec.ScaleCodecWriter
 import jp.co.soramitsu.iroha2.codec.ScaleReader
 import jp.co.soramitsu.iroha2.codec.ScaleWriter
 import jp.co.soramitsu.iroha2.wrapException
+import kotlin.Int
 import kotlin.Unit
 
 /**
- * RegisterOfPeer
+ * NonZeroOfu16
  *
- * Generated from 'RegisterOfPeer' regular structure
+ * Generated from 'NonZeroOfu16' regular structure
  */
-public data class RegisterOfPeer(
-    public val `object`: PeerId,
+public data class NonZeroOfu16(
+    public val u16: Int,
 ) {
-    public companion object : ScaleReader<RegisterOfPeer>, ScaleWriter<RegisterOfPeer> {
-        override fun read(reader: ScaleCodecReader): RegisterOfPeer = try {
-            RegisterOfPeer(
-                PeerId.read(reader),
+    public companion object : ScaleReader<NonZeroOfu16>, ScaleWriter<NonZeroOfu16> {
+        override fun read(reader: ScaleCodecReader): NonZeroOfu16 = try {
+            NonZeroOfu16(
+                reader.readUint16(),
             )
         } catch (ex: Exception) {
             throw wrapException(ex)
         }
 
-        override fun write(writer: ScaleCodecWriter, instance: RegisterOfPeer): Unit = try {
-            PeerId.write(writer, instance.`object`)
+        override fun write(writer: ScaleCodecWriter, instance: NonZeroOfu16): Unit = try {
+            writer.writeUint16(instance.u16)
         } catch (ex: Exception) {
             throw wrapException(ex)
         }

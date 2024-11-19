@@ -22,7 +22,6 @@ import jp.co.soramitsu.iroha2.testengine.AliceHasPermissionToRegisterDomain
 import jp.co.soramitsu.iroha2.testengine.AliceHasPermissionToUnregisterDomain
 import jp.co.soramitsu.iroha2.testengine.BOB_ACCOUNT_ID
 import jp.co.soramitsu.iroha2.testengine.BOB_KEYPAIR
-import jp.co.soramitsu.iroha2.testengine.BobHasPermissionToModifyDomainMetadata
 import jp.co.soramitsu.iroha2.testengine.BobHasPermissionToRegisterDomain
 import jp.co.soramitsu.iroha2.testengine.DEFAULT_ASSET_DEFINITION_ID
 import jp.co.soramitsu.iroha2.testengine.DEFAULT_ASSET_ID
@@ -378,12 +377,9 @@ class InstructionsTest : IrohaTest<Iroha2Client>() {
     @Test
     @Feature("Accounts")
     @Story("Account sets key value pair")
-    @Permission("CanSetKeyValueInDomain")
-    @SdkTestId("set_key_value_pair_for_another_account_domain_definition")
-    @WithIroha(
-        [BobHasPermissionToRegisterDomain::class, BobHasPermissionToModifyDomainMetadata::class],
-        configs = ["LOG_LEVEL${IROHA_CONFIG_DELIMITER}TRACE"],
-    )
+    @Permission("CanModifyDomainMetadata")
+    @SdkTestId("modify_metadata_for_another_account_domain_definition")
+    @WithIroha([BobHasPermissionToRegisterDomain::class])
     fun `domain metadata set key value with permissions`(): Unit = runBlocking {
         val domainId = DomainId(randomAlphabetic(10).asName())
         client.tx(BOB_ACCOUNT_ID, BOB_KEYPAIR) {
@@ -404,8 +400,8 @@ class InstructionsTest : IrohaTest<Iroha2Client>() {
     @WithIroha([DefaultGenesis::class])
     @Feature("Accounts")
     @Story("Account sets key value pair")
-    @Permission("CanSetKeyValueInUserAsset")
-    @SdkTestId("set_key_value_pair_for_another_account_asset_definition")
+    @Permission("CanModifyAssetMetadata")
+    @SdkTestId("modify_metadata_for_another_account_asset_definition")
     fun `grant access to asset key-value and then revoke`(): Unit = runBlocking {
         val aliceAssetId = DEFAULT_ASSET_ID
 
@@ -413,7 +409,7 @@ class InstructionsTest : IrohaTest<Iroha2Client>() {
             registerAssetDefinition(aliceAssetId.definition, AssetType.Store())
             // grant by Alice to Bob permissions to set key value in Asset.Store
             grantPermissionToken(
-                Permissions.CanSetKeyValueInUserAsset,
+                Permissions.CanModifyAssetMetadata,
                 aliceAssetId.asJsonString(true),
                 BOB_ACCOUNT_ID,
             )

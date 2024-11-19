@@ -12,10 +12,7 @@ import jp.co.soramitsu.iroha2.cast
 import jp.co.soramitsu.iroha2.client.Iroha2AsyncClient
 import jp.co.soramitsu.iroha2.client.Iroha2Client
 import jp.co.soramitsu.iroha2.generateKeyPair
-import jp.co.soramitsu.iroha2.generated.ChainId
-import jp.co.soramitsu.iroha2.generated.PeerId
-import jp.co.soramitsu.iroha2.generated.SocketAddr
-import jp.co.soramitsu.iroha2.generated.SocketAddrHost
+import jp.co.soramitsu.iroha2.generated.*
 import jp.co.soramitsu.iroha2.keyPairFromHex
 import jp.co.soramitsu.iroha2.model.IrohaUrls
 import jp.co.soramitsu.iroha2.toIrohaPublicKey
@@ -224,7 +221,7 @@ class IrohaRunnerExtension : InvocationInterceptor, BeforeEachCallback {
         }
         val peerIds = keyPairs.mapIndexed { i: Int, kp: KeyPair ->
             val p2pPort = portsList[i][IrohaConfig.P2P_PORT_IDX]
-            Pair(
+            Peer(
                 SocketAddr.Host(SocketAddrHost(IrohaContainer.NETWORK_ALIAS + p2pPort, p2pPort)),
                 kp.toPeerId(),
             )
