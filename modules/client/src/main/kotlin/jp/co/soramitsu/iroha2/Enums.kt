@@ -24,7 +24,7 @@ enum class Permissions(val type: String) {
     CanUnregisterAsset("CanUnregisterAsset"),
     CanMintAsset("CanMintAsset"),
     CanBurnAsset("CanBurnAsset"),
-    CanTransferAssets("CanTransferAsset"),
+    CanTransferAsset("CanTransferAsset"),
     CanModifyAssetMetadata("CanModifyAssetMetadata"),
 
     CanSetParameters("CanSetParameters"),

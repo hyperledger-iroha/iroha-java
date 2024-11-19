@@ -42,6 +42,15 @@ import kotlin.random.Random.Default.nextDouble
  */
 open class DefaultGenesis(transaction: RawGenesisTransaction? = null) : Genesis(transaction ?: rawGenesisTx())
 
+open class BobCanManageRoles : Genesis(
+    rawGenesisTx(
+        Instructions.grantPermissionToken(
+            Permissions.CanManageRoles,
+            destinationId = BOB_ACCOUNT_ID,
+        ),
+    ),
+)
+
 open class BobHasPermissionToRegisterDomain : Genesis(
     rawGenesisTx(
         Instructions.grantPermissionToken(

@@ -156,6 +156,18 @@ class QueryBuilder<R>(private val query: QueryBox, private val extractor: Result
         }
 
         @JvmStatic
+        fun findAssetsByAccountId(accountId: AccountId): QueryBuilder<List<Asset>> {
+            val predicate = CompoundPredicateOfAssetPredicateBox.Atom(
+                AssetPredicateBox.Id(
+                    AssetIdPredicateBox.AccountId(
+                        AccountIdPredicateBox.Equals(accountId),
+                    ),
+                ),
+            )
+            return QueryBuilder(Queries.findAssets(predicate), AssetsExtractor)
+        }
+
+        @JvmStatic
         fun findAssetById(assetId: AssetId): QueryBuilder<Asset?> {
             val predicate = CompoundPredicateOfAssetPredicateBox.Atom(
                 AssetPredicateBox.Id(AssetIdPredicateBox.Equals(assetId)),
