@@ -40,15 +40,6 @@ data class VecType(
 ) : IterableType(name, innerType, sorted)
 
 /**
- * `SetType` iterable type.
- */
-data class SetType(
-    override val name: String,
-    override val innerType: TypeNest,
-    override var sorted: Boolean = false,
-) : IterableType(name, innerType, sorted)
-
-/**
  * `ArrayType` iterable type.
  */
 data class ArrayType(
@@ -64,13 +55,4 @@ data class ArrayType(
 data class CompactType(
     override val name: String,
     override val innerType: TypeNest,
-) : WrapperType(name, innerType)
-
-/**
- * Fixed-point type
- */
-data class FixedPointType(
-    override val name: String,
-    override val innerType: TypeNest,
-    val decimalPlaces: Int,
 ) : WrapperType(name, innerType)

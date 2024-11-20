@@ -6,7 +6,6 @@ import jp.co.soramitsu.iroha2.type.ArrayType
 import jp.co.soramitsu.iroha2.type.BooleanType
 import jp.co.soramitsu.iroha2.type.CompactType
 import jp.co.soramitsu.iroha2.type.EnumType
-import jp.co.soramitsu.iroha2.type.FixedPointType
 import jp.co.soramitsu.iroha2.type.I128Type
 import jp.co.soramitsu.iroha2.type.I16Type
 import jp.co.soramitsu.iroha2.type.I256Type
@@ -18,7 +17,6 @@ import jp.co.soramitsu.iroha2.type.IterableType
 import jp.co.soramitsu.iroha2.type.MapType
 import jp.co.soramitsu.iroha2.type.NullType
 import jp.co.soramitsu.iroha2.type.OptionType
-import jp.co.soramitsu.iroha2.type.SetType
 import jp.co.soramitsu.iroha2.type.StringType
 import jp.co.soramitsu.iroha2.type.StructType
 import jp.co.soramitsu.iroha2.type.TupleStructType
@@ -53,9 +51,6 @@ class TypeResolver(private val schemaParser: SchemaParser) {
         CompactResolver,
         UIntResolver,
         IntResolver,
-        SetResolver,
-        FixedPointResolver,
-        QueryResolver,
     )
 
     /**
@@ -226,17 +221,6 @@ object VectorResolver : SortedWrapperResolver<VecType>("Vec") {
 }
 
 /**
- * Resolver for [SetType]
- */
-object SetResolver : WrapperResolver<SetType>("BTreeSet") {
-    override fun createWrapper(
-        name: String,
-        innerType: TypeNest,
-        sorted: Boolean,
-    ) = SetType(name, innerType, sorted)
-}
-
-/**
  * Resolver for [ArrayType]
  */
 object ArrayResolver : Resolver<ArrayType> {
@@ -368,20 +352,6 @@ object OneStringStructResolver : Resolver<StructType> {
 }
 
 /**
- * Resolver for [StructType]
- */
-object QueryResolver : Resolver<StructType> {
-    override fun resolve(name: String, typeValue: Any?, schemaParser: SchemaParser): StructType? {
-        return if (name.startsWith("Find") && typeValue == null) {
-            val generics = extractGeneric(name, schemaParser)
-            StructType(name, generics, emptyMap())
-        } else {
-            null
-        }
-    }
-}
-
-/**
  * Resolver for [StringType]
  */
 object StringResolver : Resolver<StringType> {
@@ -425,22 +395,6 @@ object IntResolver : Resolver<IntType> {
             "i128" -> I128Type
             "i256" -> I256Type
             else -> null
-        }
-    }
-}
-
-/**
- * Resolver for [FixedPointType]
- */
-object FixedPointResolver : Resolver<FixedPointType> {
-    override fun resolve(name: String, typeValue: Any?, schemaParser: SchemaParser): FixedPointType? {
-        return if (name.startsWith("FixedPoint<") && typeValue is Map<*, *>) {
-            val members = (typeValue["FixedPoint"] as? Map<String, Any>)!!
-            val base = schemaParser.createAndGetNest(members["base"]!! as String)
-            val decimalPlaces = members["decimal_places"]!! as Int
-            FixedPointType(name, base, decimalPlaces)
-        } else {
-            null
         }
     }
 }

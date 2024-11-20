@@ -16,7 +16,7 @@ import kotlin.Unit
 /**
  * FindPeers
  *
- * Generated from 'FindPeers' regular structure
+ * Generated from 'FindPeers' tuple structure
  */
 public class FindPeers {
     public companion object : ScaleReader<FindPeers>, ScaleWriter<FindPeers> {

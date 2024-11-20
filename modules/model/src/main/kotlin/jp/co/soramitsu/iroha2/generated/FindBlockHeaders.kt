@@ -16,7 +16,7 @@ import kotlin.Unit
 /**
  * FindBlockHeaders
  *
- * Generated from 'FindBlockHeaders' regular structure
+ * Generated from 'FindBlockHeaders' tuple structure
  */
 public class FindBlockHeaders {
     public companion object : ScaleReader<FindBlockHeaders>, ScaleWriter<FindBlockHeaders> {

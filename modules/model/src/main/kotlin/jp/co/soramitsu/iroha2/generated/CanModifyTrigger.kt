@@ -3,6 +3,7 @@
 //
 package jp.co.soramitsu.iroha2.generated
 
+import jp.co.soramitsu.iroha2.ModelPermission
 import jp.co.soramitsu.iroha2.codec.ScaleCodecReader
 import jp.co.soramitsu.iroha2.codec.ScaleCodecWriter
 import jp.co.soramitsu.iroha2.codec.ScaleReader
@@ -17,7 +18,7 @@ import kotlin.Unit
  */
 public data class CanModifyTrigger(
     public val trigger: TriggerId,
-) {
+) : ModelPermission {
     public companion object : ScaleReader<CanModifyTrigger>, ScaleWriter<CanModifyTrigger> {
         override fun read(reader: ScaleCodecReader): CanModifyTrigger = try {
             CanModifyTrigger(

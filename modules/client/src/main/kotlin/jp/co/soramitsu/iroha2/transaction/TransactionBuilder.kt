@@ -2,12 +2,7 @@
 
 package jp.co.soramitsu.iroha2.transaction
 
-import jp.co.soramitsu.iroha2.IrohaClientException
-import jp.co.soramitsu.iroha2.Permissions
-import jp.co.soramitsu.iroha2.U32_MAX_VALUE
-import jp.co.soramitsu.iroha2.asIrohaJson
-import jp.co.soramitsu.iroha2.asName
-import jp.co.soramitsu.iroha2.asSignatureOf
+import jp.co.soramitsu.iroha2.*
 import jp.co.soramitsu.iroha2.generated.AccountId
 import jp.co.soramitsu.iroha2.generated.AssetDefinitionId
 import jp.co.soramitsu.iroha2.generated.AssetId
@@ -17,7 +12,6 @@ import jp.co.soramitsu.iroha2.generated.ChainId
 import jp.co.soramitsu.iroha2.generated.DomainId
 import jp.co.soramitsu.iroha2.generated.EventFilterBox
 import jp.co.soramitsu.iroha2.generated.Executable
-import jp.co.soramitsu.iroha2.generated.ExecutionTime
 import jp.co.soramitsu.iroha2.generated.InstructionBox
 import jp.co.soramitsu.iroha2.generated.IpfsPath
 import jp.co.soramitsu.iroha2.generated.Json
@@ -27,18 +21,15 @@ import jp.co.soramitsu.iroha2.generated.Name
 import jp.co.soramitsu.iroha2.generated.NonZeroOfu32
 import jp.co.soramitsu.iroha2.generated.NonZeroOfu64
 import jp.co.soramitsu.iroha2.generated.PeerId
-import jp.co.soramitsu.iroha2.generated.Permission
 import jp.co.soramitsu.iroha2.generated.PublicKey
 import jp.co.soramitsu.iroha2.generated.Repeats
 import jp.co.soramitsu.iroha2.generated.RoleId
 import jp.co.soramitsu.iroha2.generated.Signature
 import jp.co.soramitsu.iroha2.generated.SignedTransaction
 import jp.co.soramitsu.iroha2.generated.SignedTransactionV1
-import jp.co.soramitsu.iroha2.generated.TimeEventFilter
 import jp.co.soramitsu.iroha2.generated.TransactionPayload
 import jp.co.soramitsu.iroha2.generated.TransactionSignature
 import jp.co.soramitsu.iroha2.generated.TriggerId
-import jp.co.soramitsu.iroha2.sign
 import java.math.BigDecimal
 import java.math.BigInteger
 import java.security.KeyPair
@@ -112,56 +103,16 @@ class TransactionBuilder(builder: TransactionBuilder.() -> Unit = {}) {
     }
 
     @JvmOverloads
-    fun registerTimeTrigger(
+    fun register(
         triggerId: TriggerId,
         isi: List<InstructionBox>,
         repeats: Repeats,
         accountId: AccountId,
-        filter: TimeEventFilter,
-        metadata: Metadata = Metadata(mapOf()),
-    ) = this.apply {
-        instructions.value.add(
-            Instructions.registerTrigger(
-                triggerId,
-                isi,
-                repeats,
-                accountId,
-                metadata,
-                filter,
-            ),
-        )
-    }
-
-    @JvmOverloads
-    fun registerExecutableTrigger(
-        triggerId: TriggerId,
-        isi: List<InstructionBox>,
-        repeats: Repeats,
-        accountId: AccountId,
-        metadata: Metadata = Metadata(mapOf()),
-    ) = this.apply {
-        instructions.value.add(
-            Instructions.registerTrigger(
-                triggerId,
-                isi,
-                repeats,
-                accountId,
-                metadata,
-            ),
-        )
-    }
-
-    @JvmOverloads
-    fun registerEventTrigger(
-        triggerId: TriggerId,
-        isi: List<InstructionBox>,
-        repeats: Repeats,
-        accountId: AccountId,
-        metadata: Metadata = Metadata(mapOf()),
         filter: EventFilterBox,
+        metadata: Metadata = Metadata(mapOf()),
     ) = this.apply {
         instructions.value.add(
-            Instructions.registerTrigger(
+            Instructions.register(
                 triggerId,
                 isi,
                 repeats,
@@ -173,16 +124,16 @@ class TransactionBuilder(builder: TransactionBuilder.() -> Unit = {}) {
     }
 
     @JvmOverloads
-    fun registerWasmTrigger(
+    fun register(
         triggerId: TriggerId,
         wasm: ByteArray,
         repeats: Repeats,
         accountId: AccountId,
-        metadata: Metadata = Metadata(mapOf()),
         filter: EventFilterBox,
+        metadata: Metadata = Metadata(mapOf()),
     ) = this.apply {
         instructions.value.add(
-            Instructions.registerTrigger(
+            Instructions.register(
                 triggerId,
                 wasm,
                 repeats,
@@ -193,89 +144,62 @@ class TransactionBuilder(builder: TransactionBuilder.() -> Unit = {}) {
         )
     }
 
-    @JvmOverloads
-    fun registerPreCommitTrigger(
-        triggerId: TriggerId,
-        isi: List<InstructionBox>,
-        repeats: Repeats,
-        accountId: AccountId,
-        metadata: Metadata = Metadata(mapOf()),
-        filter: EventFilterBox = EventFilterBox.Time(TimeEventFilter(ExecutionTime.PreCommit())),
-    ) = this.apply {
-        instructions.value.add(
-            Instructions.registerTrigger(
-                triggerId,
-                isi,
-                repeats,
-                accountId,
-                metadata,
-                filter,
-            ),
-        )
+    fun unregister(id: AssetId) = this.apply {
+        instructions.value.add(Instructions.unregister(id))
     }
 
-    fun unregisterAsset(id: AssetId) = this.apply {
-        instructions.value.add(Instructions.unregisterAsset(id))
-    }
-
-    fun unregisterAssetDefinition(id: AssetDefinitionId) = this.apply {
-        instructions.value.add(Instructions.unregisterAssetDefinition(id))
+    fun unregister(id: AssetDefinitionId) = this.apply {
+        instructions.value.add(Instructions.unregister(id))
     }
 
     fun unregisterTrigger(id: TriggerId) = this.apply {
         instructions.value.add(
-            Instructions.unregisterTrigger(id),
+            Instructions.unregister(id),
         )
     }
 
-    fun unregisterTrigger(triggerName: String, domainId: DomainId? = null) = this.apply {
+    fun unregister(id: AccountId) = this.apply {
         instructions.value.add(
-            Instructions.unregisterTrigger(triggerName, domainId),
+            Instructions.unregister(id),
         )
     }
 
-    fun unregisterAccount(id: AccountId) = this.apply {
+    fun unregister(id: DomainId) = this.apply {
         instructions.value.add(
-            Instructions.unregisterAccount(id),
+            Instructions.unregister(id),
         )
     }
 
-    fun unregisterDomain(id: DomainId) = this.apply {
-        instructions.value.add(
-            Instructions.unregisterDomain(id),
-        )
-    }
+    fun grantRole(roleId: RoleId, accountId: AccountId) = this.apply { instructions.value.add(Instructions.grant(roleId, accountId)) }
 
-    fun grantRole(roleId: RoleId, accountId: AccountId) = this.apply { instructions.value.add(Instructions.grantRole(roleId, accountId)) }
-
-    fun registerRole(
+    fun register(
         grantTo: AccountId,
         id: RoleId,
         vararg tokens: Permission,
     ) = this.apply {
-        instructions.value.add(Instructions.registerRole(grantTo, id, *tokens))
+        instructions.value.add(Instructions.register(grantTo, id, *tokens))
     }
 
-    fun unregisterRole(id: RoleId) = this.apply { instructions.value.add(Instructions.unregisterRole(id)) }
+    fun unregisterRole(id: RoleId) = this.apply { instructions.value.add(Instructions.unregister(id)) }
 
     @JvmOverloads
-    fun registerAccount(id: AccountId, metadata: Metadata = Metadata(mapOf())) =
-        this.apply { instructions.value.add(Instructions.registerAccount(id, metadata)) }
+    fun register(id: AccountId, metadata: Metadata = Metadata(mapOf())) =
+        this.apply { instructions.value.add(Instructions.register(id, metadata)) }
 
     @JvmOverloads
-    fun registerAssetDefinition(
+    fun register(
         id: AssetDefinitionId,
         assetValueType: AssetType,
         metadata: Metadata = Metadata(mapOf()),
         mintable: Mintable = Mintable.Infinitely(),
     ) = this.apply {
         instructions.value.add(
-            Instructions.registerAssetDefinition(id, assetValueType, metadata, mintable),
+            Instructions.register(id, assetValueType, metadata, mintable),
         )
     }
 
     @JvmOverloads
-    fun registerAssetDefinition(
+    fun register(
         name: Name,
         domainId: DomainId,
         assetValueType: AssetType,
@@ -283,128 +207,104 @@ class TransactionBuilder(builder: TransactionBuilder.() -> Unit = {}) {
         mintable: Mintable = Mintable.Infinitely(),
     ) = this.apply {
         instructions.value.add(
-            Instructions.registerAssetDefinition(AssetDefinitionId(domainId, name), assetValueType, metadata, mintable),
+            Instructions.register(AssetDefinitionId(domainId, name), assetValueType, metadata, mintable),
         )
     }
 
-    fun registerAsset(id: AssetId, assetValue: AssetValue) =
-        this.apply { instructions.value.add(Instructions.registerAsset(id, assetValue)) }
+    fun register(id: AssetId, assetValue: AssetValue) =
+        this.apply { instructions.value.add(Instructions.register(id, assetValue)) }
 
-    fun setKeyValue(
-        assetId: AssetId,
-        key: String,
-        value: String,
-    ) = this.apply { instructions.value.add(Instructions.setKeyValue(assetId, key.asName(), value)) }
-
-    fun setKeyValue(
+    fun<V> setKeyValue(
         assetId: AssetId,
         key: Name,
-        value: String,
+        value: V,
     ) = this.apply { instructions.value.add(Instructions.setKeyValue(assetId, key, value)) }
 
-    fun setKeyValue(
+    fun<V> setKeyValue(
         accountId: AccountId,
         key: Name,
-        value: String,
+        value: V,
     ) = this.apply { instructions.value.add(Instructions.setKeyValue(accountId, key, value)) }
 
-    fun setKeyValue(
+    fun<V> setKeyValue(
         definitionId: AssetDefinitionId,
         key: Name,
-        value: String,
+        value: V,
     ) = this.apply { instructions.value.add(Instructions.setKeyValue(definitionId, key, value)) }
 
-    fun setKeyValue(
+    fun<V> setKeyValue(
         triggerId: TriggerId,
         key: Name,
-        value: String,
+        value: V,
     ) = this.apply { instructions.value.add(Instructions.setKeyValue(triggerId, key, value)) }
 
-    fun setKeyValue(
+    fun<V> setKeyValue(
         domainId: DomainId,
         key: Name,
-        value: String,
+        value: V,
     ) = this.apply { instructions.value.add(Instructions.setKeyValue(domainId, key, value)) }
 
     fun removeKeyValue(assetId: AssetId, key: Name) = this.apply { instructions.value.add(Instructions.removeKeyValue(assetId, key)) }
 
-    fun removeKeyValue(assetId: AssetId, key: String) = removeKeyValue(assetId, key.asName())
-
-    fun executeTrigger(triggerId: TriggerId, args: String) = this.apply {
-        instructions.value.add(Instructions.executeTrigger(triggerId, Json(args)))
+    fun<V> executeTrigger(triggerId: TriggerId, args: V) = this.apply {
+        instructions.value.add(Instructions.executeTrigger(triggerId, args))
     }
 
-    fun mintAsset(assetId: AssetId, quantity: Int) = this.apply { instructions.value.add(Instructions.mintAsset(assetId, quantity)) }
+    fun mint(assetId: AssetId, quantity: Int) = this.apply { instructions.value.add(Instructions.mint(assetId, quantity)) }
 
-    fun mintAsset(assetId: AssetId, quantity: BigDecimal) = this.apply { instructions.value.add(Instructions.mintAsset(assetId, quantity)) }
+    fun mint(assetId: AssetId, quantity: BigDecimal) = this.apply { instructions.value.add(Instructions.mint(assetId, quantity)) }
 
     @JvmOverloads
-    fun registerDomain(
+    fun register(
         domainId: DomainId,
-        metadata: Map<Name, String> = mapOf(),
+        metadata: Map<Name, Json> = mapOf(),
         logo: IpfsPath? = null,
     ) = this.apply {
         instructions.value.add(
-            Instructions.registerDomain(
+            Instructions.register(
                 domainId,
-                metadata.mapValues { Json(it.value) },
+                metadata.mapValues { it.value },
                 logo,
             ),
         )
     }
 
-    fun registerPeer(peerId: PeerId) = this.apply { instructions.value.add(Instructions.registerPeer(peerId)) }
+    fun register(peerId: PeerId) = this.apply { instructions.value.add(Instructions.register(peerId)) }
 
-    fun unregisterPeer(peerId: PeerId) = this.apply { instructions.value.add(Instructions.unregisterPeer(peerId)) }
+    fun unregister(peerId: PeerId) = this.apply { instructions.value.add(Instructions.unregister(peerId)) }
 
-    fun grantPermissionToken(
-        permission: Permissions,
-        payload: String,
-        target: AccountId,
-    ) = grantPermissionToken(permission, payload.asIrohaJson(), target)
-
-    fun grantPermissionToken(
-        permission: Permissions,
-        payload: Json,
+    fun<P : Permission> grant(
+        permission: P,
         target: AccountId,
     ) = this.apply {
-        instructions.value.add(Instructions.grantPermissionToken(permission, payload, target))
+        instructions.value.add(Instructions.grant(permission, target))
     }
 
-    fun burnAsset(assetId: AssetId, value: Int) = this.apply {
-        instructions.value.add(Instructions.burnAsset(assetId, value))
+    fun burn(assetId: AssetId, value: Int) = this.apply {
+        instructions.value.add(Instructions.burn(assetId, value))
     }
 
-    fun burnAsset(assetId: AssetId, value: BigDecimal) = this.apply {
-        instructions.value.add(Instructions.burnAsset(assetId, value))
+    fun burn(assetId: AssetId, value: BigDecimal) = this.apply {
+        instructions.value.add(Instructions.burn(assetId, value))
     }
 
-    fun transferAsset(
+    fun transfer(
         sourceId: AssetId,
         value: Int,
         destinationId: AccountId,
     ) = this.apply {
-        instructions.value.add(Instructions.transferAsset(sourceId, value, destinationId))
+        instructions.value.add(Instructions.transfer(sourceId, value, destinationId))
     }
 
-    fun transferDomainOwnership(
+    fun transfer(
         sourceId: AccountId,
         value: DomainId,
         destinationId: AccountId,
     ) = this.apply {
-        instructions.value.add(Instructions.transferDomainOwnership(sourceId, value, destinationId))
+        instructions.value.add(Instructions.transfer(sourceId, value, destinationId))
     }
 
-    fun revokeSetKeyValueAsset(assetId: AssetId, target: AccountId) =
-        this.apply { instructions.value.add(Instructions.revokeSetKeyValueAsset(assetId, target)) }
-
-    fun revokeSetKeyValueAccount(accountId: AccountId, target: AccountId) =
-        this.apply { instructions.value.add(Instructions.revokeSetKeyValueAccount(accountId, target)) }
-
-    fun revokeSetKeyValueDomain(domainId: DomainId, target: AccountId) =
-        this.apply { instructions.value.add(Instructions.revokeSetKeyValueDomain(domainId, target)) }
-
-    fun revokeRole(roleId: RoleId, accountId: AccountId) = this.apply { instructions.value.add(Instructions.revokeRole(roleId, accountId)) }
+    fun revoke(roleId: RoleId, accountId: AccountId) = this.apply { instructions.value.add(Instructions.revoke(roleId, accountId)) }
 
     private fun fallbackCreationTime() = System.currentTimeMillis().toBigInteger()
 

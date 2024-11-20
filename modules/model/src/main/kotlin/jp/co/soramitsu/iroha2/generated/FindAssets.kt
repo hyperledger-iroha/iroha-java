@@ -16,7 +16,7 @@ import kotlin.Unit
 /**
  * FindAssets
  *
- * Generated from 'FindAssets' regular structure
+ * Generated from 'FindAssets' tuple structure
  */
 public class FindAssets {
     public companion object : ScaleReader<FindAssets>, ScaleWriter<FindAssets> {

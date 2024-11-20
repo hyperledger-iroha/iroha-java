@@ -12,7 +12,7 @@ sealed class Type(open val name: String) {
 }
 
 /**
- * Boolean type
+ * Unit struct type
  */
 object NullType : Type("null")
 

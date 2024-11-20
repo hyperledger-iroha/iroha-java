@@ -3,6 +3,7 @@
 //
 package jp.co.soramitsu.iroha2.generated
 
+import jp.co.soramitsu.iroha2.ModelPermission
 import jp.co.soramitsu.iroha2.codec.ScaleCodecReader
 import jp.co.soramitsu.iroha2.codec.ScaleCodecWriter
 import jp.co.soramitsu.iroha2.codec.ScaleReader
@@ -17,7 +18,7 @@ import kotlin.Unit
  */
 public data class CanUnregisterAsset(
     public val asset: AssetId,
-) {
+) : ModelPermission {
     public companion object : ScaleReader<CanUnregisterAsset>, ScaleWriter<CanUnregisterAsset> {
         override fun read(reader: ScaleCodecReader): CanUnregisterAsset = try {
             CanUnregisterAsset(

@@ -28,7 +28,7 @@ class SendTransaction(
         client.sendTransaction {
             account(admin)
             chainId(chainUuid)
-            registerDomain(id.asDomainId(), metadata)
+            register(id.asDomainId(), metadata)
             buildSigned(keyPair)
         }.also {
             withTimeout(timeout) { it.await() }
@@ -44,7 +44,7 @@ class SendTransaction(
         client.sendTransaction {
             account(admin)
             chainId(chainUuid)
-            registerAccount(id.asAccountId(), Metadata(metadata))
+            register(id.asAccountId(), Metadata(metadata))
             buildSigned(keyPair)
         }.also {
             withTimeout(timeout) { it.await() }
@@ -62,7 +62,7 @@ class SendTransaction(
         client.sendTransaction {
             account(admin)
             chainId(chainUuid)
-            registerAssetDefinition(id.asAssetDefinitionId(), type, Metadata(metadata), mintable)
+            register(id.asAssetDefinitionId(), type, Metadata(metadata), mintable)
             buildSigned(keyPair)
         }.also {
             withTimeout(timeout) { it.await() }
@@ -78,7 +78,7 @@ class SendTransaction(
         client.sendTransaction {
             account(admin)
             chainId(chainUuid)
-            registerAsset(id, value)
+            register(id, value)
             buildSigned(keyPair)
         }.also {
             withTimeout(timeout) { it.await() }
@@ -95,7 +95,7 @@ class SendTransaction(
         client.sendTransaction {
             account(admin)
             chainId(chainUuid)
-            transferAsset(from, value, to.asAccountId())
+            transfer(from, value, to.asAccountId())
             buildSigned(keyPair)
         }.also {
             withTimeout(timeout) { it.await() }
@@ -111,7 +111,7 @@ class SendTransaction(
         client.sendTransaction {
             account(admin)
             chainId(chainUuid)
-            burnAsset(assetId, value)
+            burn(assetId, value)
             buildSigned(keyPair)
         }.also {
             withTimeout(timeout) { it.await() }

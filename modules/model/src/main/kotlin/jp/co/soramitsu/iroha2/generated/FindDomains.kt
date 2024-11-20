@@ -16,7 +16,7 @@ import kotlin.Unit
 /**
  * FindDomains
  *
- * Generated from 'FindDomains' regular structure
+ * Generated from 'FindDomains' tuple structure
  */
 public class FindDomains {
     public companion object : ScaleReader<FindDomains>, ScaleWriter<FindDomains> {

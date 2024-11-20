@@ -5,6 +5,8 @@ package jp.co.soramitsu.iroha2
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.node.NullNode
 import com.fasterxml.jackson.databind.node.TextNode
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import com.google.gson.GsonBuilder
 import io.ktor.websocket.Frame
 import jp.co.soramitsu.iroha2.generated.Account
@@ -179,36 +181,41 @@ inline fun <reified B> Any.cast(): B = this as? B
 
 fun AssetId.asString(withPrefix: Boolean = true) = this.definition.asString() + ASSET_ID_DELIMITER + this.account.asString(withPrefix)
 
-fun AssetId.asJsonString(withPrefix: Boolean = true) = "{\"asset\": " +
+fun AssetId.asJson(withPrefix: Boolean = true) = "{\"asset\": " +
     "\"${this.definition.asString() + ASSET_ID_DELIMITER + this.account.asString(withPrefix)}\"}"
 
 fun AssetDefinitionId.asString() = this.name.string + ASSET_ID_DELIMITER + this.domain.name.string
 
-fun AssetDefinitionId.asJsonString(): Json =
-    "{\"asset_definition\": \"${this.name.string + ASSET_ID_DELIMITER + this.domain.name.string}\"}"
-        .asIrohaJson()
+fun AssetDefinitionId.asJson(): Json =
+    Json.writeValue("{\"asset_definition\": \"${this.name.string + ASSET_ID_DELIMITER + this.domain.name.string}\"}")
 
 fun AccountId.asString(withPrefix: Boolean = true) = this.signatory.payload.toHex(withPrefix) +
     ACCOUNT_ID_DELIMITER + this.domain.name.string
 
-fun AccountId.asJsonString(withPrefix: Boolean = true): Json =
-    "{\"account\": \"${this.signatory.payload.toHex(withPrefix) + ACCOUNT_ID_DELIMITER + this.domain.name.string}\"}"
-        .asIrohaJson()
+fun AccountId.asJson(withPrefix: Boolean = true): Json =
+    Json.writeValue(
+        "{\"account\": \"${this.signatory.payload.toHex(withPrefix) + ACCOUNT_ID_DELIMITER + this.domain.name.string}\"}",
+    )
 
-fun String.asIrohaJson() = Json(this)
+object JsonMapper {
+    val mapper = jacksonObjectMapper()
+}
+
+inline fun <reified T> Json.readValue(): T {
+    return JsonMapper.mapper.readValue(this.string)
+}
+fun Json.Companion.writeValue(value: Any): Json {
+    println("KITA: " + JsonMapper.mapper.convertValue(value, Json::class.java))
+    return JsonMapper.mapper.convertValue(value, Json::class.java)
+}
 
 fun DomainId.asString() = this.name.string
 
-fun DomainId.asJsonString() = "{\"domain\": \"${this.name.string}\"}".asIrohaJson()
+fun DomainId.asJson() = Json.writeValue("{\"domain\": \"${this.name.string}\"}")
 
 fun RoleId.asString() = this.name.string
 
-fun RoleId.asJsonString() = "{\"role\": \"${this.name.string}\"}"
-
-fun String.fromJsonString() = when {
-    this.startsWith("\"") && this.endsWith("\"") -> this.drop(1).dropLast(1)
-    else -> this
-}
+fun RoleId.asJson() = Json.writeValue("{\"role\": \"${this.name.string}\"}")
 
 fun SocketAddr.asString() = when (this) {
     is SocketAddr.Host -> this.socketAddrHost.let { "${it.host}:${it.port}" }

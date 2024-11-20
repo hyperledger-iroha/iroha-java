@@ -16,7 +16,7 @@ import kotlin.Unit
 /**
  * FindActiveTriggerIds
  *
- * Generated from 'FindActiveTriggerIds' regular structure
+ * Generated from 'FindActiveTriggerIds' tuple structure
  */
 public class FindActiveTriggerIds {
     public companion object : ScaleReader<FindActiveTriggerIds>, ScaleWriter<FindActiveTriggerIds> {

@@ -43,7 +43,7 @@ class GenesisTest : IrohaTest<Iroha2Client>() {
     @WithIroha([DefaultGenesis::class], executorSource = "src/test/resources/executor.wasm")
     fun `custom executor path`(): Unit = runBlocking {
         val definitionId = AssetDefinitionId(DEFAULT_DOMAIN_ID, "XSTUSD".asName())
-        client.tx { registerAssetDefinition(definitionId, AssetType.numeric()) }
+        client.tx { register(definitionId, AssetType.numeric()) }
 
         QueryBuilder.findAssetsDefinitions()
             .account(super.account)

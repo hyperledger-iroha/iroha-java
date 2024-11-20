@@ -16,7 +16,7 @@ import kotlin.Unit
 /**
  * FindRoles
  *
- * Generated from 'FindRoles' regular structure
+ * Generated from 'FindRoles' tuple structure
  */
 public class FindRoles {
     public companion object : ScaleReader<FindRoles>, ScaleWriter<FindRoles> {

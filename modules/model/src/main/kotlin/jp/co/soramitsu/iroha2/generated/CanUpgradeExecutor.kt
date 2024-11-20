@@ -3,6 +3,7 @@
 //
 package jp.co.soramitsu.iroha2.generated
 
+import jp.co.soramitsu.iroha2.ModelPermission
 import jp.co.soramitsu.iroha2.codec.ScaleCodecReader
 import jp.co.soramitsu.iroha2.codec.ScaleCodecWriter
 import jp.co.soramitsu.iroha2.codec.ScaleReader
@@ -14,28 +15,28 @@ import kotlin.Int
 import kotlin.Unit
 
 /**
- * FindRoleIds
+ * CanUpgradeExecutor
  *
- * Generated from 'FindRoleIds' tuple structure
+ * Generated from 'CanUpgradeExecutor' tuple structure
  */
-public class FindRoleIds {
-    public companion object : ScaleReader<FindRoleIds>, ScaleWriter<FindRoleIds> {
-        override fun read(reader: ScaleCodecReader): FindRoleIds = try {
-            FindRoleIds()
+public class CanUpgradeExecutor : ModelPermission {
+    public companion object : ScaleReader<CanUpgradeExecutor>, ScaleWriter<CanUpgradeExecutor> {
+        override fun read(reader: ScaleCodecReader): CanUpgradeExecutor = try {
+            CanUpgradeExecutor()
         } catch (ex: Exception) {
             throw wrapException(ex)
         }
 
-        override fun write(writer: ScaleCodecWriter, instance: FindRoleIds): Unit = try {
+        override fun write(writer: ScaleCodecWriter, instance: CanUpgradeExecutor): Unit = try {
         } catch (ex: Exception) {
             throw wrapException(ex)
         }
 
-        public fun equals(o1: FindRoleIds, o2: Any?): Boolean = when (o2) {
+        public fun equals(o1: CanUpgradeExecutor, o2: Any?): Boolean = when (o2) {
             null -> false
             else -> o2::class == o1::class
         }
 
-        override fun hashCode(): Int = ".FindRoleIds".hashCode()
+        override fun hashCode(): Int = ".CanUpgradeExecutor".hashCode()
     }
 }

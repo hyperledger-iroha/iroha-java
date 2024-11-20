@@ -3,6 +3,7 @@
 //
 package jp.co.soramitsu.iroha2.generated
 
+import jp.co.soramitsu.iroha2.ModelPermission
 import jp.co.soramitsu.iroha2.codec.ScaleCodecReader
 import jp.co.soramitsu.iroha2.codec.ScaleCodecWriter
 import jp.co.soramitsu.iroha2.codec.ScaleReader
@@ -14,28 +15,28 @@ import kotlin.Int
 import kotlin.Unit
 
 /**
- * FindRoleIds
+ * CanSetParameters
  *
- * Generated from 'FindRoleIds' tuple structure
+ * Generated from 'CanSetParameters' tuple structure
  */
-public class FindRoleIds {
-    public companion object : ScaleReader<FindRoleIds>, ScaleWriter<FindRoleIds> {
-        override fun read(reader: ScaleCodecReader): FindRoleIds = try {
-            FindRoleIds()
+public class CanSetParameters : ModelPermission {
+    public companion object : ScaleReader<CanSetParameters>, ScaleWriter<CanSetParameters> {
+        override fun read(reader: ScaleCodecReader): CanSetParameters = try {
+            CanSetParameters()
         } catch (ex: Exception) {
             throw wrapException(ex)
         }
 
-        override fun write(writer: ScaleCodecWriter, instance: FindRoleIds): Unit = try {
+        override fun write(writer: ScaleCodecWriter, instance: CanSetParameters): Unit = try {
         } catch (ex: Exception) {
             throw wrapException(ex)
         }
 
-        public fun equals(o1: FindRoleIds, o2: Any?): Boolean = when (o2) {
+        public fun equals(o1: CanSetParameters, o2: Any?): Boolean = when (o2) {
             null -> false
             else -> o2::class == o1::class
         }
 
-        override fun hashCode(): Int = ".FindRoleIds".hashCode()
+        override fun hashCode(): Int = ".CanSetParameters".hashCode()
     }
 }

@@ -16,7 +16,7 @@ import kotlin.Unit
 /**
  * FindExecutorDataModel
  *
- * Generated from 'FindExecutorDataModel' regular structure
+ * Generated from 'FindExecutorDataModel' tuple structure
  */
 public class FindExecutorDataModel {
     public companion object : ScaleReader<FindExecutorDataModel>, ScaleWriter<FindExecutorDataModel> {

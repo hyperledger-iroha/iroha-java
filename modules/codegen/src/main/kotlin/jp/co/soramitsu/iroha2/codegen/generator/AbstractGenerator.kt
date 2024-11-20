@@ -12,6 +12,7 @@ import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.TypeVariableName
 import com.squareup.kotlinpoet.WildcardTypeName
+import jp.co.soramitsu.iroha2.ModelPermission
 import jp.co.soramitsu.iroha2.codegen.blueprint.Blueprint
 import jp.co.soramitsu.iroha2.type.CompositeType
 
@@ -129,7 +130,11 @@ abstract class AbstractGenerator<T : Blueprint<*>> {
         }
     }
 
-    open fun implSuperClasses(blueprint: T, clazz: TypeSpec.Builder) = Unit
+    open fun implSuperClasses(blueprint: T, clazz: TypeSpec.Builder) {
+        if (blueprint.className.startsWith("Can")) {
+            clazz.addSuperinterface(ModelPermission::class)
+        }
+    }
 
     open fun implConstructor(blueprint: T, clazz: TypeSpec.Builder) {
         if (blueprint.properties.isEmpty()) {

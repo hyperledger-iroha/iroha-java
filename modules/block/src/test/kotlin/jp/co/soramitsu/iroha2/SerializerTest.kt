@@ -35,10 +35,10 @@ class SerializerTest {
                     SmartContractParameters(NonZeroOfu64(BigInteger.valueOf(9)), NonZeroOfu64(BigInteger.valueOf(10))),
                     emptyMap(),
                 ),
-                Instructions.grantPermissionToken(
+                Instructions.grant(
                     Permissions.CanUnregisterAccount,
                     "ed012004FF5B81046DDCCF19E2E451C45DFB6F53759D4EB30FA2EFA807284D1CC33016${ACCOUNT_ID_DELIMITER}wonderland".asAccountId()
-                        .asJsonString(withPrefix = true),
+                        .asJson(withPrefix = true),
                     "ed0120CE7FA46C9DCE7EA4B125E2E36BDB63EA33073E7590AC92816AE1E861B7048B03${ACCOUNT_ID_DELIMITER}wonderland".asAccountId(),
                 ).let { listOf(it) },
                 "",
@@ -120,11 +120,11 @@ class SerializerTest {
                     emptyMap(),
                 ),
                 listOf(
-                    Instructions.mintAsset(assetId, 100),
+                    Instructions.mint(assetId, 100),
                     Instructions.setKeyValue(assetId, "key".asName(), "value"),
-                    Instructions.registerTrigger(
+                    Instructions.register(
                         triggerId,
-                        listOf(Instructions.mintAsset(assetId, 1)),
+                        listOf(Instructions.mint(assetId, 1)),
                         Repeats.Indefinitely(),
                         aliceAccountId,
                         Metadata(mapOf()),

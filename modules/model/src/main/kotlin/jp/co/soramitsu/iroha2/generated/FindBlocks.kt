@@ -16,7 +16,7 @@ import kotlin.Unit
 /**
  * FindBlocks
  *
- * Generated from 'FindBlocks' regular structure
+ * Generated from 'FindBlocks' tuple structure
  */
 public class FindBlocks {
     public companion object : ScaleReader<FindBlocks>, ScaleWriter<FindBlocks> {

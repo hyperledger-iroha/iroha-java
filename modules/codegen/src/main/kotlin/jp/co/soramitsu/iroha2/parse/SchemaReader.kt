@@ -22,6 +22,7 @@ class SchemaReader {
         lines.forEach { line -> line.countRepeatedWithGenerics() }
         repeated.entries.removeIf { (it.key != "Trigger" && it.key != "Action") && it.value < 2 }
         toReplace.putAll(lines.mapNotNull { it.getReplacePairOrNull() }.toMap())
+        toReplace["null"] = "{\"Tuple\": []}"
 
         lines.forEach { line -> sb.appendLine(line.replace()) }
 

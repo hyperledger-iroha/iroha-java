@@ -16,7 +16,7 @@ import kotlin.Unit
 /**
  * FindParameters
  *
- * Generated from 'FindParameters' regular structure
+ * Generated from 'FindParameters' tuple structure
  */
 public class FindParameters {
     public companion object : ScaleReader<FindParameters>, ScaleWriter<FindParameters> {

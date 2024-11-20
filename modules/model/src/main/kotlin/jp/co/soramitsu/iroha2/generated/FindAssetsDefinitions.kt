@@ -16,7 +16,7 @@ import kotlin.Unit
 /**
  * FindAssetsDefinitions
  *
- * Generated from 'FindAssetsDefinitions' regular structure
+ * Generated from 'FindAssetsDefinitions' tuple structure
  */
 public class FindAssetsDefinitions {
     public companion object : ScaleReader<FindAssetsDefinitions>, ScaleWriter<FindAssetsDefinitions> {

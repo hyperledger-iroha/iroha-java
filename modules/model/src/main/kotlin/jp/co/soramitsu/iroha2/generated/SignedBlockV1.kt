@@ -7,6 +7,7 @@ import jp.co.soramitsu.iroha2.codec.ScaleCodecReader
 import jp.co.soramitsu.iroha2.codec.ScaleCodecWriter
 import jp.co.soramitsu.iroha2.codec.ScaleReader
 import jp.co.soramitsu.iroha2.codec.ScaleWriter
+import jp.co.soramitsu.iroha2.comparator
 import jp.co.soramitsu.iroha2.wrapException
 import java.math.BigInteger
 import kotlin.Unit
@@ -45,7 +46,9 @@ public data class SignedBlockV1(
             }
             BlockPayload.write(writer, instance.payload)
             writer.writeCompact(instance.errors.size)
-            instance.errors.toSortedMap().forEach { (key, value) ->
+            instance.errors.toSortedMap(
+                BigInteger.comparator(),
+            ).forEach { (key, value) ->
                 writer.writeUint64(key)
                 TransactionRejectionReason.write(writer, value)
             }

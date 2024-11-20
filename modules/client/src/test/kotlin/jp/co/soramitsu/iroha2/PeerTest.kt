@@ -181,7 +181,7 @@ class PeerTest : IrohaTest<AdminIroha2Client>() {
     private suspend fun unregisterPeer(peerId: PeerId, keyPair: KeyPair = ALICE_KEYPAIR) {
         client.sendTransaction {
             account(ALICE_ACCOUNT_ID)
-            unregisterPeer(peerId)
+            unregister(peerId)
             buildSigned(keyPair)
         }.also { d ->
             withTimeout(txTimeout.plus(Duration.ofSeconds(20))) { d.await() }
@@ -195,7 +195,7 @@ class PeerTest : IrohaTest<AdminIroha2Client>() {
     ) {
         client.sendTransaction {
             account(account)
-            registerPeer(peerId)
+            register(peerId)
             buildSigned(keyPair)
         }.also { d ->
             withTimeout(txTimeout.plus(Duration.ofSeconds(20))) { d.await() }

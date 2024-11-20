@@ -16,7 +16,7 @@ import kotlin.Unit
 /**
  * FindTriggers
  *
- * Generated from 'FindTriggers' regular structure
+ * Generated from 'FindTriggers' tuple structure
  */
 public class FindTriggers {
     public companion object : ScaleReader<FindTriggers>, ScaleWriter<FindTriggers> {

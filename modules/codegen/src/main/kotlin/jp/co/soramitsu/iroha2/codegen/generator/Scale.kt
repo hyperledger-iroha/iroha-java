@@ -17,14 +17,12 @@ import jp.co.soramitsu.iroha2.type.ArrayType
 import jp.co.soramitsu.iroha2.type.BooleanType
 import jp.co.soramitsu.iroha2.type.CompactType
 import jp.co.soramitsu.iroha2.type.CompositeType
-import jp.co.soramitsu.iroha2.type.FixedPointType
 import jp.co.soramitsu.iroha2.type.I128Type
 import jp.co.soramitsu.iroha2.type.I256Type
 import jp.co.soramitsu.iroha2.type.I32Type
 import jp.co.soramitsu.iroha2.type.I64Type
 import jp.co.soramitsu.iroha2.type.MapType
 import jp.co.soramitsu.iroha2.type.OptionType
-import jp.co.soramitsu.iroha2.type.SetType
 import jp.co.soramitsu.iroha2.type.StringType
 import jp.co.soramitsu.iroha2.type.Type
 import jp.co.soramitsu.iroha2.type.U128Type
@@ -52,10 +50,6 @@ fun resolveScaleReadImpl(type: Type): CodeBlock {
     return when (type) {
         is ArrayType -> type.scaleReadImpl()
         is VecType -> type.scaleReadImpl()
-        is SetType -> CodeBlock.of(
-            "reader.readSet(reader.readCompactInt()) {%L}",
-            resolveScaleReadImpl(type.innerType.requireValue()),
-        )
         is MapType -> CodeBlock.of(
             "reader.readMap(reader.readCompactInt(), {%1L}, {%2L})",
             resolveScaleReadImpl(type.key.requireValue()),
@@ -75,7 +69,6 @@ fun resolveScaleReadImpl(type: Type): CodeBlock {
         is BooleanType -> CodeBlock.of("reader.readBoolean()")
         is CompositeType -> type.scaleReadImpl()
         is OptionType -> type.scaleReadImpl()
-        is FixedPointType -> type.scaleReadImpl()
         is CompactType -> type.scaleReadImpl()
         else -> throw RuntimeException("Unexpected type: $type")
     }
@@ -88,7 +81,6 @@ fun resolveScaleWriteImpl(type: Type, propName: CodeBlock): CodeBlock {
     return when (type) {
         is ArrayType -> type.scaleWriteImpl(propName)
         is VecType -> type.scaleWriteImpl(propName)
-        is SetType -> type.scaleWriteImpl(propName)
         is MapType -> type.scaleWriteImpl(propName)
         is U8Type -> CodeBlock.of("writer.writeUByte(%L)", propName)
         is U16Type -> CodeBlock.of("writer.writeUint16(%L)", propName)
@@ -104,7 +96,6 @@ fun resolveScaleWriteImpl(type: Type, propName: CodeBlock): CodeBlock {
         is BooleanType -> CodeBlock.of("if (%L) { writer.directWrite(1) } else { writer.directWrite(0) }", propName)
         is CompositeType -> CodeBlock.of("%T.write(writer, %L)", withoutGenerics(resolveKotlinType(type)), propName)
         is OptionType -> type.scaleWriteImpl(propName)
-        is FixedPointType -> type.scaleWriteImpl(propName)
         is CompactType -> CodeBlock.of("writer.write(%T(), %L.toLong())", COMPACT_ULONG_WRITER, propName)
         else -> throw RuntimeException("Unexpected type: $type")
     }
@@ -165,16 +156,6 @@ private fun OptionType.scaleReadImpl(): CodeBlock {
     }
 }
 
-private fun FixedPointType.scaleReadImpl(): CodeBlock {
-    return when (this.innerType.requireValue()) {
-        is I64Type -> CodeBlock.builder()
-            .add(resolveScaleReadImpl(this.innerType.requireValue()))
-            .add(".toBigInteger().%M()", FROM_FIXED_POINT)
-            .build()
-        else -> throw RuntimeException("Fixed point with base type $this not implemented")
-    }
-}
-
 private fun CompactType.scaleReadImpl(): CodeBlock {
     return when (val innerType = this.innerType.requireValue()) {
         is U8Type -> CodeBlock.of("reader.readCompactInt().toShort()")
@@ -201,13 +182,6 @@ private fun MapType.scaleWriteImpl(propName: CodeBlock): CodeBlock {
         resolveScaleWriteImpl(this.value.requireValue(), CodeBlock.of("value")),
         sorted,
     )
-}
-
-private fun FixedPointType.scaleWriteImpl(propName: CodeBlock): CodeBlock {
-    return when (this.innerType.requireValue()) {
-        is I64Type -> CodeBlock.of("writer.writeInt64(%1L.%2M().toLong())", propName, TO_FIXED_POINT)
-        else -> throw RuntimeException("Fixed point with base type $this not implemented")
-    }
 }
 
 private fun OptionType.scaleWriteImpl(propName: CodeBlock): CodeBlock {
@@ -260,14 +234,6 @@ private fun VecType.scaleWriteImpl(propName: CodeBlock): CodeBlock {
             )
         }
     }
-}
-
-private fun SetType.scaleWriteImpl(propName: CodeBlock): CodeBlock {
-    return CodeBlock.of(
-        "writer.writeCompact(%1L.size)\n%1L.forEach { value -> %2L }",
-        propName,
-        resolveScaleWriteImpl(this.innerType.requireValue(), CodeBlock.of("value")),
-    )
 }
 
 private fun TypeName.rawTypeName() = ((this as? ParameterizedTypeName)?.rawType ?: (this as ClassName)).simpleName

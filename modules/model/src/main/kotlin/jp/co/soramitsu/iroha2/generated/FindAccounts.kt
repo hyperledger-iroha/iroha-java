@@ -16,7 +16,7 @@ import kotlin.Unit
 /**
  * FindAccounts
  *
- * Generated from 'FindAccounts' regular structure
+ * Generated from 'FindAccounts' tuple structure
  */
 public class FindAccounts {
     public companion object : ScaleReader<FindAccounts>, ScaleWriter<FindAccounts> {
