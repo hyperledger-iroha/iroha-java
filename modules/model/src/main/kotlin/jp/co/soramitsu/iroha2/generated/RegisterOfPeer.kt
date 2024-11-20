@@ -15,9 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'RegisterOfPeer' regular structure
  */
-public data class RegisterOfPeer(
-    public val `object`: PeerId,
-) {
+public data class RegisterOfPeer(public val `object`: PeerId) {
     public companion object : ScaleReader<RegisterOfPeer>, ScaleWriter<RegisterOfPeer> {
         override fun read(reader: ScaleCodecReader): RegisterOfPeer = try {
             RegisterOfPeer(

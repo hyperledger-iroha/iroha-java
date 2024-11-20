@@ -16,9 +16,7 @@ import kotlin.Unit
  *
  * Generated from 'CanUnregisterTrigger' regular structure
  */
-public data class CanUnregisterTrigger(
-    public val trigger: TriggerId,
-) : ModelPermission {
+public data class CanUnregisterTrigger(public val trigger: TriggerId) : ModelPermission {
     public companion object : ScaleReader<CanUnregisterTrigger>, ScaleWriter<CanUnregisterTrigger> {
         override fun read(reader: ScaleCodecReader): CanUnregisterTrigger = try {
             CanUnregisterTrigger(

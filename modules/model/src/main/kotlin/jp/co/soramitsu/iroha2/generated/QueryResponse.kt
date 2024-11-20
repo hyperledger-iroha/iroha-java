@@ -26,9 +26,7 @@ public sealed class QueryResponse : ModelEnum {
     /**
      * 'Singular' variant
      */
-    public data class Singular(
-        public val singularQueryOutputBox: SingularQueryOutputBox,
-    ) : QueryResponse() {
+    public data class Singular(public val singularQueryOutputBox: SingularQueryOutputBox) : QueryResponse() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -44,10 +42,7 @@ public sealed class QueryResponse : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.QueryResponse.Singular,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.QueryResponse.Singular): Unit = try {
                 SingularQueryOutputBox.write(writer, instance.singularQueryOutputBox)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -58,9 +53,7 @@ public sealed class QueryResponse : ModelEnum {
     /**
      * 'Iterable' variant
      */
-    public data class Iterable(
-        public val queryOutput: QueryOutput,
-    ) : QueryResponse() {
+    public data class Iterable(public val queryOutput: QueryOutput) : QueryResponse() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -76,10 +69,7 @@ public sealed class QueryResponse : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.QueryResponse.Iterable,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.QueryResponse.Iterable): Unit = try {
                 QueryOutput.write(writer, instance.queryOutput)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -94,14 +84,16 @@ public sealed class QueryResponse : ModelEnum {
         ) {
             0 -> Singular.read(reader)
             1 -> Iterable.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+        }
 
         override fun write(writer: ScaleCodecWriter, instance: QueryResponse) {
             writer.directWrite(instance.discriminant())
             when (val discriminant = instance.discriminant()) {
                 0 -> Singular.write(writer, instance as Singular)
                 1 -> Iterable.write(writer, instance as Iterable)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

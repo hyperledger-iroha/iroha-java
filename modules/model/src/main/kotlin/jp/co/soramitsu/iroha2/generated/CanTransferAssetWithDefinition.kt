@@ -16,9 +16,7 @@ import kotlin.Unit
  *
  * Generated from 'CanTransferAssetWithDefinition' regular structure
  */
-public data class CanTransferAssetWithDefinition(
-    public val assetDefinition: AssetDefinitionId,
-) : ModelPermission {
+public data class CanTransferAssetWithDefinition(public val assetDefinition: AssetDefinitionId) : ModelPermission {
     public companion object :
         ScaleReader<CanTransferAssetWithDefinition>,
         ScaleWriter<CanTransferAssetWithDefinition> {
@@ -30,11 +28,10 @@ public data class CanTransferAssetWithDefinition(
             throw wrapException(ex)
         }
 
-        override fun write(writer: ScaleCodecWriter, instance: CanTransferAssetWithDefinition): Unit =
-            try {
-                AssetDefinitionId.write(writer, instance.assetDefinition)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+        override fun write(writer: ScaleCodecWriter, instance: CanTransferAssetWithDefinition): Unit = try {
+            AssetDefinitionId.write(writer, instance.assetDefinition)
+        } catch (ex: Exception) {
+            throw wrapException(ex)
+        }
     }
 }

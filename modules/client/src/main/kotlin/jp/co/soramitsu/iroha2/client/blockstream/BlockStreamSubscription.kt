@@ -35,9 +35,9 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.coroutines.CoroutineContext
 
-open class BlockStreamSubscription private constructor(
-    private val context: BlockStreamContext,
-) : CoroutineScope, AutoCloseable {
+open class BlockStreamSubscription private constructor(private val context: BlockStreamContext) :
+    CoroutineScope,
+    AutoCloseable {
 
     override val coroutineContext: CoroutineContext = Dispatchers.IO
 

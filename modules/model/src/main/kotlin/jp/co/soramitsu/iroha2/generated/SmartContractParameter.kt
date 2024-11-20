@@ -26,9 +26,7 @@ public sealed class SmartContractParameter : ModelEnum {
     /**
      * 'Fuel' variant
      */
-    public data class Fuel(
-        public val nonZeroOfu64: NonZeroOfu64,
-    ) : SmartContractParameter() {
+    public data class Fuel(public val nonZeroOfu64: NonZeroOfu64) : SmartContractParameter() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -44,23 +42,19 @@ public sealed class SmartContractParameter : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.SmartContractParameter.Fuel,
-            ): Unit = try {
-                NonZeroOfu64.write(writer, instance.nonZeroOfu64)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.SmartContractParameter.Fuel): Unit =
+                try {
+                    NonZeroOfu64.write(writer, instance.nonZeroOfu64)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
     /**
      * 'Memory' variant
      */
-    public data class Memory(
-        public val nonZeroOfu64: NonZeroOfu64,
-    ) : SmartContractParameter() {
+    public data class Memory(public val nonZeroOfu64: NonZeroOfu64) : SmartContractParameter() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -76,14 +70,12 @@ public sealed class SmartContractParameter : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.SmartContractParameter.Memory,
-            ): Unit = try {
-                NonZeroOfu64.write(writer, instance.nonZeroOfu64)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.SmartContractParameter.Memory): Unit =
+                try {
+                    NonZeroOfu64.write(writer, instance.nonZeroOfu64)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
@@ -94,14 +86,16 @@ public sealed class SmartContractParameter : ModelEnum {
         ) {
             0 -> Fuel.read(reader)
             1 -> Memory.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+        }
 
         override fun write(writer: ScaleCodecWriter, instance: SmartContractParameter) {
             writer.directWrite(instance.discriminant())
             when (val discriminant = instance.discriminant()) {
                 0 -> Fuel.write(writer, instance as Fuel)
                 1 -> Memory.write(writer, instance as Memory)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

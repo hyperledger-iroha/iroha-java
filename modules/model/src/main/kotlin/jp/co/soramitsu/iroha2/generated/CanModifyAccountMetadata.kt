@@ -16,9 +16,7 @@ import kotlin.Unit
  *
  * Generated from 'CanModifyAccountMetadata' regular structure
  */
-public data class CanModifyAccountMetadata(
-    public val account: AccountId,
-) : ModelPermission {
+public data class CanModifyAccountMetadata(public val account: AccountId) : ModelPermission {
     public companion object :
         ScaleReader<CanModifyAccountMetadata>,
         ScaleWriter<CanModifyAccountMetadata> {

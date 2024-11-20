@@ -15,10 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'TransactionParameters' regular structure
  */
-public data class TransactionParameters(
-    public val maxInstructions: NonZeroOfu64,
-    public val smartContractSize: NonZeroOfu64,
-) {
+public data class TransactionParameters(public val maxInstructions: NonZeroOfu64, public val smartContractSize: NonZeroOfu64) {
     public companion object : ScaleReader<TransactionParameters>, ScaleWriter<TransactionParameters> {
         override fun read(reader: ScaleCodecReader): TransactionParameters = try {
             TransactionParameters(

@@ -26,9 +26,7 @@ public sealed class TransactionParameter : ModelEnum {
     /**
      * 'MaxInstructions' variant
      */
-    public data class MaxInstructions(
-        public val nonZeroOfu64: NonZeroOfu64,
-    ) : TransactionParameter() {
+    public data class MaxInstructions(public val nonZeroOfu64: NonZeroOfu64) : TransactionParameter() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -47,21 +45,18 @@ public sealed class TransactionParameter : ModelEnum {
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.TransactionParameter.MaxInstructions,
-            ): Unit =
-                try {
-                    NonZeroOfu64.write(writer, instance.nonZeroOfu64)
-                } catch (ex: Exception) {
-                    throw wrapException(ex)
-                }
+            ): Unit = try {
+                NonZeroOfu64.write(writer, instance.nonZeroOfu64)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
         }
     }
 
     /**
      * 'SmartContractSize' variant
      */
-    public data class SmartContractSize(
-        public val nonZeroOfu64: NonZeroOfu64,
-    ) : TransactionParameter() {
+    public data class SmartContractSize(public val nonZeroOfu64: NonZeroOfu64) : TransactionParameter() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -80,12 +75,11 @@ public sealed class TransactionParameter : ModelEnum {
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.TransactionParameter.SmartContractSize,
-            ): Unit =
-                try {
-                    NonZeroOfu64.write(writer, instance.nonZeroOfu64)
-                } catch (ex: Exception) {
-                    throw wrapException(ex)
-                }
+            ): Unit = try {
+                NonZeroOfu64.write(writer, instance.nonZeroOfu64)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
         }
     }
 
@@ -96,14 +90,16 @@ public sealed class TransactionParameter : ModelEnum {
         ) {
             0 -> MaxInstructions.read(reader)
             1 -> SmartContractSize.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+        }
 
         override fun write(writer: ScaleCodecWriter, instance: TransactionParameter) {
             writer.directWrite(instance.discriminant())
             when (val discriminant = instance.discriminant()) {
                 0 -> MaxInstructions.write(writer, instance as MaxInstructions)
                 1 -> SmartContractSize.write(writer, instance as SmartContractSize)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

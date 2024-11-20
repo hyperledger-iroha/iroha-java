@@ -16,10 +16,7 @@ import kotlin.Unit
  *
  * Generated from 'SocketAddrV4' regular structure
  */
-public data class SocketAddrV4(
-    public val ip: Ipv4Addr,
-    public val port: Int,
-) {
+public data class SocketAddrV4(public val ip: Ipv4Addr, public val port: Int) {
     public companion object : ScaleReader<SocketAddrV4>, ScaleWriter<SocketAddrV4> {
         override fun read(reader: ScaleCodecReader): SocketAddrV4 = try {
             SocketAddrV4(

@@ -48,7 +48,11 @@ class IntReader(private val bit: Int) : ScaleReader<BigInteger> {
     }
 }
 
-private fun putBytes(buf: ByteBuffer, capacity: Int, rdr: ScaleCodecReader) {
+private fun putBytes(
+    buf: ByteBuffer,
+    capacity: Int,
+    rdr: ScaleCodecReader,
+) {
     for (i in 1..capacity) {
         buf.put(rdr.readByte())
     }

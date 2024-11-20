@@ -26,9 +26,7 @@ public sealed class AssetIdPredicateBox : ModelEnum {
     /**
      * 'Equals' variant
      */
-    public data class Equals(
-        public val assetId: AssetId,
-    ) : AssetIdPredicateBox() {
+    public data class Equals(public val assetId: AssetId) : AssetIdPredicateBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -44,23 +42,19 @@ public sealed class AssetIdPredicateBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.AssetIdPredicateBox.Equals,
-            ): Unit = try {
-                AssetId.write(writer, instance.assetId)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.AssetIdPredicateBox.Equals): Unit =
+                try {
+                    AssetId.write(writer, instance.assetId)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
     /**
      * 'DefinitionId' variant
      */
-    public data class DefinitionId(
-        public val assetDefinitionIdPredicateBox: AssetDefinitionIdPredicateBox,
-    ) : AssetIdPredicateBox() {
+    public data class DefinitionId(public val assetDefinitionIdPredicateBox: AssetDefinitionIdPredicateBox) : AssetIdPredicateBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -90,9 +84,7 @@ public sealed class AssetIdPredicateBox : ModelEnum {
     /**
      * 'AccountId' variant
      */
-    public data class AccountId(
-        public val accountIdPredicateBox: AccountIdPredicateBox,
-    ) : AssetIdPredicateBox() {
+    public data class AccountId(public val accountIdPredicateBox: AccountIdPredicateBox) : AssetIdPredicateBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -108,14 +100,12 @@ public sealed class AssetIdPredicateBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.AssetIdPredicateBox.AccountId,
-            ): Unit = try {
-                AccountIdPredicateBox.write(writer, instance.accountIdPredicateBox)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.AssetIdPredicateBox.AccountId): Unit =
+                try {
+                    AccountIdPredicateBox.write(writer, instance.accountIdPredicateBox)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
@@ -127,7 +117,8 @@ public sealed class AssetIdPredicateBox : ModelEnum {
             0 -> Equals.read(reader)
             1 -> DefinitionId.read(reader)
             2 -> AccountId.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+        }
 
         override fun write(writer: ScaleCodecWriter, instance: AssetIdPredicateBox) {
             writer.directWrite(instance.discriminant())
@@ -135,7 +126,8 @@ public sealed class AssetIdPredicateBox : ModelEnum {
                 0 -> Equals.write(writer, instance as Equals)
                 1 -> DefinitionId.write(writer, instance as DefinitionId)
                 2 -> AccountId.write(writer, instance as AccountId)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

@@ -15,9 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'RegisterOfAccount' regular structure
  */
-public data class RegisterOfAccount(
-    public val `object`: NewAccount,
-) {
+public data class RegisterOfAccount(public val `object`: NewAccount) {
     public companion object : ScaleReader<RegisterOfAccount>, ScaleWriter<RegisterOfAccount> {
         override fun read(reader: ScaleCodecReader): RegisterOfAccount = try {
             RegisterOfAccount(

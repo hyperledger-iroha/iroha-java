@@ -31,10 +31,7 @@ public data class QueryWithFilterOfFindBlockHeadersAndBlockHeaderPredicateBox(
             throw wrapException(ex)
         }
 
-        override fun write(
-            writer: ScaleCodecWriter,
-            instance: QueryWithFilterOfFindBlockHeadersAndBlockHeaderPredicateBox,
-        ): Unit = try {
+        override fun write(writer: ScaleCodecWriter, instance: QueryWithFilterOfFindBlockHeadersAndBlockHeaderPredicateBox): Unit = try {
             FindBlockHeaders.write(writer, instance.query)
             CompoundPredicateOfBlockHeaderPredicateBox.write(writer, instance.predicate)
         } catch (ex: Exception) {

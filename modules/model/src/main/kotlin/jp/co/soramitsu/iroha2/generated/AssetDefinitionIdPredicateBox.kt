@@ -26,9 +26,7 @@ public sealed class AssetDefinitionIdPredicateBox : ModelEnum {
     /**
      * 'Equals' variant
      */
-    public data class Equals(
-        public val assetDefinitionId: AssetDefinitionId,
-    ) : AssetDefinitionIdPredicateBox() {
+    public data class Equals(public val assetDefinitionId: AssetDefinitionId) : AssetDefinitionIdPredicateBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -47,21 +45,18 @@ public sealed class AssetDefinitionIdPredicateBox : ModelEnum {
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.AssetDefinitionIdPredicateBox.Equals,
-            ): Unit =
-                try {
-                    AssetDefinitionId.write(writer, instance.assetDefinitionId)
-                } catch (ex: Exception) {
-                    throw wrapException(ex)
-                }
+            ): Unit = try {
+                AssetDefinitionId.write(writer, instance.assetDefinitionId)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
         }
     }
 
     /**
      * 'DomainId' variant
      */
-    public data class DomainId(
-        public val domainIdPredicateBox: DomainIdPredicateBox,
-    ) : AssetDefinitionIdPredicateBox() {
+    public data class DomainId(public val domainIdPredicateBox: DomainIdPredicateBox) : AssetDefinitionIdPredicateBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -80,21 +75,18 @@ public sealed class AssetDefinitionIdPredicateBox : ModelEnum {
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.AssetDefinitionIdPredicateBox.DomainId,
-            ): Unit =
-                try {
-                    DomainIdPredicateBox.write(writer, instance.domainIdPredicateBox)
-                } catch (ex: Exception) {
-                    throw wrapException(ex)
-                }
+            ): Unit = try {
+                DomainIdPredicateBox.write(writer, instance.domainIdPredicateBox)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
         }
     }
 
     /**
      * 'Name' variant
      */
-    public data class Name(
-        public val stringPredicateBox: StringPredicateBox,
-    ) : AssetDefinitionIdPredicateBox() {
+    public data class Name(public val stringPredicateBox: StringPredicateBox) : AssetDefinitionIdPredicateBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -131,7 +123,8 @@ public sealed class AssetDefinitionIdPredicateBox : ModelEnum {
             0 -> Equals.read(reader)
             1 -> DomainId.read(reader)
             2 -> Name.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+        }
 
         override fun write(writer: ScaleCodecWriter, instance: AssetDefinitionIdPredicateBox) {
             writer.directWrite(instance.discriminant())
@@ -139,7 +132,8 @@ public sealed class AssetDefinitionIdPredicateBox : ModelEnum {
                 0 -> Equals.write(writer, instance as Equals)
                 1 -> DomainId.write(writer, instance as DomainId)
                 2 -> Name.write(writer, instance as Name)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

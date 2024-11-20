@@ -15,10 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'BlockEventFilter' regular structure
  */
-public data class BlockEventFilter(
-    public val height: NonZeroOfu64? = null,
-    public val status: BlockStatus? = null,
-) {
+public data class BlockEventFilter(public val height: NonZeroOfu64? = null, public val status: BlockStatus? = null) {
     public companion object : ScaleReader<BlockEventFilter>, ScaleWriter<BlockEventFilter> {
         override fun read(reader: ScaleCodecReader): BlockEventFilter = try {
             BlockEventFilter(

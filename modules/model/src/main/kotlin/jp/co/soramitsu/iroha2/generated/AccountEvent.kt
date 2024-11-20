@@ -26,9 +26,7 @@ public sealed class AccountEvent : ModelEnum {
     /**
      * 'Created' variant
      */
-    public data class Created(
-        public val account: Account,
-    ) : AccountEvent() {
+    public data class Created(public val account: Account) : AccountEvent() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -44,10 +42,7 @@ public sealed class AccountEvent : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.AccountEvent.Created,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.AccountEvent.Created): Unit = try {
                 Account.write(writer, instance.account)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -58,9 +53,7 @@ public sealed class AccountEvent : ModelEnum {
     /**
      * 'Deleted' variant
      */
-    public data class Deleted(
-        public val accountId: AccountId,
-    ) : AccountEvent() {
+    public data class Deleted(public val accountId: AccountId) : AccountEvent() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -76,10 +69,7 @@ public sealed class AccountEvent : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.AccountEvent.Deleted,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.AccountEvent.Deleted): Unit = try {
                 AccountId.write(writer, instance.accountId)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -90,9 +80,7 @@ public sealed class AccountEvent : ModelEnum {
     /**
      * 'Asset' variant
      */
-    public data class Asset(
-        public val assetEvent: AssetEvent,
-    ) : AccountEvent() {
+    public data class Asset(public val assetEvent: AssetEvent) : AccountEvent() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -108,10 +96,7 @@ public sealed class AccountEvent : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.AccountEvent.Asset,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.AccountEvent.Asset): Unit = try {
                 AssetEvent.write(writer, instance.assetEvent)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -122,9 +107,7 @@ public sealed class AccountEvent : ModelEnum {
     /**
      * 'PermissionAdded' variant
      */
-    public data class PermissionAdded(
-        public val accountPermissionChanged: AccountPermissionChanged,
-    ) : AccountEvent() {
+    public data class PermissionAdded(public val accountPermissionChanged: AccountPermissionChanged) : AccountEvent() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -140,23 +123,19 @@ public sealed class AccountEvent : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.AccountEvent.PermissionAdded,
-            ): Unit = try {
-                AccountPermissionChanged.write(writer, instance.accountPermissionChanged)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.AccountEvent.PermissionAdded): Unit =
+                try {
+                    AccountPermissionChanged.write(writer, instance.accountPermissionChanged)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
     /**
      * 'PermissionRemoved' variant
      */
-    public data class PermissionRemoved(
-        public val accountPermissionChanged: AccountPermissionChanged,
-    ) : AccountEvent() {
+    public data class PermissionRemoved(public val accountPermissionChanged: AccountPermissionChanged) : AccountEvent() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -172,23 +151,19 @@ public sealed class AccountEvent : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.AccountEvent.PermissionRemoved,
-            ): Unit = try {
-                AccountPermissionChanged.write(writer, instance.accountPermissionChanged)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.AccountEvent.PermissionRemoved): Unit =
+                try {
+                    AccountPermissionChanged.write(writer, instance.accountPermissionChanged)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
     /**
      * 'RoleGranted' variant
      */
-    public data class RoleGranted(
-        public val accountRoleChanged: AccountRoleChanged,
-    ) : AccountEvent() {
+    public data class RoleGranted(public val accountRoleChanged: AccountRoleChanged) : AccountEvent() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -204,10 +179,7 @@ public sealed class AccountEvent : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.AccountEvent.RoleGranted,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.AccountEvent.RoleGranted): Unit = try {
                 AccountRoleChanged.write(writer, instance.accountRoleChanged)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -218,9 +190,7 @@ public sealed class AccountEvent : ModelEnum {
     /**
      * 'RoleRevoked' variant
      */
-    public data class RoleRevoked(
-        public val accountRoleChanged: AccountRoleChanged,
-    ) : AccountEvent() {
+    public data class RoleRevoked(public val accountRoleChanged: AccountRoleChanged) : AccountEvent() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -236,10 +206,7 @@ public sealed class AccountEvent : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.AccountEvent.RoleRevoked,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.AccountEvent.RoleRevoked): Unit = try {
                 AccountRoleChanged.write(writer, instance.accountRoleChanged)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -250,9 +217,7 @@ public sealed class AccountEvent : ModelEnum {
     /**
      * 'MetadataInserted' variant
      */
-    public data class MetadataInserted(
-        public val metadataChangedOfAccountId: MetadataChangedOfAccountId,
-    ) : AccountEvent() {
+    public data class MetadataInserted(public val metadataChangedOfAccountId: MetadataChangedOfAccountId) : AccountEvent() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -268,23 +233,19 @@ public sealed class AccountEvent : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.AccountEvent.MetadataInserted,
-            ): Unit = try {
-                MetadataChangedOfAccountId.write(writer, instance.metadataChangedOfAccountId)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.AccountEvent.MetadataInserted): Unit =
+                try {
+                    MetadataChangedOfAccountId.write(writer, instance.metadataChangedOfAccountId)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
     /**
      * 'MetadataRemoved' variant
      */
-    public data class MetadataRemoved(
-        public val metadataChangedOfAccountId: MetadataChangedOfAccountId,
-    ) : AccountEvent() {
+    public data class MetadataRemoved(public val metadataChangedOfAccountId: MetadataChangedOfAccountId) : AccountEvent() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -300,14 +261,12 @@ public sealed class AccountEvent : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.AccountEvent.MetadataRemoved,
-            ): Unit = try {
-                MetadataChangedOfAccountId.write(writer, instance.metadataChangedOfAccountId)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.AccountEvent.MetadataRemoved): Unit =
+                try {
+                    MetadataChangedOfAccountId.write(writer, instance.metadataChangedOfAccountId)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
@@ -325,7 +284,8 @@ public sealed class AccountEvent : ModelEnum {
             6 -> RoleRevoked.read(reader)
             7 -> MetadataInserted.read(reader)
             8 -> MetadataRemoved.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+        }
 
         override fun write(writer: ScaleCodecWriter, instance: AccountEvent) {
             writer.directWrite(instance.discriminant())
@@ -339,7 +299,8 @@ public sealed class AccountEvent : ModelEnum {
                 6 -> RoleRevoked.write(writer, instance as RoleRevoked)
                 7 -> MetadataInserted.write(writer, instance as MetadataInserted)
                 8 -> MetadataRemoved.write(writer, instance as MetadataRemoved)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

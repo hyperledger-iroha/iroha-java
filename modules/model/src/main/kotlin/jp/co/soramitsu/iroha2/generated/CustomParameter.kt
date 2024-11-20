@@ -15,10 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'CustomParameter' regular structure
  */
-public data class CustomParameter(
-    public val id: CustomParameterId,
-    public val payload: Json,
-) {
+public data class CustomParameter(public val id: CustomParameterId, public val payload: Json) {
     public companion object : ScaleReader<CustomParameter>, ScaleWriter<CustomParameter> {
         override fun read(reader: ScaleCodecReader): CustomParameter = try {
             CustomParameter(

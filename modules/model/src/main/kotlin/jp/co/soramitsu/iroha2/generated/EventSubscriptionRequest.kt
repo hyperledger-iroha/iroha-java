@@ -16,9 +16,7 @@ import kotlin.collections.List
  *
  * Generated from 'EventSubscriptionRequest' regular structure
  */
-public data class EventSubscriptionRequest(
-    public val vecOfEventFilterBox: List<EventFilterBox>,
-) {
+public data class EventSubscriptionRequest(public val vecOfEventFilterBox: List<EventFilterBox>) {
     public companion object :
         ScaleReader<EventSubscriptionRequest>,
         ScaleWriter<EventSubscriptionRequest> {

@@ -15,10 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'GrantOfPermissionAndRole' regular structure
  */
-public data class GrantOfPermissionAndRole(
-    public val `object`: Permission,
-    public val destination: RoleId,
-) {
+public data class GrantOfPermissionAndRole(public val `object`: Permission, public val destination: RoleId) {
     public companion object :
         ScaleReader<GrantOfPermissionAndRole>,
         ScaleWriter<GrantOfPermissionAndRole> {

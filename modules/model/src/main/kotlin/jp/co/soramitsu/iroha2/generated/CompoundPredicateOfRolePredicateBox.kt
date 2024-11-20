@@ -27,9 +27,7 @@ public sealed class CompoundPredicateOfRolePredicateBox : ModelEnum {
     /**
      * 'Atom' variant
      */
-    public data class Atom(
-        public val rolePredicateBox: RolePredicateBox,
-    ) : CompoundPredicateOfRolePredicateBox() {
+    public data class Atom(public val rolePredicateBox: RolePredicateBox) : CompoundPredicateOfRolePredicateBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -59,9 +57,8 @@ public sealed class CompoundPredicateOfRolePredicateBox : ModelEnum {
     /**
      * 'Not' variant
      */
-    public data class Not(
-        public val compoundPredicateOfRolePredicateBox: CompoundPredicateOfRolePredicateBox,
-    ) : CompoundPredicateOfRolePredicateBox() {
+    public data class Not(public val compoundPredicateOfRolePredicateBox: CompoundPredicateOfRolePredicateBox) :
+        CompoundPredicateOfRolePredicateBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -94,9 +91,7 @@ public sealed class CompoundPredicateOfRolePredicateBox : ModelEnum {
     /**
      * 'And' variant
      */
-    public data class And(
-        public val vec: List<CompoundPredicateOfRolePredicateBox>,
-    ) : CompoundPredicateOfRolePredicateBox() {
+    public data class And(public val vec: List<CompoundPredicateOfRolePredicateBox>) : CompoundPredicateOfRolePredicateBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -129,9 +124,7 @@ public sealed class CompoundPredicateOfRolePredicateBox : ModelEnum {
     /**
      * 'Or' variant
      */
-    public data class Or(
-        public val vec: List<CompoundPredicateOfRolePredicateBox>,
-    ) : CompoundPredicateOfRolePredicateBox() {
+    public data class Or(public val vec: List<CompoundPredicateOfRolePredicateBox>) : CompoundPredicateOfRolePredicateBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -150,15 +143,14 @@ public sealed class CompoundPredicateOfRolePredicateBox : ModelEnum {
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.CompoundPredicateOfRolePredicateBox.Or,
-            ): Unit =
-                try {
-                    writer.writeCompact(instance.vec.size)
-                    instance.vec.forEach { value ->
-                        CompoundPredicateOfRolePredicateBox.write(writer, value)
-                    }
-                } catch (ex: Exception) {
-                    throw wrapException(ex)
+            ): Unit = try {
+                writer.writeCompact(instance.vec.size)
+                instance.vec.forEach { value ->
+                    CompoundPredicateOfRolePredicateBox.write(writer, value)
                 }
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
         }
     }
 
@@ -173,7 +165,8 @@ public sealed class CompoundPredicateOfRolePredicateBox : ModelEnum {
             1 -> Not.read(reader)
             2 -> And.read(reader)
             3 -> Or.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+        }
 
         override fun write(writer: ScaleCodecWriter, instance: CompoundPredicateOfRolePredicateBox) {
             writer.directWrite(instance.discriminant())
@@ -182,7 +175,8 @@ public sealed class CompoundPredicateOfRolePredicateBox : ModelEnum {
                 1 -> Not.write(writer, instance as Not)
                 2 -> And.write(writer, instance as And)
                 3 -> Or.write(writer, instance as Or)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

@@ -27,9 +27,7 @@ public sealed class CompoundPredicateOfPeerPredicateBox : ModelEnum {
     /**
      * 'Atom' variant
      */
-    public data class Atom(
-        public val peerPredicateBox: PeerPredicateBox,
-    ) : CompoundPredicateOfPeerPredicateBox() {
+    public data class Atom(public val peerPredicateBox: PeerPredicateBox) : CompoundPredicateOfPeerPredicateBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -59,9 +57,8 @@ public sealed class CompoundPredicateOfPeerPredicateBox : ModelEnum {
     /**
      * 'Not' variant
      */
-    public data class Not(
-        public val compoundPredicateOfPeerPredicateBox: CompoundPredicateOfPeerPredicateBox,
-    ) : CompoundPredicateOfPeerPredicateBox() {
+    public data class Not(public val compoundPredicateOfPeerPredicateBox: CompoundPredicateOfPeerPredicateBox) :
+        CompoundPredicateOfPeerPredicateBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -94,9 +91,7 @@ public sealed class CompoundPredicateOfPeerPredicateBox : ModelEnum {
     /**
      * 'And' variant
      */
-    public data class And(
-        public val vec: List<CompoundPredicateOfPeerPredicateBox>,
-    ) : CompoundPredicateOfPeerPredicateBox() {
+    public data class And(public val vec: List<CompoundPredicateOfPeerPredicateBox>) : CompoundPredicateOfPeerPredicateBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -129,9 +124,7 @@ public sealed class CompoundPredicateOfPeerPredicateBox : ModelEnum {
     /**
      * 'Or' variant
      */
-    public data class Or(
-        public val vec: List<CompoundPredicateOfPeerPredicateBox>,
-    ) : CompoundPredicateOfPeerPredicateBox() {
+    public data class Or(public val vec: List<CompoundPredicateOfPeerPredicateBox>) : CompoundPredicateOfPeerPredicateBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -150,15 +143,14 @@ public sealed class CompoundPredicateOfPeerPredicateBox : ModelEnum {
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.CompoundPredicateOfPeerPredicateBox.Or,
-            ): Unit =
-                try {
-                    writer.writeCompact(instance.vec.size)
-                    instance.vec.forEach { value ->
-                        CompoundPredicateOfPeerPredicateBox.write(writer, value)
-                    }
-                } catch (ex: Exception) {
-                    throw wrapException(ex)
+            ): Unit = try {
+                writer.writeCompact(instance.vec.size)
+                instance.vec.forEach { value ->
+                    CompoundPredicateOfPeerPredicateBox.write(writer, value)
                 }
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
         }
     }
 
@@ -173,7 +165,8 @@ public sealed class CompoundPredicateOfPeerPredicateBox : ModelEnum {
             1 -> Not.read(reader)
             2 -> And.read(reader)
             3 -> Or.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+        }
 
         override fun write(writer: ScaleCodecWriter, instance: CompoundPredicateOfPeerPredicateBox) {
             writer.directWrite(instance.discriminant())
@@ -182,7 +175,8 @@ public sealed class CompoundPredicateOfPeerPredicateBox : ModelEnum {
                 1 -> Not.write(writer, instance as Not)
                 2 -> And.write(writer, instance as And)
                 3 -> Or.write(writer, instance as Or)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

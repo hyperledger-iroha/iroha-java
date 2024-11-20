@@ -26,9 +26,7 @@ public sealed class SignedBlock : ModelEnum {
     /**
      * 'V1' variant
      */
-    public data class V1(
-        public val signedBlockV1: SignedBlockV1,
-    ) : SignedBlock() {
+    public data class V1(public val signedBlockV1: SignedBlockV1) : SignedBlock() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -36,19 +34,15 @@ public sealed class SignedBlock : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.SignedBlock.V1> {
             public const val DISCRIMINANT: Int = 1
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.SignedBlock.V1 =
-                try {
-                    V1(
-                        SignedBlockV1.read(reader),
-                    )
-                } catch (ex: Exception) {
-                    throw wrapException(ex)
-                }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.SignedBlock.V1 = try {
+                V1(
+                    SignedBlockV1.read(reader),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.SignedBlock.V1,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.SignedBlock.V1): Unit = try {
                 SignedBlockV1.write(writer, instance.signedBlockV1)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -62,13 +56,15 @@ public sealed class SignedBlock : ModelEnum {
                 reader.readUByte()
         ) {
             1 -> V1.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+        }
 
         override fun write(writer: ScaleCodecWriter, instance: SignedBlock) {
             writer.directWrite(instance.discriminant())
             when (val discriminant = instance.discriminant()) {
                 1 -> V1.write(writer, instance as V1)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

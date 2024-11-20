@@ -31,10 +31,7 @@ public data class QueryWithFilterOfFindRolesByAccountIdAndRoleIdPredicateBox(
             throw wrapException(ex)
         }
 
-        override fun write(
-            writer: ScaleCodecWriter,
-            instance: QueryWithFilterOfFindRolesByAccountIdAndRoleIdPredicateBox,
-        ): Unit = try {
+        override fun write(writer: ScaleCodecWriter, instance: QueryWithFilterOfFindRolesByAccountIdAndRoleIdPredicateBox): Unit = try {
             FindRolesByAccountId.write(writer, instance.query)
             CompoundPredicateOfRoleIdPredicateBox.write(writer, instance.predicate)
         } catch (ex: Exception) {

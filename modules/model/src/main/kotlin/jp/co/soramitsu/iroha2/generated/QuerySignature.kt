@@ -15,9 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'QuerySignature' regular structure
  */
-public data class QuerySignature(
-    public val signatureOfOfQueryRequestWithAuthority: SignatureOf<QueryRequestWithAuthority>,
-) {
+public data class QuerySignature(public val signatureOfOfQueryRequestWithAuthority: SignatureOf<QueryRequestWithAuthority>) {
     public companion object : ScaleReader<QuerySignature>, ScaleWriter<QuerySignature> {
         override fun read(reader: ScaleCodecReader): QuerySignature = try {
             QuerySignature(

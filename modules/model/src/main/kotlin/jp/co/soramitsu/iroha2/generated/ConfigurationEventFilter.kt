@@ -16,9 +16,7 @@ import kotlin.Unit
  *
  * Generated from 'ConfigurationEventFilter' regular structure
  */
-public data class ConfigurationEventFilter(
-    public val eventSet: Long,
-) {
+public data class ConfigurationEventFilter(public val eventSet: Long) {
     public companion object :
         ScaleReader<ConfigurationEventFilter>,
         ScaleWriter<ConfigurationEventFilter> {

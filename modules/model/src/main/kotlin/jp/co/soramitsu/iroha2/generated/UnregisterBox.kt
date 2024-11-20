@@ -26,9 +26,7 @@ public sealed class UnregisterBox : ModelEnum {
     /**
      * 'Peer' variant
      */
-    public data class Peer(
-        public val unregisterOfPeer: UnregisterOfPeer,
-    ) : UnregisterBox() {
+    public data class Peer(public val unregisterOfPeer: UnregisterOfPeer) : UnregisterBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -44,10 +42,7 @@ public sealed class UnregisterBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.UnregisterBox.Peer,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.UnregisterBox.Peer): Unit = try {
                 UnregisterOfPeer.write(writer, instance.unregisterOfPeer)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -58,9 +53,7 @@ public sealed class UnregisterBox : ModelEnum {
     /**
      * 'Domain' variant
      */
-    public data class Domain(
-        public val unregisterOfDomain: UnregisterOfDomain,
-    ) : UnregisterBox() {
+    public data class Domain(public val unregisterOfDomain: UnregisterOfDomain) : UnregisterBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -76,10 +69,7 @@ public sealed class UnregisterBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.UnregisterBox.Domain,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.UnregisterBox.Domain): Unit = try {
                 UnregisterOfDomain.write(writer, instance.unregisterOfDomain)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -90,9 +80,7 @@ public sealed class UnregisterBox : ModelEnum {
     /**
      * 'Account' variant
      */
-    public data class Account(
-        public val unregisterOfAccount: UnregisterOfAccount,
-    ) : UnregisterBox() {
+    public data class Account(public val unregisterOfAccount: UnregisterOfAccount) : UnregisterBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -108,10 +96,7 @@ public sealed class UnregisterBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.UnregisterBox.Account,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.UnregisterBox.Account): Unit = try {
                 UnregisterOfAccount.write(writer, instance.unregisterOfAccount)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -122,9 +107,7 @@ public sealed class UnregisterBox : ModelEnum {
     /**
      * 'AssetDefinition' variant
      */
-    public data class AssetDefinition(
-        public val unregisterOfAssetDefinition: UnregisterOfAssetDefinition,
-    ) : UnregisterBox() {
+    public data class AssetDefinition(public val unregisterOfAssetDefinition: UnregisterOfAssetDefinition) : UnregisterBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -140,23 +123,19 @@ public sealed class UnregisterBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.UnregisterBox.AssetDefinition,
-            ): Unit = try {
-                UnregisterOfAssetDefinition.write(writer, instance.unregisterOfAssetDefinition)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.UnregisterBox.AssetDefinition): Unit =
+                try {
+                    UnregisterOfAssetDefinition.write(writer, instance.unregisterOfAssetDefinition)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
     /**
      * 'Asset' variant
      */
-    public data class Asset(
-        public val unregisterOfAsset: UnregisterOfAsset,
-    ) : UnregisterBox() {
+    public data class Asset(public val unregisterOfAsset: UnregisterOfAsset) : UnregisterBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -172,10 +151,7 @@ public sealed class UnregisterBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.UnregisterBox.Asset,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.UnregisterBox.Asset): Unit = try {
                 UnregisterOfAsset.write(writer, instance.unregisterOfAsset)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -186,9 +162,7 @@ public sealed class UnregisterBox : ModelEnum {
     /**
      * 'Role' variant
      */
-    public data class Role(
-        public val unregisterOfRole: UnregisterOfRole,
-    ) : UnregisterBox() {
+    public data class Role(public val unregisterOfRole: UnregisterOfRole) : UnregisterBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -204,10 +178,7 @@ public sealed class UnregisterBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.UnregisterBox.Role,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.UnregisterBox.Role): Unit = try {
                 UnregisterOfRole.write(writer, instance.unregisterOfRole)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -218,9 +189,7 @@ public sealed class UnregisterBox : ModelEnum {
     /**
      * 'Trigger' variant
      */
-    public data class Trigger(
-        public val unregisterOfTrigger: UnregisterOfTrigger,
-    ) : UnregisterBox() {
+    public data class Trigger(public val unregisterOfTrigger: UnregisterOfTrigger) : UnregisterBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -236,10 +205,7 @@ public sealed class UnregisterBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.UnregisterBox.Trigger,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.UnregisterBox.Trigger): Unit = try {
                 UnregisterOfTrigger.write(writer, instance.unregisterOfTrigger)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -259,7 +225,8 @@ public sealed class UnregisterBox : ModelEnum {
             4 -> Asset.read(reader)
             5 -> Role.read(reader)
             6 -> Trigger.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+        }
 
         override fun write(writer: ScaleCodecWriter, instance: UnregisterBox) {
             writer.directWrite(instance.discriminant())
@@ -271,7 +238,8 @@ public sealed class UnregisterBox : ModelEnum {
                 4 -> Asset.write(writer, instance as Asset)
                 5 -> Role.write(writer, instance as Role)
                 6 -> Trigger.write(writer, instance as Trigger)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

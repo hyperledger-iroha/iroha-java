@@ -28,11 +28,13 @@ public sealed class TriggerCompletedOutcome : ModelEnum {
 
     override fun equals(other: Any?): Boolean = when (this) {
         is Success -> Success.equals(this, other)
-        else -> super.equals(other) }
+        else -> super.equals(other)
+    }
 
     override fun hashCode(): Int = when (this) {
         is Success -> Success.hashCode()
-        else -> super.hashCode() }
+        else -> super.hashCode()
+    }
 
     /**
      * 'Success' variant
@@ -59,10 +61,7 @@ public sealed class TriggerCompletedOutcome : ModelEnum {
                 throw wrapException(ex)
             }
 
-            public fun equals(
-                o1: jp.co.soramitsu.iroha2.generated.TriggerCompletedOutcome.Success,
-                o2: Any?,
-            ): Boolean = when (o2) {
+            public fun equals(o1: jp.co.soramitsu.iroha2.generated.TriggerCompletedOutcome.Success, o2: Any?): Boolean = when (o2) {
                 null -> false
                 else -> o2::class == o1::class
             }
@@ -74,9 +73,7 @@ public sealed class TriggerCompletedOutcome : ModelEnum {
     /**
      * 'Failure' variant
      */
-    public data class Failure(
-        public val string: String,
-    ) : TriggerCompletedOutcome() {
+    public data class Failure(public val string: String) : TriggerCompletedOutcome() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -112,14 +109,16 @@ public sealed class TriggerCompletedOutcome : ModelEnum {
         ) {
             0 -> Success.read(reader)
             1 -> Failure.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+        }
 
         override fun write(writer: ScaleCodecWriter, instance: TriggerCompletedOutcome) {
             writer.directWrite(instance.discriminant())
             when (val discriminant = instance.discriminant()) {
                 0 -> Success.write(writer, instance as Success)
                 1 -> Failure.write(writer, instance as Failure)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

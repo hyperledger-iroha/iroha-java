@@ -14,22 +14,18 @@ enum class IntMax(val max: BigInteger) {
     ;
 
     companion object {
-        fun uintMaxValue(bit: Int): BigInteger {
-            return when (bit) {
-                64 -> U64
-                128 -> U128
-                256 -> U256
-                else -> throw IllegalArgumentException("Unsupported type $bit")
-            }.max
-        }
+        fun uintMaxValue(bit: Int): BigInteger = when (bit) {
+            64 -> U64
+            128 -> U128
+            256 -> U256
+            else -> throw IllegalArgumentException("Unsupported type $bit")
+        }.max
 
-        fun intMaxValue(bit: Int): BigInteger {
-            return when (bit) {
-                128 -> I128
-                256 -> I256
-                else -> throw IllegalArgumentException("Unsupported type $bit")
-            }.max
-        }
+        fun intMaxValue(bit: Int): BigInteger = when (bit) {
+            128 -> I128
+            256 -> I256
+            else -> throw IllegalArgumentException("Unsupported type $bit")
+        }.max
     }
 }
 
@@ -42,12 +38,10 @@ enum class IntMin(val min: BigInteger) {
     ;
 
     companion object {
-        fun intMinValue(bit: Int): BigInteger {
-            return when (bit) {
-                128 -> I128
-                256 -> I256
-                else -> throw IllegalArgumentException("Unsupported type $bit")
-            }.min
-        }
+        fun intMinValue(bit: Int): BigInteger = when (bit) {
+            128 -> I128
+            256 -> I256
+            else -> throw IllegalArgumentException("Unsupported type $bit")
+        }.min
     }
 }

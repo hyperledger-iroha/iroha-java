@@ -16,9 +16,7 @@ import kotlin.Unit
  *
  * Generated from 'NumericSpec' regular structure
  */
-public data class NumericSpec(
-    public val scale: Long? = null,
-) {
+public data class NumericSpec(public val scale: Long? = null) {
     public companion object : ScaleReader<NumericSpec>, ScaleWriter<NumericSpec> {
         override fun read(reader: ScaleCodecReader): NumericSpec = try {
             NumericSpec(

@@ -15,10 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'BurnOfNumericAndAsset' regular structure
  */
-public data class BurnOfNumericAndAsset(
-    public val `object`: Numeric,
-    public val destination: AssetId,
-) {
+public data class BurnOfNumericAndAsset(public val `object`: Numeric, public val destination: AssetId) {
     public companion object : ScaleReader<BurnOfNumericAndAsset>, ScaleWriter<BurnOfNumericAndAsset> {
         override fun read(reader: ScaleCodecReader): BurnOfNumericAndAsset = try {
             BurnOfNumericAndAsset(

@@ -28,18 +28,18 @@ public sealed class InvalidParameterError : ModelEnum {
 
     override fun equals(other: Any?): Boolean = when (this) {
         is TimeTriggerInThePast -> TimeTriggerInThePast.equals(this, other)
-        else -> super.equals(other) }
+        else -> super.equals(other)
+    }
 
     override fun hashCode(): Int = when (this) {
         is TimeTriggerInThePast -> TimeTriggerInThePast.hashCode()
-        else -> super.hashCode() }
+        else -> super.hashCode()
+    }
 
     /**
      * 'Wasm' variant
      */
-    public data class Wasm(
-        public val string: String,
-    ) : InvalidParameterError() {
+    public data class Wasm(public val string: String) : InvalidParameterError() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -55,14 +55,12 @@ public sealed class InvalidParameterError : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.InvalidParameterError.Wasm,
-            ): Unit = try {
-                writer.writeAsList(instance.string.toByteArray(Charsets.UTF_8))
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.InvalidParameterError.Wasm): Unit =
+                try {
+                    writer.writeAsList(instance.string.toByteArray(Charsets.UTF_8))
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
@@ -91,13 +89,11 @@ public sealed class InvalidParameterError : ModelEnum {
                 throw wrapException(ex)
             }
 
-            public fun equals(
-                o1: jp.co.soramitsu.iroha2.generated.InvalidParameterError.TimeTriggerInThePast,
-                o2: Any?,
-            ): Boolean = when (o2) {
-                null -> false
-                else -> o2::class == o1::class
-            }
+            public fun equals(o1: jp.co.soramitsu.iroha2.generated.InvalidParameterError.TimeTriggerInThePast, o2: Any?): Boolean =
+                when (o2) {
+                    null -> false
+                    else -> o2::class == o1::class
+                }
 
             override fun hashCode(): Int = ".InvalidParameterError.TimeTriggerInThePast".hashCode()
         }
@@ -110,14 +106,16 @@ public sealed class InvalidParameterError : ModelEnum {
         ) {
             0 -> Wasm.read(reader)
             1 -> TimeTriggerInThePast.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+        }
 
         override fun write(writer: ScaleCodecWriter, instance: InvalidParameterError) {
             writer.directWrite(instance.discriminant())
             when (val discriminant = instance.discriminant()) {
                 0 -> Wasm.write(writer, instance as Wasm)
                 1 -> TimeTriggerInThePast.write(writer, instance as TimeTriggerInThePast)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

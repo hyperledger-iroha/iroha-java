@@ -26,11 +26,13 @@ public sealed class DataEventFilter : ModelEnum {
 
     override fun equals(other: kotlin.Any?): Boolean = when (this) {
         is Any -> Any.equals(this, other)
-        else -> super.equals(other) }
+        else -> super.equals(other)
+    }
 
     override fun hashCode(): Int = when (this) {
         is Any -> Any.hashCode()
-        else -> super.hashCode() }
+        else -> super.hashCode()
+    }
 
     /**
      * 'Any' variant
@@ -49,10 +51,7 @@ public sealed class DataEventFilter : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.DataEventFilter.Any,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.DataEventFilter.Any): Unit = try {
             } catch (ex: Exception) {
                 throw wrapException(ex)
             }
@@ -69,9 +68,7 @@ public sealed class DataEventFilter : ModelEnum {
     /**
      * 'Peer' variant
      */
-    public data class Peer(
-        public val peerEventFilter: PeerEventFilter,
-    ) : DataEventFilter() {
+    public data class Peer(public val peerEventFilter: PeerEventFilter) : DataEventFilter() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -87,10 +84,7 @@ public sealed class DataEventFilter : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.DataEventFilter.Peer,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.DataEventFilter.Peer): Unit = try {
                 PeerEventFilter.write(writer, instance.peerEventFilter)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -101,9 +95,7 @@ public sealed class DataEventFilter : ModelEnum {
     /**
      * 'Domain' variant
      */
-    public data class Domain(
-        public val domainEventFilter: DomainEventFilter,
-    ) : DataEventFilter() {
+    public data class Domain(public val domainEventFilter: DomainEventFilter) : DataEventFilter() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -119,10 +111,7 @@ public sealed class DataEventFilter : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.DataEventFilter.Domain,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.DataEventFilter.Domain): Unit = try {
                 DomainEventFilter.write(writer, instance.domainEventFilter)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -133,9 +122,7 @@ public sealed class DataEventFilter : ModelEnum {
     /**
      * 'Account' variant
      */
-    public data class Account(
-        public val accountEventFilter: AccountEventFilter,
-    ) : DataEventFilter() {
+    public data class Account(public val accountEventFilter: AccountEventFilter) : DataEventFilter() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -151,10 +138,7 @@ public sealed class DataEventFilter : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.DataEventFilter.Account,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.DataEventFilter.Account): Unit = try {
                 AccountEventFilter.write(writer, instance.accountEventFilter)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -165,9 +149,7 @@ public sealed class DataEventFilter : ModelEnum {
     /**
      * 'Asset' variant
      */
-    public data class Asset(
-        public val assetEventFilter: AssetEventFilter,
-    ) : DataEventFilter() {
+    public data class Asset(public val assetEventFilter: AssetEventFilter) : DataEventFilter() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -183,10 +165,7 @@ public sealed class DataEventFilter : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.DataEventFilter.Asset,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.DataEventFilter.Asset): Unit = try {
                 AssetEventFilter.write(writer, instance.assetEventFilter)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -197,9 +176,7 @@ public sealed class DataEventFilter : ModelEnum {
     /**
      * 'AssetDefinition' variant
      */
-    public data class AssetDefinition(
-        public val assetDefinitionEventFilter: AssetDefinitionEventFilter,
-    ) : DataEventFilter() {
+    public data class AssetDefinition(public val assetDefinitionEventFilter: AssetDefinitionEventFilter) : DataEventFilter() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -229,9 +206,7 @@ public sealed class DataEventFilter : ModelEnum {
     /**
      * 'Trigger' variant
      */
-    public data class Trigger(
-        public val triggerEventFilter: TriggerEventFilter,
-    ) : DataEventFilter() {
+    public data class Trigger(public val triggerEventFilter: TriggerEventFilter) : DataEventFilter() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -247,10 +222,7 @@ public sealed class DataEventFilter : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.DataEventFilter.Trigger,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.DataEventFilter.Trigger): Unit = try {
                 TriggerEventFilter.write(writer, instance.triggerEventFilter)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -261,9 +233,7 @@ public sealed class DataEventFilter : ModelEnum {
     /**
      * 'Role' variant
      */
-    public data class Role(
-        public val roleEventFilter: RoleEventFilter,
-    ) : DataEventFilter() {
+    public data class Role(public val roleEventFilter: RoleEventFilter) : DataEventFilter() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -279,10 +249,7 @@ public sealed class DataEventFilter : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.DataEventFilter.Role,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.DataEventFilter.Role): Unit = try {
                 RoleEventFilter.write(writer, instance.roleEventFilter)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -293,9 +260,7 @@ public sealed class DataEventFilter : ModelEnum {
     /**
      * 'Configuration' variant
      */
-    public data class Configuration(
-        public val configurationEventFilter: ConfigurationEventFilter,
-    ) : DataEventFilter() {
+    public data class Configuration(public val configurationEventFilter: ConfigurationEventFilter) : DataEventFilter() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -311,23 +276,19 @@ public sealed class DataEventFilter : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.DataEventFilter.Configuration,
-            ): Unit = try {
-                ConfigurationEventFilter.write(writer, instance.configurationEventFilter)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.DataEventFilter.Configuration): Unit =
+                try {
+                    ConfigurationEventFilter.write(writer, instance.configurationEventFilter)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
     /**
      * 'Executor' variant
      */
-    public data class Executor(
-        public val executorEventFilter: ExecutorEventFilter,
-    ) : DataEventFilter() {
+    public data class Executor(public val executorEventFilter: ExecutorEventFilter) : DataEventFilter() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -343,10 +304,7 @@ public sealed class DataEventFilter : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.DataEventFilter.Executor,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.DataEventFilter.Executor): Unit = try {
                 ExecutorEventFilter.write(writer, instance.executorEventFilter)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -369,7 +327,8 @@ public sealed class DataEventFilter : ModelEnum {
             7 -> Role.read(reader)
             8 -> Configuration.read(reader)
             9 -> Executor.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+        }
 
         override fun write(writer: ScaleCodecWriter, instance: DataEventFilter) {
             writer.directWrite(instance.discriminant())
@@ -384,7 +343,8 @@ public sealed class DataEventFilter : ModelEnum {
                 7 -> Role.write(writer, instance as Role)
                 8 -> Configuration.write(writer, instance as Configuration)
                 9 -> Executor.write(writer, instance as Executor)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

@@ -26,9 +26,7 @@ public sealed class AssetTransferBox : ModelEnum {
     /**
      * 'Numeric' variant
      */
-    public data class Numeric(
-        public val transferOfAssetAndNumericAndAccount: TransferOfAssetAndNumericAndAccount,
-    ) : AssetTransferBox() {
+    public data class Numeric(public val transferOfAssetAndNumericAndAccount: TransferOfAssetAndNumericAndAccount) : AssetTransferBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -44,10 +42,7 @@ public sealed class AssetTransferBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.AssetTransferBox.Numeric,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.AssetTransferBox.Numeric): Unit = try {
                 TransferOfAssetAndNumericAndAccount.write(
                     writer,
                     instance.transferOfAssetAndNumericAndAccount,
@@ -61,9 +56,7 @@ public sealed class AssetTransferBox : ModelEnum {
     /**
      * 'Store' variant
      */
-    public data class Store(
-        public val transferOfAssetAndMetadataAndAccount: TransferOfAssetAndMetadataAndAccount,
-    ) : AssetTransferBox() {
+    public data class Store(public val transferOfAssetAndMetadataAndAccount: TransferOfAssetAndMetadataAndAccount) : AssetTransferBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -79,10 +72,7 @@ public sealed class AssetTransferBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.AssetTransferBox.Store,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.AssetTransferBox.Store): Unit = try {
                 TransferOfAssetAndMetadataAndAccount.write(
                     writer,
                     instance.transferOfAssetAndMetadataAndAccount,
@@ -100,14 +90,16 @@ public sealed class AssetTransferBox : ModelEnum {
         ) {
             0 -> Numeric.read(reader)
             1 -> Store.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+        }
 
         override fun write(writer: ScaleCodecWriter, instance: AssetTransferBox) {
             writer.directWrite(instance.discriminant())
             when (val discriminant = instance.discriminant()) {
                 0 -> Numeric.write(writer, instance as Numeric)
                 1 -> Store.write(writer, instance as Store)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

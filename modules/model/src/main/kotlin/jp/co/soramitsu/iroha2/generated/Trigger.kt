@@ -15,10 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'Trigger' regular structure
  */
-public data class Trigger(
-    public val id: TriggerId,
-    public val action: Action,
-) {
+public data class Trigger(public val id: TriggerId, public val action: Action) {
     public companion object : ScaleReader<Trigger>, ScaleWriter<Trigger> {
         override fun read(reader: ScaleCodecReader): Trigger = try {
             Trigger(

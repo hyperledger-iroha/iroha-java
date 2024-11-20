@@ -27,26 +27,22 @@ enum class DigestFunction(val hashFunName: String, val index: Int) {
  * @throws CryptoException if key-pair cannot be generated
  */
 @JvmOverloads
-fun generateKeyPair(spec: EdDSAParameterSpec = DEFAULT_SPEC): KeyPair {
-    return try {
-        val seed = ByteArray(spec.curve.field.getb() / 8)
-        SecureRandom().nextBytes(seed)
+fun generateKeyPair(spec: EdDSAParameterSpec = DEFAULT_SPEC): KeyPair = try {
+    val seed = ByteArray(spec.curve.field.getb() / 8)
+    SecureRandom().nextBytes(seed)
 
-        val privKey = EdDSAPrivateKeySpec(seed, spec)
-        val pubKey = EdDSAPublicKeySpec(privKey.a, spec)
-        KeyPair(
-            EdDSAPublicKey(pubKey),
-            EdDSAPrivateKey(privKey),
-        )
-    } catch (ex: Exception) {
-        throw CryptoException("Cannot generate a key pair", ex)
-    }
+    val privKey = EdDSAPrivateKeySpec(seed, spec)
+    val pubKey = EdDSAPublicKeySpec(privKey.a, spec)
+    KeyPair(
+        EdDSAPublicKey(pubKey),
+        EdDSAPrivateKey(privKey),
+    )
+} catch (ex: Exception) {
+    throw CryptoException("Cannot generate a key pair", ex)
 }
 
 @JvmOverloads
-fun generatePublicKey(
-    spec: EdDSAParameterSpec = DEFAULT_SPEC,
-): PublicKey = generateKeyPair(spec).public.toIrohaPublicKey()
+fun generatePublicKey(spec: EdDSAParameterSpec = DEFAULT_SPEC): PublicKey = generateKeyPair(spec).public.toIrohaPublicKey()
 
 /**
  * Create ED25519 key-pair from given hex of the public and private key
@@ -54,8 +50,11 @@ fun generatePublicKey(
  * @throws CryptoException if key-pair cannot be created
  */
 @JvmOverloads
-fun keyPairFromHex(publicKeyHex: String, privateKeyHex: String, spec: EdDSAParameterSpec = DEFAULT_SPEC) =
-    KeyPair(publicKeyFromHex(publicKeyHex, spec), privateKeyFromHex(privateKeyHex, spec))
+fun keyPairFromHex(
+    publicKeyHex: String,
+    privateKeyHex: String,
+    spec: EdDSAParameterSpec = DEFAULT_SPEC,
+) = KeyPair(publicKeyFromHex(publicKeyHex, spec), privateKeyFromHex(privateKeyHex, spec))
 
 /**
  * Create ED25519 private key from a given hex
@@ -63,12 +62,11 @@ fun keyPairFromHex(publicKeyHex: String, privateKeyHex: String, spec: EdDSAParam
  * @throws CryptoException if key cannot be created from hex
  */
 @JvmOverloads
-fun privateKeyFromHex(privateKeyHex: String, spec: EdDSAParameterSpec = DEFAULT_SPEC) =
-    try {
-        EdDSAPrivateKey(EdDSAPrivateKeySpec(privateKeyHex.fromHex(), spec))
-    } catch (ex: Exception) {
-        throw CryptoException("Cannot create a private key from hex `$privateKeyHex`", ex)
-    }
+fun privateKeyFromHex(privateKeyHex: String, spec: EdDSAParameterSpec = DEFAULT_SPEC) = try {
+    EdDSAPrivateKey(EdDSAPrivateKeySpec(privateKeyHex.fromHex(), spec))
+} catch (ex: Exception) {
+    throw CryptoException("Cannot create a private key from hex `$privateKeyHex`", ex)
+}
 
 /**
  * Create ED25519 public key from a given hex
@@ -76,15 +74,14 @@ fun privateKeyFromHex(privateKeyHex: String, spec: EdDSAParameterSpec = DEFAULT_
  * @throws CryptoException if key cannot be created from hex
  */
 @JvmOverloads
-fun publicKeyFromHex(publicKeyHex: String, spec: EdDSAParameterSpec = DEFAULT_SPEC) =
-    try {
-        when (publicKeyHex.startsWith("ed0120")) {
-            true -> EdDSAPublicKey(EdDSAPublicKeySpec(publicKeyHex.drop(6).fromHex(), spec))
-            false -> EdDSAPublicKey(EdDSAPublicKeySpec(publicKeyHex.fromHex(), spec))
-        }
-    } catch (ex: Exception) {
-        throw CryptoException("Cannot create a public key from hex `$publicKeyHex`", ex)
+fun publicKeyFromHex(publicKeyHex: String, spec: EdDSAParameterSpec = DEFAULT_SPEC) = try {
+    when (publicKeyHex.startsWith("ed0120")) {
+        true -> EdDSAPublicKey(EdDSAPublicKeySpec(publicKeyHex.drop(6).fromHex(), spec))
+        false -> EdDSAPublicKey(EdDSAPublicKeySpec(publicKeyHex.fromHex(), spec))
     }
+} catch (ex: Exception) {
+    throw CryptoException("Cannot create a public key from hex `$publicKeyHex`", ex)
+}
 
 /**
  * Return encoded representation of the key, which may be different from `java.security.Key.getEncoded()`.
@@ -97,10 +94,8 @@ fun publicKeyFromHex(publicKeyHex: String, spec: EdDSAParameterSpec = DEFAULT_SP
  * @see java.security.Key.getFormat
  * @return bytes Encoding of the key (empty if encoding is not supported)
  */
-fun Key.bytes(): ByteArray {
-    return when (this) {
-        is EdDSAPublicKey -> abyte
-        is EdDSAPrivateKey -> seed
-        else -> this.encoded ?: ByteArray(0)
-    }
+fun Key.bytes(): ByteArray = when (this) {
+    is EdDSAPublicKey -> abyte
+    is EdDSAPrivateKey -> seed
+    else -> this.encoded ?: ByteArray(0)
 }

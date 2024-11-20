@@ -15,10 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'ExecuteTrigger' regular structure
  */
-public data class ExecuteTrigger(
-    public val trigger: TriggerId,
-    public val args: Json,
-) {
+public data class ExecuteTrigger(public val trigger: TriggerId, public val args: Json) {
     public companion object : ScaleReader<ExecuteTrigger>, ScaleWriter<ExecuteTrigger> {
         override fun read(reader: ScaleCodecReader): ExecuteTrigger = try {
             ExecuteTrigger(

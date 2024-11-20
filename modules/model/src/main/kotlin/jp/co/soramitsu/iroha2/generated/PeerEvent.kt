@@ -26,9 +26,7 @@ public sealed class PeerEvent : ModelEnum {
     /**
      * 'Added' variant
      */
-    public data class Added(
-        public val peerId: PeerId,
-    ) : PeerEvent() {
+    public data class Added(public val peerId: PeerId) : PeerEvent() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -44,10 +42,7 @@ public sealed class PeerEvent : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.PeerEvent.Added,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.PeerEvent.Added): Unit = try {
                 PeerId.write(writer, instance.peerId)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -58,9 +53,7 @@ public sealed class PeerEvent : ModelEnum {
     /**
      * 'Removed' variant
      */
-    public data class Removed(
-        public val peerId: PeerId,
-    ) : PeerEvent() {
+    public data class Removed(public val peerId: PeerId) : PeerEvent() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -76,10 +69,7 @@ public sealed class PeerEvent : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.PeerEvent.Removed,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.PeerEvent.Removed): Unit = try {
                 PeerId.write(writer, instance.peerId)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -94,14 +84,16 @@ public sealed class PeerEvent : ModelEnum {
         ) {
             0 -> Added.read(reader)
             1 -> Removed.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+        }
 
         override fun write(writer: ScaleCodecWriter, instance: PeerEvent) {
             writer.directWrite(instance.discriminant())
             when (val discriminant = instance.discriminant()) {
                 0 -> Added.write(writer, instance as Added)
                 1 -> Removed.write(writer, instance as Removed)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

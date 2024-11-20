@@ -16,10 +16,7 @@ import kotlin.Unit
  *
  * Generated from 'BlockSignature' tuple structure
  */
-public data class BlockSignature(
-    public val u64: BigInteger,
-    public val signatureOf: SignatureOf<BlockHeader>,
-) {
+public data class BlockSignature(public val u64: BigInteger, public val signatureOf: SignatureOf<BlockHeader>) {
     public companion object : ScaleReader<BlockSignature>, ScaleWriter<BlockSignature> {
         override fun read(reader: ScaleCodecReader): BlockSignature = try {
             BlockSignature(

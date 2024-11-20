@@ -49,17 +49,13 @@ object EnumVariantGenerator : AbstractGenerator<EnumVariantBlueprint>() {
         }
     }
 
-    override fun implCompanions(
-        blueprint: EnumVariantBlueprint,
-        clazz: TypeSpec.Builder,
-    ): TypeSpec.Builder {
-        return super.implCompanions(blueprint, clazz)
+    override fun implCompanions(blueprint: EnumVariantBlueprint, clazz: TypeSpec.Builder): TypeSpec.Builder =
+        super.implCompanions(blueprint, clazz)
             .addProperty(
                 PropertySpec.builder("DISCRIMINANT", Int::class, KModifier.CONST)
                     .initializer("%L", blueprint.discriminant)
                     .build(),
             )
-    }
 
     override fun implSuperClasses(blueprint: EnumVariantBlueprint, clazz: TypeSpec.Builder) {
         super.implSuperClasses(blueprint, clazz)

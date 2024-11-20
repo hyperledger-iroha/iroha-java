@@ -16,9 +16,7 @@ import kotlin.Unit
  *
  * Generated from 'TransactionLimitError' regular structure
  */
-public data class TransactionLimitError(
-    public val reason: String,
-) {
+public data class TransactionLimitError(public val reason: String) {
     public companion object : ScaleReader<TransactionLimitError>, ScaleWriter<TransactionLimitError> {
         override fun read(reader: ScaleCodecReader): TransactionLimitError = try {
             TransactionLimitError(

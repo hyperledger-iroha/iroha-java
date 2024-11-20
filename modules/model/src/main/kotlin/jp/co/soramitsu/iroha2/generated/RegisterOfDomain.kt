@@ -15,9 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'RegisterOfDomain' regular structure
  */
-public data class RegisterOfDomain(
-    public val `object`: NewDomain,
-) {
+public data class RegisterOfDomain(public val `object`: NewDomain) {
     public companion object : ScaleReader<RegisterOfDomain>, ScaleWriter<RegisterOfDomain> {
         override fun read(reader: ScaleCodecReader): RegisterOfDomain = try {
             RegisterOfDomain(

@@ -15,9 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'Sorting' regular structure
  */
-public data class Sorting(
-    public val sortByMetadataKey: Name? = null,
-) {
+public data class Sorting(public val sortByMetadataKey: Name? = null) {
     public companion object : ScaleReader<Sorting>, ScaleWriter<Sorting> {
         override fun read(reader: ScaleCodecReader): Sorting = try {
             Sorting(

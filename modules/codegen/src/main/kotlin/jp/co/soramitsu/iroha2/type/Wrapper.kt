@@ -25,10 +25,7 @@ abstract class IterableType(
 /**
  * `OptionType` wrapper type.
  */
-data class OptionType(
-    override val name: String,
-    override val innerType: TypeNest,
-) : WrapperType(name, innerType)
+data class OptionType(override val name: String, override val innerType: TypeNest) : WrapperType(name, innerType)
 
 /**
  * `VecType` iterable type.
@@ -52,7 +49,4 @@ data class ArrayType(
 /**
  * `CompactType` wrapper type.
  */
-data class CompactType(
-    override val name: String,
-    override val innerType: TypeNest,
-) : WrapperType(name, innerType)
+data class CompactType(override val name: String, override val innerType: TypeNest) : WrapperType(name, innerType)

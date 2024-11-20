@@ -16,9 +16,7 @@ import kotlin.Unit
  *
  * Generated from 'CanRegisterAssetDefinition' regular structure
  */
-public data class CanRegisterAssetDefinition(
-    public val domain: DomainId,
-) : ModelPermission {
+public data class CanRegisterAssetDefinition(public val domain: DomainId) : ModelPermission {
     public companion object :
         ScaleReader<CanRegisterAssetDefinition>,
         ScaleWriter<CanRegisterAssetDefinition> {

@@ -15,10 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'ParameterChanged' regular structure
  */
-public data class ParameterChanged(
-    public val oldValue: Parameter,
-    public val newValue: Parameter,
-) {
+public data class ParameterChanged(public val oldValue: Parameter, public val newValue: Parameter) {
     public companion object : ScaleReader<ParameterChanged>, ScaleWriter<ParameterChanged> {
         override fun read(reader: ScaleCodecReader): ParameterChanged = try {
             ParameterChanged(

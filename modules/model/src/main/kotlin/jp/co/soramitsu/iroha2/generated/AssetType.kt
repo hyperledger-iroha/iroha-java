@@ -27,18 +27,18 @@ public sealed class AssetType : ModelEnum {
 
     override fun equals(other: Any?): Boolean = when (this) {
         is Store -> Store.equals(this, other)
-        else -> super.equals(other) }
+        else -> super.equals(other)
+    }
 
     override fun hashCode(): Int = when (this) {
         is Store -> Store.hashCode()
-        else -> super.hashCode() }
+        else -> super.hashCode()
+    }
 
     /**
      * 'Numeric' variant
      */
-    public data class Numeric(
-        public val numericSpec: NumericSpec,
-    ) : AssetType() {
+    public data class Numeric(public val numericSpec: NumericSpec) : AssetType() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -54,10 +54,7 @@ public sealed class AssetType : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.AssetType.Numeric,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.AssetType.Numeric): Unit = try {
                 NumericSpec.write(writer, instance.numericSpec)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -82,19 +79,15 @@ public sealed class AssetType : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.AssetType.Store,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.AssetType.Store): Unit = try {
             } catch (ex: Exception) {
                 throw wrapException(ex)
             }
 
-            public fun equals(o1: jp.co.soramitsu.iroha2.generated.AssetType.Store, o2: Any?): Boolean =
-                when (o2) {
-                    null -> false
-                    else -> o2::class == o1::class
-                }
+            public fun equals(o1: jp.co.soramitsu.iroha2.generated.AssetType.Store, o2: Any?): Boolean = when (o2) {
+                null -> false
+                else -> o2::class == o1::class
+            }
 
             override fun hashCode(): Int = ".AssetType.Store".hashCode()
         }
@@ -107,14 +100,16 @@ public sealed class AssetType : ModelEnum {
         ) {
             0 -> Numeric.read(reader)
             1 -> Store.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+        }
 
         override fun write(writer: ScaleCodecWriter, instance: AssetType) {
             writer.directWrite(instance.discriminant())
             when (val discriminant = instance.discriminant()) {
                 0 -> Numeric.write(writer, instance as Numeric)
                 1 -> Store.write(writer, instance as Store)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

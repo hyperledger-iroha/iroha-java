@@ -15,9 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'SetParameter' regular structure
  */
-public data class SetParameter(
-    public val parameter: Parameter,
-) {
+public data class SetParameter(public val parameter: Parameter) {
     public companion object : ScaleReader<SetParameter>, ScaleWriter<SetParameter> {
         override fun read(reader: ScaleCodecReader): SetParameter = try {
             SetParameter(

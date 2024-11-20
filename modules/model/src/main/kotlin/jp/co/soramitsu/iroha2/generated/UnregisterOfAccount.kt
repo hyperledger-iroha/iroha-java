@@ -15,9 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'UnregisterOfAccount' regular structure
  */
-public data class UnregisterOfAccount(
-    public val `object`: AccountId,
-) {
+public data class UnregisterOfAccount(public val `object`: AccountId) {
     public companion object : ScaleReader<UnregisterOfAccount>, ScaleWriter<UnregisterOfAccount> {
         override fun read(reader: ScaleCodecReader): UnregisterOfAccount = try {
             UnregisterOfAccount(

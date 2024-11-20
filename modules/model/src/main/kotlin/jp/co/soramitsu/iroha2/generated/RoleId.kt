@@ -15,9 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'RoleId' regular structure
  */
-public data class RoleId(
-    public val name: Name,
-) {
+public data class RoleId(public val name: Name) {
     public companion object : ScaleReader<RoleId>, ScaleWriter<RoleId> {
         override fun read(reader: ScaleCodecReader): RoleId = try {
             RoleId(

@@ -27,9 +27,7 @@ public sealed class InstructionEvaluationError : ModelEnum {
     /**
      * 'Unsupported' variant
      */
-    public data class Unsupported(
-        public val instructionType: InstructionType,
-    ) : InstructionEvaluationError() {
+    public data class Unsupported(public val instructionType: InstructionType) : InstructionEvaluationError() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -48,21 +46,18 @@ public sealed class InstructionEvaluationError : ModelEnum {
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.InstructionEvaluationError.Unsupported,
-            ): Unit =
-                try {
-                    InstructionType.write(writer, instance.instructionType)
-                } catch (ex: Exception) {
-                    throw wrapException(ex)
-                }
+            ): Unit = try {
+                InstructionType.write(writer, instance.instructionType)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
         }
     }
 
     /**
      * 'PermissionParameter' variant
      */
-    public data class PermissionParameter(
-        public val string: String,
-    ) : InstructionEvaluationError() {
+    public data class PermissionParameter(public val string: String) : InstructionEvaluationError() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -70,13 +65,14 @@ public sealed class InstructionEvaluationError : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.InstructionEvaluationError.PermissionParameter> {
             public const val DISCRIMINANT: Int = 1
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.InstructionEvaluationError.PermissionParameter = try {
-                PermissionParameter(
-                    reader.readString(),
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.InstructionEvaluationError.PermissionParameter =
+                try {
+                    PermissionParameter(
+                        reader.readString(),
+                    )
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             override fun write(
                 writer: ScaleCodecWriter,
@@ -92,9 +88,7 @@ public sealed class InstructionEvaluationError : ModelEnum {
     /**
      * 'Type' variant
      */
-    public data class Type(
-        public val typeError: TypeError,
-    ) : InstructionEvaluationError() {
+    public data class Type(public val typeError: TypeError) : InstructionEvaluationError() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -131,7 +125,8 @@ public sealed class InstructionEvaluationError : ModelEnum {
             0 -> Unsupported.read(reader)
             1 -> PermissionParameter.read(reader)
             2 -> Type.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+        }
 
         override fun write(writer: ScaleCodecWriter, instance: InstructionEvaluationError) {
             writer.directWrite(instance.discriminant())
@@ -139,7 +134,8 @@ public sealed class InstructionEvaluationError : ModelEnum {
                 0 -> Unsupported.write(writer, instance as Unsupported)
                 1 -> PermissionParameter.write(writer, instance as PermissionParameter)
                 2 -> Type.write(writer, instance as Type)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

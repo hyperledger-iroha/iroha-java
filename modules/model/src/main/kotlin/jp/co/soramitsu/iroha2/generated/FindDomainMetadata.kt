@@ -15,10 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'FindDomainMetadata' regular structure
  */
-public data class FindDomainMetadata(
-    public val id: DomainId,
-    public val key: Name,
-) {
+public data class FindDomainMetadata(public val id: DomainId, public val key: Name) {
     public companion object : ScaleReader<FindDomainMetadata>, ScaleWriter<FindDomainMetadata> {
         override fun read(reader: ScaleCodecReader): FindDomainMetadata = try {
             FindDomainMetadata(

@@ -15,10 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'RevokeOfRoleIdAndAccount' regular structure
  */
-public data class RevokeOfRoleIdAndAccount(
-    public val `object`: RoleId,
-    public val destination: AccountId,
-) {
+public data class RevokeOfRoleIdAndAccount(public val `object`: RoleId, public val destination: AccountId) {
     public companion object :
         ScaleReader<RevokeOfRoleIdAndAccount>,
         ScaleWriter<RevokeOfRoleIdAndAccount> {

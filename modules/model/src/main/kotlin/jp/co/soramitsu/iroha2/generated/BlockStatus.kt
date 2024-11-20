@@ -30,14 +30,16 @@ public sealed class BlockStatus : ModelEnum {
         is Approved -> Approved.equals(this, other)
         is Committed -> Committed.equals(this, other)
         is Applied -> Applied.equals(this, other)
-        else -> super.equals(other) }
+        else -> super.equals(other)
+    }
 
     override fun hashCode(): Int = when (this) {
         is Created -> Created.hashCode()
         is Approved -> Approved.hashCode()
         is Committed -> Committed.hashCode()
         is Applied -> Applied.hashCode()
-        else -> super.hashCode() }
+        else -> super.hashCode()
+    }
 
     /**
      * 'Created' variant
@@ -56,10 +58,7 @@ public sealed class BlockStatus : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.BlockStatus.Created,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.BlockStatus.Created): Unit = try {
             } catch (ex: Exception) {
                 throw wrapException(ex)
             }
@@ -90,10 +89,7 @@ public sealed class BlockStatus : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.BlockStatus.Approved,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.BlockStatus.Approved): Unit = try {
             } catch (ex: Exception) {
                 throw wrapException(ex)
             }
@@ -110,9 +106,7 @@ public sealed class BlockStatus : ModelEnum {
     /**
      * 'Rejected' variant
      */
-    public data class Rejected(
-        public val blockRejectionReason: BlockRejectionReason,
-    ) : BlockStatus() {
+    public data class Rejected(public val blockRejectionReason: BlockRejectionReason) : BlockStatus() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -128,10 +122,7 @@ public sealed class BlockStatus : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.BlockStatus.Rejected,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.BlockStatus.Rejected): Unit = try {
                 BlockRejectionReason.write(writer, instance.blockRejectionReason)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -156,10 +147,7 @@ public sealed class BlockStatus : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.BlockStatus.Committed,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.BlockStatus.Committed): Unit = try {
             } catch (ex: Exception) {
                 throw wrapException(ex)
             }
@@ -190,10 +178,7 @@ public sealed class BlockStatus : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.BlockStatus.Applied,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.BlockStatus.Applied): Unit = try {
             } catch (ex: Exception) {
                 throw wrapException(ex)
             }
@@ -217,7 +202,8 @@ public sealed class BlockStatus : ModelEnum {
             2 -> Rejected.read(reader)
             3 -> Committed.read(reader)
             4 -> Applied.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+        }
 
         override fun write(writer: ScaleCodecWriter, instance: BlockStatus) {
             writer.directWrite(instance.discriminant())
@@ -227,7 +213,8 @@ public sealed class BlockStatus : ModelEnum {
                 2 -> Rejected.write(writer, instance as Rejected)
                 3 -> Committed.write(writer, instance as Committed)
                 4 -> Applied.write(writer, instance as Applied)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

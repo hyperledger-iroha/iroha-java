@@ -16,9 +16,7 @@ import kotlin.Unit
  *
  * Generated from 'WasmExecutionFail' regular structure
  */
-public data class WasmExecutionFail(
-    public val reason: String,
-) {
+public data class WasmExecutionFail(public val reason: String) {
     public companion object : ScaleReader<WasmExecutionFail>, ScaleWriter<WasmExecutionFail> {
         override fun read(reader: ScaleCodecReader): WasmExecutionFail = try {
             WasmExecutionFail(

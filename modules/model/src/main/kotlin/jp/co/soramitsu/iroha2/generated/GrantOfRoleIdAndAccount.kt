@@ -15,10 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'GrantOfRoleIdAndAccount' regular structure
  */
-public data class GrantOfRoleIdAndAccount(
-    public val `object`: RoleId,
-    public val destination: AccountId,
-) {
+public data class GrantOfRoleIdAndAccount(public val `object`: RoleId, public val destination: AccountId) {
     public companion object :
         ScaleReader<GrantOfRoleIdAndAccount>,
         ScaleWriter<GrantOfRoleIdAndAccount> {

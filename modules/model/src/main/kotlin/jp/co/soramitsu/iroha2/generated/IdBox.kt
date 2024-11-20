@@ -26,9 +26,7 @@ public sealed class IdBox : ModelEnum {
     /**
      * 'DomainId' variant
      */
-    public data class DomainId(
-        public val domainId: jp.co.soramitsu.iroha2.generated.DomainId,
-    ) : IdBox() {
+    public data class DomainId(public val domainId: jp.co.soramitsu.iroha2.generated.DomainId) : IdBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -36,19 +34,15 @@ public sealed class IdBox : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.IdBox.DomainId> {
             public const val DISCRIMINANT: Int = 0
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.IdBox.DomainId =
-                try {
-                    DomainId(
-                        jp.co.soramitsu.iroha2.generated.DomainId.read(reader),
-                    )
-                } catch (ex: Exception) {
-                    throw wrapException(ex)
-                }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.IdBox.DomainId = try {
+                DomainId(
+                    jp.co.soramitsu.iroha2.generated.DomainId.read(reader),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.IdBox.DomainId,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.IdBox.DomainId): Unit = try {
                 jp.co.soramitsu.iroha2.generated.DomainId.write(writer, instance.domainId)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -59,9 +53,7 @@ public sealed class IdBox : ModelEnum {
     /**
      * 'AccountId' variant
      */
-    public data class AccountId(
-        public val accountId: jp.co.soramitsu.iroha2.generated.AccountId,
-    ) : IdBox() {
+    public data class AccountId(public val accountId: jp.co.soramitsu.iroha2.generated.AccountId) : IdBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -77,10 +69,7 @@ public sealed class IdBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.IdBox.AccountId,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.IdBox.AccountId): Unit = try {
                 jp.co.soramitsu.iroha2.generated.AccountId.write(writer, instance.accountId)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -91,9 +80,7 @@ public sealed class IdBox : ModelEnum {
     /**
      * 'AssetDefinitionId' variant
      */
-    public data class AssetDefinitionId(
-        public val assetDefinitionId: jp.co.soramitsu.iroha2.generated.AssetDefinitionId,
-    ) : IdBox() {
+    public data class AssetDefinitionId(public val assetDefinitionId: jp.co.soramitsu.iroha2.generated.AssetDefinitionId) : IdBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -109,10 +96,7 @@ public sealed class IdBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.IdBox.AssetDefinitionId,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.IdBox.AssetDefinitionId): Unit = try {
                 jp.co.soramitsu.iroha2.generated.AssetDefinitionId.write(writer, instance.assetDefinitionId)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -123,9 +107,7 @@ public sealed class IdBox : ModelEnum {
     /**
      * 'AssetId' variant
      */
-    public data class AssetId(
-        public val assetId: jp.co.soramitsu.iroha2.generated.AssetId,
-    ) : IdBox() {
+    public data class AssetId(public val assetId: jp.co.soramitsu.iroha2.generated.AssetId) : IdBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -133,19 +115,15 @@ public sealed class IdBox : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.IdBox.AssetId> {
             public const val DISCRIMINANT: Int = 3
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.IdBox.AssetId =
-                try {
-                    AssetId(
-                        jp.co.soramitsu.iroha2.generated.AssetId.read(reader),
-                    )
-                } catch (ex: Exception) {
-                    throw wrapException(ex)
-                }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.IdBox.AssetId = try {
+                AssetId(
+                    jp.co.soramitsu.iroha2.generated.AssetId.read(reader),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.IdBox.AssetId,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.IdBox.AssetId): Unit = try {
                 jp.co.soramitsu.iroha2.generated.AssetId.write(writer, instance.assetId)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -156,9 +134,7 @@ public sealed class IdBox : ModelEnum {
     /**
      * 'PeerId' variant
      */
-    public data class PeerId(
-        public val peerId: jp.co.soramitsu.iroha2.generated.PeerId,
-    ) : IdBox() {
+    public data class PeerId(public val peerId: jp.co.soramitsu.iroha2.generated.PeerId) : IdBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -166,19 +142,15 @@ public sealed class IdBox : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.IdBox.PeerId> {
             public const val DISCRIMINANT: Int = 4
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.IdBox.PeerId =
-                try {
-                    PeerId(
-                        jp.co.soramitsu.iroha2.generated.PeerId.read(reader),
-                    )
-                } catch (ex: Exception) {
-                    throw wrapException(ex)
-                }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.IdBox.PeerId = try {
+                PeerId(
+                    jp.co.soramitsu.iroha2.generated.PeerId.read(reader),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.IdBox.PeerId,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.IdBox.PeerId): Unit = try {
                 jp.co.soramitsu.iroha2.generated.PeerId.write(writer, instance.peerId)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -189,9 +161,7 @@ public sealed class IdBox : ModelEnum {
     /**
      * 'TriggerId' variant
      */
-    public data class TriggerId(
-        public val triggerId: jp.co.soramitsu.iroha2.generated.TriggerId,
-    ) : IdBox() {
+    public data class TriggerId(public val triggerId: jp.co.soramitsu.iroha2.generated.TriggerId) : IdBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -207,10 +177,7 @@ public sealed class IdBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.IdBox.TriggerId,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.IdBox.TriggerId): Unit = try {
                 jp.co.soramitsu.iroha2.generated.TriggerId.write(writer, instance.triggerId)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -221,9 +188,7 @@ public sealed class IdBox : ModelEnum {
     /**
      * 'RoleId' variant
      */
-    public data class RoleId(
-        public val roleId: jp.co.soramitsu.iroha2.generated.RoleId,
-    ) : IdBox() {
+    public data class RoleId(public val roleId: jp.co.soramitsu.iroha2.generated.RoleId) : IdBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -231,19 +196,15 @@ public sealed class IdBox : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.IdBox.RoleId> {
             public const val DISCRIMINANT: Int = 6
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.IdBox.RoleId =
-                try {
-                    RoleId(
-                        jp.co.soramitsu.iroha2.generated.RoleId.read(reader),
-                    )
-                } catch (ex: Exception) {
-                    throw wrapException(ex)
-                }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.IdBox.RoleId = try {
+                RoleId(
+                    jp.co.soramitsu.iroha2.generated.RoleId.read(reader),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.IdBox.RoleId,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.IdBox.RoleId): Unit = try {
                 jp.co.soramitsu.iroha2.generated.RoleId.write(writer, instance.roleId)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -254,9 +215,7 @@ public sealed class IdBox : ModelEnum {
     /**
      * 'Permission' variant
      */
-    public data class Permission(
-        public val permission: jp.co.soramitsu.iroha2.generated.Permission,
-    ) : IdBox() {
+    public data class Permission(public val permission: jp.co.soramitsu.iroha2.generated.Permission) : IdBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -272,10 +231,7 @@ public sealed class IdBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.IdBox.Permission,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.IdBox.Permission): Unit = try {
                 jp.co.soramitsu.iroha2.generated.Permission.write(writer, instance.permission)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -286,9 +242,7 @@ public sealed class IdBox : ModelEnum {
     /**
      * 'CustomParameterId' variant
      */
-    public data class CustomParameterId(
-        public val customParameterId: jp.co.soramitsu.iroha2.generated.CustomParameterId,
-    ) : IdBox() {
+    public data class CustomParameterId(public val customParameterId: jp.co.soramitsu.iroha2.generated.CustomParameterId) : IdBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -304,10 +258,7 @@ public sealed class IdBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.IdBox.CustomParameterId,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.IdBox.CustomParameterId): Unit = try {
                 jp.co.soramitsu.iroha2.generated.CustomParameterId.write(writer, instance.customParameterId)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -326,7 +277,8 @@ public sealed class IdBox : ModelEnum {
             6 -> RoleId.read(reader)
             7 -> Permission.read(reader)
             8 -> CustomParameterId.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+        }
 
         override fun write(writer: ScaleCodecWriter, instance: IdBox) {
             writer.directWrite(instance.discriminant())
@@ -340,7 +292,8 @@ public sealed class IdBox : ModelEnum {
                 6 -> RoleId.write(writer, instance as RoleId)
                 7 -> Permission.write(writer, instance as Permission)
                 8 -> CustomParameterId.write(writer, instance as CustomParameterId)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

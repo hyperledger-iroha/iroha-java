@@ -15,9 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'UnregisterOfAssetDefinition' regular structure
  */
-public data class UnregisterOfAssetDefinition(
-    public val `object`: AssetDefinitionId,
-) {
+public data class UnregisterOfAssetDefinition(public val `object`: AssetDefinitionId) {
     public companion object :
         ScaleReader<UnregisterOfAssetDefinition>,
         ScaleWriter<UnregisterOfAssetDefinition> {

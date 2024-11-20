@@ -15,10 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'AccountId' regular structure
  */
-public data class AccountId(
-    public val domain: DomainId,
-    public val signatory: PublicKey,
-) {
+public data class AccountId(public val domain: DomainId, public val signatory: PublicKey) {
     public companion object : ScaleReader<AccountId>, ScaleWriter<AccountId> {
         override fun read(reader: ScaleCodecReader): AccountId = try {
             AccountId(

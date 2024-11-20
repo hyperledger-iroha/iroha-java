@@ -15,10 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'RolePermissionChanged' regular structure
  */
-public data class RolePermissionChanged(
-    public val role: RoleId,
-    public val permission: Permission,
-) {
+public data class RolePermissionChanged(public val role: RoleId, public val permission: Permission) {
     public companion object : ScaleReader<RolePermissionChanged>, ScaleWriter<RolePermissionChanged> {
         override fun read(reader: ScaleCodecReader): RolePermissionChanged = try {
             RolePermissionChanged(

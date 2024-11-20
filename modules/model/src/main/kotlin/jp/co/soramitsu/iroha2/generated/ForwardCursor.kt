@@ -16,10 +16,7 @@ import kotlin.Unit
  *
  * Generated from 'ForwardCursor' regular structure
  */
-public data class ForwardCursor(
-    public val query: String,
-    public val cursor: NonZeroOfu64,
-) {
+public data class ForwardCursor(public val query: String, public val cursor: NonZeroOfu64) {
     public companion object : ScaleReader<ForwardCursor>, ScaleWriter<ForwardCursor> {
         override fun read(reader: ScaleCodecReader): ForwardCursor = try {
             ForwardCursor(

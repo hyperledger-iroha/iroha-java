@@ -27,11 +27,13 @@ public sealed class BlockRejectionReason : ModelEnum {
 
     override fun equals(other: Any?): Boolean = when (this) {
         is ConsensusBlockRejection -> ConsensusBlockRejection.equals(this, other)
-        else -> super.equals(other) }
+        else -> super.equals(other)
+    }
 
     override fun hashCode(): Int = when (this) {
         is ConsensusBlockRejection -> ConsensusBlockRejection.hashCode()
-        else -> super.hashCode() }
+        else -> super.hashCode()
+    }
 
     /**
      * 'ConsensusBlockRejection' variant
@@ -44,11 +46,12 @@ public sealed class BlockRejectionReason : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.BlockRejectionReason.ConsensusBlockRejection> {
             public const val DISCRIMINANT: Int = 0
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.BlockRejectionReason.ConsensusBlockRejection = try {
-                ConsensusBlockRejection()
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.BlockRejectionReason.ConsensusBlockRejection =
+                try {
+                    ConsensusBlockRejection()
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             override fun write(
                 writer: ScaleCodecWriter,
@@ -58,13 +61,11 @@ public sealed class BlockRejectionReason : ModelEnum {
                 throw wrapException(ex)
             }
 
-            public fun equals(
-                o1: jp.co.soramitsu.iroha2.generated.BlockRejectionReason.ConsensusBlockRejection,
-                o2: Any?,
-            ): Boolean = when (o2) {
-                null -> false
-                else -> o2::class == o1::class
-            }
+            public fun equals(o1: jp.co.soramitsu.iroha2.generated.BlockRejectionReason.ConsensusBlockRejection, o2: Any?): Boolean =
+                when (o2) {
+                    null -> false
+                    else -> o2::class == o1::class
+                }
 
             override fun hashCode(): Int = ".BlockRejectionReason.ConsensusBlockRejection".hashCode()
         }
@@ -76,13 +77,15 @@ public sealed class BlockRejectionReason : ModelEnum {
                 reader.readUByte()
         ) {
             0 -> ConsensusBlockRejection.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+        }
 
         override fun write(writer: ScaleCodecWriter, instance: BlockRejectionReason) {
             writer.directWrite(instance.discriminant())
             when (val discriminant = instance.discriminant()) {
                 0 -> ConsensusBlockRejection.write(writer, instance as ConsensusBlockRejection)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

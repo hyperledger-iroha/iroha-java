@@ -29,13 +29,15 @@ public sealed class TransactionStatus : ModelEnum {
         is Queued -> Queued.equals(this, other)
         is Expired -> Expired.equals(this, other)
         is Approved -> Approved.equals(this, other)
-        else -> super.equals(other) }
+        else -> super.equals(other)
+    }
 
     override fun hashCode(): Int = when (this) {
         is Queued -> Queued.hashCode()
         is Expired -> Expired.hashCode()
         is Approved -> Approved.hashCode()
-        else -> super.hashCode() }
+        else -> super.hashCode()
+    }
 
     /**
      * 'Queued' variant
@@ -54,10 +56,7 @@ public sealed class TransactionStatus : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.TransactionStatus.Queued,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.TransactionStatus.Queued): Unit = try {
             } catch (ex: Exception) {
                 throw wrapException(ex)
             }
@@ -88,10 +87,7 @@ public sealed class TransactionStatus : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.TransactionStatus.Expired,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.TransactionStatus.Expired): Unit = try {
             } catch (ex: Exception) {
                 throw wrapException(ex)
             }
@@ -122,13 +118,11 @@ public sealed class TransactionStatus : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.TransactionStatus.Approved,
-            ): Unit = try {
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.TransactionStatus.Approved): Unit =
+                try {
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             public fun equals(o1: jp.co.soramitsu.iroha2.generated.TransactionStatus.Approved, o2: Any?): Boolean = when (o2) {
                 null -> false
@@ -142,9 +136,7 @@ public sealed class TransactionStatus : ModelEnum {
     /**
      * 'Rejected' variant
      */
-    public data class Rejected(
-        public val transactionRejectionReason: TransactionRejectionReason,
-    ) : TransactionStatus() {
+    public data class Rejected(public val transactionRejectionReason: TransactionRejectionReason) : TransactionStatus() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -160,14 +152,12 @@ public sealed class TransactionStatus : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.TransactionStatus.Rejected,
-            ): Unit = try {
-                TransactionRejectionReason.write(writer, instance.transactionRejectionReason)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.TransactionStatus.Rejected): Unit =
+                try {
+                    TransactionRejectionReason.write(writer, instance.transactionRejectionReason)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
@@ -180,7 +170,8 @@ public sealed class TransactionStatus : ModelEnum {
             1 -> Expired.read(reader)
             2 -> Approved.read(reader)
             3 -> Rejected.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+        }
 
         override fun write(writer: ScaleCodecWriter, instance: TransactionStatus) {
             writer.directWrite(instance.discriminant())
@@ -189,7 +180,8 @@ public sealed class TransactionStatus : ModelEnum {
                 1 -> Expired.write(writer, instance as Expired)
                 2 -> Approved.write(writer, instance as Approved)
                 3 -> Rejected.write(writer, instance as Rejected)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

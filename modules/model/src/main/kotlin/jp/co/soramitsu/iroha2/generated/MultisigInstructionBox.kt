@@ -26,9 +26,7 @@ public sealed class MultisigInstructionBox : ModelEnum {
     /**
      * 'Register' variant
      */
-    public data class Register(
-        public val multisigRegister: MultisigRegister,
-    ) : MultisigInstructionBox() {
+    public data class Register(public val multisigRegister: MultisigRegister) : MultisigInstructionBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -58,9 +56,7 @@ public sealed class MultisigInstructionBox : ModelEnum {
     /**
      * 'Propose' variant
      */
-    public data class Propose(
-        public val multisigPropose: MultisigPropose,
-    ) : MultisigInstructionBox() {
+    public data class Propose(public val multisigPropose: MultisigPropose) : MultisigInstructionBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -76,23 +72,19 @@ public sealed class MultisigInstructionBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.MultisigInstructionBox.Propose,
-            ): Unit = try {
-                MultisigPropose.write(writer, instance.multisigPropose)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.MultisigInstructionBox.Propose): Unit =
+                try {
+                    MultisigPropose.write(writer, instance.multisigPropose)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
     /**
      * 'Approve' variant
      */
-    public data class Approve(
-        public val multisigApprove: MultisigApprove,
-    ) : MultisigInstructionBox() {
+    public data class Approve(public val multisigApprove: MultisigApprove) : MultisigInstructionBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -108,14 +100,12 @@ public sealed class MultisigInstructionBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.MultisigInstructionBox.Approve,
-            ): Unit = try {
-                MultisigApprove.write(writer, instance.multisigApprove)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.MultisigInstructionBox.Approve): Unit =
+                try {
+                    MultisigApprove.write(writer, instance.multisigApprove)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
@@ -127,7 +117,8 @@ public sealed class MultisigInstructionBox : ModelEnum {
             0 -> Register.read(reader)
             1 -> Propose.read(reader)
             2 -> Approve.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+        }
 
         override fun write(writer: ScaleCodecWriter, instance: MultisigInstructionBox) {
             writer.directWrite(instance.discriminant())
@@ -135,7 +126,8 @@ public sealed class MultisigInstructionBox : ModelEnum {
                 0 -> Register.write(writer, instance as Register)
                 1 -> Propose.write(writer, instance as Propose)
                 2 -> Approve.write(writer, instance as Approve)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

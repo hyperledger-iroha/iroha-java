@@ -16,9 +16,7 @@ import kotlin.Unit
  *
  * Generated from 'CanModifyTriggerMetadata' regular structure
  */
-public data class CanModifyTriggerMetadata(
-    public val trigger: TriggerId,
-) : ModelPermission {
+public data class CanModifyTriggerMetadata(public val trigger: TriggerId) : ModelPermission {
     public companion object :
         ScaleReader<CanModifyTriggerMetadata>,
         ScaleWriter<CanModifyTriggerMetadata> {

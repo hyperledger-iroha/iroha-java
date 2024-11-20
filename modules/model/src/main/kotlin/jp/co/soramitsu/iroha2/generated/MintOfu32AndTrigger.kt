@@ -16,10 +16,7 @@ import kotlin.Unit
  *
  * Generated from 'MintOfu32AndTrigger' regular structure
  */
-public data class MintOfu32AndTrigger(
-    public val `object`: Long,
-    public val destination: TriggerId,
-) {
+public data class MintOfu32AndTrigger(public val `object`: Long, public val destination: TriggerId) {
     public companion object : ScaleReader<MintOfu32AndTrigger>, ScaleWriter<MintOfu32AndTrigger> {
         override fun read(reader: ScaleCodecReader): MintOfu32AndTrigger = try {
             MintOfu32AndTrigger(

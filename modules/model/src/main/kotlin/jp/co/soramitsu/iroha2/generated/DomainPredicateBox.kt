@@ -26,9 +26,7 @@ public sealed class DomainPredicateBox : ModelEnum {
     /**
      * 'Id' variant
      */
-    public data class Id(
-        public val domainIdPredicateBox: DomainIdPredicateBox,
-    ) : DomainPredicateBox() {
+    public data class Id(public val domainIdPredicateBox: DomainIdPredicateBox) : DomainPredicateBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -44,10 +42,7 @@ public sealed class DomainPredicateBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.DomainPredicateBox.Id,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.DomainPredicateBox.Id): Unit = try {
                 DomainIdPredicateBox.write(writer, instance.domainIdPredicateBox)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -58,9 +53,7 @@ public sealed class DomainPredicateBox : ModelEnum {
     /**
      * 'Metadata' variant
      */
-    public data class Metadata(
-        public val metadataPredicateBox: MetadataPredicateBox,
-    ) : DomainPredicateBox() {
+    public data class Metadata(public val metadataPredicateBox: MetadataPredicateBox) : DomainPredicateBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -76,14 +69,12 @@ public sealed class DomainPredicateBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.DomainPredicateBox.Metadata,
-            ): Unit = try {
-                MetadataPredicateBox.write(writer, instance.metadataPredicateBox)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.DomainPredicateBox.Metadata): Unit =
+                try {
+                    MetadataPredicateBox.write(writer, instance.metadataPredicateBox)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
@@ -94,14 +85,16 @@ public sealed class DomainPredicateBox : ModelEnum {
         ) {
             0 -> Id.read(reader)
             1 -> Metadata.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+        }
 
         override fun write(writer: ScaleCodecWriter, instance: DomainPredicateBox) {
             writer.directWrite(instance.discriminant())
             when (val discriminant = instance.discriminant()) {
                 0 -> Id.write(writer, instance as Id)
                 1 -> Metadata.write(writer, instance as Metadata)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

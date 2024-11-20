@@ -26,9 +26,7 @@ public sealed class AssetPredicateBox : ModelEnum {
     /**
      * 'Id' variant
      */
-    public data class Id(
-        public val assetIdPredicateBox: AssetIdPredicateBox,
-    ) : AssetPredicateBox() {
+    public data class Id(public val assetIdPredicateBox: AssetIdPredicateBox) : AssetPredicateBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -44,10 +42,7 @@ public sealed class AssetPredicateBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.AssetPredicateBox.Id,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.AssetPredicateBox.Id): Unit = try {
                 AssetIdPredicateBox.write(writer, instance.assetIdPredicateBox)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -58,9 +53,7 @@ public sealed class AssetPredicateBox : ModelEnum {
     /**
      * 'Value' variant
      */
-    public data class Value(
-        public val assetValuePredicateBox: AssetValuePredicateBox,
-    ) : AssetPredicateBox() {
+    public data class Value(public val assetValuePredicateBox: AssetValuePredicateBox) : AssetPredicateBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -76,10 +69,7 @@ public sealed class AssetPredicateBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.AssetPredicateBox.Value,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.AssetPredicateBox.Value): Unit = try {
                 AssetValuePredicateBox.write(writer, instance.assetValuePredicateBox)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -94,14 +84,16 @@ public sealed class AssetPredicateBox : ModelEnum {
         ) {
             0 -> Id.read(reader)
             1 -> Value.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+        }
 
         override fun write(writer: ScaleCodecWriter, instance: AssetPredicateBox) {
             writer.directWrite(instance.discriminant())
             when (val discriminant = instance.discriminant()) {
                 0 -> Id.write(writer, instance as Id)
                 1 -> Value.write(writer, instance as Value)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

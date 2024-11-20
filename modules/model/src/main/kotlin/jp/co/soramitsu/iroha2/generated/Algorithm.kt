@@ -30,14 +30,16 @@ public sealed class Algorithm : ModelEnum {
         is Secp256k1 -> Secp256k1.equals(this, other)
         is BlsNormal -> BlsNormal.equals(this, other)
         is BlsSmall -> BlsSmall.equals(this, other)
-        else -> super.equals(other) }
+        else -> super.equals(other)
+    }
 
     override fun hashCode(): Int = when (this) {
         is Ed25519 -> Ed25519.hashCode()
         is Secp256k1 -> Secp256k1.hashCode()
         is BlsNormal -> BlsNormal.hashCode()
         is BlsSmall -> BlsSmall.hashCode()
-        else -> super.hashCode() }
+        else -> super.hashCode()
+    }
 
     /**
      * 'Ed25519' variant
@@ -56,19 +58,15 @@ public sealed class Algorithm : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.Algorithm.Ed25519,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.Algorithm.Ed25519): Unit = try {
             } catch (ex: Exception) {
                 throw wrapException(ex)
             }
 
-            public fun equals(o1: jp.co.soramitsu.iroha2.generated.Algorithm.Ed25519, o2: Any?): Boolean =
-                when (o2) {
-                    null -> false
-                    else -> o2::class == o1::class
-                }
+            public fun equals(o1: jp.co.soramitsu.iroha2.generated.Algorithm.Ed25519, o2: Any?): Boolean = when (o2) {
+                null -> false
+                else -> o2::class == o1::class
+            }
 
             override fun hashCode(): Int = ".Algorithm.Ed25519".hashCode()
         }
@@ -91,10 +89,7 @@ public sealed class Algorithm : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.Algorithm.Secp256k1,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.Algorithm.Secp256k1): Unit = try {
             } catch (ex: Exception) {
                 throw wrapException(ex)
             }
@@ -125,10 +120,7 @@ public sealed class Algorithm : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.Algorithm.BlsNormal,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.Algorithm.BlsNormal): Unit = try {
             } catch (ex: Exception) {
                 throw wrapException(ex)
             }
@@ -159,10 +151,7 @@ public sealed class Algorithm : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.Algorithm.BlsSmall,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.Algorithm.BlsSmall): Unit = try {
             } catch (ex: Exception) {
                 throw wrapException(ex)
             }
@@ -185,7 +174,8 @@ public sealed class Algorithm : ModelEnum {
             1 -> Secp256k1.read(reader)
             2 -> BlsNormal.read(reader)
             3 -> BlsSmall.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+        }
 
         override fun write(writer: ScaleCodecWriter, instance: Algorithm) {
             writer.directWrite(instance.discriminant())
@@ -194,7 +184,8 @@ public sealed class Algorithm : ModelEnum {
                 1 -> Secp256k1.write(writer, instance as Secp256k1)
                 2 -> BlsNormal.write(writer, instance as BlsNormal)
                 3 -> BlsSmall.write(writer, instance as BlsSmall)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

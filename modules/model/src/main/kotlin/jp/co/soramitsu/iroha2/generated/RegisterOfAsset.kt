@@ -15,9 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'RegisterOfAsset' regular structure
  */
-public data class RegisterOfAsset(
-    public val `object`: Asset,
-) {
+public data class RegisterOfAsset(public val `object`: Asset) {
     public companion object : ScaleReader<RegisterOfAsset>, ScaleWriter<RegisterOfAsset> {
         override fun read(reader: ScaleCodecReader): RegisterOfAsset = try {
             RegisterOfAsset(

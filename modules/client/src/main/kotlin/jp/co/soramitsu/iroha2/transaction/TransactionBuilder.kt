@@ -175,7 +175,7 @@ class TransactionBuilder(builder: TransactionBuilder.() -> Unit = {}) {
     fun register(
         grantTo: AccountId,
         id: RoleId,
-        vararg tokens: Permission,
+        vararg tokens: ModelPermission,
     ) = this.apply {
         instructions.value.add(Instructions.register(grantTo, id, *tokens))
     }
@@ -211,34 +211,33 @@ class TransactionBuilder(builder: TransactionBuilder.() -> Unit = {}) {
         )
     }
 
-    fun register(id: AssetId, assetValue: AssetValue) =
-        this.apply { instructions.value.add(Instructions.register(id, assetValue)) }
+    fun register(id: AssetId, assetValue: AssetValue) = this.apply { instructions.value.add(Instructions.register(id, assetValue)) }
 
-    fun<V> setKeyValue(
+    fun <V> setKeyValue(
         assetId: AssetId,
         key: Name,
         value: V,
     ) = this.apply { instructions.value.add(Instructions.setKeyValue(assetId, key, value)) }
 
-    fun<V> setKeyValue(
+    fun <V> setKeyValue(
         accountId: AccountId,
         key: Name,
         value: V,
     ) = this.apply { instructions.value.add(Instructions.setKeyValue(accountId, key, value)) }
 
-    fun<V> setKeyValue(
+    fun <V> setKeyValue(
         definitionId: AssetDefinitionId,
         key: Name,
         value: V,
     ) = this.apply { instructions.value.add(Instructions.setKeyValue(definitionId, key, value)) }
 
-    fun<V> setKeyValue(
+    fun <V> setKeyValue(
         triggerId: TriggerId,
         key: Name,
         value: V,
     ) = this.apply { instructions.value.add(Instructions.setKeyValue(triggerId, key, value)) }
 
-    fun<V> setKeyValue(
+    fun <V> setKeyValue(
         domainId: DomainId,
         key: Name,
         value: V,
@@ -246,7 +245,7 @@ class TransactionBuilder(builder: TransactionBuilder.() -> Unit = {}) {
 
     fun removeKeyValue(assetId: AssetId, key: Name) = this.apply { instructions.value.add(Instructions.removeKeyValue(assetId, key)) }
 
-    fun<V> executeTrigger(triggerId: TriggerId, args: V) = this.apply {
+    fun <V> executeTrigger(triggerId: TriggerId, args: V) = this.apply {
         instructions.value.add(Instructions.executeTrigger(triggerId, args))
     }
 
@@ -273,10 +272,7 @@ class TransactionBuilder(builder: TransactionBuilder.() -> Unit = {}) {
 
     fun unregister(peerId: PeerId) = this.apply { instructions.value.add(Instructions.unregister(peerId)) }
 
-    fun<P : Permission> grant(
-        permission: P,
-        target: AccountId,
-    ) = this.apply {
+    fun <P : ModelPermission> grant(permission: P, target: AccountId) = this.apply {
         instructions.value.add(Instructions.grant(permission, target))
     }
 

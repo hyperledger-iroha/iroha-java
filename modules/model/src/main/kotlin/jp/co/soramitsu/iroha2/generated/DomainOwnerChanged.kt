@@ -15,10 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'DomainOwnerChanged' regular structure
  */
-public data class DomainOwnerChanged(
-    public val domain: DomainId,
-    public val newOwner: AccountId,
-) {
+public data class DomainOwnerChanged(public val domain: DomainId, public val newOwner: AccountId) {
     public companion object : ScaleReader<DomainOwnerChanged>, ScaleWriter<DomainOwnerChanged> {
         override fun read(reader: ScaleCodecReader): DomainOwnerChanged = try {
             DomainOwnerChanged(

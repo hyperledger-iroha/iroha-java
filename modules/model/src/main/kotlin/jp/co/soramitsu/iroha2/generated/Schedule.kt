@@ -16,10 +16,7 @@ import kotlin.Unit
  *
  * Generated from 'Schedule' regular structure
  */
-public data class Schedule(
-    public val startMs: BigInteger,
-    public val periodMs: BigInteger? = null,
-) {
+public data class Schedule(public val startMs: BigInteger, public val periodMs: BigInteger? = null) {
     public companion object : ScaleReader<Schedule>, ScaleWriter<Schedule> {
         override fun read(reader: ScaleCodecReader): Schedule = try {
             Schedule(

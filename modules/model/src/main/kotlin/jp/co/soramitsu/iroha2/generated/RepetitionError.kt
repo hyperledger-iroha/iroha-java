@@ -15,10 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'RepetitionError' regular structure
  */
-public data class RepetitionError(
-    public val instruction: InstructionType,
-    public val id: IdBox,
-) {
+public data class RepetitionError(public val instruction: InstructionType, public val id: IdBox) {
     public companion object : ScaleReader<RepetitionError>, ScaleWriter<RepetitionError> {
         override fun read(reader: ScaleCodecReader): RepetitionError = try {
             RepetitionError(

@@ -19,7 +19,11 @@ data class EnumType(
     /**
      * Variant of a enum type
      */
-    data class Variant(val name: String, val discriminant: Int, val type: TypeNest?)
+    data class Variant(
+        val name: String,
+        val discriminant: Int,
+        val type: TypeNest?,
+    )
 
     private var resolutionInProgress: Boolean = false
 
@@ -44,11 +48,9 @@ data class TupleStructType(
     override val generics: List<TypeNest>,
     val types: List<TypeNest>,
 ) : CompositeType(name, generics) {
-    override fun notResolvedTypes(): Set<String> {
-        return types.union(generics).flatMap {
-            it.value?.notResolvedTypes() ?: setOf(it.name)
-        }.toSet()
-    }
+    override fun notResolvedTypes(): Set<String> = types.union(generics).flatMap {
+        it.value?.notResolvedTypes() ?: setOf(it.name)
+    }.toSet()
 }
 
 /**
@@ -59,9 +61,7 @@ data class StructType(
     override val generics: List<TypeNest>,
     val mapping: Map<String, TypeNest>,
 ) : CompositeType(name, generics) {
-    override fun notResolvedTypes(): Set<String> {
-        return mapping.values.union(generics).flatMap {
-            it.value?.let { setOf() } ?: setOf(it.name)
-        }.toSet()
-    }
+    override fun notResolvedTypes(): Set<String> = mapping.values.union(generics).flatMap {
+        it.value?.let { setOf() } ?: setOf(it.name)
+    }.toSet()
 }

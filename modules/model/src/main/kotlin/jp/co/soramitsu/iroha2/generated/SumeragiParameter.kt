@@ -27,9 +27,7 @@ public sealed class SumeragiParameter : ModelEnum {
     /**
      * 'BlockTimeMs' variant
      */
-    public data class BlockTimeMs(
-        public val u64: BigInteger,
-    ) : SumeragiParameter() {
+    public data class BlockTimeMs(public val u64: BigInteger) : SumeragiParameter() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -45,23 +43,19 @@ public sealed class SumeragiParameter : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.SumeragiParameter.BlockTimeMs,
-            ): Unit = try {
-                writer.writeUint64(instance.u64)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.SumeragiParameter.BlockTimeMs): Unit =
+                try {
+                    writer.writeUint64(instance.u64)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
     /**
      * 'CommitTimeMs' variant
      */
-    public data class CommitTimeMs(
-        public val u64: BigInteger,
-    ) : SumeragiParameter() {
+    public data class CommitTimeMs(public val u64: BigInteger) : SumeragiParameter() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -77,23 +71,19 @@ public sealed class SumeragiParameter : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.SumeragiParameter.CommitTimeMs,
-            ): Unit = try {
-                writer.writeUint64(instance.u64)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.SumeragiParameter.CommitTimeMs): Unit =
+                try {
+                    writer.writeUint64(instance.u64)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
     /**
      * 'MaxClockDriftMs' variant
      */
-    public data class MaxClockDriftMs(
-        public val u64: BigInteger,
-    ) : SumeragiParameter() {
+    public data class MaxClockDriftMs(public val u64: BigInteger) : SumeragiParameter() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -128,7 +118,8 @@ public sealed class SumeragiParameter : ModelEnum {
             0 -> BlockTimeMs.read(reader)
             1 -> CommitTimeMs.read(reader)
             2 -> MaxClockDriftMs.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+        }
 
         override fun write(writer: ScaleCodecWriter, instance: SumeragiParameter) {
             writer.directWrite(instance.discriminant())
@@ -136,7 +127,8 @@ public sealed class SumeragiParameter : ModelEnum {
                 0 -> BlockTimeMs.write(writer, instance as BlockTimeMs)
                 1 -> CommitTimeMs.write(writer, instance as CommitTimeMs)
                 2 -> MaxClockDriftMs.write(writer, instance as MaxClockDriftMs)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

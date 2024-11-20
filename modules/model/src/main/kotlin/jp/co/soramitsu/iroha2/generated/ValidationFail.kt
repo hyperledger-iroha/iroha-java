@@ -29,19 +29,19 @@ public sealed class ValidationFail : ModelEnum {
     override fun equals(other: Any?): Boolean = when (this) {
         is TooComplex -> TooComplex.equals(this, other)
         is InternalError -> InternalError.equals(this, other)
-        else -> super.equals(other) }
+        else -> super.equals(other)
+    }
 
     override fun hashCode(): Int = when (this) {
         is TooComplex -> TooComplex.hashCode()
         is InternalError -> InternalError.hashCode()
-        else -> super.hashCode() }
+        else -> super.hashCode()
+    }
 
     /**
      * 'NotPermitted' variant
      */
-    public data class NotPermitted(
-        public val string: String,
-    ) : ValidationFail() {
+    public data class NotPermitted(public val string: String) : ValidationFail() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -57,23 +57,19 @@ public sealed class ValidationFail : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.ValidationFail.NotPermitted,
-            ): Unit = try {
-                writer.writeAsList(instance.string.toByteArray(Charsets.UTF_8))
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.ValidationFail.NotPermitted): Unit =
+                try {
+                    writer.writeAsList(instance.string.toByteArray(Charsets.UTF_8))
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
     /**
      * 'InstructionFailed' variant
      */
-    public data class InstructionFailed(
-        public val instructionExecutionError: InstructionExecutionError,
-    ) : ValidationFail() {
+    public data class InstructionFailed(public val instructionExecutionError: InstructionExecutionError) : ValidationFail() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -103,9 +99,7 @@ public sealed class ValidationFail : ModelEnum {
     /**
      * 'QueryFailed' variant
      */
-    public data class QueryFailed(
-        public val queryExecutionFail: QueryExecutionFail,
-    ) : ValidationFail() {
+    public data class QueryFailed(public val queryExecutionFail: QueryExecutionFail) : ValidationFail() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -121,14 +115,12 @@ public sealed class ValidationFail : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.ValidationFail.QueryFailed,
-            ): Unit = try {
-                QueryExecutionFail.write(writer, instance.queryExecutionFail)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.ValidationFail.QueryFailed): Unit =
+                try {
+                    QueryExecutionFail.write(writer, instance.queryExecutionFail)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
@@ -149,10 +141,7 @@ public sealed class ValidationFail : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.ValidationFail.TooComplex,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.ValidationFail.TooComplex): Unit = try {
             } catch (ex: Exception) {
                 throw wrapException(ex)
             }
@@ -183,18 +172,13 @@ public sealed class ValidationFail : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.ValidationFail.InternalError,
-            ): Unit = try {
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.ValidationFail.InternalError): Unit =
+                try {
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
-            public fun equals(
-                o1: jp.co.soramitsu.iroha2.generated.ValidationFail.InternalError,
-                o2: Any?,
-            ): Boolean = when (o2) {
+            public fun equals(o1: jp.co.soramitsu.iroha2.generated.ValidationFail.InternalError, o2: Any?): Boolean = when (o2) {
                 null -> false
                 else -> o2::class == o1::class
             }
@@ -213,7 +197,8 @@ public sealed class ValidationFail : ModelEnum {
             2 -> QueryFailed.read(reader)
             3 -> TooComplex.read(reader)
             4 -> InternalError.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+        }
 
         override fun write(writer: ScaleCodecWriter, instance: ValidationFail) {
             writer.directWrite(instance.discriminant())
@@ -223,7 +208,8 @@ public sealed class ValidationFail : ModelEnum {
                 2 -> QueryFailed.write(writer, instance as QueryFailed)
                 3 -> TooComplex.write(writer, instance as TooComplex)
                 4 -> InternalError.write(writer, instance as InternalError)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

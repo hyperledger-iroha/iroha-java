@@ -15,10 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'Account' regular structure
  */
-public data class Account(
-    public val id: AccountId,
-    public val metadata: Metadata,
-) {
+public data class Account(public val id: AccountId, public val metadata: Metadata) {
     public companion object : ScaleReader<Account>, ScaleWriter<Account> {
         override fun read(reader: ScaleCodecReader): Account = try {
             Account(

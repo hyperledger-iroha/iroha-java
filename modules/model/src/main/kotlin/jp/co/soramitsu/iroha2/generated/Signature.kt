@@ -19,9 +19,7 @@ import kotlin.Unit
  *
  * Generated from 'Signature' regular structure
  */
-public data class Signature(
-    public val payload: ByteArray,
-) {
+public data class Signature(public val payload: ByteArray) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is Signature) return false

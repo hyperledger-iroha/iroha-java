@@ -15,10 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'RemoveKeyValueOfTrigger' regular structure
  */
-public data class RemoveKeyValueOfTrigger(
-    public val `object`: TriggerId,
-    public val key: Name,
-) {
+public data class RemoveKeyValueOfTrigger(public val `object`: TriggerId, public val key: Name) {
     public companion object :
         ScaleReader<RemoveKeyValueOfTrigger>,
         ScaleWriter<RemoveKeyValueOfTrigger> {

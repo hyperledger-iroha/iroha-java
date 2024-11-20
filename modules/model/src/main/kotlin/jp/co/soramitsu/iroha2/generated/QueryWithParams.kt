@@ -15,10 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'QueryWithParams' regular structure
  */
-public data class QueryWithParams(
-    public val query: QueryBox,
-    public val params: QueryParams,
-) {
+public data class QueryWithParams(public val query: QueryBox, public val params: QueryParams) {
     public companion object : ScaleReader<QueryWithParams>, ScaleWriter<QueryWithParams> {
         override fun read(reader: ScaleCodecReader): QueryWithParams = try {
             QueryWithParams(

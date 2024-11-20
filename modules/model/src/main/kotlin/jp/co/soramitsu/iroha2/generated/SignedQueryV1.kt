@@ -15,10 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'SignedQueryV1' regular structure
  */
-public data class SignedQueryV1(
-    public val signature: QuerySignature,
-    public val payload: QueryRequestWithAuthority,
-) {
+public data class SignedQueryV1(public val signature: QuerySignature, public val payload: QueryRequestWithAuthority) {
     public companion object : ScaleReader<SignedQueryV1>, ScaleWriter<SignedQueryV1> {
         override fun read(reader: ScaleCodecReader): SignedQueryV1 = try {
             SignedQueryV1(

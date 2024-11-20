@@ -27,9 +27,8 @@ public sealed class CompoundPredicateOfCommittedTransactionPredicateBox : ModelE
     /**
      * 'Atom' variant
      */
-    public data class Atom(
-        public val committedTransactionPredicateBox: CommittedTransactionPredicateBox,
-    ) : CompoundPredicateOfCommittedTransactionPredicateBox() {
+    public data class Atom(public val committedTransactionPredicateBox: CommittedTransactionPredicateBox) :
+        CompoundPredicateOfCommittedTransactionPredicateBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -37,7 +36,9 @@ public sealed class CompoundPredicateOfCommittedTransactionPredicateBox : ModelE
             ScaleWriter<jp.co.soramitsu.iroha2.generated.CompoundPredicateOfCommittedTransactionPredicateBox.Atom> {
             public const val DISCRIMINANT: Int = 0
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.CompoundPredicateOfCommittedTransactionPredicateBox.Atom = try {
+            override fun read(
+                reader: ScaleCodecReader,
+            ): jp.co.soramitsu.iroha2.generated.CompoundPredicateOfCommittedTransactionPredicateBox.Atom = try {
                 Atom(
                     CommittedTransactionPredicateBox.read(reader),
                 )
@@ -60,8 +61,7 @@ public sealed class CompoundPredicateOfCommittedTransactionPredicateBox : ModelE
      * 'Not' variant
      */
     public data class Not(
-        public val compoundPredicateOfCommittedTransactionPredicateBox:
-        CompoundPredicateOfCommittedTransactionPredicateBox,
+        public val compoundPredicateOfCommittedTransactionPredicateBox: CompoundPredicateOfCommittedTransactionPredicateBox,
     ) : CompoundPredicateOfCommittedTransactionPredicateBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
@@ -70,14 +70,15 @@ public sealed class CompoundPredicateOfCommittedTransactionPredicateBox : ModelE
             ScaleWriter<jp.co.soramitsu.iroha2.generated.CompoundPredicateOfCommittedTransactionPredicateBox.Not> {
             public const val DISCRIMINANT: Int = 1
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.CompoundPredicateOfCommittedTransactionPredicateBox.Not =
-                try {
-                    Not(
-                        CompoundPredicateOfCommittedTransactionPredicateBox.read(reader),
-                    )
-                } catch (ex: Exception) {
-                    throw wrapException(ex)
-                }
+            override fun read(
+                reader: ScaleCodecReader,
+            ): jp.co.soramitsu.iroha2.generated.CompoundPredicateOfCommittedTransactionPredicateBox.Not = try {
+                Not(
+                    CompoundPredicateOfCommittedTransactionPredicateBox.read(reader),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
             override fun write(
                 writer: ScaleCodecWriter,
@@ -96,9 +97,8 @@ public sealed class CompoundPredicateOfCommittedTransactionPredicateBox : ModelE
     /**
      * 'And' variant
      */
-    public data class And(
-        public val vec: List<CompoundPredicateOfCommittedTransactionPredicateBox>,
-    ) : CompoundPredicateOfCommittedTransactionPredicateBox() {
+    public data class And(public val vec: List<CompoundPredicateOfCommittedTransactionPredicateBox>) :
+        CompoundPredicateOfCommittedTransactionPredicateBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -106,14 +106,15 @@ public sealed class CompoundPredicateOfCommittedTransactionPredicateBox : ModelE
             ScaleWriter<jp.co.soramitsu.iroha2.generated.CompoundPredicateOfCommittedTransactionPredicateBox.And> {
             public const val DISCRIMINANT: Int = 2
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.CompoundPredicateOfCommittedTransactionPredicateBox.And =
-                try {
-                    And(
-                        reader.readVec(reader.readCompactInt()) { CompoundPredicateOfCommittedTransactionPredicateBox.read(reader) },
-                    )
-                } catch (ex: Exception) {
-                    throw wrapException(ex)
-                }
+            override fun read(
+                reader: ScaleCodecReader,
+            ): jp.co.soramitsu.iroha2.generated.CompoundPredicateOfCommittedTransactionPredicateBox.And = try {
+                And(
+                    reader.readVec(reader.readCompactInt()) { CompoundPredicateOfCommittedTransactionPredicateBox.read(reader) },
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
             override fun write(
                 writer: ScaleCodecWriter,
@@ -132,9 +133,8 @@ public sealed class CompoundPredicateOfCommittedTransactionPredicateBox : ModelE
     /**
      * 'Or' variant
      */
-    public data class Or(
-        public val vec: List<CompoundPredicateOfCommittedTransactionPredicateBox>,
-    ) : CompoundPredicateOfCommittedTransactionPredicateBox() {
+    public data class Or(public val vec: List<CompoundPredicateOfCommittedTransactionPredicateBox>) :
+        CompoundPredicateOfCommittedTransactionPredicateBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -142,14 +142,15 @@ public sealed class CompoundPredicateOfCommittedTransactionPredicateBox : ModelE
             ScaleWriter<jp.co.soramitsu.iroha2.generated.CompoundPredicateOfCommittedTransactionPredicateBox.Or> {
             public const val DISCRIMINANT: Int = 3
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.CompoundPredicateOfCommittedTransactionPredicateBox.Or =
-                try {
-                    Or(
-                        reader.readVec(reader.readCompactInt()) { CompoundPredicateOfCommittedTransactionPredicateBox.read(reader) },
-                    )
-                } catch (ex: Exception) {
-                    throw wrapException(ex)
-                }
+            override fun read(
+                reader: ScaleCodecReader,
+            ): jp.co.soramitsu.iroha2.generated.CompoundPredicateOfCommittedTransactionPredicateBox.Or = try {
+                Or(
+                    reader.readVec(reader.readCompactInt()) { CompoundPredicateOfCommittedTransactionPredicateBox.read(reader) },
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
             override fun write(
                 writer: ScaleCodecWriter,
@@ -168,24 +169,24 @@ public sealed class CompoundPredicateOfCommittedTransactionPredicateBox : ModelE
     public companion object :
         ScaleReader<CompoundPredicateOfCommittedTransactionPredicateBox>,
         ScaleWriter<CompoundPredicateOfCommittedTransactionPredicateBox> {
-        override fun read(reader: ScaleCodecReader): CompoundPredicateOfCommittedTransactionPredicateBox = when (val discriminant = reader.readUByte()) {
-            0 -> Atom.read(reader)
-            1 -> Not.read(reader)
-            2 -> And.read(reader)
-            3 -> Or.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+        override fun read(reader: ScaleCodecReader): CompoundPredicateOfCommittedTransactionPredicateBox =
+            when (val discriminant = reader.readUByte()) {
+                0 -> Atom.read(reader)
+                1 -> Not.read(reader)
+                2 -> And.read(reader)
+                3 -> Or.read(reader)
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
 
-        override fun write(
-            writer: ScaleCodecWriter,
-            instance: CompoundPredicateOfCommittedTransactionPredicateBox,
-        ) {
+        override fun write(writer: ScaleCodecWriter, instance: CompoundPredicateOfCommittedTransactionPredicateBox) {
             writer.directWrite(instance.discriminant())
             when (val discriminant = instance.discriminant()) {
                 0 -> Atom.write(writer, instance as Atom)
                 1 -> Not.write(writer, instance as Not)
                 2 -> And.write(writer, instance as And)
                 3 -> Or.write(writer, instance as Or)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

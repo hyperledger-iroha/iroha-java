@@ -15,9 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'CustomParameterId' regular structure
  */
-public data class CustomParameterId(
-    public val name: Name,
-) {
+public data class CustomParameterId(public val name: Name) {
     public companion object : ScaleReader<CustomParameterId>, ScaleWriter<CustomParameterId> {
         override fun read(reader: ScaleCodecReader): CustomParameterId = try {
             CustomParameterId(

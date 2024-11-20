@@ -16,9 +16,7 @@ import kotlin.Unit
  *
  * Generated from 'IpfsPath' regular structure
  */
-public data class IpfsPath(
-    public val string: String,
-) {
+public data class IpfsPath(public val string: String) {
     public companion object : ScaleReader<IpfsPath>, ScaleWriter<IpfsPath> {
         override fun read(reader: ScaleCodecReader): IpfsPath = try {
             IpfsPath(

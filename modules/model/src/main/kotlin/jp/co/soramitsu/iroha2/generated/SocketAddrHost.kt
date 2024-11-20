@@ -17,10 +17,7 @@ import kotlin.Unit
  *
  * Generated from 'SocketAddrHost' regular structure
  */
-public data class SocketAddrHost(
-    public val host: String,
-    public val port: Int,
-) {
+public data class SocketAddrHost(public val host: String, public val port: Int) {
     public companion object : ScaleReader<SocketAddrHost>, ScaleWriter<SocketAddrHost> {
         override fun read(reader: ScaleCodecReader): SocketAddrHost = try {
             SocketAddrHost(

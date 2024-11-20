@@ -5,8 +5,7 @@ import io.ktor.http.HttpStatusCode
 /**
  * Throw if query payload can not be extracted
  */
-class QueryPayloadExtractionException(message: String? = null, cause: Throwable? = null) :
-    IrohaSdkException(message, cause)
+class QueryPayloadExtractionException(message: String? = null, cause: Throwable? = null) : IrohaSdkException(message, cause)
 
 /**
  * Throw if there is an unexpected state during WebSocket interaction
@@ -25,8 +24,7 @@ class IrohaClientException(
 /**
  * Throw if a transaction was rejected by a peer
  */
-class TransactionRejectedException(message: String? = null, cause: Throwable? = null) :
-    IrohaSdkException(message, cause)
+class TransactionRejectedException(message: String? = null, cause: Throwable? = null) : IrohaSdkException(message, cause)
 
 /**
  * Throw if there is an exception related to cryptography

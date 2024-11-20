@@ -26,9 +26,7 @@ public sealed class Parameter : ModelEnum {
     /**
      * 'Sumeragi' variant
      */
-    public data class Sumeragi(
-        public val sumeragiParameter: SumeragiParameter,
-    ) : Parameter() {
+    public data class Sumeragi(public val sumeragiParameter: SumeragiParameter) : Parameter() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -44,10 +42,7 @@ public sealed class Parameter : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.Parameter.Sumeragi,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.Parameter.Sumeragi): Unit = try {
                 SumeragiParameter.write(writer, instance.sumeragiParameter)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -58,9 +53,7 @@ public sealed class Parameter : ModelEnum {
     /**
      * 'Block' variant
      */
-    public data class Block(
-        public val blockParameter: BlockParameter,
-    ) : Parameter() {
+    public data class Block(public val blockParameter: BlockParameter) : Parameter() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -76,10 +69,7 @@ public sealed class Parameter : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.Parameter.Block,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.Parameter.Block): Unit = try {
                 BlockParameter.write(writer, instance.blockParameter)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -90,9 +80,7 @@ public sealed class Parameter : ModelEnum {
     /**
      * 'Transaction' variant
      */
-    public data class Transaction(
-        public val transactionParameter: TransactionParameter,
-    ) : Parameter() {
+    public data class Transaction(public val transactionParameter: TransactionParameter) : Parameter() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -108,10 +96,7 @@ public sealed class Parameter : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.Parameter.Transaction,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.Parameter.Transaction): Unit = try {
                 TransactionParameter.write(writer, instance.transactionParameter)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -122,9 +107,7 @@ public sealed class Parameter : ModelEnum {
     /**
      * 'SmartContract' variant
      */
-    public data class SmartContract(
-        public val smartContractParameter: SmartContractParameter,
-    ) : Parameter() {
+    public data class SmartContract(public val smartContractParameter: SmartContractParameter) : Parameter() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -140,10 +123,7 @@ public sealed class Parameter : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.Parameter.SmartContract,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.Parameter.SmartContract): Unit = try {
                 SmartContractParameter.write(writer, instance.smartContractParameter)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -154,9 +134,7 @@ public sealed class Parameter : ModelEnum {
     /**
      * 'Executor' variant
      */
-    public data class Executor(
-        public val smartContractParameter: SmartContractParameter,
-    ) : Parameter() {
+    public data class Executor(public val smartContractParameter: SmartContractParameter) : Parameter() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -172,10 +150,7 @@ public sealed class Parameter : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.Parameter.Executor,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.Parameter.Executor): Unit = try {
                 SmartContractParameter.write(writer, instance.smartContractParameter)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -186,9 +161,7 @@ public sealed class Parameter : ModelEnum {
     /**
      * 'Custom' variant
      */
-    public data class Custom(
-        public val customParameter: CustomParameter,
-    ) : Parameter() {
+    public data class Custom(public val customParameter: CustomParameter) : Parameter() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -204,10 +177,7 @@ public sealed class Parameter : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.Parameter.Custom,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.Parameter.Custom): Unit = try {
                 CustomParameter.write(writer, instance.customParameter)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -226,7 +196,8 @@ public sealed class Parameter : ModelEnum {
             3 -> SmartContract.read(reader)
             4 -> Executor.read(reader)
             5 -> Custom.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+        }
 
         override fun write(writer: ScaleCodecWriter, instance: Parameter) {
             writer.directWrite(instance.discriminant())
@@ -237,7 +208,8 @@ public sealed class Parameter : ModelEnum {
                 3 -> SmartContract.write(writer, instance as SmartContract)
                 4 -> Executor.write(writer, instance as Executor)
                 5 -> Custom.write(writer, instance as Custom)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

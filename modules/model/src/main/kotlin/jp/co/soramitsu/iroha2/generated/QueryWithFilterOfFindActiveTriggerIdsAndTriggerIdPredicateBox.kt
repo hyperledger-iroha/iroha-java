@@ -31,10 +31,7 @@ public data class QueryWithFilterOfFindActiveTriggerIdsAndTriggerIdPredicateBox(
             throw wrapException(ex)
         }
 
-        override fun write(
-            writer: ScaleCodecWriter,
-            instance: QueryWithFilterOfFindActiveTriggerIdsAndTriggerIdPredicateBox,
-        ): Unit = try {
+        override fun write(writer: ScaleCodecWriter, instance: QueryWithFilterOfFindActiveTriggerIdsAndTriggerIdPredicateBox): Unit = try {
             FindActiveTriggerIds.write(writer, instance.query)
             CompoundPredicateOfTriggerIdPredicateBox.write(writer, instance.predicate)
         } catch (ex: Exception) {

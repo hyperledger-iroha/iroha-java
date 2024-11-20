@@ -15,10 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'MintOfNumericAndAsset' regular structure
  */
-public data class MintOfNumericAndAsset(
-    public val `object`: Numeric,
-    public val destination: AssetId,
-) {
+public data class MintOfNumericAndAsset(public val `object`: Numeric, public val destination: AssetId) {
     public companion object : ScaleReader<MintOfNumericAndAsset>, ScaleWriter<MintOfNumericAndAsset> {
         override fun read(reader: ScaleCodecReader): MintOfNumericAndAsset = try {
             MintOfNumericAndAsset(

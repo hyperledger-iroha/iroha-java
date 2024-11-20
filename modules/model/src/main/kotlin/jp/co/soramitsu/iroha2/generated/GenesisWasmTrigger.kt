@@ -15,10 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'GenesisWasmTrigger' regular structure
  */
-public data class GenesisWasmTrigger(
-    public val id: TriggerId,
-    public val action: GenesisWasmAction,
-) {
+public data class GenesisWasmTrigger(public val id: TriggerId, public val action: GenesisWasmAction) {
     public companion object : ScaleReader<GenesisWasmTrigger>, ScaleWriter<GenesisWasmTrigger> {
         override fun read(reader: ScaleCodecReader): GenesisWasmTrigger = try {
             GenesisWasmTrigger(

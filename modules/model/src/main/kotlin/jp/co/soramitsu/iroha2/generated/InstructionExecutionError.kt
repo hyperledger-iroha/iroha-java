@@ -27,9 +27,7 @@ public sealed class InstructionExecutionError : ModelEnum {
     /**
      * 'Evaluate' variant
      */
-    public data class Evaluate(
-        public val instructionEvaluationError: InstructionEvaluationError,
-    ) : InstructionExecutionError() {
+    public data class Evaluate(public val instructionEvaluationError: InstructionEvaluationError) : InstructionExecutionError() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -59,9 +57,7 @@ public sealed class InstructionExecutionError : ModelEnum {
     /**
      * 'Query' variant
      */
-    public data class Query(
-        public val queryExecutionFail: QueryExecutionFail,
-    ) : InstructionExecutionError() {
+    public data class Query(public val queryExecutionFail: QueryExecutionFail) : InstructionExecutionError() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -91,9 +87,7 @@ public sealed class InstructionExecutionError : ModelEnum {
     /**
      * 'Conversion' variant
      */
-    public data class Conversion(
-        public val string: String,
-    ) : InstructionExecutionError() {
+    public data class Conversion(public val string: String) : InstructionExecutionError() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -112,21 +106,18 @@ public sealed class InstructionExecutionError : ModelEnum {
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.InstructionExecutionError.Conversion,
-            ): Unit =
-                try {
-                    writer.writeAsList(instance.string.toByteArray(Charsets.UTF_8))
-                } catch (ex: Exception) {
-                    throw wrapException(ex)
-                }
+            ): Unit = try {
+                writer.writeAsList(instance.string.toByteArray(Charsets.UTF_8))
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
         }
     }
 
     /**
      * 'Find' variant
      */
-    public data class Find(
-        public val findError: FindError,
-    ) : InstructionExecutionError() {
+    public data class Find(public val findError: FindError) : InstructionExecutionError() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -142,23 +133,19 @@ public sealed class InstructionExecutionError : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.InstructionExecutionError.Find,
-            ): Unit = try {
-                FindError.write(writer, instance.findError)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.InstructionExecutionError.Find): Unit =
+                try {
+                    FindError.write(writer, instance.findError)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
     /**
      * 'Repetition' variant
      */
-    public data class Repetition(
-        public val repetitionError: RepetitionError,
-    ) : InstructionExecutionError() {
+    public data class Repetition(public val repetitionError: RepetitionError) : InstructionExecutionError() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -177,21 +164,18 @@ public sealed class InstructionExecutionError : ModelEnum {
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.InstructionExecutionError.Repetition,
-            ): Unit =
-                try {
-                    RepetitionError.write(writer, instance.repetitionError)
-                } catch (ex: Exception) {
-                    throw wrapException(ex)
-                }
+            ): Unit = try {
+                RepetitionError.write(writer, instance.repetitionError)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
         }
     }
 
     /**
      * 'Mintability' variant
      */
-    public data class Mintability(
-        public val mintabilityError: MintabilityError,
-    ) : InstructionExecutionError() {
+    public data class Mintability(public val mintabilityError: MintabilityError) : InstructionExecutionError() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -210,21 +194,18 @@ public sealed class InstructionExecutionError : ModelEnum {
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.InstructionExecutionError.Mintability,
-            ): Unit =
-                try {
-                    MintabilityError.write(writer, instance.mintabilityError)
-                } catch (ex: Exception) {
-                    throw wrapException(ex)
-                }
+            ): Unit = try {
+                MintabilityError.write(writer, instance.mintabilityError)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
         }
     }
 
     /**
      * 'Math' variant
      */
-    public data class Math(
-        public val mathError: MathError,
-    ) : InstructionExecutionError() {
+    public data class Math(public val mathError: MathError) : InstructionExecutionError() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -240,23 +221,19 @@ public sealed class InstructionExecutionError : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.InstructionExecutionError.Math,
-            ): Unit = try {
-                MathError.write(writer, instance.mathError)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.InstructionExecutionError.Math): Unit =
+                try {
+                    MathError.write(writer, instance.mathError)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
     /**
      * 'InvalidParameter' variant
      */
-    public data class InvalidParameter(
-        public val invalidParameterError: InvalidParameterError,
-    ) : InstructionExecutionError() {
+    public data class InvalidParameter(public val invalidParameterError: InvalidParameterError) : InstructionExecutionError() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -286,9 +263,7 @@ public sealed class InstructionExecutionError : ModelEnum {
     /**
      * 'InvariantViolation' variant
      */
-    public data class InvariantViolation(
-        public val string: String,
-    ) : InstructionExecutionError() {
+    public data class InvariantViolation(public val string: String) : InstructionExecutionError() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -296,13 +271,14 @@ public sealed class InstructionExecutionError : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.InstructionExecutionError.InvariantViolation> {
             public const val DISCRIMINANT: Int = 8
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.InstructionExecutionError.InvariantViolation = try {
-                InvariantViolation(
-                    reader.readString(),
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.InstructionExecutionError.InvariantViolation =
+                try {
+                    InvariantViolation(
+                        reader.readString(),
+                    )
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             override fun write(
                 writer: ScaleCodecWriter,
@@ -331,7 +307,8 @@ public sealed class InstructionExecutionError : ModelEnum {
             6 -> Math.read(reader)
             7 -> InvalidParameter.read(reader)
             8 -> InvariantViolation.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+        }
 
         override fun write(writer: ScaleCodecWriter, instance: InstructionExecutionError) {
             writer.directWrite(instance.discriminant())
@@ -345,7 +322,8 @@ public sealed class InstructionExecutionError : ModelEnum {
                 6 -> Math.write(writer, instance as Math)
                 7 -> InvalidParameter.write(writer, instance as InvalidParameter)
                 8 -> InvariantViolation.write(writer, instance as InvariantViolation)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

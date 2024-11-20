@@ -27,8 +27,7 @@ public sealed class QueryBox : ModelEnum {
      * 'FindDomains' variant
      */
     public data class FindDomains(
-        public val queryWithFilterOfFindDomainsAndDomainPredicateBox:
-        QueryWithFilterOfFindDomainsAndDomainPredicateBox,
+        public val queryWithFilterOfFindDomainsAndDomainPredicateBox: QueryWithFilterOfFindDomainsAndDomainPredicateBox,
     ) : QueryBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
@@ -45,10 +44,7 @@ public sealed class QueryBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.QueryBox.FindDomains,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.QueryBox.FindDomains): Unit = try {
                 QueryWithFilterOfFindDomainsAndDomainPredicateBox.write(
                     writer,
                     instance.queryWithFilterOfFindDomainsAndDomainPredicateBox,
@@ -63,8 +59,7 @@ public sealed class QueryBox : ModelEnum {
      * 'FindAccounts' variant
      */
     public data class FindAccounts(
-        public val queryWithFilterOfFindAccountsAndAccountPredicateBox:
-        QueryWithFilterOfFindAccountsAndAccountPredicateBox,
+        public val queryWithFilterOfFindAccountsAndAccountPredicateBox: QueryWithFilterOfFindAccountsAndAccountPredicateBox,
     ) : QueryBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
@@ -81,10 +76,7 @@ public sealed class QueryBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.QueryBox.FindAccounts,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.QueryBox.FindAccounts): Unit = try {
                 QueryWithFilterOfFindAccountsAndAccountPredicateBox.write(
                     writer,
                     instance.queryWithFilterOfFindAccountsAndAccountPredicateBox,
@@ -99,8 +91,7 @@ public sealed class QueryBox : ModelEnum {
      * 'FindAssets' variant
      */
     public data class FindAssets(
-        public val queryWithFilterOfFindAssetsAndAssetPredicateBox:
-        QueryWithFilterOfFindAssetsAndAssetPredicateBox,
+        public val queryWithFilterOfFindAssetsAndAssetPredicateBox: QueryWithFilterOfFindAssetsAndAssetPredicateBox,
     ) : QueryBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
@@ -117,10 +108,7 @@ public sealed class QueryBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.QueryBox.FindAssets,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.QueryBox.FindAssets): Unit = try {
                 QueryWithFilterOfFindAssetsAndAssetPredicateBox.write(
                     writer,
                     instance.queryWithFilterOfFindAssetsAndAssetPredicateBox,
@@ -153,27 +141,23 @@ public sealed class QueryBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.QueryBox.FindAssetsDefinitions,
-            ): Unit = try {
-                QueryWithFilterOfFindAssetsDefinitionsAndAssetDefinitionPredicateBox.write(
-                    writer,
-                    instance.queryWithFilterOfFindAssetsDefinitionsAndAssetDefinitionPredicateBox,
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.QueryBox.FindAssetsDefinitions): Unit =
+                try {
+                    QueryWithFilterOfFindAssetsDefinitionsAndAssetDefinitionPredicateBox.write(
+                        writer,
+                        instance.queryWithFilterOfFindAssetsDefinitionsAndAssetDefinitionPredicateBox,
+                    )
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
     /**
      * 'FindRoles' variant
      */
-    public data class FindRoles(
-        public val queryWithFilterOfFindRolesAndRolePredicateBox:
-        QueryWithFilterOfFindRolesAndRolePredicateBox,
-    ) : QueryBox() {
+    public data class FindRoles(public val queryWithFilterOfFindRolesAndRolePredicateBox: QueryWithFilterOfFindRolesAndRolePredicateBox) :
+        QueryBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -189,10 +173,7 @@ public sealed class QueryBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.QueryBox.FindRoles,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.QueryBox.FindRoles): Unit = try {
                 QueryWithFilterOfFindRolesAndRolePredicateBox.write(
                     writer,
                     instance.queryWithFilterOfFindRolesAndRolePredicateBox,
@@ -207,8 +188,7 @@ public sealed class QueryBox : ModelEnum {
      * 'FindRoleIds' variant
      */
     public data class FindRoleIds(
-        public val queryWithFilterOfFindRoleIdsAndRoleIdPredicateBox:
-        QueryWithFilterOfFindRoleIdsAndRoleIdPredicateBox,
+        public val queryWithFilterOfFindRoleIdsAndRoleIdPredicateBox: QueryWithFilterOfFindRoleIdsAndRoleIdPredicateBox,
     ) : QueryBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
@@ -225,10 +205,7 @@ public sealed class QueryBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.QueryBox.FindRoleIds,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.QueryBox.FindRoleIds): Unit = try {
                 QueryWithFilterOfFindRoleIdsAndRoleIdPredicateBox.write(
                     writer,
                     instance.queryWithFilterOfFindRoleIdsAndRoleIdPredicateBox,
@@ -264,15 +241,14 @@ public sealed class QueryBox : ModelEnum {
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.QueryBox.FindPermissionsByAccountId,
-            ): Unit =
-                try {
-                    QueryWithFilterOfFindPermissionsByAccountIdAndPermissionPredicateBox.write(
-                        writer,
-                        instance.queryWithFilterOfFindPermissionsByAccountIdAndPermissionPredicateBox,
-                    )
-                } catch (ex: Exception) {
-                    throw wrapException(ex)
-                }
+            ): Unit = try {
+                QueryWithFilterOfFindPermissionsByAccountIdAndPermissionPredicateBox.write(
+                    writer,
+                    instance.queryWithFilterOfFindPermissionsByAccountIdAndPermissionPredicateBox,
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
         }
     }
 
@@ -280,8 +256,7 @@ public sealed class QueryBox : ModelEnum {
      * 'FindRolesByAccountId' variant
      */
     public data class FindRolesByAccountId(
-        public val queryWithFilterOfFindRolesByAccountIdAndRoleIdPredicateBox:
-        QueryWithFilterOfFindRolesByAccountIdAndRoleIdPredicateBox,
+        public val queryWithFilterOfFindRolesByAccountIdAndRoleIdPredicateBox: QueryWithFilterOfFindRolesByAccountIdAndRoleIdPredicateBox,
     ) : QueryBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
@@ -298,17 +273,15 @@ public sealed class QueryBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.QueryBox.FindRolesByAccountId,
-            ): Unit = try {
-                QueryWithFilterOfFindRolesByAccountIdAndRoleIdPredicateBox.write(
-                    writer,
-                    instance.queryWithFilterOfFindRolesByAccountIdAndRoleIdPredicateBox,
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.QueryBox.FindRolesByAccountId): Unit =
+                try {
+                    QueryWithFilterOfFindRolesByAccountIdAndRoleIdPredicateBox.write(
+                        writer,
+                        instance.queryWithFilterOfFindRolesByAccountIdAndRoleIdPredicateBox,
+                    )
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
@@ -334,27 +307,23 @@ public sealed class QueryBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.QueryBox.FindAccountsWithAsset,
-            ): Unit = try {
-                QueryWithFilterOfFindAccountsWithAssetAndAccountPredicateBox.write(
-                    writer,
-                    instance.queryWithFilterOfFindAccountsWithAssetAndAccountPredicateBox,
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.QueryBox.FindAccountsWithAsset): Unit =
+                try {
+                    QueryWithFilterOfFindAccountsWithAssetAndAccountPredicateBox.write(
+                        writer,
+                        instance.queryWithFilterOfFindAccountsWithAssetAndAccountPredicateBox,
+                    )
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
     /**
      * 'FindPeers' variant
      */
-    public data class FindPeers(
-        public val queryWithFilterOfFindPeersAndPeerPredicateBox:
-        QueryWithFilterOfFindPeersAndPeerPredicateBox,
-    ) : QueryBox() {
+    public data class FindPeers(public val queryWithFilterOfFindPeersAndPeerPredicateBox: QueryWithFilterOfFindPeersAndPeerPredicateBox) :
+        QueryBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -370,10 +339,7 @@ public sealed class QueryBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.QueryBox.FindPeers,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.QueryBox.FindPeers): Unit = try {
                 QueryWithFilterOfFindPeersAndPeerPredicateBox.write(
                     writer,
                     instance.queryWithFilterOfFindPeersAndPeerPredicateBox,
@@ -406,17 +372,15 @@ public sealed class QueryBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.QueryBox.FindActiveTriggerIds,
-            ): Unit = try {
-                QueryWithFilterOfFindActiveTriggerIdsAndTriggerIdPredicateBox.write(
-                    writer,
-                    instance.queryWithFilterOfFindActiveTriggerIdsAndTriggerIdPredicateBox,
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.QueryBox.FindActiveTriggerIds): Unit =
+                try {
+                    QueryWithFilterOfFindActiveTriggerIdsAndTriggerIdPredicateBox.write(
+                        writer,
+                        instance.queryWithFilterOfFindActiveTriggerIdsAndTriggerIdPredicateBox,
+                    )
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
@@ -424,8 +388,7 @@ public sealed class QueryBox : ModelEnum {
      * 'FindTriggers' variant
      */
     public data class FindTriggers(
-        public val queryWithFilterOfFindTriggersAndTriggerPredicateBox:
-        QueryWithFilterOfFindTriggersAndTriggerPredicateBox,
+        public val queryWithFilterOfFindTriggersAndTriggerPredicateBox: QueryWithFilterOfFindTriggersAndTriggerPredicateBox,
     ) : QueryBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
@@ -442,10 +405,7 @@ public sealed class QueryBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.QueryBox.FindTriggers,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.QueryBox.FindTriggers): Unit = try {
                 QueryWithFilterOfFindTriggersAndTriggerPredicateBox.write(
                     writer,
                     instance.queryWithFilterOfFindTriggersAndTriggerPredicateBox,
@@ -478,10 +438,7 @@ public sealed class QueryBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.QueryBox.FindTransactions,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.QueryBox.FindTransactions): Unit = try {
                 QueryWithFilterOfFindTransactionsAndCommittedTransactionPredicateBox.write(
                     writer,
                     instance.queryWithFilterOfFindTransactionsAndCommittedTransactionPredicateBox,
@@ -496,8 +453,7 @@ public sealed class QueryBox : ModelEnum {
      * 'FindBlocks' variant
      */
     public data class FindBlocks(
-        public val queryWithFilterOfFindBlocksAndSignedBlockPredicateBox:
-        QueryWithFilterOfFindBlocksAndSignedBlockPredicateBox,
+        public val queryWithFilterOfFindBlocksAndSignedBlockPredicateBox: QueryWithFilterOfFindBlocksAndSignedBlockPredicateBox,
     ) : QueryBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
@@ -514,10 +470,7 @@ public sealed class QueryBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.QueryBox.FindBlocks,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.QueryBox.FindBlocks): Unit = try {
                 QueryWithFilterOfFindBlocksAndSignedBlockPredicateBox.write(
                     writer,
                     instance.queryWithFilterOfFindBlocksAndSignedBlockPredicateBox,
@@ -532,8 +485,7 @@ public sealed class QueryBox : ModelEnum {
      * 'FindBlockHeaders' variant
      */
     public data class FindBlockHeaders(
-        public val queryWithFilterOfFindBlockHeadersAndBlockHeaderPredicateBox:
-        QueryWithFilterOfFindBlockHeadersAndBlockHeaderPredicateBox,
+        public val queryWithFilterOfFindBlockHeadersAndBlockHeaderPredicateBox: QueryWithFilterOfFindBlockHeadersAndBlockHeaderPredicateBox,
     ) : QueryBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
@@ -550,10 +502,7 @@ public sealed class QueryBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.QueryBox.FindBlockHeaders,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.QueryBox.FindBlockHeaders): Unit = try {
                 QueryWithFilterOfFindBlockHeadersAndBlockHeaderPredicateBox.write(
                     writer,
                     instance.queryWithFilterOfFindBlockHeadersAndBlockHeaderPredicateBox,
@@ -584,7 +533,8 @@ public sealed class QueryBox : ModelEnum {
             12 -> FindTransactions.read(reader)
             13 -> FindBlocks.read(reader)
             14 -> FindBlockHeaders.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+        }
 
         override fun write(writer: ScaleCodecWriter, instance: QueryBox) {
             writer.directWrite(instance.discriminant())
@@ -604,7 +554,8 @@ public sealed class QueryBox : ModelEnum {
                 12 -> FindTransactions.write(writer, instance as FindTransactions)
                 13 -> FindBlocks.write(writer, instance as FindBlocks)
                 14 -> FindBlockHeaders.write(writer, instance as FindBlockHeaders)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

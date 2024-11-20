@@ -15,10 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'RemoveKeyValueOfAccount' regular structure
  */
-public data class RemoveKeyValueOfAccount(
-    public val `object`: AccountId,
-    public val key: Name,
-) {
+public data class RemoveKeyValueOfAccount(public val `object`: AccountId, public val key: Name) {
     public companion object :
         ScaleReader<RemoveKeyValueOfAccount>,
         ScaleWriter<RemoveKeyValueOfAccount> {

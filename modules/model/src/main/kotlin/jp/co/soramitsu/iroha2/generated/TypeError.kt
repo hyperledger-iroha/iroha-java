@@ -26,9 +26,7 @@ public sealed class TypeError : ModelEnum {
     /**
      * 'AssetType' variant
      */
-    public data class AssetType(
-        public val mismatch: Mismatch<jp.co.soramitsu.iroha2.generated.AssetType>,
-    ) : TypeError() {
+    public data class AssetType(public val mismatch: Mismatch<jp.co.soramitsu.iroha2.generated.AssetType>) : TypeError() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -44,10 +42,7 @@ public sealed class TypeError : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.TypeError.AssetType,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.TypeError.AssetType): Unit = try {
                 Mismatch.write(writer, instance.mismatch)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -58,9 +53,7 @@ public sealed class TypeError : ModelEnum {
     /**
      * 'NumericAssetTypeExpected' variant
      */
-    public data class NumericAssetTypeExpected(
-        public val assetType: jp.co.soramitsu.iroha2.generated.AssetType,
-    ) : TypeError() {
+    public data class NumericAssetTypeExpected(public val assetType: jp.co.soramitsu.iroha2.generated.AssetType) : TypeError() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -94,14 +87,16 @@ public sealed class TypeError : ModelEnum {
         ) {
             0 -> AssetType.read(reader)
             1 -> NumericAssetTypeExpected.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+        }
 
         override fun write(writer: ScaleCodecWriter, instance: TypeError) {
             writer.directWrite(instance.discriminant())
             when (val discriminant = instance.discriminant()) {
                 0 -> AssetType.write(writer, instance as AssetType)
                 1 -> NumericAssetTypeExpected.write(writer, instance as NumericAssetTypeExpected)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

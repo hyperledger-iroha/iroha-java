@@ -15,9 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'TriggerId' regular structure
  */
-public data class TriggerId(
-    public val name: Name,
-) {
+public data class TriggerId(public val name: Name) {
     public companion object : ScaleReader<TriggerId>, ScaleWriter<TriggerId> {
         override fun read(reader: ScaleCodecReader): TriggerId = try {
             TriggerId(

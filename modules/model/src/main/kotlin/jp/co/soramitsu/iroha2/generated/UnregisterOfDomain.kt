@@ -15,9 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'UnregisterOfDomain' regular structure
  */
-public data class UnregisterOfDomain(
-    public val `object`: DomainId,
-) {
+public data class UnregisterOfDomain(public val `object`: DomainId) {
     public companion object : ScaleReader<UnregisterOfDomain>, ScaleWriter<UnregisterOfDomain> {
         override fun read(reader: ScaleCodecReader): UnregisterOfDomain = try {
             UnregisterOfDomain(

@@ -26,9 +26,8 @@ public sealed class SingularQueryBox : ModelEnum {
     /**
      * 'FindAssetQuantityById' variant
      */
-    public data class FindAssetQuantityById(
-        public val findAssetQuantityById: jp.co.soramitsu.iroha2.generated.FindAssetQuantityById,
-    ) : SingularQueryBox() {
+    public data class FindAssetQuantityById(public val findAssetQuantityById: jp.co.soramitsu.iroha2.generated.FindAssetQuantityById) :
+        SingularQueryBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -47,24 +46,22 @@ public sealed class SingularQueryBox : ModelEnum {
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.SingularQueryBox.FindAssetQuantityById,
-            ): Unit =
-                try {
-                    jp.co.soramitsu.iroha2.generated.FindAssetQuantityById.write(
-                        writer,
-                        instance.findAssetQuantityById,
-                    )
-                } catch (ex: Exception) {
-                    throw wrapException(ex)
-                }
+            ): Unit = try {
+                jp.co.soramitsu.iroha2.generated.FindAssetQuantityById.write(
+                    writer,
+                    instance.findAssetQuantityById,
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
         }
     }
 
     /**
      * 'FindExecutorDataModel' variant
      */
-    public data class FindExecutorDataModel(
-        public val findExecutorDataModel: jp.co.soramitsu.iroha2.generated.FindExecutorDataModel,
-    ) : SingularQueryBox() {
+    public data class FindExecutorDataModel(public val findExecutorDataModel: jp.co.soramitsu.iroha2.generated.FindExecutorDataModel) :
+        SingularQueryBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -83,24 +80,21 @@ public sealed class SingularQueryBox : ModelEnum {
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.SingularQueryBox.FindExecutorDataModel,
-            ): Unit =
-                try {
-                    jp.co.soramitsu.iroha2.generated.FindExecutorDataModel.write(
-                        writer,
-                        instance.findExecutorDataModel,
-                    )
-                } catch (ex: Exception) {
-                    throw wrapException(ex)
-                }
+            ): Unit = try {
+                jp.co.soramitsu.iroha2.generated.FindExecutorDataModel.write(
+                    writer,
+                    instance.findExecutorDataModel,
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
         }
     }
 
     /**
      * 'FindParameters' variant
      */
-    public data class FindParameters(
-        public val findParameters: jp.co.soramitsu.iroha2.generated.FindParameters,
-    ) : SingularQueryBox() {
+    public data class FindParameters(public val findParameters: jp.co.soramitsu.iroha2.generated.FindParameters) : SingularQueryBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -130,9 +124,8 @@ public sealed class SingularQueryBox : ModelEnum {
     /**
      * 'FindDomainMetadata' variant
      */
-    public data class FindDomainMetadata(
-        public val findDomainMetadata: jp.co.soramitsu.iroha2.generated.FindDomainMetadata,
-    ) : SingularQueryBox() {
+    public data class FindDomainMetadata(public val findDomainMetadata: jp.co.soramitsu.iroha2.generated.FindDomainMetadata) :
+        SingularQueryBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -151,24 +144,22 @@ public sealed class SingularQueryBox : ModelEnum {
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.SingularQueryBox.FindDomainMetadata,
-            ): Unit =
-                try {
-                    jp.co.soramitsu.iroha2.generated.FindDomainMetadata.write(
-                        writer,
-                        instance.findDomainMetadata,
-                    )
-                } catch (ex: Exception) {
-                    throw wrapException(ex)
-                }
+            ): Unit = try {
+                jp.co.soramitsu.iroha2.generated.FindDomainMetadata.write(
+                    writer,
+                    instance.findDomainMetadata,
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
         }
     }
 
     /**
      * 'FindAccountMetadata' variant
      */
-    public data class FindAccountMetadata(
-        public val findAccountMetadata: jp.co.soramitsu.iroha2.generated.FindAccountMetadata,
-    ) : SingularQueryBox() {
+    public data class FindAccountMetadata(public val findAccountMetadata: jp.co.soramitsu.iroha2.generated.FindAccountMetadata) :
+        SingularQueryBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -187,24 +178,22 @@ public sealed class SingularQueryBox : ModelEnum {
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.SingularQueryBox.FindAccountMetadata,
-            ): Unit =
-                try {
-                    jp.co.soramitsu.iroha2.generated.FindAccountMetadata.write(
-                        writer,
-                        instance.findAccountMetadata,
-                    )
-                } catch (ex: Exception) {
-                    throw wrapException(ex)
-                }
+            ): Unit = try {
+                jp.co.soramitsu.iroha2.generated.FindAccountMetadata.write(
+                    writer,
+                    instance.findAccountMetadata,
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
         }
     }
 
     /**
      * 'FindAssetMetadata' variant
      */
-    public data class FindAssetMetadata(
-        public val findAssetMetadata: jp.co.soramitsu.iroha2.generated.FindAssetMetadata,
-    ) : SingularQueryBox() {
+    public data class FindAssetMetadata(public val findAssetMetadata: jp.co.soramitsu.iroha2.generated.FindAssetMetadata) :
+        SingularQueryBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -235,8 +224,7 @@ public sealed class SingularQueryBox : ModelEnum {
      * 'FindAssetDefinitionMetadata' variant
      */
     public data class FindAssetDefinitionMetadata(
-        public val findAssetDefinitionMetadata:
-        jp.co.soramitsu.iroha2.generated.FindAssetDefinitionMetadata,
+        public val findAssetDefinitionMetadata: jp.co.soramitsu.iroha2.generated.FindAssetDefinitionMetadata,
     ) : SingularQueryBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
@@ -245,13 +233,14 @@ public sealed class SingularQueryBox : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.SingularQueryBox.FindAssetDefinitionMetadata> {
             public const val DISCRIMINANT: Int = 6
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.SingularQueryBox.FindAssetDefinitionMetadata = try {
-                FindAssetDefinitionMetadata(
-                    jp.co.soramitsu.iroha2.generated.FindAssetDefinitionMetadata.read(reader),
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.SingularQueryBox.FindAssetDefinitionMetadata =
+                try {
+                    FindAssetDefinitionMetadata(
+                        jp.co.soramitsu.iroha2.generated.FindAssetDefinitionMetadata.read(reader),
+                    )
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             override fun write(
                 writer: ScaleCodecWriter,
@@ -270,9 +259,8 @@ public sealed class SingularQueryBox : ModelEnum {
     /**
      * 'FindTriggerMetadata' variant
      */
-    public data class FindTriggerMetadata(
-        public val findTriggerMetadata: jp.co.soramitsu.iroha2.generated.FindTriggerMetadata,
-    ) : SingularQueryBox() {
+    public data class FindTriggerMetadata(public val findTriggerMetadata: jp.co.soramitsu.iroha2.generated.FindTriggerMetadata) :
+        SingularQueryBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -291,15 +279,14 @@ public sealed class SingularQueryBox : ModelEnum {
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.SingularQueryBox.FindTriggerMetadata,
-            ): Unit =
-                try {
-                    jp.co.soramitsu.iroha2.generated.FindTriggerMetadata.write(
-                        writer,
-                        instance.findTriggerMetadata,
-                    )
-                } catch (ex: Exception) {
-                    throw wrapException(ex)
-                }
+            ): Unit = try {
+                jp.co.soramitsu.iroha2.generated.FindTriggerMetadata.write(
+                    writer,
+                    instance.findTriggerMetadata,
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
         }
     }
 
@@ -316,7 +303,8 @@ public sealed class SingularQueryBox : ModelEnum {
             5 -> FindAssetMetadata.read(reader)
             6 -> FindAssetDefinitionMetadata.read(reader)
             7 -> FindTriggerMetadata.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+        }
 
         override fun write(writer: ScaleCodecWriter, instance: SingularQueryBox) {
             writer.directWrite(instance.discriminant())
@@ -329,7 +317,8 @@ public sealed class SingularQueryBox : ModelEnum {
                 5 -> FindAssetMetadata.write(writer, instance as FindAssetMetadata)
                 6 -> FindAssetDefinitionMetadata.write(writer, instance as FindAssetDefinitionMetadata)
                 7 -> FindTriggerMetadata.write(writer, instance as FindTriggerMetadata)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

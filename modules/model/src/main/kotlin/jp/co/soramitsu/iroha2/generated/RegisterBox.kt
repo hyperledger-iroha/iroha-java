@@ -26,9 +26,7 @@ public sealed class RegisterBox : ModelEnum {
     /**
      * 'Peer' variant
      */
-    public data class Peer(
-        public val registerOfPeer: RegisterOfPeer,
-    ) : RegisterBox() {
+    public data class Peer(public val registerOfPeer: RegisterOfPeer) : RegisterBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -44,10 +42,7 @@ public sealed class RegisterBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.RegisterBox.Peer,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.RegisterBox.Peer): Unit = try {
                 RegisterOfPeer.write(writer, instance.registerOfPeer)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -58,9 +53,7 @@ public sealed class RegisterBox : ModelEnum {
     /**
      * 'Domain' variant
      */
-    public data class Domain(
-        public val registerOfDomain: RegisterOfDomain,
-    ) : RegisterBox() {
+    public data class Domain(public val registerOfDomain: RegisterOfDomain) : RegisterBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -76,10 +69,7 @@ public sealed class RegisterBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.RegisterBox.Domain,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.RegisterBox.Domain): Unit = try {
                 RegisterOfDomain.write(writer, instance.registerOfDomain)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -90,9 +80,7 @@ public sealed class RegisterBox : ModelEnum {
     /**
      * 'Account' variant
      */
-    public data class Account(
-        public val registerOfAccount: RegisterOfAccount,
-    ) : RegisterBox() {
+    public data class Account(public val registerOfAccount: RegisterOfAccount) : RegisterBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -108,10 +96,7 @@ public sealed class RegisterBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.RegisterBox.Account,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.RegisterBox.Account): Unit = try {
                 RegisterOfAccount.write(writer, instance.registerOfAccount)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -122,9 +107,7 @@ public sealed class RegisterBox : ModelEnum {
     /**
      * 'AssetDefinition' variant
      */
-    public data class AssetDefinition(
-        public val registerOfAssetDefinition: RegisterOfAssetDefinition,
-    ) : RegisterBox() {
+    public data class AssetDefinition(public val registerOfAssetDefinition: RegisterOfAssetDefinition) : RegisterBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -140,23 +123,19 @@ public sealed class RegisterBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.RegisterBox.AssetDefinition,
-            ): Unit = try {
-                RegisterOfAssetDefinition.write(writer, instance.registerOfAssetDefinition)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.RegisterBox.AssetDefinition): Unit =
+                try {
+                    RegisterOfAssetDefinition.write(writer, instance.registerOfAssetDefinition)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
     /**
      * 'Asset' variant
      */
-    public data class Asset(
-        public val registerOfAsset: RegisterOfAsset,
-    ) : RegisterBox() {
+    public data class Asset(public val registerOfAsset: RegisterOfAsset) : RegisterBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -172,10 +151,7 @@ public sealed class RegisterBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.RegisterBox.Asset,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.RegisterBox.Asset): Unit = try {
                 RegisterOfAsset.write(writer, instance.registerOfAsset)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -186,9 +162,7 @@ public sealed class RegisterBox : ModelEnum {
     /**
      * 'Role' variant
      */
-    public data class Role(
-        public val registerOfRole: RegisterOfRole,
-    ) : RegisterBox() {
+    public data class Role(public val registerOfRole: RegisterOfRole) : RegisterBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -204,10 +178,7 @@ public sealed class RegisterBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.RegisterBox.Role,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.RegisterBox.Role): Unit = try {
                 RegisterOfRole.write(writer, instance.registerOfRole)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -218,9 +189,7 @@ public sealed class RegisterBox : ModelEnum {
     /**
      * 'Trigger' variant
      */
-    public data class Trigger(
-        public val registerOfTrigger: RegisterOfTrigger,
-    ) : RegisterBox() {
+    public data class Trigger(public val registerOfTrigger: RegisterOfTrigger) : RegisterBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -236,10 +205,7 @@ public sealed class RegisterBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.RegisterBox.Trigger,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.RegisterBox.Trigger): Unit = try {
                 RegisterOfTrigger.write(writer, instance.registerOfTrigger)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -259,7 +225,8 @@ public sealed class RegisterBox : ModelEnum {
             4 -> Asset.read(reader)
             5 -> Role.read(reader)
             6 -> Trigger.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+        }
 
         override fun write(writer: ScaleCodecWriter, instance: RegisterBox) {
             writer.directWrite(instance.discriminant())
@@ -271,7 +238,8 @@ public sealed class RegisterBox : ModelEnum {
                 4 -> Asset.write(writer, instance as Asset)
                 5 -> Role.write(writer, instance as Role)
                 6 -> Trigger.write(writer, instance as Trigger)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

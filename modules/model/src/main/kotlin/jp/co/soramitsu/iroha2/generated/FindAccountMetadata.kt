@@ -15,10 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'FindAccountMetadata' regular structure
  */
-public data class FindAccountMetadata(
-    public val id: AccountId,
-    public val key: Name,
-) {
+public data class FindAccountMetadata(public val id: AccountId, public val key: Name) {
     public companion object : ScaleReader<FindAccountMetadata>, ScaleWriter<FindAccountMetadata> {
         override fun read(reader: ScaleCodecReader): FindAccountMetadata = try {
             FindAccountMetadata(

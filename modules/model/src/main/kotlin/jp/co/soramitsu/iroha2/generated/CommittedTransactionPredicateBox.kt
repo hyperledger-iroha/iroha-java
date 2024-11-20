@@ -26,9 +26,7 @@ public sealed class CommittedTransactionPredicateBox : ModelEnum {
     /**
      * 'BlockHash' variant
      */
-    public data class BlockHash(
-        public val blockHashPredicateBox: BlockHashPredicateBox,
-    ) : CommittedTransactionPredicateBox() {
+    public data class BlockHash(public val blockHashPredicateBox: BlockHashPredicateBox) : CommittedTransactionPredicateBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -58,9 +56,7 @@ public sealed class CommittedTransactionPredicateBox : ModelEnum {
     /**
      * 'Value' variant
      */
-    public data class Value(
-        public val signedTransactionPredicateBox: SignedTransactionPredicateBox,
-    ) : CommittedTransactionPredicateBox() {
+    public data class Value(public val signedTransactionPredicateBox: SignedTransactionPredicateBox) : CommittedTransactionPredicateBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -79,21 +75,18 @@ public sealed class CommittedTransactionPredicateBox : ModelEnum {
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.CommittedTransactionPredicateBox.Value,
-            ): Unit =
-                try {
-                    SignedTransactionPredicateBox.write(writer, instance.signedTransactionPredicateBox)
-                } catch (ex: Exception) {
-                    throw wrapException(ex)
-                }
+            ): Unit = try {
+                SignedTransactionPredicateBox.write(writer, instance.signedTransactionPredicateBox)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
         }
     }
 
     /**
      * 'Error' variant
      */
-    public data class Error(
-        public val transactionErrorPredicateBox: TransactionErrorPredicateBox,
-    ) : CommittedTransactionPredicateBox() {
+    public data class Error(public val transactionErrorPredicateBox: TransactionErrorPredicateBox) : CommittedTransactionPredicateBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -112,12 +105,11 @@ public sealed class CommittedTransactionPredicateBox : ModelEnum {
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.CommittedTransactionPredicateBox.Error,
-            ): Unit =
-                try {
-                    TransactionErrorPredicateBox.write(writer, instance.transactionErrorPredicateBox)
-                } catch (ex: Exception) {
-                    throw wrapException(ex)
-                }
+            ): Unit = try {
+                TransactionErrorPredicateBox.write(writer, instance.transactionErrorPredicateBox)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
         }
     }
 
@@ -131,7 +123,8 @@ public sealed class CommittedTransactionPredicateBox : ModelEnum {
             0 -> BlockHash.read(reader)
             1 -> Value.read(reader)
             2 -> Error.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+        }
 
         override fun write(writer: ScaleCodecWriter, instance: CommittedTransactionPredicateBox) {
             writer.directWrite(instance.discriminant())
@@ -139,7 +132,8 @@ public sealed class CommittedTransactionPredicateBox : ModelEnum {
                 0 -> BlockHash.write(writer, instance as BlockHash)
                 1 -> Value.write(writer, instance as Value)
                 2 -> Error.write(writer, instance as Error)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

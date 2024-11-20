@@ -15,9 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'FindAssetQuantityById' regular structure
  */
-public data class FindAssetQuantityById(
-    public val id: AssetId,
-) {
+public data class FindAssetQuantityById(public val id: AssetId) {
     public companion object : ScaleReader<FindAssetQuantityById>, ScaleWriter<FindAssetQuantityById> {
         override fun read(reader: ScaleCodecReader): FindAssetQuantityById = try {
             FindAssetQuantityById(

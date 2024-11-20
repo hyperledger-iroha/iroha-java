@@ -15,10 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'TriggerCompletedEvent' regular structure
  */
-public data class TriggerCompletedEvent(
-    public val triggerId: TriggerId,
-    public val outcome: TriggerCompletedOutcome,
-) {
+public data class TriggerCompletedEvent(public val triggerId: TriggerId, public val outcome: TriggerCompletedOutcome) {
     public companion object : ScaleReader<TriggerCompletedEvent>, ScaleWriter<TriggerCompletedEvent> {
         override fun read(reader: ScaleCodecReader): TriggerCompletedEvent = try {
             TriggerCompletedEvent(

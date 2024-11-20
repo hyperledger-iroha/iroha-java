@@ -26,9 +26,7 @@ public sealed class SignedTransactionPredicateBox : ModelEnum {
     /**
      * 'Hash' variant
      */
-    public data class Hash(
-        public val transactionHashPredicateBox: TransactionHashPredicateBox,
-    ) : SignedTransactionPredicateBox() {
+    public data class Hash(public val transactionHashPredicateBox: TransactionHashPredicateBox) : SignedTransactionPredicateBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -58,9 +56,7 @@ public sealed class SignedTransactionPredicateBox : ModelEnum {
     /**
      * 'Authority' variant
      */
-    public data class Authority(
-        public val accountIdPredicateBox: AccountIdPredicateBox,
-    ) : SignedTransactionPredicateBox() {
+    public data class Authority(public val accountIdPredicateBox: AccountIdPredicateBox) : SignedTransactionPredicateBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -96,14 +92,16 @@ public sealed class SignedTransactionPredicateBox : ModelEnum {
         ) {
             0 -> Hash.read(reader)
             1 -> Authority.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+        }
 
         override fun write(writer: ScaleCodecWriter, instance: SignedTransactionPredicateBox) {
             writer.directWrite(instance.discriminant())
             when (val discriminant = instance.discriminant()) {
                 0 -> Hash.write(writer, instance as Hash)
                 1 -> Authority.write(writer, instance as Authority)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

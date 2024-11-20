@@ -16,10 +16,7 @@ import kotlin.Unit
  *
  * Generated from 'Permission' regular structure
  */
-public data class Permission(
-    public val name: String,
-    public val payload: Json,
-) {
+public data class Permission(public val name: String, public val payload: Json) {
     public companion object : ScaleReader<Permission>, ScaleWriter<Permission> {
         override fun read(reader: ScaleCodecReader): Permission = try {
             Permission(

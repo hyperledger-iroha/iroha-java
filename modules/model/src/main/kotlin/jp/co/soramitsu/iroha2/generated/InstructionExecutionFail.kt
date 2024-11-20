@@ -16,10 +16,7 @@ import kotlin.Unit
  *
  * Generated from 'InstructionExecutionFail' regular structure
  */
-public data class InstructionExecutionFail(
-    public val instruction: InstructionBox,
-    public val reason: String,
-) {
+public data class InstructionExecutionFail(public val instruction: InstructionBox, public val reason: String) {
     public companion object :
         ScaleReader<InstructionExecutionFail>,
         ScaleWriter<InstructionExecutionFail> {

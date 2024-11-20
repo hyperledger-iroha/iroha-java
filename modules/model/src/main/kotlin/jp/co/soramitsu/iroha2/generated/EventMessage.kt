@@ -15,9 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'EventMessage' regular structure
  */
-public data class EventMessage(
-    public val eventBox: EventBox,
-) {
+public data class EventMessage(public val eventBox: EventBox) {
     public companion object : ScaleReader<EventMessage>, ScaleWriter<EventMessage> {
         override fun read(reader: ScaleCodecReader): EventMessage = try {
             EventMessage(

@@ -16,9 +16,7 @@ import kotlin.Unit
  *
  * Generated from 'CanModifyTrigger' regular structure
  */
-public data class CanModifyTrigger(
-    public val trigger: TriggerId,
-) : ModelPermission {
+public data class CanModifyTrigger(public val trigger: TriggerId) : ModelPermission {
     public companion object : ScaleReader<CanModifyTrigger>, ScaleWriter<CanModifyTrigger> {
         override fun read(reader: ScaleCodecReader): CanModifyTrigger = try {
             CanModifyTrigger(

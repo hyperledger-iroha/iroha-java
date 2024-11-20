@@ -15,10 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'SignedTransactionV1' regular structure
  */
-public data class SignedTransactionV1(
-    public val signature: TransactionSignature,
-    public val payload: TransactionPayload,
-) {
+public data class SignedTransactionV1(public val signature: TransactionSignature, public val payload: TransactionPayload) {
     public companion object : ScaleReader<SignedTransactionV1>, ScaleWriter<SignedTransactionV1> {
         override fun read(reader: ScaleCodecReader): SignedTransactionV1 = try {
             SignedTransactionV1(

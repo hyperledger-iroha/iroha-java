@@ -26,9 +26,7 @@ public sealed class InstructionBox : ModelEnum {
     /**
      * 'Register' variant
      */
-    public data class Register(
-        public val registerBox: RegisterBox,
-    ) : InstructionBox() {
+    public data class Register(public val registerBox: RegisterBox) : InstructionBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -44,10 +42,7 @@ public sealed class InstructionBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.InstructionBox.Register,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.InstructionBox.Register): Unit = try {
                 RegisterBox.write(writer, instance.registerBox)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -58,9 +53,7 @@ public sealed class InstructionBox : ModelEnum {
     /**
      * 'Unregister' variant
      */
-    public data class Unregister(
-        public val unregisterBox: UnregisterBox,
-    ) : InstructionBox() {
+    public data class Unregister(public val unregisterBox: UnregisterBox) : InstructionBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -76,10 +69,7 @@ public sealed class InstructionBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.InstructionBox.Unregister,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.InstructionBox.Unregister): Unit = try {
                 UnregisterBox.write(writer, instance.unregisterBox)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -90,9 +80,7 @@ public sealed class InstructionBox : ModelEnum {
     /**
      * 'Mint' variant
      */
-    public data class Mint(
-        public val mintBox: MintBox,
-    ) : InstructionBox() {
+    public data class Mint(public val mintBox: MintBox) : InstructionBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -108,10 +96,7 @@ public sealed class InstructionBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.InstructionBox.Mint,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.InstructionBox.Mint): Unit = try {
                 MintBox.write(writer, instance.mintBox)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -122,9 +107,7 @@ public sealed class InstructionBox : ModelEnum {
     /**
      * 'Burn' variant
      */
-    public data class Burn(
-        public val burnBox: BurnBox,
-    ) : InstructionBox() {
+    public data class Burn(public val burnBox: BurnBox) : InstructionBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -140,10 +123,7 @@ public sealed class InstructionBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.InstructionBox.Burn,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.InstructionBox.Burn): Unit = try {
                 BurnBox.write(writer, instance.burnBox)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -154,9 +134,7 @@ public sealed class InstructionBox : ModelEnum {
     /**
      * 'Transfer' variant
      */
-    public data class Transfer(
-        public val transferBox: TransferBox,
-    ) : InstructionBox() {
+    public data class Transfer(public val transferBox: TransferBox) : InstructionBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -172,10 +150,7 @@ public sealed class InstructionBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.InstructionBox.Transfer,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.InstructionBox.Transfer): Unit = try {
                 TransferBox.write(writer, instance.transferBox)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -186,9 +161,7 @@ public sealed class InstructionBox : ModelEnum {
     /**
      * 'SetKeyValue' variant
      */
-    public data class SetKeyValue(
-        public val setKeyValueBox: SetKeyValueBox,
-    ) : InstructionBox() {
+    public data class SetKeyValue(public val setKeyValueBox: SetKeyValueBox) : InstructionBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -204,23 +177,19 @@ public sealed class InstructionBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.InstructionBox.SetKeyValue,
-            ): Unit = try {
-                SetKeyValueBox.write(writer, instance.setKeyValueBox)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.InstructionBox.SetKeyValue): Unit =
+                try {
+                    SetKeyValueBox.write(writer, instance.setKeyValueBox)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
     /**
      * 'RemoveKeyValue' variant
      */
-    public data class RemoveKeyValue(
-        public val removeKeyValueBox: RemoveKeyValueBox,
-    ) : InstructionBox() {
+    public data class RemoveKeyValue(public val removeKeyValueBox: RemoveKeyValueBox) : InstructionBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -236,23 +205,19 @@ public sealed class InstructionBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.InstructionBox.RemoveKeyValue,
-            ): Unit = try {
-                RemoveKeyValueBox.write(writer, instance.removeKeyValueBox)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.InstructionBox.RemoveKeyValue): Unit =
+                try {
+                    RemoveKeyValueBox.write(writer, instance.removeKeyValueBox)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
     /**
      * 'Grant' variant
      */
-    public data class Grant(
-        public val grantBox: GrantBox,
-    ) : InstructionBox() {
+    public data class Grant(public val grantBox: GrantBox) : InstructionBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -268,10 +233,7 @@ public sealed class InstructionBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.InstructionBox.Grant,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.InstructionBox.Grant): Unit = try {
                 GrantBox.write(writer, instance.grantBox)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -282,9 +244,7 @@ public sealed class InstructionBox : ModelEnum {
     /**
      * 'Revoke' variant
      */
-    public data class Revoke(
-        public val revokeBox: RevokeBox,
-    ) : InstructionBox() {
+    public data class Revoke(public val revokeBox: RevokeBox) : InstructionBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -300,10 +260,7 @@ public sealed class InstructionBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.InstructionBox.Revoke,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.InstructionBox.Revoke): Unit = try {
                 RevokeBox.write(writer, instance.revokeBox)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -314,9 +271,7 @@ public sealed class InstructionBox : ModelEnum {
     /**
      * 'ExecuteTrigger' variant
      */
-    public data class ExecuteTrigger(
-        public val executeTrigger: jp.co.soramitsu.iroha2.generated.ExecuteTrigger,
-    ) : InstructionBox() {
+    public data class ExecuteTrigger(public val executeTrigger: jp.co.soramitsu.iroha2.generated.ExecuteTrigger) : InstructionBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -332,23 +287,19 @@ public sealed class InstructionBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.InstructionBox.ExecuteTrigger,
-            ): Unit = try {
-                jp.co.soramitsu.iroha2.generated.ExecuteTrigger.write(writer, instance.executeTrigger)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.InstructionBox.ExecuteTrigger): Unit =
+                try {
+                    jp.co.soramitsu.iroha2.generated.ExecuteTrigger.write(writer, instance.executeTrigger)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
     /**
      * 'SetParameter' variant
      */
-    public data class SetParameter(
-        public val setParameter: jp.co.soramitsu.iroha2.generated.SetParameter,
-    ) : InstructionBox() {
+    public data class SetParameter(public val setParameter: jp.co.soramitsu.iroha2.generated.SetParameter) : InstructionBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -364,23 +315,19 @@ public sealed class InstructionBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.InstructionBox.SetParameter,
-            ): Unit = try {
-                jp.co.soramitsu.iroha2.generated.SetParameter.write(writer, instance.setParameter)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.InstructionBox.SetParameter): Unit =
+                try {
+                    jp.co.soramitsu.iroha2.generated.SetParameter.write(writer, instance.setParameter)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
     /**
      * 'Upgrade' variant
      */
-    public data class Upgrade(
-        public val upgrade: jp.co.soramitsu.iroha2.generated.Upgrade,
-    ) : InstructionBox() {
+    public data class Upgrade(public val upgrade: jp.co.soramitsu.iroha2.generated.Upgrade) : InstructionBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -396,10 +343,7 @@ public sealed class InstructionBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.InstructionBox.Upgrade,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.InstructionBox.Upgrade): Unit = try {
                 jp.co.soramitsu.iroha2.generated.Upgrade.write(writer, instance.upgrade)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -410,9 +354,7 @@ public sealed class InstructionBox : ModelEnum {
     /**
      * 'Log' variant
      */
-    public data class Log(
-        public val log: jp.co.soramitsu.iroha2.generated.Log,
-    ) : InstructionBox() {
+    public data class Log(public val log: jp.co.soramitsu.iroha2.generated.Log) : InstructionBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -428,10 +370,7 @@ public sealed class InstructionBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.InstructionBox.Log,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.InstructionBox.Log): Unit = try {
                 jp.co.soramitsu.iroha2.generated.Log.write(writer, instance.log)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -442,9 +381,7 @@ public sealed class InstructionBox : ModelEnum {
     /**
      * 'Custom' variant
      */
-    public data class Custom(
-        public val customInstruction: CustomInstruction,
-    ) : InstructionBox() {
+    public data class Custom(public val customInstruction: CustomInstruction) : InstructionBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -460,10 +397,7 @@ public sealed class InstructionBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.InstructionBox.Custom,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.InstructionBox.Custom): Unit = try {
                 CustomInstruction.write(writer, instance.customInstruction)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -490,7 +424,8 @@ public sealed class InstructionBox : ModelEnum {
             11 -> Upgrade.read(reader)
             12 -> Log.read(reader)
             13 -> Custom.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+        }
 
         override fun write(writer: ScaleCodecWriter, instance: InstructionBox) {
             writer.directWrite(instance.discriminant())
@@ -509,7 +444,8 @@ public sealed class InstructionBox : ModelEnum {
                 11 -> Upgrade.write(writer, instance as Upgrade)
                 12 -> Log.write(writer, instance as Log)
                 13 -> Custom.write(writer, instance as Custom)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

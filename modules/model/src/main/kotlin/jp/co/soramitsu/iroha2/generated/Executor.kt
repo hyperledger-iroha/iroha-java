@@ -15,9 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'Executor' regular structure
  */
-public data class Executor(
-    public val wasm: WasmSmartContract,
-) {
+public data class Executor(public val wasm: WasmSmartContract) {
     public companion object : ScaleReader<Executor>, ScaleWriter<Executor> {
         override fun read(reader: ScaleCodecReader): Executor = try {
             Executor(

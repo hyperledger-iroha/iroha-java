@@ -16,10 +16,7 @@ import kotlin.Unit
  *
  * Generated from 'TriggerEventFilter' regular structure
  */
-public data class TriggerEventFilter(
-    public val idMatcher: TriggerId? = null,
-    public val eventSet: Long,
-) {
+public data class TriggerEventFilter(public val idMatcher: TriggerId? = null, public val eventSet: Long) {
     public companion object : ScaleReader<TriggerEventFilter>, ScaleWriter<TriggerEventFilter> {
         override fun read(reader: ScaleCodecReader): TriggerEventFilter = try {
             TriggerEventFilter(

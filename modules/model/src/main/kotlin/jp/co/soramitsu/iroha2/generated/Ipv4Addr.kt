@@ -19,9 +19,7 @@ import kotlin.Unit
  *
  * Generated from 'Ipv4Addr' regular structure
  */
-public data class Ipv4Addr(
-    public val arrayOfU8: ByteArray,
-) {
+public data class Ipv4Addr(public val arrayOfU8: ByteArray) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is Ipv4Addr) return false

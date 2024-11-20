@@ -26,9 +26,7 @@ public sealed class EventFilterBox : ModelEnum {
     /**
      * 'Pipeline' variant
      */
-    public data class Pipeline(
-        public val pipelineEventFilterBox: PipelineEventFilterBox,
-    ) : EventFilterBox() {
+    public data class Pipeline(public val pipelineEventFilterBox: PipelineEventFilterBox) : EventFilterBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -44,10 +42,7 @@ public sealed class EventFilterBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.EventFilterBox.Pipeline,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.EventFilterBox.Pipeline): Unit = try {
                 PipelineEventFilterBox.write(writer, instance.pipelineEventFilterBox)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -58,9 +53,7 @@ public sealed class EventFilterBox : ModelEnum {
     /**
      * 'Data' variant
      */
-    public data class Data(
-        public val dataEventFilter: DataEventFilter,
-    ) : EventFilterBox() {
+    public data class Data(public val dataEventFilter: DataEventFilter) : EventFilterBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -76,10 +69,7 @@ public sealed class EventFilterBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.EventFilterBox.Data,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.EventFilterBox.Data): Unit = try {
                 DataEventFilter.write(writer, instance.dataEventFilter)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -90,9 +80,7 @@ public sealed class EventFilterBox : ModelEnum {
     /**
      * 'Time' variant
      */
-    public data class Time(
-        public val timeEventFilter: TimeEventFilter,
-    ) : EventFilterBox() {
+    public data class Time(public val timeEventFilter: TimeEventFilter) : EventFilterBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -108,10 +96,7 @@ public sealed class EventFilterBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.EventFilterBox.Time,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.EventFilterBox.Time): Unit = try {
                 TimeEventFilter.write(writer, instance.timeEventFilter)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -122,9 +107,7 @@ public sealed class EventFilterBox : ModelEnum {
     /**
      * 'ExecuteTrigger' variant
      */
-    public data class ExecuteTrigger(
-        public val executeTriggerEventFilter: ExecuteTriggerEventFilter,
-    ) : EventFilterBox() {
+    public data class ExecuteTrigger(public val executeTriggerEventFilter: ExecuteTriggerEventFilter) : EventFilterBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -140,23 +123,19 @@ public sealed class EventFilterBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.EventFilterBox.ExecuteTrigger,
-            ): Unit = try {
-                ExecuteTriggerEventFilter.write(writer, instance.executeTriggerEventFilter)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.EventFilterBox.ExecuteTrigger): Unit =
+                try {
+                    ExecuteTriggerEventFilter.write(writer, instance.executeTriggerEventFilter)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
     /**
      * 'TriggerCompleted' variant
      */
-    public data class TriggerCompleted(
-        public val triggerCompletedEventFilter: TriggerCompletedEventFilter,
-    ) : EventFilterBox() {
+    public data class TriggerCompleted(public val triggerCompletedEventFilter: TriggerCompletedEventFilter) : EventFilterBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -193,7 +172,8 @@ public sealed class EventFilterBox : ModelEnum {
             2 -> Time.read(reader)
             3 -> ExecuteTrigger.read(reader)
             4 -> TriggerCompleted.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+        }
 
         override fun write(writer: ScaleCodecWriter, instance: EventFilterBox) {
             writer.directWrite(instance.discriminant())
@@ -203,7 +183,8 @@ public sealed class EventFilterBox : ModelEnum {
                 2 -> Time.write(writer, instance as Time)
                 3 -> ExecuteTrigger.write(writer, instance as ExecuteTrigger)
                 4 -> TriggerCompleted.write(writer, instance as TriggerCompleted)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

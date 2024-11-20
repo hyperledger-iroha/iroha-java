@@ -15,10 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'AccountRoleChanged' regular structure
  */
-public data class AccountRoleChanged(
-    public val account: AccountId,
-    public val role: RoleId,
-) {
+public data class AccountRoleChanged(public val account: AccountId, public val role: RoleId) {
     public companion object : ScaleReader<AccountRoleChanged>, ScaleWriter<AccountRoleChanged> {
         override fun read(reader: ScaleCodecReader): AccountRoleChanged = try {
             AccountRoleChanged(

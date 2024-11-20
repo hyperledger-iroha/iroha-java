@@ -26,9 +26,7 @@ public sealed class RoleIdPredicateBox : ModelEnum {
     /**
      * 'Equals' variant
      */
-    public data class Equals(
-        public val roleId: RoleId,
-    ) : RoleIdPredicateBox() {
+    public data class Equals(public val roleId: RoleId) : RoleIdPredicateBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -44,10 +42,7 @@ public sealed class RoleIdPredicateBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.RoleIdPredicateBox.Equals,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.RoleIdPredicateBox.Equals): Unit = try {
                 RoleId.write(writer, instance.roleId)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -58,9 +53,7 @@ public sealed class RoleIdPredicateBox : ModelEnum {
     /**
      * 'Name' variant
      */
-    public data class Name(
-        public val stringPredicateBox: StringPredicateBox,
-    ) : RoleIdPredicateBox() {
+    public data class Name(public val stringPredicateBox: StringPredicateBox) : RoleIdPredicateBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -76,10 +69,7 @@ public sealed class RoleIdPredicateBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.RoleIdPredicateBox.Name,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.RoleIdPredicateBox.Name): Unit = try {
                 StringPredicateBox.write(writer, instance.stringPredicateBox)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -94,14 +84,16 @@ public sealed class RoleIdPredicateBox : ModelEnum {
         ) {
             0 -> Equals.read(reader)
             1 -> Name.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+        }
 
         override fun write(writer: ScaleCodecWriter, instance: RoleIdPredicateBox) {
             writer.directWrite(instance.discriminant())
             when (val discriminant = instance.discriminant()) {
                 0 -> Equals.write(writer, instance as Equals)
                 1 -> Name.write(writer, instance as Name)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

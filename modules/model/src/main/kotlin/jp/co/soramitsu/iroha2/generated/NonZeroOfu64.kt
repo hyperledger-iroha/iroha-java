@@ -16,9 +16,7 @@ import kotlin.Unit
  *
  * Generated from 'NonZeroOfu64' regular structure
  */
-public data class NonZeroOfu64(
-    public val u64: BigInteger,
-) {
+public data class NonZeroOfu64(public val u64: BigInteger) {
     public companion object : ScaleReader<NonZeroOfu64>, ScaleWriter<NonZeroOfu64> {
         override fun read(reader: ScaleCodecReader): NonZeroOfu64 = try {
             NonZeroOfu64(

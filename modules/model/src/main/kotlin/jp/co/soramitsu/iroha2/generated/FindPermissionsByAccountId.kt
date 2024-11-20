@@ -15,9 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'FindPermissionsByAccountId' regular structure
  */
-public data class FindPermissionsByAccountId(
-    public val id: AccountId,
-) {
+public data class FindPermissionsByAccountId(public val id: AccountId) {
     public companion object :
         ScaleReader<FindPermissionsByAccountId>,
         ScaleWriter<FindPermissionsByAccountId> {

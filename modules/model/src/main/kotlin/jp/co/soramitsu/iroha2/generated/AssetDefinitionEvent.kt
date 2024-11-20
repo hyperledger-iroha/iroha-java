@@ -26,9 +26,7 @@ public sealed class AssetDefinitionEvent : ModelEnum {
     /**
      * 'Created' variant
      */
-    public data class Created(
-        public val assetDefinition: AssetDefinition,
-    ) : AssetDefinitionEvent() {
+    public data class Created(public val assetDefinition: AssetDefinition) : AssetDefinitionEvent() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -44,23 +42,19 @@ public sealed class AssetDefinitionEvent : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.AssetDefinitionEvent.Created,
-            ): Unit = try {
-                AssetDefinition.write(writer, instance.assetDefinition)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.AssetDefinitionEvent.Created): Unit =
+                try {
+                    AssetDefinition.write(writer, instance.assetDefinition)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
     /**
      * 'Deleted' variant
      */
-    public data class Deleted(
-        public val assetDefinitionId: AssetDefinitionId,
-    ) : AssetDefinitionEvent() {
+    public data class Deleted(public val assetDefinitionId: AssetDefinitionId) : AssetDefinitionEvent() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -76,23 +70,20 @@ public sealed class AssetDefinitionEvent : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.AssetDefinitionEvent.Deleted,
-            ): Unit = try {
-                AssetDefinitionId.write(writer, instance.assetDefinitionId)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.AssetDefinitionEvent.Deleted): Unit =
+                try {
+                    AssetDefinitionId.write(writer, instance.assetDefinitionId)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
     /**
      * 'MetadataInserted' variant
      */
-    public data class MetadataInserted(
-        public val metadataChangedOfAssetDefinitionId: MetadataChangedOfAssetDefinitionId,
-    ) : AssetDefinitionEvent() {
+    public data class MetadataInserted(public val metadataChangedOfAssetDefinitionId: MetadataChangedOfAssetDefinitionId) :
+        AssetDefinitionEvent() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -111,24 +102,22 @@ public sealed class AssetDefinitionEvent : ModelEnum {
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.AssetDefinitionEvent.MetadataInserted,
-            ): Unit =
-                try {
-                    MetadataChangedOfAssetDefinitionId.write(
-                        writer,
-                        instance.metadataChangedOfAssetDefinitionId,
-                    )
-                } catch (ex: Exception) {
-                    throw wrapException(ex)
-                }
+            ): Unit = try {
+                MetadataChangedOfAssetDefinitionId.write(
+                    writer,
+                    instance.metadataChangedOfAssetDefinitionId,
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
         }
     }
 
     /**
      * 'MetadataRemoved' variant
      */
-    public data class MetadataRemoved(
-        public val metadataChangedOfAssetDefinitionId: MetadataChangedOfAssetDefinitionId,
-    ) : AssetDefinitionEvent() {
+    public data class MetadataRemoved(public val metadataChangedOfAssetDefinitionId: MetadataChangedOfAssetDefinitionId) :
+        AssetDefinitionEvent() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -147,24 +136,21 @@ public sealed class AssetDefinitionEvent : ModelEnum {
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.AssetDefinitionEvent.MetadataRemoved,
-            ): Unit =
-                try {
-                    MetadataChangedOfAssetDefinitionId.write(
-                        writer,
-                        instance.metadataChangedOfAssetDefinitionId,
-                    )
-                } catch (ex: Exception) {
-                    throw wrapException(ex)
-                }
+            ): Unit = try {
+                MetadataChangedOfAssetDefinitionId.write(
+                    writer,
+                    instance.metadataChangedOfAssetDefinitionId,
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
         }
     }
 
     /**
      * 'MintabilityChanged' variant
      */
-    public data class MintabilityChanged(
-        public val assetDefinitionId: AssetDefinitionId,
-    ) : AssetDefinitionEvent() {
+    public data class MintabilityChanged(public val assetDefinitionId: AssetDefinitionId) : AssetDefinitionEvent() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -194,9 +180,8 @@ public sealed class AssetDefinitionEvent : ModelEnum {
     /**
      * 'TotalQuantityChanged' variant
      */
-    public data class TotalQuantityChanged(
-        public val assetDefinitionTotalQuantityChanged: AssetDefinitionTotalQuantityChanged,
-    ) : AssetDefinitionEvent() {
+    public data class TotalQuantityChanged(public val assetDefinitionTotalQuantityChanged: AssetDefinitionTotalQuantityChanged) :
+        AssetDefinitionEvent() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -229,9 +214,7 @@ public sealed class AssetDefinitionEvent : ModelEnum {
     /**
      * 'OwnerChanged' variant
      */
-    public data class OwnerChanged(
-        public val assetDefinitionOwnerChanged: AssetDefinitionOwnerChanged,
-    ) : AssetDefinitionEvent() {
+    public data class OwnerChanged(public val assetDefinitionOwnerChanged: AssetDefinitionOwnerChanged) : AssetDefinitionEvent() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -270,7 +253,8 @@ public sealed class AssetDefinitionEvent : ModelEnum {
             4 -> MintabilityChanged.read(reader)
             5 -> TotalQuantityChanged.read(reader)
             6 -> OwnerChanged.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+        }
 
         override fun write(writer: ScaleCodecWriter, instance: AssetDefinitionEvent) {
             writer.directWrite(instance.discriminant())
@@ -282,7 +266,8 @@ public sealed class AssetDefinitionEvent : ModelEnum {
                 4 -> MintabilityChanged.write(writer, instance as MintabilityChanged)
                 5 -> TotalQuantityChanged.write(writer, instance as TotalQuantityChanged)
                 6 -> OwnerChanged.write(writer, instance as OwnerChanged)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

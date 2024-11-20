@@ -19,10 +19,7 @@ import kotlin.Unit
  *
  * Generated from 'PublicKey' regular structure
  */
-public data class PublicKey(
-    public val algorithm: Algorithm,
-    public val payload: ByteArray,
-) {
+public data class PublicKey(public val algorithm: Algorithm, public val payload: ByteArray) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is PublicKey) return false

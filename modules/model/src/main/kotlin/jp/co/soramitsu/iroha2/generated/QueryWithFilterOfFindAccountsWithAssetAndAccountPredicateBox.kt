@@ -31,10 +31,7 @@ public data class QueryWithFilterOfFindAccountsWithAssetAndAccountPredicateBox(
             throw wrapException(ex)
         }
 
-        override fun write(
-            writer: ScaleCodecWriter,
-            instance: QueryWithFilterOfFindAccountsWithAssetAndAccountPredicateBox,
-        ): Unit = try {
+        override fun write(writer: ScaleCodecWriter, instance: QueryWithFilterOfFindAccountsWithAssetAndAccountPredicateBox): Unit = try {
             FindAccountsWithAsset.write(writer, instance.query)
             CompoundPredicateOfAccountPredicateBox.write(writer, instance.predicate)
         } catch (ex: Exception) {

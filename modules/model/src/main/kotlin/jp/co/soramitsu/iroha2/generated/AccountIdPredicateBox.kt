@@ -26,9 +26,7 @@ public sealed class AccountIdPredicateBox : ModelEnum {
     /**
      * 'Equals' variant
      */
-    public data class Equals(
-        public val accountId: AccountId,
-    ) : AccountIdPredicateBox() {
+    public data class Equals(public val accountId: AccountId) : AccountIdPredicateBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -44,23 +42,19 @@ public sealed class AccountIdPredicateBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.AccountIdPredicateBox.Equals,
-            ): Unit = try {
-                AccountId.write(writer, instance.accountId)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.AccountIdPredicateBox.Equals): Unit =
+                try {
+                    AccountId.write(writer, instance.accountId)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
     /**
      * 'DomainId' variant
      */
-    public data class DomainId(
-        public val domainIdPredicateBox: DomainIdPredicateBox,
-    ) : AccountIdPredicateBox() {
+    public data class DomainId(public val domainIdPredicateBox: DomainIdPredicateBox) : AccountIdPredicateBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -76,23 +70,19 @@ public sealed class AccountIdPredicateBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.AccountIdPredicateBox.DomainId,
-            ): Unit = try {
-                DomainIdPredicateBox.write(writer, instance.domainIdPredicateBox)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.AccountIdPredicateBox.DomainId): Unit =
+                try {
+                    DomainIdPredicateBox.write(writer, instance.domainIdPredicateBox)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
     /**
      * 'Signatory' variant
      */
-    public data class Signatory(
-        public val publicKeyPredicateBox: PublicKeyPredicateBox,
-    ) : AccountIdPredicateBox() {
+    public data class Signatory(public val publicKeyPredicateBox: PublicKeyPredicateBox) : AccountIdPredicateBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -127,7 +117,8 @@ public sealed class AccountIdPredicateBox : ModelEnum {
             0 -> Equals.read(reader)
             1 -> DomainId.read(reader)
             2 -> Signatory.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+        }
 
         override fun write(writer: ScaleCodecWriter, instance: AccountIdPredicateBox) {
             writer.directWrite(instance.discriminant())
@@ -135,7 +126,8 @@ public sealed class AccountIdPredicateBox : ModelEnum {
                 0 -> Equals.write(writer, instance as Equals)
                 1 -> DomainId.write(writer, instance as DomainId)
                 2 -> Signatory.write(writer, instance as Signatory)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

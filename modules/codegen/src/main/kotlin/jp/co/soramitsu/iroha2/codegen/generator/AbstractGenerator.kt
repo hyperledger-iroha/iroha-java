@@ -160,21 +160,19 @@ abstract class AbstractGenerator<T : Blueprint<*>> {
         clazz.addKdoc(blueprint.className)
     }
 
-    private fun writeFun(type: TypeName, blueprint: T) =
-        FunSpec.builder("write")
-            .addParameter(ParameterSpec.builder("writer", SCALE_CODEC_WRITER).build())
-            .addParameter(ParameterSpec.builder("instance", type).build())
-            .addCode(scaleWriterCode(blueprint))
-            .addModifiers(KModifier.OVERRIDE)
-            .build()
+    private fun writeFun(type: TypeName, blueprint: T) = FunSpec.builder("write")
+        .addParameter(ParameterSpec.builder("writer", SCALE_CODEC_WRITER).build())
+        .addParameter(ParameterSpec.builder("instance", type).build())
+        .addCode(scaleWriterCode(blueprint))
+        .addModifiers(KModifier.OVERRIDE)
+        .build()
 
-    private fun readFun(type: TypeName, blueprint: T) =
-        FunSpec.builder("read")
-            .addParameter(ParameterSpec.builder("reader", SCALE_CODEC_READER).build())
-            .addCode(scaleReaderCode(blueprint))
-            .addModifiers(KModifier.OVERRIDE)
-            .returns(type)
-            .build()
+    private fun readFun(type: TypeName, blueprint: T) = FunSpec.builder("read")
+        .addParameter(ParameterSpec.builder("reader", SCALE_CODEC_READER).build())
+        .addCode(scaleReaderCode(blueprint))
+        .addModifiers(KModifier.OVERRIDE)
+        .returns(type)
+        .build()
 
     private fun variantEqualsFun(blueprint: T): FunSpec {
         val variantType = ClassName(blueprint.packageName, blueprint.className)

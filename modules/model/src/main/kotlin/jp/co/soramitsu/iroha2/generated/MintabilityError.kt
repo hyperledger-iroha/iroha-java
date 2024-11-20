@@ -28,12 +28,14 @@ public sealed class MintabilityError : ModelEnum {
     override fun equals(other: Any?): Boolean = when (this) {
         is MintUnmintable -> MintUnmintable.equals(this, other)
         is ForbidMintOnMintable -> ForbidMintOnMintable.equals(this, other)
-        else -> super.equals(other) }
+        else -> super.equals(other)
+    }
 
     override fun hashCode(): Int = when (this) {
         is MintUnmintable -> MintUnmintable.hashCode()
         is ForbidMintOnMintable -> ForbidMintOnMintable.hashCode()
-        else -> super.hashCode() }
+        else -> super.hashCode()
+    }
 
     /**
      * 'MintUnmintable' variant
@@ -60,10 +62,7 @@ public sealed class MintabilityError : ModelEnum {
                 throw wrapException(ex)
             }
 
-            public fun equals(
-                o1: jp.co.soramitsu.iroha2.generated.MintabilityError.MintUnmintable,
-                o2: Any?,
-            ): Boolean = when (o2) {
+            public fun equals(o1: jp.co.soramitsu.iroha2.generated.MintabilityError.MintUnmintable, o2: Any?): Boolean = when (o2) {
                 null -> false
                 else -> o2::class == o1::class
             }
@@ -92,16 +91,12 @@ public sealed class MintabilityError : ModelEnum {
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.MintabilityError.ForbidMintOnMintable,
-            ): Unit =
-                try {
-                } catch (ex: Exception) {
-                    throw wrapException(ex)
-                }
+            ): Unit = try {
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-            public fun equals(
-                o1: jp.co.soramitsu.iroha2.generated.MintabilityError.ForbidMintOnMintable,
-                o2: Any?,
-            ): Boolean = when (o2) {
+            public fun equals(o1: jp.co.soramitsu.iroha2.generated.MintabilityError.ForbidMintOnMintable, o2: Any?): Boolean = when (o2) {
                 null -> false
                 else -> o2::class == o1::class
             }
@@ -117,14 +112,16 @@ public sealed class MintabilityError : ModelEnum {
         ) {
             0 -> MintUnmintable.read(reader)
             1 -> ForbidMintOnMintable.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+        }
 
         override fun write(writer: ScaleCodecWriter, instance: MintabilityError) {
             writer.directWrite(instance.discriminant())
             when (val discriminant = instance.discriminant()) {
                 0 -> MintUnmintable.write(writer, instance as MintUnmintable)
                 1 -> ForbidMintOnMintable.write(writer, instance as ForbidMintOnMintable)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

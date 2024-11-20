@@ -15,10 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'RevokeOfPermissionAndRole' regular structure
  */
-public data class RevokeOfPermissionAndRole(
-    public val `object`: Permission,
-    public val destination: RoleId,
-) {
+public data class RevokeOfPermissionAndRole(public val `object`: Permission, public val destination: RoleId) {
     public companion object :
         ScaleReader<RevokeOfPermissionAndRole>,
         ScaleWriter<RevokeOfPermissionAndRole> {

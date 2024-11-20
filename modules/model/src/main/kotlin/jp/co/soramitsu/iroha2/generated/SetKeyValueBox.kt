@@ -26,9 +26,7 @@ public sealed class SetKeyValueBox : ModelEnum {
     /**
      * 'Domain' variant
      */
-    public data class Domain(
-        public val setKeyValueOfDomain: SetKeyValueOfDomain,
-    ) : SetKeyValueBox() {
+    public data class Domain(public val setKeyValueOfDomain: SetKeyValueOfDomain) : SetKeyValueBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -44,10 +42,7 @@ public sealed class SetKeyValueBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.SetKeyValueBox.Domain,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.SetKeyValueBox.Domain): Unit = try {
                 SetKeyValueOfDomain.write(writer, instance.setKeyValueOfDomain)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -58,9 +53,7 @@ public sealed class SetKeyValueBox : ModelEnum {
     /**
      * 'Account' variant
      */
-    public data class Account(
-        public val setKeyValueOfAccount: SetKeyValueOfAccount,
-    ) : SetKeyValueBox() {
+    public data class Account(public val setKeyValueOfAccount: SetKeyValueOfAccount) : SetKeyValueBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -76,10 +69,7 @@ public sealed class SetKeyValueBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.SetKeyValueBox.Account,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.SetKeyValueBox.Account): Unit = try {
                 SetKeyValueOfAccount.write(writer, instance.setKeyValueOfAccount)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -90,9 +80,7 @@ public sealed class SetKeyValueBox : ModelEnum {
     /**
      * 'AssetDefinition' variant
      */
-    public data class AssetDefinition(
-        public val setKeyValueOfAssetDefinition: SetKeyValueOfAssetDefinition,
-    ) : SetKeyValueBox() {
+    public data class AssetDefinition(public val setKeyValueOfAssetDefinition: SetKeyValueOfAssetDefinition) : SetKeyValueBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -108,23 +96,19 @@ public sealed class SetKeyValueBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.SetKeyValueBox.AssetDefinition,
-            ): Unit = try {
-                SetKeyValueOfAssetDefinition.write(writer, instance.setKeyValueOfAssetDefinition)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.SetKeyValueBox.AssetDefinition): Unit =
+                try {
+                    SetKeyValueOfAssetDefinition.write(writer, instance.setKeyValueOfAssetDefinition)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
     /**
      * 'Asset' variant
      */
-    public data class Asset(
-        public val setKeyValueOfAsset: SetKeyValueOfAsset,
-    ) : SetKeyValueBox() {
+    public data class Asset(public val setKeyValueOfAsset: SetKeyValueOfAsset) : SetKeyValueBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -140,10 +124,7 @@ public sealed class SetKeyValueBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.SetKeyValueBox.Asset,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.SetKeyValueBox.Asset): Unit = try {
                 SetKeyValueOfAsset.write(writer, instance.setKeyValueOfAsset)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -154,9 +135,7 @@ public sealed class SetKeyValueBox : ModelEnum {
     /**
      * 'Trigger' variant
      */
-    public data class Trigger(
-        public val setKeyValueOfTrigger: SetKeyValueOfTrigger,
-    ) : SetKeyValueBox() {
+    public data class Trigger(public val setKeyValueOfTrigger: SetKeyValueOfTrigger) : SetKeyValueBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -172,10 +151,7 @@ public sealed class SetKeyValueBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.SetKeyValueBox.Trigger,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.SetKeyValueBox.Trigger): Unit = try {
                 SetKeyValueOfTrigger.write(writer, instance.setKeyValueOfTrigger)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -193,7 +169,8 @@ public sealed class SetKeyValueBox : ModelEnum {
             2 -> AssetDefinition.read(reader)
             3 -> Asset.read(reader)
             4 -> Trigger.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+        }
 
         override fun write(writer: ScaleCodecWriter, instance: SetKeyValueBox) {
             writer.directWrite(instance.discriminant())
@@ -203,7 +180,8 @@ public sealed class SetKeyValueBox : ModelEnum {
                 2 -> AssetDefinition.write(writer, instance as AssetDefinition)
                 3 -> Asset.write(writer, instance as Asset)
                 4 -> Trigger.write(writer, instance as Trigger)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

@@ -24,18 +24,14 @@ class Iroha2AsyncClient @JvmOverloads constructor(
      * Send a request to Iroha2 and extract payload.
      * {@see Extractors}
      */
-    fun <T> sendQueryAsync(
-        queryAndExtractor: QueryAndExtractor<T>,
-    ): CompletableFuture<T> = future {
+    fun <T> sendQueryAsync(queryAndExtractor: QueryAndExtractor<T>): CompletableFuture<T> = future {
         sendQuery(queryAndExtractor)
     }
 
     /**
      * Send a transaction to an Iroha peer and wait until it is committed or rejected.
      */
-    fun sendTransactionAsync(
-        transaction: SignedTransaction,
-    ): CompletableFuture<ByteArray> = runBlocking {
+    fun sendTransactionAsync(transaction: SignedTransaction): CompletableFuture<ByteArray> = runBlocking {
         sendTransaction { transaction }.asCompletableFuture()
     }
 
@@ -45,16 +41,12 @@ class Iroha2AsyncClient @JvmOverloads constructor(
      * With this method, the state of the transaction is not tracked after the peer responses with 2xx status code,
      * which means that the peer accepted the transaction and the transaction passed the stateless validation.
      */
-    fun fireAndForgetAsync(
-        transaction: SignedTransaction,
-    ): CompletableFuture<ByteArray> = future {
+    fun fireAndForgetAsync(transaction: SignedTransaction): CompletableFuture<ByteArray> = future {
         fireAndForget { transaction }
     }
 
     /**
      * Subscribe to track the transaction status
      */
-    fun subscribeToTransactionStatusAsync(
-        hash: ByteArray,
-    ) = subscribeToTransactionStatus(hash).asCompletableFuture()
+    fun subscribeToTransactionStatusAsync(hash: ByteArray) = subscribeToTransactionStatus(hash).asCompletableFuture()
 }

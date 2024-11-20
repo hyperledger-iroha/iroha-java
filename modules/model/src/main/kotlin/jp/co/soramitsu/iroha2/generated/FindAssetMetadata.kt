@@ -15,10 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'FindAssetMetadata' regular structure
  */
-public data class FindAssetMetadata(
-    public val id: AssetId,
-    public val key: Name,
-) {
+public data class FindAssetMetadata(public val id: AssetId, public val key: Name) {
     public companion object : ScaleReader<FindAssetMetadata>, ScaleWriter<FindAssetMetadata> {
         override fun read(reader: ScaleCodecReader): FindAssetMetadata = try {
             FindAssetMetadata(

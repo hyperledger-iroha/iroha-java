@@ -27,9 +27,8 @@ public sealed class CompoundPredicateOfAssetDefinitionPredicateBox : ModelEnum {
     /**
      * 'Atom' variant
      */
-    public data class Atom(
-        public val assetDefinitionPredicateBox: AssetDefinitionPredicateBox,
-    ) : CompoundPredicateOfAssetDefinitionPredicateBox() {
+    public data class Atom(public val assetDefinitionPredicateBox: AssetDefinitionPredicateBox) :
+        CompoundPredicateOfAssetDefinitionPredicateBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -37,7 +36,9 @@ public sealed class CompoundPredicateOfAssetDefinitionPredicateBox : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.CompoundPredicateOfAssetDefinitionPredicateBox.Atom> {
             public const val DISCRIMINANT: Int = 0
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.CompoundPredicateOfAssetDefinitionPredicateBox.Atom = try {
+            override fun read(
+                reader: ScaleCodecReader,
+            ): jp.co.soramitsu.iroha2.generated.CompoundPredicateOfAssetDefinitionPredicateBox.Atom = try {
                 Atom(
                     AssetDefinitionPredicateBox.read(reader),
                 )
@@ -59,10 +60,8 @@ public sealed class CompoundPredicateOfAssetDefinitionPredicateBox : ModelEnum {
     /**
      * 'Not' variant
      */
-    public data class Not(
-        public val compoundPredicateOfAssetDefinitionPredicateBox:
-        CompoundPredicateOfAssetDefinitionPredicateBox,
-    ) : CompoundPredicateOfAssetDefinitionPredicateBox() {
+    public data class Not(public val compoundPredicateOfAssetDefinitionPredicateBox: CompoundPredicateOfAssetDefinitionPredicateBox) :
+        CompoundPredicateOfAssetDefinitionPredicateBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -70,7 +69,9 @@ public sealed class CompoundPredicateOfAssetDefinitionPredicateBox : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.CompoundPredicateOfAssetDefinitionPredicateBox.Not> {
             public const val DISCRIMINANT: Int = 1
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.CompoundPredicateOfAssetDefinitionPredicateBox.Not = try {
+            override fun read(
+                reader: ScaleCodecReader,
+            ): jp.co.soramitsu.iroha2.generated.CompoundPredicateOfAssetDefinitionPredicateBox.Not = try {
                 Not(
                     CompoundPredicateOfAssetDefinitionPredicateBox.read(reader),
                 )
@@ -95,9 +96,8 @@ public sealed class CompoundPredicateOfAssetDefinitionPredicateBox : ModelEnum {
     /**
      * 'And' variant
      */
-    public data class And(
-        public val vec: List<CompoundPredicateOfAssetDefinitionPredicateBox>,
-    ) : CompoundPredicateOfAssetDefinitionPredicateBox() {
+    public data class And(public val vec: List<CompoundPredicateOfAssetDefinitionPredicateBox>) :
+        CompoundPredicateOfAssetDefinitionPredicateBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -105,7 +105,9 @@ public sealed class CompoundPredicateOfAssetDefinitionPredicateBox : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.CompoundPredicateOfAssetDefinitionPredicateBox.And> {
             public const val DISCRIMINANT: Int = 2
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.CompoundPredicateOfAssetDefinitionPredicateBox.And = try {
+            override fun read(
+                reader: ScaleCodecReader,
+            ): jp.co.soramitsu.iroha2.generated.CompoundPredicateOfAssetDefinitionPredicateBox.And = try {
                 And(
                     reader.readVec(reader.readCompactInt()) { CompoundPredicateOfAssetDefinitionPredicateBox.read(reader) },
                 )
@@ -130,9 +132,8 @@ public sealed class CompoundPredicateOfAssetDefinitionPredicateBox : ModelEnum {
     /**
      * 'Or' variant
      */
-    public data class Or(
-        public val vec: List<CompoundPredicateOfAssetDefinitionPredicateBox>,
-    ) : CompoundPredicateOfAssetDefinitionPredicateBox() {
+    public data class Or(public val vec: List<CompoundPredicateOfAssetDefinitionPredicateBox>) :
+        CompoundPredicateOfAssetDefinitionPredicateBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -140,7 +141,9 @@ public sealed class CompoundPredicateOfAssetDefinitionPredicateBox : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.CompoundPredicateOfAssetDefinitionPredicateBox.Or> {
             public const val DISCRIMINANT: Int = 3
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.CompoundPredicateOfAssetDefinitionPredicateBox.Or = try {
+            override fun read(
+                reader: ScaleCodecReader,
+            ): jp.co.soramitsu.iroha2.generated.CompoundPredicateOfAssetDefinitionPredicateBox.Or = try {
                 Or(
                     reader.readVec(reader.readCompactInt()) { CompoundPredicateOfAssetDefinitionPredicateBox.read(reader) },
                 )
@@ -171,19 +174,18 @@ public sealed class CompoundPredicateOfAssetDefinitionPredicateBox : ModelEnum {
                 1 -> Not.read(reader)
                 2 -> And.read(reader)
                 3 -> Or.read(reader)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
 
-        override fun write(
-            writer: ScaleCodecWriter,
-            instance: CompoundPredicateOfAssetDefinitionPredicateBox,
-        ) {
+        override fun write(writer: ScaleCodecWriter, instance: CompoundPredicateOfAssetDefinitionPredicateBox) {
             writer.directWrite(instance.discriminant())
             when (val discriminant = instance.discriminant()) {
                 0 -> Atom.write(writer, instance as Atom)
                 1 -> Not.write(writer, instance as Not)
                 2 -> And.write(writer, instance as And)
                 3 -> Or.write(writer, instance as Or)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

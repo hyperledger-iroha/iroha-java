@@ -16,9 +16,7 @@ import kotlin.Unit
  *
  * Generated from 'ChainId' regular structure
  */
-public data class ChainId(
-    public val string: String,
-) {
+public data class ChainId(public val string: String) {
     public companion object : ScaleReader<ChainId>, ScaleWriter<ChainId> {
         override fun read(reader: ScaleCodecReader): ChainId = try {
             ChainId(

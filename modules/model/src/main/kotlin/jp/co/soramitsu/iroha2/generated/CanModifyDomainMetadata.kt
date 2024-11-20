@@ -16,9 +16,7 @@ import kotlin.Unit
  *
  * Generated from 'CanModifyDomainMetadata' regular structure
  */
-public data class CanModifyDomainMetadata(
-    public val domain: DomainId,
-) : ModelPermission {
+public data class CanModifyDomainMetadata(public val domain: DomainId) : ModelPermission {
     public companion object :
         ScaleReader<CanModifyDomainMetadata>,
         ScaleWriter<CanModifyDomainMetadata> {

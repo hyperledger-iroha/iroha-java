@@ -26,9 +26,7 @@ public sealed class AssetDefinitionPredicateBox : ModelEnum {
     /**
      * 'Id' variant
      */
-    public data class Id(
-        public val assetDefinitionIdPredicateBox: AssetDefinitionIdPredicateBox,
-    ) : AssetDefinitionPredicateBox() {
+    public data class Id(public val assetDefinitionIdPredicateBox: AssetDefinitionIdPredicateBox) : AssetDefinitionPredicateBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -44,23 +42,19 @@ public sealed class AssetDefinitionPredicateBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.AssetDefinitionPredicateBox.Id,
-            ): Unit = try {
-                AssetDefinitionIdPredicateBox.write(writer, instance.assetDefinitionIdPredicateBox)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.AssetDefinitionPredicateBox.Id): Unit =
+                try {
+                    AssetDefinitionIdPredicateBox.write(writer, instance.assetDefinitionIdPredicateBox)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
     /**
      * 'Metadata' variant
      */
-    public data class Metadata(
-        public val metadataPredicateBox: MetadataPredicateBox,
-    ) : AssetDefinitionPredicateBox() {
+    public data class Metadata(public val metadataPredicateBox: MetadataPredicateBox) : AssetDefinitionPredicateBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -79,21 +73,18 @@ public sealed class AssetDefinitionPredicateBox : ModelEnum {
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.AssetDefinitionPredicateBox.Metadata,
-            ): Unit =
-                try {
-                    MetadataPredicateBox.write(writer, instance.metadataPredicateBox)
-                } catch (ex: Exception) {
-                    throw wrapException(ex)
-                }
+            ): Unit = try {
+                MetadataPredicateBox.write(writer, instance.metadataPredicateBox)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
         }
     }
 
     /**
      * 'OwnedBy' variant
      */
-    public data class OwnedBy(
-        public val accountIdPredicateBox: AccountIdPredicateBox,
-    ) : AssetDefinitionPredicateBox() {
+    public data class OwnedBy(public val accountIdPredicateBox: AccountIdPredicateBox) : AssetDefinitionPredicateBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -112,12 +103,11 @@ public sealed class AssetDefinitionPredicateBox : ModelEnum {
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.AssetDefinitionPredicateBox.OwnedBy,
-            ): Unit =
-                try {
-                    AccountIdPredicateBox.write(writer, instance.accountIdPredicateBox)
-                } catch (ex: Exception) {
-                    throw wrapException(ex)
-                }
+            ): Unit = try {
+                AccountIdPredicateBox.write(writer, instance.accountIdPredicateBox)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
         }
     }
 
@@ -131,7 +121,8 @@ public sealed class AssetDefinitionPredicateBox : ModelEnum {
             0 -> Id.read(reader)
             1 -> Metadata.read(reader)
             2 -> OwnedBy.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+        }
 
         override fun write(writer: ScaleCodecWriter, instance: AssetDefinitionPredicateBox) {
             writer.directWrite(instance.discriminant())
@@ -139,7 +130,8 @@ public sealed class AssetDefinitionPredicateBox : ModelEnum {
                 0 -> Id.write(writer, instance as Id)
                 1 -> Metadata.write(writer, instance as Metadata)
                 2 -> OwnedBy.write(writer, instance as OwnedBy)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

@@ -16,10 +16,7 @@ import kotlin.collections.List
  *
  * Generated from 'MultisigApprove' regular structure
  */
-public data class MultisigApprove(
-    public val account: AccountId,
-    public val instructionsHash: HashOf<List<InstructionBox>>,
-) {
+public data class MultisigApprove(public val account: AccountId, public val instructionsHash: HashOf<List<InstructionBox>>) {
     public companion object : ScaleReader<MultisigApprove>, ScaleWriter<MultisigApprove> {
         override fun read(reader: ScaleCodecReader): MultisigApprove = try {
             MultisigApprove(

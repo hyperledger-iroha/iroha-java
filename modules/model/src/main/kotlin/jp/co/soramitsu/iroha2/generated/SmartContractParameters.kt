@@ -15,10 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'SmartContractParameters' regular structure
  */
-public data class SmartContractParameters(
-    public val fuel: NonZeroOfu64,
-    public val memory: NonZeroOfu64,
-) {
+public data class SmartContractParameters(public val fuel: NonZeroOfu64, public val memory: NonZeroOfu64) {
     public companion object :
         ScaleReader<SmartContractParameters>,
         ScaleWriter<SmartContractParameters> {

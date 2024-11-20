@@ -15,9 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'TimeEventFilter' regular structure
  */
-public data class TimeEventFilter(
-    public val executionTime: ExecutionTime,
-) {
+public data class TimeEventFilter(public val executionTime: ExecutionTime) {
     public companion object : ScaleReader<TimeEventFilter>, ScaleWriter<TimeEventFilter> {
         override fun read(reader: ScaleCodecReader): TimeEventFilter = try {
             TimeEventFilter(

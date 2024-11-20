@@ -26,9 +26,7 @@ public sealed class SignedTransaction : ModelEnum {
     /**
      * 'V1' variant
      */
-    public data class V1(
-        public val signedTransactionV1: SignedTransactionV1,
-    ) : SignedTransaction() {
+    public data class V1(public val signedTransactionV1: SignedTransactionV1) : SignedTransaction() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -44,10 +42,7 @@ public sealed class SignedTransaction : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.SignedTransaction.V1,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.SignedTransaction.V1): Unit = try {
                 SignedTransactionV1.write(writer, instance.signedTransactionV1)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -61,13 +56,15 @@ public sealed class SignedTransaction : ModelEnum {
                 reader.readUByte()
         ) {
             1 -> V1.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+        }
 
         override fun write(writer: ScaleCodecWriter, instance: SignedTransaction) {
             writer.directWrite(instance.discriminant())
             when (val discriminant = instance.discriminant()) {
                 1 -> V1.write(writer, instance as V1)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

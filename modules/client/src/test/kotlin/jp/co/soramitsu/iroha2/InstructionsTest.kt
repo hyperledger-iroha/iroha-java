@@ -506,8 +506,7 @@ class InstructionsTest : IrohaTest<Iroha2Client>() {
             register(DEFAULT_ASSET_DEFINITION_ID, AssetType.numeric())
             mint(DEFAULT_ASSET_ID, 100)
             grant(
-                Permissions.CanBurnAssetWithDefinition,
-                DEFAULT_ASSET_DEFINITION_ID.asJson(),
+                CanBurnAssetWithDefinition(DEFAULT_ASSET_DEFINITION_ID),
                 BOB_ACCOUNT_ID,
             )
         }
@@ -533,8 +532,7 @@ class InstructionsTest : IrohaTest<Iroha2Client>() {
         client.sendTransaction {
             account(BOB_ACCOUNT_ID)
             grant(
-                Permissions.CanModifyAccountMetadata,
-                BOB_ACCOUNT_ID.asJson(true),
+                CanModifyAccountMetadata(BOB_ACCOUNT_ID),
                 ALICE_ACCOUNT_ID,
             )
             buildSigned(BOB_KEYPAIR)
@@ -583,7 +581,7 @@ class InstructionsTest : IrohaTest<Iroha2Client>() {
         registerAccount(joeId)
 
         client.tx {
-            grant(Permissions.CanTransferAsset, aliceAssetId.asJson(true), joeId)
+            grant(CanTransferAsset(aliceAssetId), joeId)
         }
         client.tx(account = joeId, joeKeyPair) {
             transfer(aliceAssetId, 40, BOB_ACCOUNT_ID)

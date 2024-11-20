@@ -15,9 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'TimeEvent' regular structure
  */
-public data class TimeEvent(
-    public val interval: TimeInterval,
-) {
+public data class TimeEvent(public val interval: TimeInterval) {
     public companion object : ScaleReader<TimeEvent>, ScaleWriter<TimeEvent> {
         override fun read(reader: ScaleCodecReader): TimeEvent = try {
             TimeEvent(

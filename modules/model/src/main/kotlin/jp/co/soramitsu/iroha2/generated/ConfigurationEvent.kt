@@ -26,9 +26,7 @@ public sealed class ConfigurationEvent : ModelEnum {
     /**
      * 'Changed' variant
      */
-    public data class Changed(
-        public val parameterChanged: ParameterChanged,
-    ) : ConfigurationEvent() {
+    public data class Changed(public val parameterChanged: ParameterChanged) : ConfigurationEvent() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -44,14 +42,12 @@ public sealed class ConfigurationEvent : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.ConfigurationEvent.Changed,
-            ): Unit = try {
-                ParameterChanged.write(writer, instance.parameterChanged)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.ConfigurationEvent.Changed): Unit =
+                try {
+                    ParameterChanged.write(writer, instance.parameterChanged)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
@@ -61,13 +57,15 @@ public sealed class ConfigurationEvent : ModelEnum {
                 reader.readUByte()
         ) {
             0 -> Changed.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+        }
 
         override fun write(writer: ScaleCodecWriter, instance: ConfigurationEvent) {
             writer.directWrite(instance.discriminant())
             when (val discriminant = instance.discriminant()) {
                 0 -> Changed.write(writer, instance as Changed)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

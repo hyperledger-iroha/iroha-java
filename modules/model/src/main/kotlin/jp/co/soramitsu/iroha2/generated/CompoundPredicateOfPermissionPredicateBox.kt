@@ -27,9 +27,7 @@ public sealed class CompoundPredicateOfPermissionPredicateBox : ModelEnum {
     /**
      * 'Atom' variant
      */
-    public data class Atom(
-        public val permissionPredicateBox: PermissionPredicateBox,
-    ) : CompoundPredicateOfPermissionPredicateBox() {
+    public data class Atom(public val permissionPredicateBox: PermissionPredicateBox) : CompoundPredicateOfPermissionPredicateBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -37,13 +35,14 @@ public sealed class CompoundPredicateOfPermissionPredicateBox : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.CompoundPredicateOfPermissionPredicateBox.Atom> {
             public const val DISCRIMINANT: Int = 0
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.CompoundPredicateOfPermissionPredicateBox.Atom = try {
-                Atom(
-                    PermissionPredicateBox.read(reader),
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.CompoundPredicateOfPermissionPredicateBox.Atom =
+                try {
+                    Atom(
+                        PermissionPredicateBox.read(reader),
+                    )
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             override fun write(
                 writer: ScaleCodecWriter,
@@ -59,9 +58,8 @@ public sealed class CompoundPredicateOfPermissionPredicateBox : ModelEnum {
     /**
      * 'Not' variant
      */
-    public data class Not(
-        public val compoundPredicateOfPermissionPredicateBox: CompoundPredicateOfPermissionPredicateBox,
-    ) : CompoundPredicateOfPermissionPredicateBox() {
+    public data class Not(public val compoundPredicateOfPermissionPredicateBox: CompoundPredicateOfPermissionPredicateBox) :
+        CompoundPredicateOfPermissionPredicateBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -69,13 +67,14 @@ public sealed class CompoundPredicateOfPermissionPredicateBox : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.CompoundPredicateOfPermissionPredicateBox.Not> {
             public const val DISCRIMINANT: Int = 1
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.CompoundPredicateOfPermissionPredicateBox.Not = try {
-                Not(
-                    CompoundPredicateOfPermissionPredicateBox.read(reader),
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.CompoundPredicateOfPermissionPredicateBox.Not =
+                try {
+                    Not(
+                        CompoundPredicateOfPermissionPredicateBox.read(reader),
+                    )
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             override fun write(
                 writer: ScaleCodecWriter,
@@ -94,9 +93,7 @@ public sealed class CompoundPredicateOfPermissionPredicateBox : ModelEnum {
     /**
      * 'And' variant
      */
-    public data class And(
-        public val vec: List<CompoundPredicateOfPermissionPredicateBox>,
-    ) : CompoundPredicateOfPermissionPredicateBox() {
+    public data class And(public val vec: List<CompoundPredicateOfPermissionPredicateBox>) : CompoundPredicateOfPermissionPredicateBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -104,13 +101,14 @@ public sealed class CompoundPredicateOfPermissionPredicateBox : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.CompoundPredicateOfPermissionPredicateBox.And> {
             public const val DISCRIMINANT: Int = 2
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.CompoundPredicateOfPermissionPredicateBox.And = try {
-                And(
-                    reader.readVec(reader.readCompactInt()) { CompoundPredicateOfPermissionPredicateBox.read(reader) },
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.CompoundPredicateOfPermissionPredicateBox.And =
+                try {
+                    And(
+                        reader.readVec(reader.readCompactInt()) { CompoundPredicateOfPermissionPredicateBox.read(reader) },
+                    )
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             override fun write(
                 writer: ScaleCodecWriter,
@@ -129,9 +127,7 @@ public sealed class CompoundPredicateOfPermissionPredicateBox : ModelEnum {
     /**
      * 'Or' variant
      */
-    public data class Or(
-        public val vec: List<CompoundPredicateOfPermissionPredicateBox>,
-    ) : CompoundPredicateOfPermissionPredicateBox() {
+    public data class Or(public val vec: List<CompoundPredicateOfPermissionPredicateBox>) : CompoundPredicateOfPermissionPredicateBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -139,13 +135,14 @@ public sealed class CompoundPredicateOfPermissionPredicateBox : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.CompoundPredicateOfPermissionPredicateBox.Or> {
             public const val DISCRIMINANT: Int = 3
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.CompoundPredicateOfPermissionPredicateBox.Or = try {
-                Or(
-                    reader.readVec(reader.readCompactInt()) { CompoundPredicateOfPermissionPredicateBox.read(reader) },
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.CompoundPredicateOfPermissionPredicateBox.Or =
+                try {
+                    Or(
+                        reader.readVec(reader.readCompactInt()) { CompoundPredicateOfPermissionPredicateBox.read(reader) },
+                    )
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             override fun write(
                 writer: ScaleCodecWriter,
@@ -170,19 +167,18 @@ public sealed class CompoundPredicateOfPermissionPredicateBox : ModelEnum {
                 1 -> Not.read(reader)
                 2 -> And.read(reader)
                 3 -> Or.read(reader)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
 
-        override fun write(
-            writer: ScaleCodecWriter,
-            instance: CompoundPredicateOfPermissionPredicateBox,
-        ) {
+        override fun write(writer: ScaleCodecWriter, instance: CompoundPredicateOfPermissionPredicateBox) {
             writer.directWrite(instance.discriminant())
             when (val discriminant = instance.discriminant()) {
                 0 -> Atom.write(writer, instance as Atom)
                 1 -> Not.write(writer, instance as Not)
                 2 -> And.write(writer, instance as And)
                 3 -> Or.write(writer, instance as Or)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

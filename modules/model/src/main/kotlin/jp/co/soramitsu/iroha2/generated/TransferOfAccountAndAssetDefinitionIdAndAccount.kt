@@ -23,21 +23,17 @@ public data class TransferOfAccountAndAssetDefinitionIdAndAccount(
     public companion object :
         ScaleReader<TransferOfAccountAndAssetDefinitionIdAndAccount>,
         ScaleWriter<TransferOfAccountAndAssetDefinitionIdAndAccount> {
-        override fun read(reader: ScaleCodecReader): TransferOfAccountAndAssetDefinitionIdAndAccount =
-            try {
-                TransferOfAccountAndAssetDefinitionIdAndAccount(
-                    AccountId.read(reader),
-                    AssetDefinitionId.read(reader),
-                    AccountId.read(reader),
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+        override fun read(reader: ScaleCodecReader): TransferOfAccountAndAssetDefinitionIdAndAccount = try {
+            TransferOfAccountAndAssetDefinitionIdAndAccount(
+                AccountId.read(reader),
+                AssetDefinitionId.read(reader),
+                AccountId.read(reader),
+            )
+        } catch (ex: Exception) {
+            throw wrapException(ex)
+        }
 
-        override fun write(
-            writer: ScaleCodecWriter,
-            instance: TransferOfAccountAndAssetDefinitionIdAndAccount,
-        ): Unit = try {
+        override fun write(writer: ScaleCodecWriter, instance: TransferOfAccountAndAssetDefinitionIdAndAccount): Unit = try {
             AccountId.write(writer, instance.source)
             AssetDefinitionId.write(writer, instance.`object`)
             AccountId.write(writer, instance.destination)

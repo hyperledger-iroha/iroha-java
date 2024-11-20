@@ -28,11 +28,13 @@ public sealed class Repeats : ModelEnum {
 
     override fun equals(other: Any?): Boolean = when (this) {
         is Indefinitely -> Indefinitely.equals(this, other)
-        else -> super.equals(other) }
+        else -> super.equals(other)
+    }
 
     override fun hashCode(): Int = when (this) {
         is Indefinitely -> Indefinitely.hashCode()
-        else -> super.hashCode() }
+        else -> super.hashCode()
+    }
 
     /**
      * 'Indefinitely' variant
@@ -51,10 +53,7 @@ public sealed class Repeats : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.Repeats.Indefinitely,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.Repeats.Indefinitely): Unit = try {
             } catch (ex: Exception) {
                 throw wrapException(ex)
             }
@@ -71,9 +70,7 @@ public sealed class Repeats : ModelEnum {
     /**
      * 'Exactly' variant
      */
-    public data class Exactly(
-        public val u32: Long,
-    ) : Repeats() {
+    public data class Exactly(public val u32: Long) : Repeats() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -89,10 +86,7 @@ public sealed class Repeats : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.Repeats.Exactly,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.Repeats.Exactly): Unit = try {
                 writer.writeUint32(instance.u32)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -107,14 +101,16 @@ public sealed class Repeats : ModelEnum {
         ) {
             0 -> Indefinitely.read(reader)
             1 -> Exactly.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+        }
 
         override fun write(writer: ScaleCodecWriter, instance: Repeats) {
             writer.directWrite(instance.discriminant())
             when (val discriminant = instance.discriminant()) {
                 0 -> Indefinitely.write(writer, instance as Indefinitely)
                 1 -> Exactly.write(writer, instance as Exactly)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

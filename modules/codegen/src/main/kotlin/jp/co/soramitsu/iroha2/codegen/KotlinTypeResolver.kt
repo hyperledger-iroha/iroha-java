@@ -92,13 +92,12 @@ fun lookUpInBuiltInTypes(type: Type): TypeName = builtinKotlinTypes[type::class]
 /**
  * Define the package name for the given [class][className] and [type]
  */
-fun definePackageName(className: String, type: Type): String {
-    return "jp.co.soramitsu.iroha2.generated." + type.name.substringBeforeLast(className)
+fun definePackageName(className: String, type: Type): String =
+    "jp.co.soramitsu.iroha2.generated." + type.name.substringBeforeLast(className)
         .removeSuffix("::")
         .removePrefix("iroha")
         .replace("::", ".")
         .replace("_", "")
-}
 
 /**
  * Define the class name for the given [type][typeName]

@@ -16,9 +16,7 @@ import kotlin.Unit
  *
  * Generated from 'CanUnregisterAssetWithDefinition' regular structure
  */
-public data class CanUnregisterAssetWithDefinition(
-    public val assetDefinition: AssetDefinitionId,
-) : ModelPermission {
+public data class CanUnregisterAssetWithDefinition(public val assetDefinition: AssetDefinitionId) : ModelPermission {
     public companion object :
         ScaleReader<CanUnregisterAssetWithDefinition>,
         ScaleWriter<CanUnregisterAssetWithDefinition> {
@@ -30,11 +28,10 @@ public data class CanUnregisterAssetWithDefinition(
             throw wrapException(ex)
         }
 
-        override fun write(writer: ScaleCodecWriter, instance: CanUnregisterAssetWithDefinition): Unit =
-            try {
-                AssetDefinitionId.write(writer, instance.assetDefinition)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+        override fun write(writer: ScaleCodecWriter, instance: CanUnregisterAssetWithDefinition): Unit = try {
+            AssetDefinitionId.write(writer, instance.assetDefinition)
+        } catch (ex: Exception) {
+            throw wrapException(ex)
+        }
     }
 }

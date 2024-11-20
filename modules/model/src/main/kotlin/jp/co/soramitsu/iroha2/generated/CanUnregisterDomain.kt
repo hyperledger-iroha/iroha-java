@@ -16,9 +16,7 @@ import kotlin.Unit
  *
  * Generated from 'CanUnregisterDomain' regular structure
  */
-public data class CanUnregisterDomain(
-    public val domain: DomainId,
-) : ModelPermission {
+public data class CanUnregisterDomain(public val domain: DomainId) : ModelPermission {
     public companion object : ScaleReader<CanUnregisterDomain>, ScaleWriter<CanUnregisterDomain> {
         override fun read(reader: ScaleCodecReader): CanUnregisterDomain = try {
             CanUnregisterDomain(

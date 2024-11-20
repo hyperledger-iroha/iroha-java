@@ -15,10 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'Peer' regular structure
  */
-public data class Peer(
-    public val address: SocketAddr,
-    public val id: PeerId,
-) {
+public data class Peer(public val address: SocketAddr, public val id: PeerId) {
     public companion object : ScaleReader<Peer>, ScaleWriter<Peer> {
         override fun read(reader: ScaleCodecReader): Peer = try {
             Peer(

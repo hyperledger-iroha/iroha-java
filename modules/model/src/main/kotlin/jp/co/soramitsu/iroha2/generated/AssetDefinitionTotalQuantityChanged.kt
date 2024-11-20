@@ -15,10 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'AssetDefinitionTotalQuantityChanged' regular structure
  */
-public data class AssetDefinitionTotalQuantityChanged(
-    public val assetDefinition: AssetDefinitionId,
-    public val totalAmount: Numeric,
-) {
+public data class AssetDefinitionTotalQuantityChanged(public val assetDefinition: AssetDefinitionId, public val totalAmount: Numeric) {
     public companion object :
         ScaleReader<AssetDefinitionTotalQuantityChanged>,
         ScaleWriter<AssetDefinitionTotalQuantityChanged> {

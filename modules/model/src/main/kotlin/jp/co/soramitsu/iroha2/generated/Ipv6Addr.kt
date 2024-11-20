@@ -17,9 +17,7 @@ import kotlin.Unit
  *
  * Generated from 'Ipv6Addr' regular structure
  */
-public data class Ipv6Addr(
-    public val arrayOfU16: Array<Int>,
-) {
+public data class Ipv6Addr(public val arrayOfU16: Array<Int>) {
     public companion object : ScaleReader<Ipv6Addr>, ScaleWriter<Ipv6Addr> {
         override fun read(reader: ScaleCodecReader): Ipv6Addr = try {
             Ipv6Addr(

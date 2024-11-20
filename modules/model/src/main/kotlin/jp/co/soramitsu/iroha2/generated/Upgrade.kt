@@ -15,9 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'Upgrade' regular structure
  */
-public data class Upgrade(
-    public val executor: Executor,
-) {
+public data class Upgrade(public val executor: Executor) {
     public companion object : ScaleReader<Upgrade>, ScaleWriter<Upgrade> {
         override fun read(reader: ScaleCodecReader): Upgrade = try {
             Upgrade(

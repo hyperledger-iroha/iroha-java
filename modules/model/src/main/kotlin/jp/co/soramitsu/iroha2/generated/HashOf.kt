@@ -16,9 +16,7 @@ import kotlin.Unit
  *
  * Generated from 'HashOf<Vec<InstructionBox>>' regular structure
  */
-public data class HashOf<T0>(
-    public val hash: Hash,
-) {
+public data class HashOf<T0>(public val hash: Hash) {
     public companion object : ScaleReader<HashOf<out Any>>, ScaleWriter<HashOf<out Any>> {
         override fun read(reader: ScaleCodecReader): HashOf<out Any> = try {
             HashOf(

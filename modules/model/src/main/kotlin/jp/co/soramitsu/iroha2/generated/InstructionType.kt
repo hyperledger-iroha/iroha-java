@@ -40,7 +40,8 @@ public sealed class InstructionType : ModelEnum {
         is Upgrade -> Upgrade.equals(this, other)
         is Log -> Log.equals(this, other)
         is Custom -> Custom.equals(this, other)
-        else -> super.equals(other) }
+        else -> super.equals(other)
+    }
 
     override fun hashCode(): Int = when (this) {
         is Register -> Register.hashCode()
@@ -57,7 +58,8 @@ public sealed class InstructionType : ModelEnum {
         is Upgrade -> Upgrade.hashCode()
         is Log -> Log.hashCode()
         is Custom -> Custom.hashCode()
-        else -> super.hashCode() }
+        else -> super.hashCode()
+    }
 
     /**
      * 'Register' variant
@@ -76,10 +78,7 @@ public sealed class InstructionType : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.InstructionType.Register,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.InstructionType.Register): Unit = try {
             } catch (ex: Exception) {
                 throw wrapException(ex)
             }
@@ -110,13 +109,11 @@ public sealed class InstructionType : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.InstructionType.Unregister,
-            ): Unit = try {
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.InstructionType.Unregister): Unit =
+                try {
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             public fun equals(o1: jp.co.soramitsu.iroha2.generated.InstructionType.Unregister, o2: Any?): Boolean = when (o2) {
                 null -> false
@@ -144,10 +141,7 @@ public sealed class InstructionType : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.InstructionType.Mint,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.InstructionType.Mint): Unit = try {
             } catch (ex: Exception) {
                 throw wrapException(ex)
             }
@@ -178,10 +172,7 @@ public sealed class InstructionType : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.InstructionType.Burn,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.InstructionType.Burn): Unit = try {
             } catch (ex: Exception) {
                 throw wrapException(ex)
             }
@@ -212,10 +203,7 @@ public sealed class InstructionType : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.InstructionType.Transfer,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.InstructionType.Transfer): Unit = try {
             } catch (ex: Exception) {
                 throw wrapException(ex)
             }
@@ -246,13 +234,11 @@ public sealed class InstructionType : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.InstructionType.SetKeyValue,
-            ): Unit = try {
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.InstructionType.SetKeyValue): Unit =
+                try {
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             public fun equals(o1: jp.co.soramitsu.iroha2.generated.InstructionType.SetKeyValue, o2: Any?): Boolean = when (o2) {
                 null -> false
@@ -280,18 +266,13 @@ public sealed class InstructionType : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.InstructionType.RemoveKeyValue,
-            ): Unit = try {
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.InstructionType.RemoveKeyValue): Unit =
+                try {
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
-            public fun equals(
-                o1: jp.co.soramitsu.iroha2.generated.InstructionType.RemoveKeyValue,
-                o2: Any?,
-            ): Boolean = when (o2) {
+            public fun equals(o1: jp.co.soramitsu.iroha2.generated.InstructionType.RemoveKeyValue, o2: Any?): Boolean = when (o2) {
                 null -> false
                 else -> o2::class == o1::class
             }
@@ -317,10 +298,7 @@ public sealed class InstructionType : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.InstructionType.Grant,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.InstructionType.Grant): Unit = try {
             } catch (ex: Exception) {
                 throw wrapException(ex)
             }
@@ -351,10 +329,7 @@ public sealed class InstructionType : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.InstructionType.Revoke,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.InstructionType.Revoke): Unit = try {
             } catch (ex: Exception) {
                 throw wrapException(ex)
             }
@@ -385,18 +360,13 @@ public sealed class InstructionType : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.InstructionType.ExecuteTrigger,
-            ): Unit = try {
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.InstructionType.ExecuteTrigger): Unit =
+                try {
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
-            public fun equals(
-                o1: jp.co.soramitsu.iroha2.generated.InstructionType.ExecuteTrigger,
-                o2: Any?,
-            ): Boolean = when (o2) {
+            public fun equals(o1: jp.co.soramitsu.iroha2.generated.InstructionType.ExecuteTrigger, o2: Any?): Boolean = when (o2) {
                 null -> false
                 else -> o2::class == o1::class
             }
@@ -422,18 +392,13 @@ public sealed class InstructionType : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.InstructionType.SetParameter,
-            ): Unit = try {
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.InstructionType.SetParameter): Unit =
+                try {
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
-            public fun equals(
-                o1: jp.co.soramitsu.iroha2.generated.InstructionType.SetParameter,
-                o2: Any?,
-            ): Boolean = when (o2) {
+            public fun equals(o1: jp.co.soramitsu.iroha2.generated.InstructionType.SetParameter, o2: Any?): Boolean = when (o2) {
                 null -> false
                 else -> o2::class == o1::class
             }
@@ -459,10 +424,7 @@ public sealed class InstructionType : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.InstructionType.Upgrade,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.InstructionType.Upgrade): Unit = try {
             } catch (ex: Exception) {
                 throw wrapException(ex)
             }
@@ -493,10 +455,7 @@ public sealed class InstructionType : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.InstructionType.Log,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.InstructionType.Log): Unit = try {
             } catch (ex: Exception) {
                 throw wrapException(ex)
             }
@@ -527,10 +486,7 @@ public sealed class InstructionType : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.InstructionType.Custom,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.InstructionType.Custom): Unit = try {
             } catch (ex: Exception) {
                 throw wrapException(ex)
             }
@@ -563,7 +519,8 @@ public sealed class InstructionType : ModelEnum {
             11 -> Upgrade.read(reader)
             12 -> Log.read(reader)
             13 -> Custom.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+        }
 
         override fun write(writer: ScaleCodecWriter, instance: InstructionType) {
             writer.directWrite(instance.discriminant())
@@ -582,7 +539,8 @@ public sealed class InstructionType : ModelEnum {
                 11 -> Upgrade.write(writer, instance as Upgrade)
                 12 -> Log.write(writer, instance as Log)
                 13 -> Custom.write(writer, instance as Custom)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

@@ -16,9 +16,7 @@ import kotlin.Unit
  *
  * Generated from 'CanUnregisterAccount' regular structure
  */
-public data class CanUnregisterAccount(
-    public val account: AccountId,
-) : ModelPermission {
+public data class CanUnregisterAccount(public val account: AccountId) : ModelPermission {
     public companion object : ScaleReader<CanUnregisterAccount>, ScaleWriter<CanUnregisterAccount> {
         override fun read(reader: ScaleCodecReader): CanUnregisterAccount = try {
             CanUnregisterAccount(

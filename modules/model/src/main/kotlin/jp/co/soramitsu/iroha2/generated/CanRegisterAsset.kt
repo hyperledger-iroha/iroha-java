@@ -16,9 +16,7 @@ import kotlin.Unit
  *
  * Generated from 'CanRegisterAsset' regular structure
  */
-public data class CanRegisterAsset(
-    public val owner: AccountId,
-) : ModelPermission {
+public data class CanRegisterAsset(public val owner: AccountId) : ModelPermission {
     public companion object : ScaleReader<CanRegisterAsset>, ScaleWriter<CanRegisterAsset> {
         override fun read(reader: ScaleCodecReader): CanRegisterAsset = try {
             CanRegisterAsset(

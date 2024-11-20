@@ -15,9 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'RegisterOfRole' regular structure
  */
-public data class RegisterOfRole(
-    public val `object`: NewRole,
-) {
+public data class RegisterOfRole(public val `object`: NewRole) {
     public companion object : ScaleReader<RegisterOfRole>, ScaleWriter<RegisterOfRole> {
         override fun read(reader: ScaleCodecReader): RegisterOfRole = try {
             RegisterOfRole(

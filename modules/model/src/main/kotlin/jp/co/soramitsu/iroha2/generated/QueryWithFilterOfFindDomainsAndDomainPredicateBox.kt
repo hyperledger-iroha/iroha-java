@@ -22,20 +22,16 @@ public data class QueryWithFilterOfFindDomainsAndDomainPredicateBox(
     public companion object :
         ScaleReader<QueryWithFilterOfFindDomainsAndDomainPredicateBox>,
         ScaleWriter<QueryWithFilterOfFindDomainsAndDomainPredicateBox> {
-        override fun read(reader: ScaleCodecReader): QueryWithFilterOfFindDomainsAndDomainPredicateBox =
-            try {
-                QueryWithFilterOfFindDomainsAndDomainPredicateBox(
-                    FindDomains.read(reader),
-                    CompoundPredicateOfDomainPredicateBox.read(reader),
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+        override fun read(reader: ScaleCodecReader): QueryWithFilterOfFindDomainsAndDomainPredicateBox = try {
+            QueryWithFilterOfFindDomainsAndDomainPredicateBox(
+                FindDomains.read(reader),
+                CompoundPredicateOfDomainPredicateBox.read(reader),
+            )
+        } catch (ex: Exception) {
+            throw wrapException(ex)
+        }
 
-        override fun write(
-            writer: ScaleCodecWriter,
-            instance: QueryWithFilterOfFindDomainsAndDomainPredicateBox,
-        ): Unit = try {
+        override fun write(writer: ScaleCodecWriter, instance: QueryWithFilterOfFindDomainsAndDomainPredicateBox): Unit = try {
             FindDomains.write(writer, instance.query)
             CompoundPredicateOfDomainPredicateBox.write(writer, instance.predicate)
         } catch (ex: Exception) {

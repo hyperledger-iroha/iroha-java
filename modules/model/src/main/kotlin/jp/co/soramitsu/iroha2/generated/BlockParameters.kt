@@ -15,9 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'BlockParameters' regular structure
  */
-public data class BlockParameters(
-    public val maxTransactions: NonZeroOfu64,
-) {
+public data class BlockParameters(public val maxTransactions: NonZeroOfu64) {
     public companion object : ScaleReader<BlockParameters>, ScaleWriter<BlockParameters> {
         override fun read(reader: ScaleCodecReader): BlockParameters = try {
             BlockParameters(

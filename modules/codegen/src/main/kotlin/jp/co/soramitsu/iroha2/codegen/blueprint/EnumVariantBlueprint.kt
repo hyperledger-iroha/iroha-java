@@ -17,14 +17,12 @@ class EnumVariantBlueprint(
     override val packageName = "${parentBlueprint.packageName}.${parentBlueprint.className}"
     override val properties = resolveProperties(source)
 
-    override fun resolveProperties(variant: EnumType.Variant): List<Property> {
-        return variant.type?.requireValue()
-            ?.let { type ->
-                Property(
-                    defineClassName(type.name).replaceFirstChar(Char::lowercase),
-                    resolveKotlinType(type),
-                    type,
-                )
-            }?.let { property -> listOf(property) } ?: listOf()
-    }
+    override fun resolveProperties(variant: EnumType.Variant): List<Property> = variant.type?.requireValue()
+        ?.let { type ->
+            Property(
+                defineClassName(type.name).replaceFirstChar(Char::lowercase),
+                resolveKotlinType(type),
+                type,
+            )
+        }?.let { property -> listOf(property) } ?: listOf()
 }

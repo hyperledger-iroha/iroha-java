@@ -3,6 +3,7 @@
 package jp.co.soramitsu.iroha2.transaction
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import jp.co.soramitsu.iroha2.ModelPermission
 import jp.co.soramitsu.iroha2.asNumeric
 import jp.co.soramitsu.iroha2.generated.*
 import java.math.BigDecimal
@@ -20,9 +21,9 @@ object Instructions {
     fun register(
         grantTo: AccountId,
         roleId: RoleId,
-        vararg tokens: Permission,
+        vararg tokens: ModelPermission,
     ) = InstructionBox.Register(
-        RegisterBox.Role(RegisterOfRole(NewRole(Role(roleId, tokens.toList().map { permission -> permission.asRaw() }), grantTo))),
+        RegisterBox.Role(RegisterOfRole(NewRole(Role(roleId, tokens.map { it.asRaw() }), grantTo))),
     )
 
     /**
@@ -186,7 +187,7 @@ object Instructions {
     /**
      * Set key/value for a given asset
      */
-    fun<V> setKeyValue(
+    fun <V> setKeyValue(
         assetId: AssetId,
         key: Name,
         value: V,
@@ -199,7 +200,7 @@ object Instructions {
     /**
      * Set key/value for a given trigger
      */
-    fun<V> setKeyValue(
+    fun <V> setKeyValue(
         triggerId: TriggerId,
         key: Name,
         value: V,
@@ -212,7 +213,7 @@ object Instructions {
     /**
      * Set key/value for a given asset definition
      */
-    fun<V> setKeyValue(
+    fun <V> setKeyValue(
         definitionId: AssetDefinitionId,
         key: Name,
         value: V,
@@ -225,7 +226,7 @@ object Instructions {
     /**
      * Set key/value in the metadata of a given domain
      */
-    fun<V> setKeyValue(
+    fun <V> setKeyValue(
         domainId: DomainId,
         key: Name,
         value: V,
@@ -238,7 +239,7 @@ object Instructions {
     /**
      * Set key/value in the metadata of a given account
      */
-    fun<V> setKeyValue(
+    fun <V> setKeyValue(
         accountId: AccountId,
         key: Name,
         value: V,
@@ -258,7 +259,7 @@ object Instructions {
     /**
      * Execute a trigger
      */
-    fun<V> executeTrigger(triggerId: TriggerId, args: V?) = InstructionBox.ExecuteTrigger(
+    fun <V> executeTrigger(triggerId: TriggerId, args: V?) = InstructionBox.ExecuteTrigger(
         ExecuteTrigger(
             triggerId,
             Json(mapper.writeValueAsString(args)),
@@ -296,10 +297,7 @@ object Instructions {
     /**
      * Grant an account the custom permission
      */
-    fun<P : Permission> grant(
-        permission: P,
-        destinationId: AccountId,
-    ) = InstructionBox.Grant(
+    fun <P : ModelPermission> grant(permission: P, destinationId: AccountId) = InstructionBox.Grant(
         GrantBox.Permission(
             GrantOfPermissionAndAccount(
                 permission.asRaw(),

@@ -15,9 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'RegisterOfTrigger' regular structure
  */
-public data class RegisterOfTrigger(
-    public val `object`: Trigger,
-) {
+public data class RegisterOfTrigger(public val `object`: Trigger) {
     public companion object : ScaleReader<RegisterOfTrigger>, ScaleWriter<RegisterOfTrigger> {
         override fun read(reader: ScaleCodecReader): RegisterOfTrigger = try {
             RegisterOfTrigger(

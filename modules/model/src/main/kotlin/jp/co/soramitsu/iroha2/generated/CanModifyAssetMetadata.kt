@@ -16,9 +16,7 @@ import kotlin.Unit
  *
  * Generated from 'CanModifyAssetMetadata' regular structure
  */
-public data class CanModifyAssetMetadata(
-    public val asset: AssetId,
-) : ModelPermission {
+public data class CanModifyAssetMetadata(public val asset: AssetId) : ModelPermission {
     public companion object : ScaleReader<CanModifyAssetMetadata>, ScaleWriter<CanModifyAssetMetadata> {
         override fun read(reader: ScaleCodecReader): CanModifyAssetMetadata = try {
             CanModifyAssetMetadata(

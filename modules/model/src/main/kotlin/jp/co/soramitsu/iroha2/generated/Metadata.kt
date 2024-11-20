@@ -17,9 +17,7 @@ import kotlin.collections.Map
  *
  * Generated from 'Metadata' regular structure
  */
-public data class Metadata(
-    public val sortedMapOfName: Map<Name, Json>,
-) {
+public data class Metadata(public val sortedMapOfName: Map<Name, Json>) {
     public companion object : ScaleReader<Metadata>, ScaleWriter<Metadata> {
         override fun read(reader: ScaleCodecReader): Metadata = try {
             Metadata(

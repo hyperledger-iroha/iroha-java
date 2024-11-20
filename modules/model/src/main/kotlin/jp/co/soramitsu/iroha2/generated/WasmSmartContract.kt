@@ -19,9 +19,7 @@ import kotlin.Unit
  *
  * Generated from 'WasmSmartContract' regular structure
  */
-public data class WasmSmartContract(
-    public val vecOfU8: ByteArray,
-) {
+public data class WasmSmartContract(public val vecOfU8: ByteArray) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is WasmSmartContract) return false

@@ -15,10 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'BlockEvent' regular structure
  */
-public data class BlockEvent(
-    public val `header`: BlockHeader,
-    public val status: BlockStatus,
-) {
+public data class BlockEvent(public val `header`: BlockHeader, public val status: BlockStatus) {
     public companion object : ScaleReader<BlockEvent>, ScaleWriter<BlockEvent> {
         override fun read(reader: ScaleCodecReader): BlockEvent = try {
             BlockEvent(

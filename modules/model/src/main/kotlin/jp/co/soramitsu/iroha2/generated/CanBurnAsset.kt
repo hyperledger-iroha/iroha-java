@@ -16,9 +16,7 @@ import kotlin.Unit
  *
  * Generated from 'CanBurnAsset' regular structure
  */
-public data class CanBurnAsset(
-    public val asset: AssetId,
-) : ModelPermission {
+public data class CanBurnAsset(public val asset: AssetId) : ModelPermission {
     public companion object : ScaleReader<CanBurnAsset>, ScaleWriter<CanBurnAsset> {
         override fun read(reader: ScaleCodecReader): CanBurnAsset = try {
             CanBurnAsset(

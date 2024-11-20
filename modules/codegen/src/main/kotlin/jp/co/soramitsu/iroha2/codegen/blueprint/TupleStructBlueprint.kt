@@ -21,14 +21,16 @@ class TupleStructBlueprint(type: TupleStructType) : TypeBasedBlueprint<TupleStru
         }
     }
 
-    private fun createPropName(type: Type, unique: Boolean = true, propertyCount: Int? = null): String {
-        return when (type) {
-            is ArrayType -> "array"
-            else -> defineClassName(type.name).let { name ->
-                when (unique) {
-                    true -> name.replaceFirstChar { it.lowercase() }
-                    else -> "p${propertyCount}${name.replaceFirstChar { it.uppercase() }}"
-                }
+    private fun createPropName(
+        type: Type,
+        unique: Boolean = true,
+        propertyCount: Int? = null,
+    ): String = when (type) {
+        is ArrayType -> "array"
+        else -> defineClassName(type.name).let { name ->
+            when (unique) {
+                true -> name.replaceFirstChar { it.lowercase() }
+                else -> "p${propertyCount}${name.replaceFirstChar { it.uppercase() }}"
             }
         }
     }

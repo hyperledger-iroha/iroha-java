@@ -16,9 +16,7 @@ import kotlin.Unit
  *
  * Generated from 'CanUnregisterAssetDefinition' regular structure
  */
-public data class CanUnregisterAssetDefinition(
-    public val assetDefinition: AssetDefinitionId,
-) : ModelPermission {
+public data class CanUnregisterAssetDefinition(public val assetDefinition: AssetDefinitionId) : ModelPermission {
     public companion object :
         ScaleReader<CanUnregisterAssetDefinition>,
         ScaleWriter<CanUnregisterAssetDefinition> {

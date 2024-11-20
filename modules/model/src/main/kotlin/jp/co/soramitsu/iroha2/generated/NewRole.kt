@@ -15,10 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'NewRole' regular structure
  */
-public data class NewRole(
-    public val `inner`: Role,
-    public val grantTo: AccountId,
-) {
+public data class NewRole(public val `inner`: Role, public val grantTo: AccountId) {
     public companion object : ScaleReader<NewRole>, ScaleWriter<NewRole> {
         override fun read(reader: ScaleCodecReader): NewRole = try {
             NewRole(

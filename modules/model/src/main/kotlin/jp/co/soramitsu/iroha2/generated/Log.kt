@@ -16,10 +16,7 @@ import kotlin.Unit
  *
  * Generated from 'Log' regular structure
  */
-public data class Log(
-    public val level: Level,
-    public val msg: String,
-) {
+public data class Log(public val level: Level, public val msg: String) {
     public companion object : ScaleReader<Log>, ScaleWriter<Log> {
         override fun read(reader: ScaleCodecReader): Log = try {
             Log(

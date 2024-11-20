@@ -16,9 +16,7 @@ import kotlin.Unit
  *
  * Generated from 'Name' regular structure
  */
-public data class Name(
-    public val string: String,
-) {
+public data class Name(public val string: String) {
     public companion object : ScaleReader<Name>, ScaleWriter<Name> {
         override fun read(reader: ScaleCodecReader): Name = try {
             Name(

@@ -15,9 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'PeerId' regular structure
  */
-public data class PeerId(
-    public val publicKey: PublicKey,
-) {
+public data class PeerId(public val publicKey: PublicKey) {
     public companion object : ScaleReader<PeerId>, ScaleWriter<PeerId> {
         override fun read(reader: ScaleCodecReader): PeerId = try {
             PeerId(

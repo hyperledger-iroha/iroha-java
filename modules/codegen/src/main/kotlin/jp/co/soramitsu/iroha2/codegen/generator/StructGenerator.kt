@@ -25,47 +25,43 @@ object StructGenerator : AbstractGenerator<StructBlueprint>() {
         }
     }
 
-    private fun hashCodeFun(blueprint: StructBlueprint): FunSpec {
-        return FunSpec.builder("hashCode")
-            .addModifiers(KModifier.OVERRIDE)
-            .returns(Int::class)
-            .apply {
-                when (blueprint.properties.isEmpty()) {
-                    true -> addStatement("return 0")
-                    false -> {
-                        val firstProperty = blueprint.properties[0]
-                        when (blueprint.properties[0].typeName) {
-                            ByteArray::class.asTypeName() -> addCode("return %L.%L()", firstProperty.name, "contentHashCode")
-                            else -> addCode("return %L.%L()", firstProperty.name, "hashCode")
-                        }
-                        for ((property, type) in blueprint.properties.drop(1)) {
-                            addCode(" * 31")
-                            when (type) {
-                                ByteArray::class.asTypeName() -> addCode(" + %L.contentHashCode()", property)
-                                else -> addCode(" + %L.hashCode()", property)
-                            }
-                        }
-                        addCode("\n")
+    private fun hashCodeFun(blueprint: StructBlueprint): FunSpec = FunSpec.builder("hashCode")
+        .addModifiers(KModifier.OVERRIDE)
+        .returns(Int::class)
+        .apply {
+            when (blueprint.properties.isEmpty()) {
+                true -> addStatement("return 0")
+                false -> {
+                    val firstProperty = blueprint.properties[0]
+                    when (blueprint.properties[0].typeName) {
+                        ByteArray::class.asTypeName() -> addCode("return %L.%L()", firstProperty.name, "contentHashCode")
+                        else -> addCode("return %L.%L()", firstProperty.name, "hashCode")
                     }
+                    for ((property, type) in blueprint.properties.drop(1)) {
+                        addCode(" * 31")
+                        when (type) {
+                            ByteArray::class.asTypeName() -> addCode(" + %L.contentHashCode()", property)
+                            else -> addCode(" + %L.hashCode()", property)
+                        }
+                    }
+                    addCode("\n")
                 }
-            }.build()
-    }
+            }
+        }.build()
 
-    private fun equalsFun(blueprint: StructBlueprint): FunSpec {
-        return FunSpec.builder("equals")
-            .addModifiers(KModifier.OVERRIDE)
-            .addParameter(ParameterSpec.builder("other", ANY_TYPE.copy(nullable = true)).build())
-            .returns(Boolean::class)
-            .addStatement("if (this === other) return true")
-            .addStatement("if (other !is %L) return false", blueprint.className)
-            .apply {
-                for ((property, type) in blueprint.properties) {
-                    when (type) {
-                        ByteArray::class.asTypeName() -> addStatement("if (!%L.contentEquals(other.%L)) return false", property, property)
-                        else -> addStatement("if (%L != other.%L) return false", property, property)
-                    }
+    private fun equalsFun(blueprint: StructBlueprint): FunSpec = FunSpec.builder("equals")
+        .addModifiers(KModifier.OVERRIDE)
+        .addParameter(ParameterSpec.builder("other", ANY_TYPE.copy(nullable = true)).build())
+        .returns(Boolean::class)
+        .addStatement("if (this === other) return true")
+        .addStatement("if (other !is %L) return false", blueprint.className)
+        .apply {
+            for ((property, type) in blueprint.properties) {
+                when (type) {
+                    ByteArray::class.asTypeName() -> addStatement("if (!%L.contentEquals(other.%L)) return false", property, property)
+                    else -> addStatement("if (%L != other.%L) return false", property, property)
                 }
-                addStatement("return true")
-            }.build()
-    }
+            }
+            addStatement("return true")
+        }.build()
 }

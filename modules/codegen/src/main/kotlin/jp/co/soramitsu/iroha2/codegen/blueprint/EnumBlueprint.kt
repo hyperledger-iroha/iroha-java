@@ -8,9 +8,7 @@ import jp.co.soramitsu.iroha2.type.EnumType
 class EnumBlueprint(type: EnumType) : TypeBasedBlueprint<EnumType>(type) {
     val variants = resolveVariants()
 
-    private fun resolveVariants(): List<EnumVariantBlueprint> {
-        return source.variants.map {
-            EnumVariantBlueprint(it.discriminant, this, it)
-        }
+    private fun resolveVariants(): List<EnumVariantBlueprint> = source.variants.map {
+        EnumVariantBlueprint(it.discriminant, this, it)
     }
 }

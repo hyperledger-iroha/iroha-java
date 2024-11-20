@@ -16,10 +16,7 @@ import kotlin.Unit
  *
  * Generated from 'DomainEventFilter' regular structure
  */
-public data class DomainEventFilter(
-    public val idMatcher: DomainId? = null,
-    public val eventSet: Long,
-) {
+public data class DomainEventFilter(public val idMatcher: DomainId? = null, public val eventSet: Long) {
     public companion object : ScaleReader<DomainEventFilter>, ScaleWriter<DomainEventFilter> {
         override fun read(reader: ScaleCodecReader): DomainEventFilter = try {
             DomainEventFilter(

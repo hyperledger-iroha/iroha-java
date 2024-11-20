@@ -15,9 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'UnregisterOfAsset' regular structure
  */
-public data class UnregisterOfAsset(
-    public val `object`: AssetId,
-) {
+public data class UnregisterOfAsset(public val `object`: AssetId) {
     public companion object : ScaleReader<UnregisterOfAsset>, ScaleWriter<UnregisterOfAsset> {
         override fun read(reader: ScaleCodecReader): UnregisterOfAsset = try {
             UnregisterOfAsset(

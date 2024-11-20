@@ -16,10 +16,7 @@ import kotlin.Unit
  *
  * Generated from 'AccountEventFilter' regular structure
  */
-public data class AccountEventFilter(
-    public val idMatcher: AccountId? = null,
-    public val eventSet: Long,
-) {
+public data class AccountEventFilter(public val idMatcher: AccountId? = null, public val eventSet: Long) {
     public companion object : ScaleReader<AccountEventFilter>, ScaleWriter<AccountEventFilter> {
         override fun read(reader: ScaleCodecReader): AccountEventFilter = try {
             AccountEventFilter(

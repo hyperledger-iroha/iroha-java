@@ -22,20 +22,16 @@ public data class QueryWithFilterOfFindRoleIdsAndRoleIdPredicateBox(
     public companion object :
         ScaleReader<QueryWithFilterOfFindRoleIdsAndRoleIdPredicateBox>,
         ScaleWriter<QueryWithFilterOfFindRoleIdsAndRoleIdPredicateBox> {
-        override fun read(reader: ScaleCodecReader): QueryWithFilterOfFindRoleIdsAndRoleIdPredicateBox =
-            try {
-                QueryWithFilterOfFindRoleIdsAndRoleIdPredicateBox(
-                    FindRoleIds.read(reader),
-                    CompoundPredicateOfRoleIdPredicateBox.read(reader),
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+        override fun read(reader: ScaleCodecReader): QueryWithFilterOfFindRoleIdsAndRoleIdPredicateBox = try {
+            QueryWithFilterOfFindRoleIdsAndRoleIdPredicateBox(
+                FindRoleIds.read(reader),
+                CompoundPredicateOfRoleIdPredicateBox.read(reader),
+            )
+        } catch (ex: Exception) {
+            throw wrapException(ex)
+        }
 
-        override fun write(
-            writer: ScaleCodecWriter,
-            instance: QueryWithFilterOfFindRoleIdsAndRoleIdPredicateBox,
-        ): Unit = try {
+        override fun write(writer: ScaleCodecWriter, instance: QueryWithFilterOfFindRoleIdsAndRoleIdPredicateBox): Unit = try {
             FindRoleIds.write(writer, instance.query)
             CompoundPredicateOfRoleIdPredicateBox.write(writer, instance.predicate)
         } catch (ex: Exception) {

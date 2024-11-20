@@ -15,10 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'AssetId' regular structure
  */
-public data class AssetId(
-    public val account: AccountId,
-    public val definition: AssetDefinitionId,
-) {
+public data class AssetId(public val account: AccountId, public val definition: AssetDefinitionId) {
     public companion object : ScaleReader<AssetId>, ScaleWriter<AssetId> {
         override fun read(reader: ScaleCodecReader): AssetId = try {
             AssetId(

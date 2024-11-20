@@ -26,9 +26,7 @@ public sealed class RoleEvent : ModelEnum {
     /**
      * 'Created' variant
      */
-    public data class Created(
-        public val role: Role,
-    ) : RoleEvent() {
+    public data class Created(public val role: Role) : RoleEvent() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -44,10 +42,7 @@ public sealed class RoleEvent : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.RoleEvent.Created,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.RoleEvent.Created): Unit = try {
                 Role.write(writer, instance.role)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -58,9 +53,7 @@ public sealed class RoleEvent : ModelEnum {
     /**
      * 'Deleted' variant
      */
-    public data class Deleted(
-        public val roleId: RoleId,
-    ) : RoleEvent() {
+    public data class Deleted(public val roleId: RoleId) : RoleEvent() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -76,10 +69,7 @@ public sealed class RoleEvent : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.RoleEvent.Deleted,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.RoleEvent.Deleted): Unit = try {
                 RoleId.write(writer, instance.roleId)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -90,9 +80,7 @@ public sealed class RoleEvent : ModelEnum {
     /**
      * 'PermissionAdded' variant
      */
-    public data class PermissionAdded(
-        public val rolePermissionChanged: RolePermissionChanged,
-    ) : RoleEvent() {
+    public data class PermissionAdded(public val rolePermissionChanged: RolePermissionChanged) : RoleEvent() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -108,10 +96,7 @@ public sealed class RoleEvent : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.RoleEvent.PermissionAdded,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.RoleEvent.PermissionAdded): Unit = try {
                 RolePermissionChanged.write(writer, instance.rolePermissionChanged)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -122,9 +107,7 @@ public sealed class RoleEvent : ModelEnum {
     /**
      * 'PermissionRemoved' variant
      */
-    public data class PermissionRemoved(
-        public val rolePermissionChanged: RolePermissionChanged,
-    ) : RoleEvent() {
+    public data class PermissionRemoved(public val rolePermissionChanged: RolePermissionChanged) : RoleEvent() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -140,14 +123,12 @@ public sealed class RoleEvent : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.RoleEvent.PermissionRemoved,
-            ): Unit = try {
-                RolePermissionChanged.write(writer, instance.rolePermissionChanged)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.RoleEvent.PermissionRemoved): Unit =
+                try {
+                    RolePermissionChanged.write(writer, instance.rolePermissionChanged)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
@@ -160,7 +141,8 @@ public sealed class RoleEvent : ModelEnum {
             1 -> Deleted.read(reader)
             2 -> PermissionAdded.read(reader)
             3 -> PermissionRemoved.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+        }
 
         override fun write(writer: ScaleCodecWriter, instance: RoleEvent) {
             writer.directWrite(instance.discriminant())
@@ -169,7 +151,8 @@ public sealed class RoleEvent : ModelEnum {
                 1 -> Deleted.write(writer, instance as Deleted)
                 2 -> PermissionAdded.write(writer, instance as PermissionAdded)
                 3 -> PermissionRemoved.write(writer, instance as PermissionRemoved)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

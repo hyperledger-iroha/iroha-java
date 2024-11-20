@@ -15,9 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'BlockMessage' regular structure
  */
-public data class BlockMessage(
-    public val signedBlock: SignedBlock,
-) {
+public data class BlockMessage(public val signedBlock: SignedBlock) {
     public companion object : ScaleReader<BlockMessage>, ScaleWriter<BlockMessage> {
         override fun read(reader: ScaleCodecReader): BlockMessage = try {
             BlockMessage(

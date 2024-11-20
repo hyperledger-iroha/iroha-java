@@ -15,9 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'UnregisterOfTrigger' regular structure
  */
-public data class UnregisterOfTrigger(
-    public val `object`: TriggerId,
-) {
+public data class UnregisterOfTrigger(public val `object`: TriggerId) {
     public companion object : ScaleReader<UnregisterOfTrigger>, ScaleWriter<UnregisterOfTrigger> {
         override fun read(reader: ScaleCodecReader): UnregisterOfTrigger = try {
             UnregisterOfTrigger(

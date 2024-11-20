@@ -19,9 +19,7 @@ import kotlin.Unit
  *
  * Generated from 'Hash' regular structure
  */
-public data class Hash(
-    public val arrayOfU8: ByteArray,
-) {
+public data class Hash(public val arrayOfU8: ByteArray) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is Hash) return false

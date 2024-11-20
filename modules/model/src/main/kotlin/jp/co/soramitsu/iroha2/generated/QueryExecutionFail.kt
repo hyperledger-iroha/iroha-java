@@ -33,7 +33,8 @@ public sealed class QueryExecutionFail : ModelEnum {
         is FetchSizeTooBig -> FetchSizeTooBig.equals(this, other)
         is InvalidSingularParameters -> InvalidSingularParameters.equals(this, other)
         is CapacityLimit -> CapacityLimit.equals(this, other)
-        else -> super.equals(other) }
+        else -> super.equals(other)
+    }
 
     override fun hashCode(): Int = when (this) {
         is NotFound -> NotFound.hashCode()
@@ -42,14 +43,13 @@ public sealed class QueryExecutionFail : ModelEnum {
         is FetchSizeTooBig -> FetchSizeTooBig.hashCode()
         is InvalidSingularParameters -> InvalidSingularParameters.hashCode()
         is CapacityLimit -> CapacityLimit.hashCode()
-        else -> super.hashCode() }
+        else -> super.hashCode()
+    }
 
     /**
      * 'Find' variant
      */
-    public data class Find(
-        public val findError: FindError,
-    ) : QueryExecutionFail() {
+    public data class Find(public val findError: FindError) : QueryExecutionFail() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -65,10 +65,7 @@ public sealed class QueryExecutionFail : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.QueryExecutionFail.Find,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.QueryExecutionFail.Find): Unit = try {
                 FindError.write(writer, instance.findError)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -79,9 +76,7 @@ public sealed class QueryExecutionFail : ModelEnum {
     /**
      * 'Conversion' variant
      */
-    public data class Conversion(
-        public val string: String,
-    ) : QueryExecutionFail() {
+    public data class Conversion(public val string: String) : QueryExecutionFail() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -97,14 +92,12 @@ public sealed class QueryExecutionFail : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.QueryExecutionFail.Conversion,
-            ): Unit = try {
-                writer.writeAsList(instance.string.toByteArray(Charsets.UTF_8))
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.QueryExecutionFail.Conversion): Unit =
+                try {
+                    writer.writeAsList(instance.string.toByteArray(Charsets.UTF_8))
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
@@ -125,13 +118,11 @@ public sealed class QueryExecutionFail : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.QueryExecutionFail.NotFound,
-            ): Unit = try {
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.QueryExecutionFail.NotFound): Unit =
+                try {
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             public fun equals(o1: jp.co.soramitsu.iroha2.generated.QueryExecutionFail.NotFound, o2: Any?): Boolean = when (o2) {
                 null -> false
@@ -167,10 +158,7 @@ public sealed class QueryExecutionFail : ModelEnum {
                 throw wrapException(ex)
             }
 
-            public fun equals(
-                o1: jp.co.soramitsu.iroha2.generated.QueryExecutionFail.CursorMismatch,
-                o2: Any?,
-            ): Boolean = when (o2) {
+            public fun equals(o1: jp.co.soramitsu.iroha2.generated.QueryExecutionFail.CursorMismatch, o2: Any?): Boolean = when (o2) {
                 null -> false
                 else -> o2::class == o1::class
             }
@@ -196,18 +184,13 @@ public sealed class QueryExecutionFail : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.QueryExecutionFail.CursorDone,
-            ): Unit = try {
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.QueryExecutionFail.CursorDone): Unit =
+                try {
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
-            public fun equals(
-                o1: jp.co.soramitsu.iroha2.generated.QueryExecutionFail.CursorDone,
-                o2: Any?,
-            ): Boolean = when (o2) {
+            public fun equals(o1: jp.co.soramitsu.iroha2.generated.QueryExecutionFail.CursorDone, o2: Any?): Boolean = when (o2) {
                 null -> false
                 else -> o2::class == o1::class
             }
@@ -241,10 +224,7 @@ public sealed class QueryExecutionFail : ModelEnum {
                 throw wrapException(ex)
             }
 
-            public fun equals(
-                o1: jp.co.soramitsu.iroha2.generated.QueryExecutionFail.FetchSizeTooBig,
-                o2: Any?,
-            ): Boolean = when (o2) {
+            public fun equals(o1: jp.co.soramitsu.iroha2.generated.QueryExecutionFail.FetchSizeTooBig, o2: Any?): Boolean = when (o2) {
                 null -> false
                 else -> o2::class == o1::class
             }
@@ -264,11 +244,12 @@ public sealed class QueryExecutionFail : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.QueryExecutionFail.InvalidSingularParameters> {
             public const val DISCRIMINANT: Int = 6
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.QueryExecutionFail.InvalidSingularParameters = try {
-                InvalidSingularParameters()
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.QueryExecutionFail.InvalidSingularParameters =
+                try {
+                    InvalidSingularParameters()
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             override fun write(
                 writer: ScaleCodecWriter,
@@ -278,13 +259,11 @@ public sealed class QueryExecutionFail : ModelEnum {
                 throw wrapException(ex)
             }
 
-            public fun equals(
-                o1: jp.co.soramitsu.iroha2.generated.QueryExecutionFail.InvalidSingularParameters,
-                o2: Any?,
-            ): Boolean = when (o2) {
-                null -> false
-                else -> o2::class == o1::class
-            }
+            public fun equals(o1: jp.co.soramitsu.iroha2.generated.QueryExecutionFail.InvalidSingularParameters, o2: Any?): Boolean =
+                when (o2) {
+                    null -> false
+                    else -> o2::class == o1::class
+                }
 
             override fun hashCode(): Int = ".QueryExecutionFail.InvalidSingularParameters".hashCode()
         }
@@ -315,10 +294,7 @@ public sealed class QueryExecutionFail : ModelEnum {
                 throw wrapException(ex)
             }
 
-            public fun equals(
-                o1: jp.co.soramitsu.iroha2.generated.QueryExecutionFail.CapacityLimit,
-                o2: Any?,
-            ): Boolean = when (o2) {
+            public fun equals(o1: jp.co.soramitsu.iroha2.generated.QueryExecutionFail.CapacityLimit, o2: Any?): Boolean = when (o2) {
                 null -> false
                 else -> o2::class == o1::class
             }
@@ -340,7 +316,8 @@ public sealed class QueryExecutionFail : ModelEnum {
             5 -> FetchSizeTooBig.read(reader)
             6 -> InvalidSingularParameters.read(reader)
             7 -> CapacityLimit.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+        }
 
         override fun write(writer: ScaleCodecWriter, instance: QueryExecutionFail) {
             writer.directWrite(instance.discriminant())
@@ -353,7 +330,8 @@ public sealed class QueryExecutionFail : ModelEnum {
                 5 -> FetchSizeTooBig.write(writer, instance as FetchSizeTooBig)
                 6 -> InvalidSingularParameters.write(writer, instance as InvalidSingularParameters)
                 7 -> CapacityLimit.write(writer, instance as CapacityLimit)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

@@ -29,13 +29,15 @@ public sealed class Mintable : ModelEnum {
         is Infinitely -> Infinitely.equals(this, other)
         is Once -> Once.equals(this, other)
         is Not -> Not.equals(this, other)
-        else -> super.equals(other) }
+        else -> super.equals(other)
+    }
 
     override fun hashCode(): Int = when (this) {
         is Infinitely -> Infinitely.hashCode()
         is Once -> Once.hashCode()
         is Not -> Not.hashCode()
-        else -> super.hashCode() }
+        else -> super.hashCode()
+    }
 
     /**
      * 'Infinitely' variant
@@ -54,10 +56,7 @@ public sealed class Mintable : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.Mintable.Infinitely,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.Mintable.Infinitely): Unit = try {
             } catch (ex: Exception) {
                 throw wrapException(ex)
             }
@@ -82,26 +81,21 @@ public sealed class Mintable : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.Mintable.Once> {
             public const val DISCRIMINANT: Int = 1
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.Mintable.Once =
-                try {
-                    Once()
-                } catch (ex: Exception) {
-                    throw wrapException(ex)
-                }
-
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.Mintable.Once,
-            ): Unit = try {
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.Mintable.Once = try {
+                Once()
             } catch (ex: Exception) {
                 throw wrapException(ex)
             }
 
-            public fun equals(o1: jp.co.soramitsu.iroha2.generated.Mintable.Once, o2: Any?): Boolean =
-                when (o2) {
-                    null -> false
-                    else -> o2::class == o1::class
-                }
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.Mintable.Once): Unit = try {
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
+
+            public fun equals(o1: jp.co.soramitsu.iroha2.generated.Mintable.Once, o2: Any?): Boolean = when (o2) {
+                null -> false
+                else -> o2::class == o1::class
+            }
 
             override fun hashCode(): Int = ".Mintable.Once".hashCode()
         }
@@ -118,17 +112,13 @@ public sealed class Mintable : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.Mintable.Not> {
             public const val DISCRIMINANT: Int = 2
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.Mintable.Not =
-                try {
-                    Not()
-                } catch (ex: Exception) {
-                    throw wrapException(ex)
-                }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.Mintable.Not = try {
+                Not()
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.Mintable.Not,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.Mintable.Not): Unit = try {
             } catch (ex: Exception) {
                 throw wrapException(ex)
             }
@@ -151,7 +141,8 @@ public sealed class Mintable : ModelEnum {
             0 -> Infinitely.read(reader)
             1 -> Once.read(reader)
             2 -> Not.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+        }
 
         override fun write(writer: ScaleCodecWriter, instance: Mintable) {
             writer.directWrite(instance.discriminant())
@@ -159,7 +150,8 @@ public sealed class Mintable : ModelEnum {
                 0 -> Infinitely.write(writer, instance as Infinitely)
                 1 -> Once.write(writer, instance as Once)
                 2 -> Not.write(writer, instance as Not)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

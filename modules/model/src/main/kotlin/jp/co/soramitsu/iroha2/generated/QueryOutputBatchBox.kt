@@ -27,9 +27,7 @@ public sealed class QueryOutputBatchBox : ModelEnum {
     /**
      * 'Domain' variant
      */
-    public data class Domain(
-        public val vec: List<jp.co.soramitsu.iroha2.generated.Domain>,
-    ) : QueryOutputBatchBox() {
+    public data class Domain(public val vec: List<jp.co.soramitsu.iroha2.generated.Domain>) : QueryOutputBatchBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -45,26 +43,22 @@ public sealed class QueryOutputBatchBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.Domain,
-            ): Unit = try {
-                writer.writeCompact(instance.vec.size)
-                instance.vec.forEach { value ->
-                    jp.co.soramitsu.iroha2.generated.Domain.write(writer, value)
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.Domain): Unit =
+                try {
+                    writer.writeCompact(instance.vec.size)
+                    instance.vec.forEach { value ->
+                        jp.co.soramitsu.iroha2.generated.Domain.write(writer, value)
+                    }
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
                 }
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
         }
     }
 
     /**
      * 'Account' variant
      */
-    public data class Account(
-        public val vec: List<jp.co.soramitsu.iroha2.generated.Account>,
-    ) : QueryOutputBatchBox() {
+    public data class Account(public val vec: List<jp.co.soramitsu.iroha2.generated.Account>) : QueryOutputBatchBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -80,26 +74,22 @@ public sealed class QueryOutputBatchBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.Account,
-            ): Unit = try {
-                writer.writeCompact(instance.vec.size)
-                instance.vec.forEach { value ->
-                    jp.co.soramitsu.iroha2.generated.Account.write(writer, value)
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.Account): Unit =
+                try {
+                    writer.writeCompact(instance.vec.size)
+                    instance.vec.forEach { value ->
+                        jp.co.soramitsu.iroha2.generated.Account.write(writer, value)
+                    }
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
                 }
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
         }
     }
 
     /**
      * 'Asset' variant
      */
-    public data class Asset(
-        public val vec: List<jp.co.soramitsu.iroha2.generated.Asset>,
-    ) : QueryOutputBatchBox() {
+    public data class Asset(public val vec: List<jp.co.soramitsu.iroha2.generated.Asset>) : QueryOutputBatchBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -115,10 +105,7 @@ public sealed class QueryOutputBatchBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.Asset,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.Asset): Unit = try {
                 writer.writeCompact(instance.vec.size)
                 instance.vec.forEach { value ->
                     jp.co.soramitsu.iroha2.generated.Asset.write(writer, value)
@@ -132,9 +119,7 @@ public sealed class QueryOutputBatchBox : ModelEnum {
     /**
      * 'AssetDefinition' variant
      */
-    public data class AssetDefinition(
-        public val vec: List<jp.co.soramitsu.iroha2.generated.AssetDefinition>,
-    ) : QueryOutputBatchBox() {
+    public data class AssetDefinition(public val vec: List<jp.co.soramitsu.iroha2.generated.AssetDefinition>) : QueryOutputBatchBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -153,24 +138,21 @@ public sealed class QueryOutputBatchBox : ModelEnum {
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.AssetDefinition,
-            ): Unit =
-                try {
-                    writer.writeCompact(instance.vec.size)
-                    instance.vec.forEach { value ->
-                        jp.co.soramitsu.iroha2.generated.AssetDefinition.write(writer, value)
-                    }
-                } catch (ex: Exception) {
-                    throw wrapException(ex)
+            ): Unit = try {
+                writer.writeCompact(instance.vec.size)
+                instance.vec.forEach { value ->
+                    jp.co.soramitsu.iroha2.generated.AssetDefinition.write(writer, value)
                 }
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
         }
     }
 
     /**
      * 'Role' variant
      */
-    public data class Role(
-        public val vec: List<jp.co.soramitsu.iroha2.generated.Role>,
-    ) : QueryOutputBatchBox() {
+    public data class Role(public val vec: List<jp.co.soramitsu.iroha2.generated.Role>) : QueryOutputBatchBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -186,10 +168,7 @@ public sealed class QueryOutputBatchBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.Role,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.Role): Unit = try {
                 writer.writeCompact(instance.vec.size)
                 instance.vec.forEach { value ->
                     jp.co.soramitsu.iroha2.generated.Role.write(writer, value)
@@ -203,9 +182,7 @@ public sealed class QueryOutputBatchBox : ModelEnum {
     /**
      * 'Parameter' variant
      */
-    public data class Parameter(
-        public val vec: List<jp.co.soramitsu.iroha2.generated.Parameter>,
-    ) : QueryOutputBatchBox() {
+    public data class Parameter(public val vec: List<jp.co.soramitsu.iroha2.generated.Parameter>) : QueryOutputBatchBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -221,26 +198,22 @@ public sealed class QueryOutputBatchBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.Parameter,
-            ): Unit = try {
-                writer.writeCompact(instance.vec.size)
-                instance.vec.forEach { value ->
-                    jp.co.soramitsu.iroha2.generated.Parameter.write(writer, value)
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.Parameter): Unit =
+                try {
+                    writer.writeCompact(instance.vec.size)
+                    instance.vec.forEach { value ->
+                        jp.co.soramitsu.iroha2.generated.Parameter.write(writer, value)
+                    }
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
                 }
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
         }
     }
 
     /**
      * 'Permission' variant
      */
-    public data class Permission(
-        public val vec: List<jp.co.soramitsu.iroha2.generated.Permission>,
-    ) : QueryOutputBatchBox() {
+    public data class Permission(public val vec: List<jp.co.soramitsu.iroha2.generated.Permission>) : QueryOutputBatchBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -256,26 +229,22 @@ public sealed class QueryOutputBatchBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.Permission,
-            ): Unit = try {
-                writer.writeCompact(instance.vec.size)
-                instance.vec.forEach { value ->
-                    jp.co.soramitsu.iroha2.generated.Permission.write(writer, value)
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.Permission): Unit =
+                try {
+                    writer.writeCompact(instance.vec.size)
+                    instance.vec.forEach { value ->
+                        jp.co.soramitsu.iroha2.generated.Permission.write(writer, value)
+                    }
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
                 }
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
         }
     }
 
     /**
      * 'Transaction' variant
      */
-    public data class Transaction(
-        public val vec: List<CommittedTransaction>,
-    ) : QueryOutputBatchBox() {
+    public data class Transaction(public val vec: List<CommittedTransaction>) : QueryOutputBatchBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -308,9 +277,7 @@ public sealed class QueryOutputBatchBox : ModelEnum {
     /**
      * 'Peer' variant
      */
-    public data class Peer(
-        public val vec: List<PeerId>,
-    ) : QueryOutputBatchBox() {
+    public data class Peer(public val vec: List<PeerId>) : QueryOutputBatchBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -326,10 +293,7 @@ public sealed class QueryOutputBatchBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.Peer,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.Peer): Unit = try {
                 writer.writeCompact(instance.vec.size)
                 instance.vec.forEach { value ->
                     PeerId.write(writer, value)
@@ -343,9 +307,7 @@ public sealed class QueryOutputBatchBox : ModelEnum {
     /**
      * 'RoleId' variant
      */
-    public data class RoleId(
-        public val vec: List<jp.co.soramitsu.iroha2.generated.RoleId>,
-    ) : QueryOutputBatchBox() {
+    public data class RoleId(public val vec: List<jp.co.soramitsu.iroha2.generated.RoleId>) : QueryOutputBatchBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -361,26 +323,22 @@ public sealed class QueryOutputBatchBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.RoleId,
-            ): Unit = try {
-                writer.writeCompact(instance.vec.size)
-                instance.vec.forEach { value ->
-                    jp.co.soramitsu.iroha2.generated.RoleId.write(writer, value)
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.RoleId): Unit =
+                try {
+                    writer.writeCompact(instance.vec.size)
+                    instance.vec.forEach { value ->
+                        jp.co.soramitsu.iroha2.generated.RoleId.write(writer, value)
+                    }
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
                 }
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
         }
     }
 
     /**
      * 'TriggerId' variant
      */
-    public data class TriggerId(
-        public val vec: List<jp.co.soramitsu.iroha2.generated.TriggerId>,
-    ) : QueryOutputBatchBox() {
+    public data class TriggerId(public val vec: List<jp.co.soramitsu.iroha2.generated.TriggerId>) : QueryOutputBatchBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -396,26 +354,22 @@ public sealed class QueryOutputBatchBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.TriggerId,
-            ): Unit = try {
-                writer.writeCompact(instance.vec.size)
-                instance.vec.forEach { value ->
-                    jp.co.soramitsu.iroha2.generated.TriggerId.write(writer, value)
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.TriggerId): Unit =
+                try {
+                    writer.writeCompact(instance.vec.size)
+                    instance.vec.forEach { value ->
+                        jp.co.soramitsu.iroha2.generated.TriggerId.write(writer, value)
+                    }
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
                 }
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
         }
     }
 
     /**
      * 'Trigger' variant
      */
-    public data class Trigger(
-        public val vec: List<jp.co.soramitsu.iroha2.generated.Trigger>,
-    ) : QueryOutputBatchBox() {
+    public data class Trigger(public val vec: List<jp.co.soramitsu.iroha2.generated.Trigger>) : QueryOutputBatchBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -431,26 +385,22 @@ public sealed class QueryOutputBatchBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.Trigger,
-            ): Unit = try {
-                writer.writeCompact(instance.vec.size)
-                instance.vec.forEach { value ->
-                    jp.co.soramitsu.iroha2.generated.Trigger.write(writer, value)
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.Trigger): Unit =
+                try {
+                    writer.writeCompact(instance.vec.size)
+                    instance.vec.forEach { value ->
+                        jp.co.soramitsu.iroha2.generated.Trigger.write(writer, value)
+                    }
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
                 }
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
         }
     }
 
     /**
      * 'Block' variant
      */
-    public data class Block(
-        public val vec: List<SignedBlock>,
-    ) : QueryOutputBatchBox() {
+    public data class Block(public val vec: List<SignedBlock>) : QueryOutputBatchBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -466,10 +416,7 @@ public sealed class QueryOutputBatchBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.Block,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.Block): Unit = try {
                 writer.writeCompact(instance.vec.size)
                 instance.vec.forEach { value ->
                     SignedBlock.write(writer, value)
@@ -483,9 +430,7 @@ public sealed class QueryOutputBatchBox : ModelEnum {
     /**
      * 'BlockHeader' variant
      */
-    public data class BlockHeader(
-        public val vec: List<jp.co.soramitsu.iroha2.generated.BlockHeader>,
-    ) : QueryOutputBatchBox() {
+    public data class BlockHeader(public val vec: List<jp.co.soramitsu.iroha2.generated.BlockHeader>) : QueryOutputBatchBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -534,7 +479,8 @@ public sealed class QueryOutputBatchBox : ModelEnum {
             11 -> Trigger.read(reader)
             12 -> Block.read(reader)
             13 -> BlockHeader.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+        }
 
         override fun write(writer: ScaleCodecWriter, instance: QueryOutputBatchBox) {
             writer.directWrite(instance.discriminant())
@@ -553,7 +499,8 @@ public sealed class QueryOutputBatchBox : ModelEnum {
                 11 -> Trigger.write(writer, instance as Trigger)
                 12 -> Block.write(writer, instance as Block)
                 13 -> BlockHeader.write(writer, instance as BlockHeader)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

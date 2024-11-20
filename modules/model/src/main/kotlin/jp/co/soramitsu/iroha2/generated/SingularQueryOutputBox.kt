@@ -26,9 +26,7 @@ public sealed class SingularQueryOutputBox : ModelEnum {
     /**
      * 'Numeric' variant
      */
-    public data class Numeric(
-        public val numeric: jp.co.soramitsu.iroha2.generated.Numeric,
-    ) : SingularQueryOutputBox() {
+    public data class Numeric(public val numeric: jp.co.soramitsu.iroha2.generated.Numeric) : SingularQueryOutputBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -44,23 +42,20 @@ public sealed class SingularQueryOutputBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.SingularQueryOutputBox.Numeric,
-            ): Unit = try {
-                jp.co.soramitsu.iroha2.generated.Numeric.write(writer, instance.numeric)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.SingularQueryOutputBox.Numeric): Unit =
+                try {
+                    jp.co.soramitsu.iroha2.generated.Numeric.write(writer, instance.numeric)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
     /**
      * 'ExecutorDataModel' variant
      */
-    public data class ExecutorDataModel(
-        public val executorDataModel: jp.co.soramitsu.iroha2.generated.ExecutorDataModel,
-    ) : SingularQueryOutputBox() {
+    public data class ExecutorDataModel(public val executorDataModel: jp.co.soramitsu.iroha2.generated.ExecutorDataModel) :
+        SingularQueryOutputBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -90,9 +85,7 @@ public sealed class SingularQueryOutputBox : ModelEnum {
     /**
      * 'Json' variant
      */
-    public data class Json(
-        public val json: jp.co.soramitsu.iroha2.generated.Json,
-    ) : SingularQueryOutputBox() {
+    public data class Json(public val json: jp.co.soramitsu.iroha2.generated.Json) : SingularQueryOutputBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -108,23 +101,19 @@ public sealed class SingularQueryOutputBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.SingularQueryOutputBox.Json,
-            ): Unit = try {
-                jp.co.soramitsu.iroha2.generated.Json.write(writer, instance.json)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.SingularQueryOutputBox.Json): Unit =
+                try {
+                    jp.co.soramitsu.iroha2.generated.Json.write(writer, instance.json)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
     /**
      * 'Trigger' variant
      */
-    public data class Trigger(
-        public val trigger: jp.co.soramitsu.iroha2.generated.Trigger,
-    ) : SingularQueryOutputBox() {
+    public data class Trigger(public val trigger: jp.co.soramitsu.iroha2.generated.Trigger) : SingularQueryOutputBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -140,23 +129,19 @@ public sealed class SingularQueryOutputBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.SingularQueryOutputBox.Trigger,
-            ): Unit = try {
-                jp.co.soramitsu.iroha2.generated.Trigger.write(writer, instance.trigger)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.SingularQueryOutputBox.Trigger): Unit =
+                try {
+                    jp.co.soramitsu.iroha2.generated.Trigger.write(writer, instance.trigger)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
     /**
      * 'Parameters' variant
      */
-    public data class Parameters(
-        public val parameters: jp.co.soramitsu.iroha2.generated.Parameters,
-    ) : SingularQueryOutputBox() {
+    public data class Parameters(public val parameters: jp.co.soramitsu.iroha2.generated.Parameters) : SingularQueryOutputBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -186,9 +171,7 @@ public sealed class SingularQueryOutputBox : ModelEnum {
     /**
      * 'Transaction' variant
      */
-    public data class Transaction(
-        public val committedTransaction: CommittedTransaction,
-    ) : SingularQueryOutputBox() {
+    public data class Transaction(public val committedTransaction: CommittedTransaction) : SingularQueryOutputBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -218,9 +201,7 @@ public sealed class SingularQueryOutputBox : ModelEnum {
     /**
      * 'BlockHeader' variant
      */
-    public data class BlockHeader(
-        public val blockHeader: jp.co.soramitsu.iroha2.generated.BlockHeader,
-    ) : SingularQueryOutputBox() {
+    public data class BlockHeader(public val blockHeader: jp.co.soramitsu.iroha2.generated.BlockHeader) : SingularQueryOutputBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -259,7 +240,8 @@ public sealed class SingularQueryOutputBox : ModelEnum {
             4 -> Parameters.read(reader)
             5 -> Transaction.read(reader)
             6 -> BlockHeader.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+        }
 
         override fun write(writer: ScaleCodecWriter, instance: SingularQueryOutputBox) {
             writer.directWrite(instance.discriminant())
@@ -271,7 +253,8 @@ public sealed class SingularQueryOutputBox : ModelEnum {
                 4 -> Parameters.write(writer, instance as Parameters)
                 5 -> Transaction.write(writer, instance as Transaction)
                 6 -> BlockHeader.write(writer, instance as BlockHeader)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

@@ -15,10 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'RemoveKeyValueOfDomain' regular structure
  */
-public data class RemoveKeyValueOfDomain(
-    public val `object`: DomainId,
-    public val key: Name,
-) {
+public data class RemoveKeyValueOfDomain(public val `object`: DomainId, public val key: Name) {
     public companion object : ScaleReader<RemoveKeyValueOfDomain>, ScaleWriter<RemoveKeyValueOfDomain> {
         override fun read(reader: ScaleCodecReader): RemoveKeyValueOfDomain = try {
             RemoveKeyValueOfDomain(

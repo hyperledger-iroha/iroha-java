@@ -15,9 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'BlockSubscriptionRequest' regular structure
  */
-public data class BlockSubscriptionRequest(
-    public val nonZeroOfu64: NonZeroOfu64,
-) {
+public data class BlockSubscriptionRequest(public val nonZeroOfu64: NonZeroOfu64) {
     public companion object :
         ScaleReader<BlockSubscriptionRequest>,
         ScaleWriter<BlockSubscriptionRequest> {

@@ -26,15 +26,12 @@ fun main(args: Array<String>) {
 /**
  * Parse the [arguments][args]
  */
-fun parseArgs(args: Array<String>): Map<String, String> {
-    return args.map { it.split("=") }
-        .onEach { if (it.size != 2) throw RuntimeException("Incorrect format: expected format argumentKey=argumentValue") }
-        .associateBy({ it[0] }, { it[1] })
-}
+fun parseArgs(args: Array<String>): Map<String, String> = args.map { it.split("=") }
+    .onEach { if (it.size != 2) throw RuntimeException("Incorrect format: expected format argumentKey=argumentValue") }
+    .associateBy({ it[0] }, { it[1] })
 
 /**
  * Extract a specified [argumnt][argName] from all [arguments][args]
  */
-fun tryExtractArg(args: Map<String, String>, argName: String): String {
-    return args[argName] ?: throw RuntimeException("Property '$argName' must be specified")
-}
+fun tryExtractArg(args: Map<String, String>, argName: String): String =
+    args[argName] ?: throw RuntimeException("Property '$argName' must be specified")

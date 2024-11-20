@@ -15,9 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'CustomInstruction' regular structure
  */
-public data class CustomInstruction(
-    public val payload: Json,
-) {
+public data class CustomInstruction(public val payload: Json) {
     public companion object : ScaleReader<CustomInstruction>, ScaleWriter<CustomInstruction> {
         override fun read(reader: ScaleCodecReader): CustomInstruction = try {
             CustomInstruction(

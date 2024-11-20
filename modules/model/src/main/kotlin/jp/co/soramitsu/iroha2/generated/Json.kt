@@ -16,9 +16,7 @@ import kotlin.Unit
  *
  * Generated from 'Json' regular structure
  */
-public data class Json(
-    public val string: String,
-) {
+public data class Json(public val string: String) {
     public companion object : ScaleReader<Json>, ScaleWriter<Json> {
         override fun read(reader: ScaleCodecReader): Json = try {
             Json(

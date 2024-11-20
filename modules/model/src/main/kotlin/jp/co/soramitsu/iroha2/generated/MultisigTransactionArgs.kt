@@ -27,9 +27,7 @@ public sealed class MultisigTransactionArgs : ModelEnum {
     /**
      * 'Propose' variant
      */
-    public data class Propose(
-        public val vec: List<InstructionBox>,
-    ) : MultisigTransactionArgs() {
+    public data class Propose(public val vec: List<InstructionBox>) : MultisigTransactionArgs() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -62,9 +60,7 @@ public sealed class MultisigTransactionArgs : ModelEnum {
     /**
      * 'Approve' variant
      */
-    public data class Approve(
-        public val hashOf: HashOf<List<InstructionBox>>,
-    ) : MultisigTransactionArgs() {
+    public data class Approve(public val hashOf: HashOf<List<InstructionBox>>) : MultisigTransactionArgs() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -100,14 +96,16 @@ public sealed class MultisigTransactionArgs : ModelEnum {
         ) {
             0 -> Propose.read(reader)
             1 -> Approve.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+        }
 
         override fun write(writer: ScaleCodecWriter, instance: MultisigTransactionArgs) {
             writer.directWrite(instance.discriminant())
             when (val discriminant = instance.discriminant()) {
                 0 -> Propose.write(writer, instance as Propose)
                 1 -> Approve.write(writer, instance as Approve)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

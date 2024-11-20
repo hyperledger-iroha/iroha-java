@@ -16,9 +16,7 @@ import kotlin.Unit
  *
  * Generated from 'CanTransferAsset' regular structure
  */
-public data class CanTransferAsset(
-    public val asset: AssetId,
-) : ModelPermission {
+public data class CanTransferAsset(public val asset: AssetId) : ModelPermission {
     public companion object : ScaleReader<CanTransferAsset>, ScaleWriter<CanTransferAsset> {
         override fun read(reader: ScaleCodecReader): CanTransferAsset = try {
             CanTransferAsset(

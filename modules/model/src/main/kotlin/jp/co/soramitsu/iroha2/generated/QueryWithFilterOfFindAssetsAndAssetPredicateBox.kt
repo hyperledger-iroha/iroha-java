@@ -22,20 +22,16 @@ public data class QueryWithFilterOfFindAssetsAndAssetPredicateBox(
     public companion object :
         ScaleReader<QueryWithFilterOfFindAssetsAndAssetPredicateBox>,
         ScaleWriter<QueryWithFilterOfFindAssetsAndAssetPredicateBox> {
-        override fun read(reader: ScaleCodecReader): QueryWithFilterOfFindAssetsAndAssetPredicateBox =
-            try {
-                QueryWithFilterOfFindAssetsAndAssetPredicateBox(
-                    FindAssets.read(reader),
-                    CompoundPredicateOfAssetPredicateBox.read(reader),
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+        override fun read(reader: ScaleCodecReader): QueryWithFilterOfFindAssetsAndAssetPredicateBox = try {
+            QueryWithFilterOfFindAssetsAndAssetPredicateBox(
+                FindAssets.read(reader),
+                CompoundPredicateOfAssetPredicateBox.read(reader),
+            )
+        } catch (ex: Exception) {
+            throw wrapException(ex)
+        }
 
-        override fun write(
-            writer: ScaleCodecWriter,
-            instance: QueryWithFilterOfFindAssetsAndAssetPredicateBox,
-        ): Unit = try {
+        override fun write(writer: ScaleCodecWriter, instance: QueryWithFilterOfFindAssetsAndAssetPredicateBox): Unit = try {
             FindAssets.write(writer, instance.query)
             CompoundPredicateOfAssetPredicateBox.write(writer, instance.predicate)
         } catch (ex: Exception) {

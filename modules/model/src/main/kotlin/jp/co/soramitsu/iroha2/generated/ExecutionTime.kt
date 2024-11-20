@@ -27,11 +27,13 @@ public sealed class ExecutionTime : ModelEnum {
 
     override fun equals(other: Any?): Boolean = when (this) {
         is PreCommit -> PreCommit.equals(this, other)
-        else -> super.equals(other) }
+        else -> super.equals(other)
+    }
 
     override fun hashCode(): Int = when (this) {
         is PreCommit -> PreCommit.hashCode()
-        else -> super.hashCode() }
+        else -> super.hashCode()
+    }
 
     /**
      * 'PreCommit' variant
@@ -50,10 +52,7 @@ public sealed class ExecutionTime : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.ExecutionTime.PreCommit,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.ExecutionTime.PreCommit): Unit = try {
             } catch (ex: Exception) {
                 throw wrapException(ex)
             }
@@ -70,9 +69,7 @@ public sealed class ExecutionTime : ModelEnum {
     /**
      * 'Schedule' variant
      */
-    public data class Schedule(
-        public val schedule: jp.co.soramitsu.iroha2.generated.Schedule,
-    ) : ExecutionTime() {
+    public data class Schedule(public val schedule: jp.co.soramitsu.iroha2.generated.Schedule) : ExecutionTime() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -88,10 +85,7 @@ public sealed class ExecutionTime : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.ExecutionTime.Schedule,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.ExecutionTime.Schedule): Unit = try {
                 jp.co.soramitsu.iroha2.generated.Schedule.write(writer, instance.schedule)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -106,14 +100,16 @@ public sealed class ExecutionTime : ModelEnum {
         ) {
             0 -> PreCommit.read(reader)
             1 -> Schedule.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+        }
 
         override fun write(writer: ScaleCodecWriter, instance: ExecutionTime) {
             writer.directWrite(instance.discriminant())
             when (val discriminant = instance.discriminant()) {
                 0 -> PreCommit.write(writer, instance as PreCommit)
                 1 -> Schedule.write(writer, instance as Schedule)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

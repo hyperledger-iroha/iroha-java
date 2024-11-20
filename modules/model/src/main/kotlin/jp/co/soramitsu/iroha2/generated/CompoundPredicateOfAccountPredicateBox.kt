@@ -27,9 +27,7 @@ public sealed class CompoundPredicateOfAccountPredicateBox : ModelEnum {
     /**
      * 'Atom' variant
      */
-    public data class Atom(
-        public val accountPredicateBox: AccountPredicateBox,
-    ) : CompoundPredicateOfAccountPredicateBox() {
+    public data class Atom(public val accountPredicateBox: AccountPredicateBox) : CompoundPredicateOfAccountPredicateBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -37,13 +35,14 @@ public sealed class CompoundPredicateOfAccountPredicateBox : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.CompoundPredicateOfAccountPredicateBox.Atom> {
             public const val DISCRIMINANT: Int = 0
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.CompoundPredicateOfAccountPredicateBox.Atom = try {
-                Atom(
-                    AccountPredicateBox.read(reader),
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.CompoundPredicateOfAccountPredicateBox.Atom =
+                try {
+                    Atom(
+                        AccountPredicateBox.read(reader),
+                    )
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             override fun write(
                 writer: ScaleCodecWriter,
@@ -59,9 +58,8 @@ public sealed class CompoundPredicateOfAccountPredicateBox : ModelEnum {
     /**
      * 'Not' variant
      */
-    public data class Not(
-        public val compoundPredicateOfAccountPredicateBox: CompoundPredicateOfAccountPredicateBox,
-    ) : CompoundPredicateOfAccountPredicateBox() {
+    public data class Not(public val compoundPredicateOfAccountPredicateBox: CompoundPredicateOfAccountPredicateBox) :
+        CompoundPredicateOfAccountPredicateBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -94,9 +92,7 @@ public sealed class CompoundPredicateOfAccountPredicateBox : ModelEnum {
     /**
      * 'And' variant
      */
-    public data class And(
-        public val vec: List<CompoundPredicateOfAccountPredicateBox>,
-    ) : CompoundPredicateOfAccountPredicateBox() {
+    public data class And(public val vec: List<CompoundPredicateOfAccountPredicateBox>) : CompoundPredicateOfAccountPredicateBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -129,9 +125,7 @@ public sealed class CompoundPredicateOfAccountPredicateBox : ModelEnum {
     /**
      * 'Or' variant
      */
-    public data class Or(
-        public val vec: List<CompoundPredicateOfAccountPredicateBox>,
-    ) : CompoundPredicateOfAccountPredicateBox() {
+    public data class Or(public val vec: List<CompoundPredicateOfAccountPredicateBox>) : CompoundPredicateOfAccountPredicateBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -172,7 +166,8 @@ public sealed class CompoundPredicateOfAccountPredicateBox : ModelEnum {
             1 -> Not.read(reader)
             2 -> And.read(reader)
             3 -> Or.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+        }
 
         override fun write(writer: ScaleCodecWriter, instance: CompoundPredicateOfAccountPredicateBox) {
             writer.directWrite(instance.discriminant())
@@ -181,7 +176,8 @@ public sealed class CompoundPredicateOfAccountPredicateBox : ModelEnum {
                 1 -> Not.write(writer, instance as Not)
                 2 -> And.write(writer, instance as And)
                 3 -> Or.write(writer, instance as Or)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

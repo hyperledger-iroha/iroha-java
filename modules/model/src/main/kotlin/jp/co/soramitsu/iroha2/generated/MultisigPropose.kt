@@ -16,10 +16,7 @@ import kotlin.collections.List
  *
  * Generated from 'MultisigPropose' regular structure
  */
-public data class MultisigPropose(
-    public val account: AccountId,
-    public val instructions: List<InstructionBox>,
-) {
+public data class MultisigPropose(public val account: AccountId, public val instructions: List<InstructionBox>) {
     public companion object : ScaleReader<MultisigPropose>, ScaleWriter<MultisigPropose> {
         override fun read(reader: ScaleCodecReader): MultisigPropose = try {
             MultisigPropose(

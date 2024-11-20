@@ -26,9 +26,7 @@ public sealed class MintBox : ModelEnum {
     /**
      * 'Asset' variant
      */
-    public data class Asset(
-        public val mintOfNumericAndAsset: MintOfNumericAndAsset,
-    ) : MintBox() {
+    public data class Asset(public val mintOfNumericAndAsset: MintOfNumericAndAsset) : MintBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -36,19 +34,15 @@ public sealed class MintBox : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.MintBox.Asset> {
             public const val DISCRIMINANT: Int = 0
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.MintBox.Asset =
-                try {
-                    Asset(
-                        MintOfNumericAndAsset.read(reader),
-                    )
-                } catch (ex: Exception) {
-                    throw wrapException(ex)
-                }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.MintBox.Asset = try {
+                Asset(
+                    MintOfNumericAndAsset.read(reader),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.MintBox.Asset,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.MintBox.Asset): Unit = try {
                 MintOfNumericAndAsset.write(writer, instance.mintOfNumericAndAsset)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -59,9 +53,7 @@ public sealed class MintBox : ModelEnum {
     /**
      * 'TriggerRepetitions' variant
      */
-    public data class TriggerRepetitions(
-        public val mintOfu32AndTrigger: MintOfu32AndTrigger,
-    ) : MintBox() {
+    public data class TriggerRepetitions(public val mintOfu32AndTrigger: MintOfu32AndTrigger) : MintBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -77,14 +69,12 @@ public sealed class MintBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.MintBox.TriggerRepetitions,
-            ): Unit = try {
-                MintOfu32AndTrigger.write(writer, instance.mintOfu32AndTrigger)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.MintBox.TriggerRepetitions): Unit =
+                try {
+                    MintOfu32AndTrigger.write(writer, instance.mintOfu32AndTrigger)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
@@ -95,14 +85,16 @@ public sealed class MintBox : ModelEnum {
         ) {
             0 -> Asset.read(reader)
             1 -> TriggerRepetitions.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+        }
 
         override fun write(writer: ScaleCodecWriter, instance: MintBox) {
             writer.directWrite(instance.discriminant())
             when (val discriminant = instance.discriminant()) {
                 0 -> Asset.write(writer, instance as Asset)
                 1 -> TriggerRepetitions.write(writer, instance as TriggerRepetitions)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

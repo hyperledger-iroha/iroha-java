@@ -16,10 +16,7 @@ import kotlin.Unit
  *
  * Generated from 'Mismatch<AssetType>' regular structure
  */
-public data class Mismatch<T0>(
-    public val expected: AssetType,
-    public val `actual`: AssetType,
-) {
+public data class Mismatch<T0>(public val expected: AssetType, public val `actual`: AssetType) {
     public companion object : ScaleReader<Mismatch<out Any>>, ScaleWriter<Mismatch<out Any>> {
         override fun read(reader: ScaleCodecReader): Mismatch<out Any> = try {
             Mismatch(

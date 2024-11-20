@@ -16,9 +16,7 @@ import kotlin.Unit
  *
  * Generated from 'SignatureOf<TransactionPayload>' regular structure
  */
-public data class SignatureOf<T0>(
-    public val signature: Signature,
-) {
+public data class SignatureOf<T0>(public val signature: Signature) {
     public companion object : ScaleReader<SignatureOf<out Any>>, ScaleWriter<SignatureOf<out Any>> {
         override fun read(reader: ScaleCodecReader): SignatureOf<out Any> = try {
             SignatureOf(

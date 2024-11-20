@@ -15,10 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'RemoveKeyValueOfAsset' regular structure
  */
-public data class RemoveKeyValueOfAsset(
-    public val `object`: AssetId,
-    public val key: Name,
-) {
+public data class RemoveKeyValueOfAsset(public val `object`: AssetId, public val key: Name) {
     public companion object : ScaleReader<RemoveKeyValueOfAsset>, ScaleWriter<RemoveKeyValueOfAsset> {
         override fun read(reader: ScaleCodecReader): RemoveKeyValueOfAsset = try {
             RemoveKeyValueOfAsset(

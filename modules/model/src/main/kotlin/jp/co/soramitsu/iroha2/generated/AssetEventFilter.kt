@@ -16,10 +16,7 @@ import kotlin.Unit
  *
  * Generated from 'AssetEventFilter' regular structure
  */
-public data class AssetEventFilter(
-    public val idMatcher: AssetId? = null,
-    public val eventSet: Long,
-) {
+public data class AssetEventFilter(public val idMatcher: AssetId? = null, public val eventSet: Long) {
     public companion object : ScaleReader<AssetEventFilter>, ScaleWriter<AssetEventFilter> {
         override fun read(reader: ScaleCodecReader): AssetEventFilter = try {
             AssetEventFilter(

@@ -15,9 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'FetchSize' regular structure
  */
-public data class FetchSize(
-    public val fetchSize: NonZeroOfu64? = null,
-) {
+public data class FetchSize(public val fetchSize: NonZeroOfu64? = null) {
     public companion object : ScaleReader<FetchSize>, ScaleWriter<FetchSize> {
         override fun read(reader: ScaleCodecReader): FetchSize = try {
             FetchSize(

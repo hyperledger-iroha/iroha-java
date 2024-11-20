@@ -15,9 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'FindRolesByAccountId' regular structure
  */
-public data class FindRolesByAccountId(
-    public val id: AccountId,
-) {
+public data class FindRolesByAccountId(public val id: AccountId) {
     public companion object : ScaleReader<FindRolesByAccountId>, ScaleWriter<FindRolesByAccountId> {
         override fun read(reader: ScaleCodecReader): FindRolesByAccountId = try {
             FindRolesByAccountId(

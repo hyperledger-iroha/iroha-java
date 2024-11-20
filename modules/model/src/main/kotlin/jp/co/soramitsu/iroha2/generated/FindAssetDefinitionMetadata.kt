@@ -15,10 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'FindAssetDefinitionMetadata' regular structure
  */
-public data class FindAssetDefinitionMetadata(
-    public val id: AssetDefinitionId,
-    public val key: Name,
-) {
+public data class FindAssetDefinitionMetadata(public val id: AssetDefinitionId, public val key: Name) {
     public companion object :
         ScaleReader<FindAssetDefinitionMetadata>,
         ScaleWriter<FindAssetDefinitionMetadata> {

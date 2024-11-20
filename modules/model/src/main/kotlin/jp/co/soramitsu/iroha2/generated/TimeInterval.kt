@@ -16,10 +16,7 @@ import kotlin.Unit
  *
  * Generated from 'TimeInterval' regular structure
  */
-public data class TimeInterval(
-    public val sinceMs: BigInteger,
-    public val lengthMs: BigInteger,
-) {
+public data class TimeInterval(public val sinceMs: BigInteger, public val lengthMs: BigInteger) {
     public companion object : ScaleReader<TimeInterval>, ScaleWriter<TimeInterval> {
         override fun read(reader: ScaleCodecReader): TimeInterval = try {
             TimeInterval(

@@ -192,18 +192,15 @@ fun AssetDefinitionId.asJson(): Json =
 fun AccountId.asString(withPrefix: Boolean = true) = this.signatory.payload.toHex(withPrefix) +
     ACCOUNT_ID_DELIMITER + this.domain.name.string
 
-fun AccountId.asJson(withPrefix: Boolean = true): Json =
-    Json.writeValue(
-        "{\"account\": \"${this.signatory.payload.toHex(withPrefix) + ACCOUNT_ID_DELIMITER + this.domain.name.string}\"}",
-    )
+fun AccountId.asJson(withPrefix: Boolean = true): Json = Json.writeValue(
+    "{\"account\": \"${this.signatory.payload.toHex(withPrefix) + ACCOUNT_ID_DELIMITER + this.domain.name.string}\"}",
+)
 
 object JsonMapper {
     val mapper = jacksonObjectMapper()
 }
 
-inline fun <reified T> Json.readValue(): T {
-    return JsonMapper.mapper.readValue(this.string)
-}
+inline fun <reified T> Json.readValue(): T = JsonMapper.mapper.readValue(this.string)
 fun Json.Companion.writeValue(value: Any): Json {
     println("KITA: " + JsonMapper.mapper.convertValue(value, Json::class.java))
     return JsonMapper.mapper.convertValue(value, Json::class.java)

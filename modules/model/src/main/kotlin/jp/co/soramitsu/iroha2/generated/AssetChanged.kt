@@ -15,10 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'AssetChanged' regular structure
  */
-public data class AssetChanged(
-    public val asset: AssetId,
-    public val amount: AssetValue,
-) {
+public data class AssetChanged(public val asset: AssetId, public val amount: AssetValue) {
     public companion object : ScaleReader<AssetChanged>, ScaleWriter<AssetChanged> {
         override fun read(reader: ScaleCodecReader): AssetChanged = try {
             AssetChanged(

@@ -15,10 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'AssetDefinitionOwnerChanged' regular structure
  */
-public data class AssetDefinitionOwnerChanged(
-    public val assetDefinition: AssetDefinitionId,
-    public val newOwner: AccountId,
-) {
+public data class AssetDefinitionOwnerChanged(public val assetDefinition: AssetDefinitionId, public val newOwner: AccountId) {
     public companion object :
         ScaleReader<AssetDefinitionOwnerChanged>,
         ScaleWriter<AssetDefinitionOwnerChanged> {

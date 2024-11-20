@@ -26,9 +26,7 @@ public sealed class GrantBox : ModelEnum {
     /**
      * 'Permission' variant
      */
-    public data class Permission(
-        public val grantOfPermissionAndAccount: GrantOfPermissionAndAccount,
-    ) : GrantBox() {
+    public data class Permission(public val grantOfPermissionAndAccount: GrantOfPermissionAndAccount) : GrantBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -44,10 +42,7 @@ public sealed class GrantBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.GrantBox.Permission,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.GrantBox.Permission): Unit = try {
                 GrantOfPermissionAndAccount.write(writer, instance.grantOfPermissionAndAccount)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -58,9 +53,7 @@ public sealed class GrantBox : ModelEnum {
     /**
      * 'Role' variant
      */
-    public data class Role(
-        public val grantOfRoleIdAndAccount: GrantOfRoleIdAndAccount,
-    ) : GrantBox() {
+    public data class Role(public val grantOfRoleIdAndAccount: GrantOfRoleIdAndAccount) : GrantBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -68,19 +61,15 @@ public sealed class GrantBox : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.GrantBox.Role> {
             public const val DISCRIMINANT: Int = 1
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.GrantBox.Role =
-                try {
-                    Role(
-                        GrantOfRoleIdAndAccount.read(reader),
-                    )
-                } catch (ex: Exception) {
-                    throw wrapException(ex)
-                }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.GrantBox.Role = try {
+                Role(
+                    GrantOfRoleIdAndAccount.read(reader),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.GrantBox.Role,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.GrantBox.Role): Unit = try {
                 GrantOfRoleIdAndAccount.write(writer, instance.grantOfRoleIdAndAccount)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -91,9 +80,7 @@ public sealed class GrantBox : ModelEnum {
     /**
      * 'RolePermission' variant
      */
-    public data class RolePermission(
-        public val grantOfPermissionAndRole: GrantOfPermissionAndRole,
-    ) : GrantBox() {
+    public data class RolePermission(public val grantOfPermissionAndRole: GrantOfPermissionAndRole) : GrantBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -109,10 +96,7 @@ public sealed class GrantBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.GrantBox.RolePermission,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.GrantBox.RolePermission): Unit = try {
                 GrantOfPermissionAndRole.write(writer, instance.grantOfPermissionAndRole)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -128,7 +112,8 @@ public sealed class GrantBox : ModelEnum {
             0 -> Permission.read(reader)
             1 -> Role.read(reader)
             2 -> RolePermission.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+        }
 
         override fun write(writer: ScaleCodecWriter, instance: GrantBox) {
             writer.directWrite(instance.discriminant())
@@ -136,7 +121,8 @@ public sealed class GrantBox : ModelEnum {
                 0 -> Permission.write(writer, instance as Permission)
                 1 -> Role.write(writer, instance as Role)
                 2 -> RolePermission.write(writer, instance as RolePermission)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

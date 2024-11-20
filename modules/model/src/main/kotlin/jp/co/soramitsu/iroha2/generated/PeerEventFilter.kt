@@ -16,10 +16,7 @@ import kotlin.Unit
  *
  * Generated from 'PeerEventFilter' regular structure
  */
-public data class PeerEventFilter(
-    public val idMatcher: PeerId? = null,
-    public val eventSet: Long,
-) {
+public data class PeerEventFilter(public val idMatcher: PeerId? = null, public val eventSet: Long) {
     public companion object : ScaleReader<PeerEventFilter>, ScaleWriter<PeerEventFilter> {
         override fun read(reader: ScaleCodecReader): PeerEventFilter = try {
             PeerEventFilter(

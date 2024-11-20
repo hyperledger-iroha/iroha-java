@@ -53,7 +53,9 @@ open class IrohaContainer : GenericContainer<IrohaContainer> {
                 "TRUSTED_PEERS",
                 "[" +
                     config.trustedPeers.joinToString(",") {
-                        JSON_SERDE.writeValueAsString(it.id.publicKey).trimEnd('"') + "@" + JSON_SERDE.writeValueAsString(it.address).trimStart(
+                        JSON_SERDE.writeValueAsString(
+                            it.id.publicKey,
+                        ).trimEnd('"') + "@" + JSON_SERDE.writeValueAsString(it.address).trimStart(
                             '"',
                         )
                     } + "]",

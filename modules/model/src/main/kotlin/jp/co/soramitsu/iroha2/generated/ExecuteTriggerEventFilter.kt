@@ -15,10 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'ExecuteTriggerEventFilter' regular structure
  */
-public data class ExecuteTriggerEventFilter(
-    public val triggerId: TriggerId? = null,
-    public val authority: AccountId? = null,
-) {
+public data class ExecuteTriggerEventFilter(public val triggerId: TriggerId? = null, public val authority: AccountId? = null) {
     public companion object :
         ScaleReader<ExecuteTriggerEventFilter>,
         ScaleWriter<ExecuteTriggerEventFilter> {

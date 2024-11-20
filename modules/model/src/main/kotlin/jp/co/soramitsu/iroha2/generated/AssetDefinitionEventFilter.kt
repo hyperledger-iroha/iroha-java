@@ -16,10 +16,7 @@ import kotlin.Unit
  *
  * Generated from 'AssetDefinitionEventFilter' regular structure
  */
-public data class AssetDefinitionEventFilter(
-    public val idMatcher: AssetDefinitionId? = null,
-    public val eventSet: Long,
-) {
+public data class AssetDefinitionEventFilter(public val idMatcher: AssetDefinitionId? = null, public val eventSet: Long) {
     public companion object :
         ScaleReader<AssetDefinitionEventFilter>,
         ScaleWriter<AssetDefinitionEventFilter> {

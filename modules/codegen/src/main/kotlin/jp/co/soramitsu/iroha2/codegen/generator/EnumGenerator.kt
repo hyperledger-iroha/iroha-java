@@ -71,22 +71,18 @@ object EnumGenerator : AbstractGenerator<EnumBlueprint>() {
         clazz.addSuperinterface(ModelEnum::class)
     }
 
-    private fun hashCodeFun(blueprint: EnumBlueprint): FunSpec {
-        return FunSpec.builder("hashCode")
-            .addCode(hashcodeCode(blueprint))
-            .addModifiers(KModifier.OVERRIDE)
-            .returns(Int::class.java)
-            .build()
-    }
+    private fun hashCodeFun(blueprint: EnumBlueprint): FunSpec = FunSpec.builder("hashCode")
+        .addCode(hashcodeCode(blueprint))
+        .addModifiers(KModifier.OVERRIDE)
+        .returns(Int::class.java)
+        .build()
 
-    private fun equalsFun(blueprint: EnumBlueprint): FunSpec {
-        return FunSpec.builder("equals")
-            .addParameter(ParameterSpec.builder("other", ANY_TYPE.copy(nullable = true)).build())
-            .addCode(equalsCode(blueprint))
-            .addModifiers(KModifier.OVERRIDE)
-            .returns(Boolean::class.java)
-            .build()
-    }
+    private fun equalsFun(blueprint: EnumBlueprint): FunSpec = FunSpec.builder("equals")
+        .addParameter(ParameterSpec.builder("other", ANY_TYPE.copy(nullable = true)).build())
+        .addCode(equalsCode(blueprint))
+        .addModifiers(KModifier.OVERRIDE)
+        .returns(Boolean::class.java)
+        .build()
 
     private fun equalsCode(blueprint: EnumBlueprint): CodeBlock {
         val codeBlock = CodeBlock.builder().add("return when(this) {\n")

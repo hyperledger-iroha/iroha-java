@@ -16,9 +16,7 @@ import kotlin.Unit
  *
  * Generated from 'ExecutorEventFilter' regular structure
  */
-public data class ExecutorEventFilter(
-    public val eventSet: Long,
-) {
+public data class ExecutorEventFilter(public val eventSet: Long) {
     public companion object : ScaleReader<ExecutorEventFilter>, ScaleWriter<ExecutorEventFilter> {
         override fun read(reader: ScaleCodecReader): ExecutorEventFilter = try {
             ExecutorEventFilter(

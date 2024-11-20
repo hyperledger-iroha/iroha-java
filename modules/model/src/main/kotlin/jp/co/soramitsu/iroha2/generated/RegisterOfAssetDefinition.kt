@@ -15,9 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'RegisterOfAssetDefinition' regular structure
  */
-public data class RegisterOfAssetDefinition(
-    public val `object`: NewAssetDefinition,
-) {
+public data class RegisterOfAssetDefinition(public val `object`: NewAssetDefinition) {
     public companion object :
         ScaleReader<RegisterOfAssetDefinition>,
         ScaleWriter<RegisterOfAssetDefinition> {

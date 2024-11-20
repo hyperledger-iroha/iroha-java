@@ -31,10 +31,7 @@ public data class QueryWithFilterOfFindBlocksAndSignedBlockPredicateBox(
             throw wrapException(ex)
         }
 
-        override fun write(
-            writer: ScaleCodecWriter,
-            instance: QueryWithFilterOfFindBlocksAndSignedBlockPredicateBox,
-        ): Unit = try {
+        override fun write(writer: ScaleCodecWriter, instance: QueryWithFilterOfFindBlocksAndSignedBlockPredicateBox): Unit = try {
             FindBlocks.write(writer, instance.query)
             CompoundPredicateOfSignedBlockPredicateBox.write(writer, instance.predicate)
         } catch (ex: Exception) {

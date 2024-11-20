@@ -16,9 +16,7 @@ import kotlin.Unit
  *
  * Generated from 'NonZeroOfu16' regular structure
  */
-public data class NonZeroOfu16(
-    public val u16: Int,
-) {
+public data class NonZeroOfu16(public val u16: Int) {
     public companion object : ScaleReader<NonZeroOfu16>, ScaleWriter<NonZeroOfu16> {
         override fun read(reader: ScaleCodecReader): NonZeroOfu16 = try {
             NonZeroOfu16(

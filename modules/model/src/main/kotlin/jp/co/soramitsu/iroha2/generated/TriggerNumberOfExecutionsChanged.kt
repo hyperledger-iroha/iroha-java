@@ -16,10 +16,7 @@ import kotlin.Unit
  *
  * Generated from 'TriggerNumberOfExecutionsChanged' regular structure
  */
-public data class TriggerNumberOfExecutionsChanged(
-    public val trigger: TriggerId,
-    public val `by`: Long,
-) {
+public data class TriggerNumberOfExecutionsChanged(public val trigger: TriggerId, public val `by`: Long) {
     public companion object :
         ScaleReader<TriggerNumberOfExecutionsChanged>,
         ScaleWriter<TriggerNumberOfExecutionsChanged> {
@@ -32,12 +29,11 @@ public data class TriggerNumberOfExecutionsChanged(
             throw wrapException(ex)
         }
 
-        override fun write(writer: ScaleCodecWriter, instance: TriggerNumberOfExecutionsChanged): Unit =
-            try {
-                TriggerId.write(writer, instance.trigger)
-                writer.writeUint32(instance.`by`)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+        override fun write(writer: ScaleCodecWriter, instance: TriggerNumberOfExecutionsChanged): Unit = try {
+            TriggerId.write(writer, instance.trigger)
+            writer.writeUint32(instance.`by`)
+        } catch (ex: Exception) {
+            throw wrapException(ex)
+        }
     }
 }

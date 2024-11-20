@@ -15,10 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'QueryRequestWithAuthority' regular structure
  */
-public data class QueryRequestWithAuthority(
-    public val authority: AccountId,
-    public val request: QueryRequest,
-) {
+public data class QueryRequestWithAuthority(public val authority: AccountId, public val request: QueryRequest) {
     public companion object :
         ScaleReader<QueryRequestWithAuthority>,
         ScaleWriter<QueryRequestWithAuthority> {

@@ -17,10 +17,7 @@ import kotlin.collections.List
  *
  * Generated from 'Role' regular structure
  */
-public data class Role(
-    public val id: RoleId,
-    public val permissions: List<Permission>,
-) {
+public data class Role(public val id: RoleId, public val permissions: List<Permission>) {
     public companion object : ScaleReader<Role>, ScaleWriter<Role> {
         override fun read(reader: ScaleCodecReader): Role = try {
             Role(

@@ -15,10 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'FindTriggerMetadata' regular structure
  */
-public data class FindTriggerMetadata(
-    public val id: TriggerId,
-    public val key: Name,
-) {
+public data class FindTriggerMetadata(public val id: TriggerId, public val key: Name) {
     public companion object : ScaleReader<FindTriggerMetadata>, ScaleWriter<FindTriggerMetadata> {
         override fun read(reader: ScaleCodecReader): FindTriggerMetadata = try {
             FindTriggerMetadata(

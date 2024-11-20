@@ -27,9 +27,7 @@ public sealed class CompoundPredicateOfTriggerIdPredicateBox : ModelEnum {
     /**
      * 'Atom' variant
      */
-    public data class Atom(
-        public val triggerIdPredicateBox: TriggerIdPredicateBox,
-    ) : CompoundPredicateOfTriggerIdPredicateBox() {
+    public data class Atom(public val triggerIdPredicateBox: TriggerIdPredicateBox) : CompoundPredicateOfTriggerIdPredicateBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -37,13 +35,14 @@ public sealed class CompoundPredicateOfTriggerIdPredicateBox : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.CompoundPredicateOfTriggerIdPredicateBox.Atom> {
             public const val DISCRIMINANT: Int = 0
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.CompoundPredicateOfTriggerIdPredicateBox.Atom = try {
-                Atom(
-                    TriggerIdPredicateBox.read(reader),
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.CompoundPredicateOfTriggerIdPredicateBox.Atom =
+                try {
+                    Atom(
+                        TriggerIdPredicateBox.read(reader),
+                    )
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             override fun write(
                 writer: ScaleCodecWriter,
@@ -59,9 +58,8 @@ public sealed class CompoundPredicateOfTriggerIdPredicateBox : ModelEnum {
     /**
      * 'Not' variant
      */
-    public data class Not(
-        public val compoundPredicateOfTriggerIdPredicateBox: CompoundPredicateOfTriggerIdPredicateBox,
-    ) : CompoundPredicateOfTriggerIdPredicateBox() {
+    public data class Not(public val compoundPredicateOfTriggerIdPredicateBox: CompoundPredicateOfTriggerIdPredicateBox) :
+        CompoundPredicateOfTriggerIdPredicateBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -69,13 +67,14 @@ public sealed class CompoundPredicateOfTriggerIdPredicateBox : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.CompoundPredicateOfTriggerIdPredicateBox.Not> {
             public const val DISCRIMINANT: Int = 1
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.CompoundPredicateOfTriggerIdPredicateBox.Not = try {
-                Not(
-                    CompoundPredicateOfTriggerIdPredicateBox.read(reader),
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.CompoundPredicateOfTriggerIdPredicateBox.Not =
+                try {
+                    Not(
+                        CompoundPredicateOfTriggerIdPredicateBox.read(reader),
+                    )
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             override fun write(
                 writer: ScaleCodecWriter,
@@ -94,9 +93,7 @@ public sealed class CompoundPredicateOfTriggerIdPredicateBox : ModelEnum {
     /**
      * 'And' variant
      */
-    public data class And(
-        public val vec: List<CompoundPredicateOfTriggerIdPredicateBox>,
-    ) : CompoundPredicateOfTriggerIdPredicateBox() {
+    public data class And(public val vec: List<CompoundPredicateOfTriggerIdPredicateBox>) : CompoundPredicateOfTriggerIdPredicateBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -104,13 +101,14 @@ public sealed class CompoundPredicateOfTriggerIdPredicateBox : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.CompoundPredicateOfTriggerIdPredicateBox.And> {
             public const val DISCRIMINANT: Int = 2
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.CompoundPredicateOfTriggerIdPredicateBox.And = try {
-                And(
-                    reader.readVec(reader.readCompactInt()) { CompoundPredicateOfTriggerIdPredicateBox.read(reader) },
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.CompoundPredicateOfTriggerIdPredicateBox.And =
+                try {
+                    And(
+                        reader.readVec(reader.readCompactInt()) { CompoundPredicateOfTriggerIdPredicateBox.read(reader) },
+                    )
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             override fun write(
                 writer: ScaleCodecWriter,
@@ -129,9 +127,7 @@ public sealed class CompoundPredicateOfTriggerIdPredicateBox : ModelEnum {
     /**
      * 'Or' variant
      */
-    public data class Or(
-        public val vec: List<CompoundPredicateOfTriggerIdPredicateBox>,
-    ) : CompoundPredicateOfTriggerIdPredicateBox() {
+    public data class Or(public val vec: List<CompoundPredicateOfTriggerIdPredicateBox>) : CompoundPredicateOfTriggerIdPredicateBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -139,13 +135,14 @@ public sealed class CompoundPredicateOfTriggerIdPredicateBox : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.CompoundPredicateOfTriggerIdPredicateBox.Or> {
             public const val DISCRIMINANT: Int = 3
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.CompoundPredicateOfTriggerIdPredicateBox.Or = try {
-                Or(
-                    reader.readVec(reader.readCompactInt()) { CompoundPredicateOfTriggerIdPredicateBox.read(reader) },
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.CompoundPredicateOfTriggerIdPredicateBox.Or =
+                try {
+                    Or(
+                        reader.readVec(reader.readCompactInt()) { CompoundPredicateOfTriggerIdPredicateBox.read(reader) },
+                    )
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             override fun write(
                 writer: ScaleCodecWriter,
@@ -172,19 +169,18 @@ public sealed class CompoundPredicateOfTriggerIdPredicateBox : ModelEnum {
             1 -> Not.read(reader)
             2 -> And.read(reader)
             3 -> Or.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+        }
 
-        override fun write(
-            writer: ScaleCodecWriter,
-            instance: CompoundPredicateOfTriggerIdPredicateBox,
-        ) {
+        override fun write(writer: ScaleCodecWriter, instance: CompoundPredicateOfTriggerIdPredicateBox) {
             writer.directWrite(instance.discriminant())
             when (val discriminant = instance.discriminant()) {
                 0 -> Atom.write(writer, instance as Atom)
                 1 -> Not.write(writer, instance as Not)
                 2 -> And.write(writer, instance as And)
                 3 -> Or.write(writer, instance as Or)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

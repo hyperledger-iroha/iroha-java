@@ -26,9 +26,7 @@ public sealed class PipelineEventBox : ModelEnum {
     /**
      * 'Transaction' variant
      */
-    public data class Transaction(
-        public val transactionEvent: TransactionEvent,
-    ) : PipelineEventBox() {
+    public data class Transaction(public val transactionEvent: TransactionEvent) : PipelineEventBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -44,23 +42,19 @@ public sealed class PipelineEventBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.PipelineEventBox.Transaction,
-            ): Unit = try {
-                TransactionEvent.write(writer, instance.transactionEvent)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.PipelineEventBox.Transaction): Unit =
+                try {
+                    TransactionEvent.write(writer, instance.transactionEvent)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
     /**
      * 'Block' variant
      */
-    public data class Block(
-        public val blockEvent: BlockEvent,
-    ) : PipelineEventBox() {
+    public data class Block(public val blockEvent: BlockEvent) : PipelineEventBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -76,10 +70,7 @@ public sealed class PipelineEventBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.PipelineEventBox.Block,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.PipelineEventBox.Block): Unit = try {
                 BlockEvent.write(writer, instance.blockEvent)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -94,14 +85,16 @@ public sealed class PipelineEventBox : ModelEnum {
         ) {
             0 -> Transaction.read(reader)
             1 -> Block.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+        }
 
         override fun write(writer: ScaleCodecWriter, instance: PipelineEventBox) {
             writer.directWrite(instance.discriminant())
             when (val discriminant = instance.discriminant()) {
                 0 -> Transaction.write(writer, instance as Transaction)
                 1 -> Block.write(writer, instance as Block)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

@@ -26,9 +26,7 @@ public sealed class SocketAddr : ModelEnum {
     /**
      * 'Ipv4' variant
      */
-    public data class Ipv4(
-        public val socketAddrV4: SocketAddrV4,
-    ) : SocketAddr() {
+    public data class Ipv4(public val socketAddrV4: SocketAddrV4) : SocketAddr() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -44,10 +42,7 @@ public sealed class SocketAddr : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.SocketAddr.Ipv4,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.SocketAddr.Ipv4): Unit = try {
                 SocketAddrV4.write(writer, instance.socketAddrV4)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -58,9 +53,7 @@ public sealed class SocketAddr : ModelEnum {
     /**
      * 'Ipv6' variant
      */
-    public data class Ipv6(
-        public val socketAddrV6: SocketAddrV6,
-    ) : SocketAddr() {
+    public data class Ipv6(public val socketAddrV6: SocketAddrV6) : SocketAddr() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -76,10 +69,7 @@ public sealed class SocketAddr : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.SocketAddr.Ipv6,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.SocketAddr.Ipv6): Unit = try {
                 SocketAddrV6.write(writer, instance.socketAddrV6)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -90,9 +80,7 @@ public sealed class SocketAddr : ModelEnum {
     /**
      * 'Host' variant
      */
-    public data class Host(
-        public val socketAddrHost: SocketAddrHost,
-    ) : SocketAddr() {
+    public data class Host(public val socketAddrHost: SocketAddrHost) : SocketAddr() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -108,10 +96,7 @@ public sealed class SocketAddr : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.SocketAddr.Host,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.SocketAddr.Host): Unit = try {
                 SocketAddrHost.write(writer, instance.socketAddrHost)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -127,7 +112,8 @@ public sealed class SocketAddr : ModelEnum {
             0 -> Ipv4.read(reader)
             1 -> Ipv6.read(reader)
             2 -> Host.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+        }
 
         override fun write(writer: ScaleCodecWriter, instance: SocketAddr) {
             writer.directWrite(instance.discriminant())
@@ -135,7 +121,8 @@ public sealed class SocketAddr : ModelEnum {
                 0 -> Ipv4.write(writer, instance as Ipv4)
                 1 -> Ipv6.write(writer, instance as Ipv6)
                 2 -> Host.write(writer, instance as Host)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

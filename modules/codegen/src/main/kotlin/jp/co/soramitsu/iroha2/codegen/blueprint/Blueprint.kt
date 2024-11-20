@@ -17,4 +17,8 @@ abstract class Blueprint<T>(val source: T) {
 /**
  * Type properties
  */
-data class Property(val name: String, val typeName: TypeName, val original: Type)
+data class Property(
+    val name: String,
+    val typeName: TypeName,
+    val original: Type,
+)

@@ -16,10 +16,7 @@ import kotlin.Unit
  *
  * Generated from 'RoleEventFilter' regular structure
  */
-public data class RoleEventFilter(
-    public val idMatcher: RoleId? = null,
-    public val eventSet: Long,
-) {
+public data class RoleEventFilter(public val idMatcher: RoleId? = null, public val eventSet: Long) {
     public companion object : ScaleReader<RoleEventFilter>, ScaleWriter<RoleEventFilter> {
         override fun read(reader: ScaleCodecReader): RoleEventFilter = try {
             RoleEventFilter(

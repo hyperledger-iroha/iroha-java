@@ -41,7 +41,9 @@ import kotlin.reflect.full.memberProperties
 /**
  * Runner for Iroha2 Docker containers
  */
-class IrohaRunnerExtension : InvocationInterceptor, BeforeEachCallback {
+class IrohaRunnerExtension :
+    InvocationInterceptor,
+    BeforeEachCallback {
 
     private val resources: MutableMap<String, List<AutoCloseable>> = Collections.synchronizedMap(mutableMapOf())
 
@@ -68,9 +70,7 @@ class IrohaRunnerExtension : InvocationInterceptor, BeforeEachCallback {
         }
     }
 
-    private suspend fun initIfRequested(
-        extensionContext: ExtensionContext,
-    ): List<AutoCloseable> = coroutineScope {
+    private suspend fun initIfRequested(extensionContext: ExtensionContext): List<AutoCloseable> = coroutineScope {
         val withIroha = extensionContext.element.get()
             .annotations.filterIsInstance<WithIroha>()
             .firstOrNull()
@@ -208,10 +208,7 @@ class IrohaRunnerExtension : InvocationInterceptor, BeforeEachCallback {
             ?.call(testClassInstance, valueToSet())
     }
 
-    private suspend fun createContainers(
-        withIroha: WithIroha,
-        testInstance: IrohaTest<*>,
-    ): List<IrohaContainer> = coroutineScope {
+    private suspend fun createContainers(withIroha: WithIroha, testInstance: IrohaTest<*>): List<IrohaContainer> = coroutineScope {
         val keyPairs = mutableListOf<KeyPair>()
         val portsList = mutableListOf<List<Int>>()
 
@@ -285,14 +282,12 @@ class IrohaRunnerExtension : InvocationInterceptor, BeforeEachCallback {
         return genesis
     }
 
-    private fun findField(clazz: Class<*>, fieldName: String): Field {
-        return try {
-            clazz.getDeclaredField(fieldName)
-        } catch (e: NoSuchFieldException) {
-            when (clazz.superclass == null) {
-                true -> throw e
-                false -> findField(clazz.superclass, fieldName)
-            }
+    private fun findField(clazz: Class<*>, fieldName: String): Field = try {
+        clazz.getDeclaredField(fieldName)
+    } catch (e: NoSuchFieldException) {
+        when (clazz.superclass == null) {
+            true -> throw e
+            false -> findField(clazz.superclass, fieldName)
         }
     }
 }

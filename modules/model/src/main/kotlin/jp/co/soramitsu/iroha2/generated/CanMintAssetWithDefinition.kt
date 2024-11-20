@@ -12,23 +12,23 @@ import jp.co.soramitsu.iroha2.wrapException
 import kotlin.Unit
 
 /**
- * CanRegisterAssetWithDefinition
+ * CanMintAssetWithDefinition
  *
- * Generated from 'CanRegisterAssetWithDefinition' regular structure
+ * Generated from 'CanMintAssetWithDefinition' regular structure
  */
-public data class CanRegisterAssetWithDefinition(public val assetDefinition: AssetDefinitionId) : ModelPermission {
+public data class CanMintAssetWithDefinition(public val assetDefinition: AssetDefinitionId) : ModelPermission {
     public companion object :
-        ScaleReader<CanRegisterAssetWithDefinition>,
-        ScaleWriter<CanRegisterAssetWithDefinition> {
-        override fun read(reader: ScaleCodecReader): CanRegisterAssetWithDefinition = try {
-            CanRegisterAssetWithDefinition(
+        ScaleReader<CanMintAssetWithDefinition>,
+        ScaleWriter<CanMintAssetWithDefinition> {
+        override fun read(reader: ScaleCodecReader): CanMintAssetWithDefinition = try {
+            CanMintAssetWithDefinition(
                 AssetDefinitionId.read(reader),
             )
         } catch (ex: Exception) {
             throw wrapException(ex)
         }
 
-        override fun write(writer: ScaleCodecWriter, instance: CanRegisterAssetWithDefinition): Unit = try {
+        override fun write(writer: ScaleCodecWriter, instance: CanMintAssetWithDefinition): Unit = try {
             AssetDefinitionId.write(writer, instance.assetDefinition)
         } catch (ex: Exception) {
             throw wrapException(ex)

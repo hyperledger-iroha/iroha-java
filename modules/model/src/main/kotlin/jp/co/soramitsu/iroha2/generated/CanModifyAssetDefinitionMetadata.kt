@@ -16,9 +16,7 @@ import kotlin.Unit
  *
  * Generated from 'CanModifyAssetDefinitionMetadata' regular structure
  */
-public data class CanModifyAssetDefinitionMetadata(
-    public val assetDefinition: AssetDefinitionId,
-) : ModelPermission {
+public data class CanModifyAssetDefinitionMetadata(public val assetDefinition: AssetDefinitionId) : ModelPermission {
     public companion object :
         ScaleReader<CanModifyAssetDefinitionMetadata>,
         ScaleWriter<CanModifyAssetDefinitionMetadata> {
@@ -30,11 +28,10 @@ public data class CanModifyAssetDefinitionMetadata(
             throw wrapException(ex)
         }
 
-        override fun write(writer: ScaleCodecWriter, instance: CanModifyAssetDefinitionMetadata): Unit =
-            try {
-                AssetDefinitionId.write(writer, instance.assetDefinition)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+        override fun write(writer: ScaleCodecWriter, instance: CanModifyAssetDefinitionMetadata): Unit = try {
+            AssetDefinitionId.write(writer, instance.assetDefinition)
+        } catch (ex: Exception) {
+            throw wrapException(ex)
+        }
     }
 }

@@ -19,10 +19,7 @@ import kotlin.Unit
  *
  * Generated from 'Numeric' regular structure
  */
-public data class Numeric(
-    public val mantissa: BigInteger,
-    public val scale: Long,
-) {
+public data class Numeric(public val mantissa: BigInteger, public val scale: Long) {
     public companion object : ScaleReader<Numeric>, ScaleWriter<Numeric> {
         override fun read(reader: ScaleCodecReader): Numeric = try {
             Numeric(

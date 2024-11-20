@@ -26,9 +26,7 @@ public sealed class RemoveKeyValueBox : ModelEnum {
     /**
      * 'Domain' variant
      */
-    public data class Domain(
-        public val removeKeyValueOfDomain: RemoveKeyValueOfDomain,
-    ) : RemoveKeyValueBox() {
+    public data class Domain(public val removeKeyValueOfDomain: RemoveKeyValueOfDomain) : RemoveKeyValueBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -44,10 +42,7 @@ public sealed class RemoveKeyValueBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.RemoveKeyValueBox.Domain,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.RemoveKeyValueBox.Domain): Unit = try {
                 RemoveKeyValueOfDomain.write(writer, instance.removeKeyValueOfDomain)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -58,9 +53,7 @@ public sealed class RemoveKeyValueBox : ModelEnum {
     /**
      * 'Account' variant
      */
-    public data class Account(
-        public val removeKeyValueOfAccount: RemoveKeyValueOfAccount,
-    ) : RemoveKeyValueBox() {
+    public data class Account(public val removeKeyValueOfAccount: RemoveKeyValueOfAccount) : RemoveKeyValueBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -76,10 +69,7 @@ public sealed class RemoveKeyValueBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.RemoveKeyValueBox.Account,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.RemoveKeyValueBox.Account): Unit = try {
                 RemoveKeyValueOfAccount.write(writer, instance.removeKeyValueOfAccount)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -90,9 +80,7 @@ public sealed class RemoveKeyValueBox : ModelEnum {
     /**
      * 'AssetDefinition' variant
      */
-    public data class AssetDefinition(
-        public val removeKeyValueOfAssetDefinition: RemoveKeyValueOfAssetDefinition,
-    ) : RemoveKeyValueBox() {
+    public data class AssetDefinition(public val removeKeyValueOfAssetDefinition: RemoveKeyValueOfAssetDefinition) : RemoveKeyValueBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -122,9 +110,7 @@ public sealed class RemoveKeyValueBox : ModelEnum {
     /**
      * 'Asset' variant
      */
-    public data class Asset(
-        public val removeKeyValueOfAsset: RemoveKeyValueOfAsset,
-    ) : RemoveKeyValueBox() {
+    public data class Asset(public val removeKeyValueOfAsset: RemoveKeyValueOfAsset) : RemoveKeyValueBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -140,10 +126,7 @@ public sealed class RemoveKeyValueBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.RemoveKeyValueBox.Asset,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.RemoveKeyValueBox.Asset): Unit = try {
                 RemoveKeyValueOfAsset.write(writer, instance.removeKeyValueOfAsset)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -154,9 +137,7 @@ public sealed class RemoveKeyValueBox : ModelEnum {
     /**
      * 'Trigger' variant
      */
-    public data class Trigger(
-        public val removeKeyValueOfTrigger: RemoveKeyValueOfTrigger,
-    ) : RemoveKeyValueBox() {
+    public data class Trigger(public val removeKeyValueOfTrigger: RemoveKeyValueOfTrigger) : RemoveKeyValueBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -172,10 +153,7 @@ public sealed class RemoveKeyValueBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.RemoveKeyValueBox.Trigger,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.RemoveKeyValueBox.Trigger): Unit = try {
                 RemoveKeyValueOfTrigger.write(writer, instance.removeKeyValueOfTrigger)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -193,7 +171,8 @@ public sealed class RemoveKeyValueBox : ModelEnum {
             2 -> AssetDefinition.read(reader)
             3 -> Asset.read(reader)
             4 -> Trigger.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+        }
 
         override fun write(writer: ScaleCodecWriter, instance: RemoveKeyValueBox) {
             writer.directWrite(instance.discriminant())
@@ -203,7 +182,8 @@ public sealed class RemoveKeyValueBox : ModelEnum {
                 2 -> AssetDefinition.write(writer, instance as AssetDefinition)
                 3 -> Asset.write(writer, instance as Asset)
                 4 -> Trigger.write(writer, instance as Trigger)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

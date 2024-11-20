@@ -15,9 +15,7 @@ import kotlin.Unit
  *
  * Generated from 'DomainId' regular structure
  */
-public data class DomainId(
-    public val name: Name,
-) {
+public data class DomainId(public val name: Name) {
     public companion object : ScaleReader<DomainId>, ScaleWriter<DomainId> {
         override fun read(reader: ScaleCodecReader): DomainId = try {
             DomainId(

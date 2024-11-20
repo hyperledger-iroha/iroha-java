@@ -27,9 +27,7 @@ public sealed class StringPredicateBox : ModelEnum {
     /**
      * 'Equals' variant
      */
-    public data class Equals(
-        public val string: String,
-    ) : StringPredicateBox() {
+    public data class Equals(public val string: String) : StringPredicateBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -45,10 +43,7 @@ public sealed class StringPredicateBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.StringPredicateBox.Equals,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.StringPredicateBox.Equals): Unit = try {
                 writer.writeAsList(instance.string.toByteArray(Charsets.UTF_8))
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -59,9 +54,7 @@ public sealed class StringPredicateBox : ModelEnum {
     /**
      * 'Contains' variant
      */
-    public data class Contains(
-        public val string: String,
-    ) : StringPredicateBox() {
+    public data class Contains(public val string: String) : StringPredicateBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -77,23 +70,19 @@ public sealed class StringPredicateBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.StringPredicateBox.Contains,
-            ): Unit = try {
-                writer.writeAsList(instance.string.toByteArray(Charsets.UTF_8))
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.StringPredicateBox.Contains): Unit =
+                try {
+                    writer.writeAsList(instance.string.toByteArray(Charsets.UTF_8))
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
     /**
      * 'StartsWith' variant
      */
-    public data class StartsWith(
-        public val string: String,
-    ) : StringPredicateBox() {
+    public data class StartsWith(public val string: String) : StringPredicateBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -109,23 +98,19 @@ public sealed class StringPredicateBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.StringPredicateBox.StartsWith,
-            ): Unit = try {
-                writer.writeAsList(instance.string.toByteArray(Charsets.UTF_8))
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.StringPredicateBox.StartsWith): Unit =
+                try {
+                    writer.writeAsList(instance.string.toByteArray(Charsets.UTF_8))
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
     /**
      * 'EndsWith' variant
      */
-    public data class EndsWith(
-        public val string: String,
-    ) : StringPredicateBox() {
+    public data class EndsWith(public val string: String) : StringPredicateBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -141,14 +126,12 @@ public sealed class StringPredicateBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.StringPredicateBox.EndsWith,
-            ): Unit = try {
-                writer.writeAsList(instance.string.toByteArray(Charsets.UTF_8))
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.StringPredicateBox.EndsWith): Unit =
+                try {
+                    writer.writeAsList(instance.string.toByteArray(Charsets.UTF_8))
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
@@ -161,7 +144,8 @@ public sealed class StringPredicateBox : ModelEnum {
             1 -> Contains.read(reader)
             2 -> StartsWith.read(reader)
             3 -> EndsWith.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+        }
 
         override fun write(writer: ScaleCodecWriter, instance: StringPredicateBox) {
             writer.directWrite(instance.discriminant())
@@ -170,7 +154,8 @@ public sealed class StringPredicateBox : ModelEnum {
                 1 -> Contains.write(writer, instance as Contains)
                 2 -> StartsWith.write(writer, instance as StartsWith)
                 3 -> EndsWith.write(writer, instance as EndsWith)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

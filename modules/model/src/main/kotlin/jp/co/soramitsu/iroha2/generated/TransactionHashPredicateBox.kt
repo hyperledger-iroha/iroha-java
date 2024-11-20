@@ -26,9 +26,7 @@ public sealed class TransactionHashPredicateBox : ModelEnum {
     /**
      * 'Equals' variant
      */
-    public data class Equals(
-        public val hashOf: HashOf<SignedTransaction>,
-    ) : TransactionHashPredicateBox() {
+    public data class Equals(public val hashOf: HashOf<SignedTransaction>) : TransactionHashPredicateBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -63,13 +61,15 @@ public sealed class TransactionHashPredicateBox : ModelEnum {
                 reader.readUByte()
         ) {
             0 -> Equals.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+        }
 
         override fun write(writer: ScaleCodecWriter, instance: TransactionHashPredicateBox) {
             writer.directWrite(instance.discriminant())
             when (val discriminant = instance.discriminant()) {
                 0 -> Equals.write(writer, instance as Equals)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

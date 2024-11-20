@@ -26,9 +26,7 @@ public sealed class RolePredicateBox : ModelEnum {
     /**
      * 'Id' variant
      */
-    public data class Id(
-        public val roleIdPredicateBox: RoleIdPredicateBox,
-    ) : RolePredicateBox() {
+    public data class Id(public val roleIdPredicateBox: RoleIdPredicateBox) : RolePredicateBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -44,10 +42,7 @@ public sealed class RolePredicateBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.RolePredicateBox.Id,
-            ): Unit = try {
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.RolePredicateBox.Id): Unit = try {
                 RoleIdPredicateBox.write(writer, instance.roleIdPredicateBox)
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -61,13 +56,15 @@ public sealed class RolePredicateBox : ModelEnum {
                 reader.readUByte()
         ) {
             0 -> Id.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+        }
 
         override fun write(writer: ScaleCodecWriter, instance: RolePredicateBox) {
             writer.directWrite(instance.discriminant())
             when (val discriminant = instance.discriminant()) {
                 0 -> Id.write(writer, instance as Id)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

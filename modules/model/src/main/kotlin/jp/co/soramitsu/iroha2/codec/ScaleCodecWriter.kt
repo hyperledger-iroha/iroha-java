@@ -58,7 +58,11 @@ class ScaleCodecWriter(private val out: OutputStream) : Closeable {
      * Write the bytes into output stream as-is directly with the given [offset].
      * The input is supposed to be already encoded.
      */
-    fun directWrite(bytes: ByteArray, offset: Int, length: Int) {
+    fun directWrite(
+        bytes: ByteArray,
+        offset: Int,
+        length: Int,
+    ) {
         out.write(bytes, offset, length)
     }
 

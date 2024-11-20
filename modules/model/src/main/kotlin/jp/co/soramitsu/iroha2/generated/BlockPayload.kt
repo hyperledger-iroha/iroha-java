@@ -16,10 +16,7 @@ import kotlin.collections.List
  *
  * Generated from 'BlockPayload' regular structure
  */
-public data class BlockPayload(
-    public val `header`: BlockHeader,
-    public val transactions: List<SignedTransaction>,
-) {
+public data class BlockPayload(public val `header`: BlockHeader, public val transactions: List<SignedTransaction>) {
     public companion object : ScaleReader<BlockPayload>, ScaleWriter<BlockPayload> {
         override fun read(reader: ScaleCodecReader): BlockPayload = try {
             BlockPayload(

@@ -31,10 +31,7 @@ public data class QueryWithFilterOfFindPeersAndPeerPredicateBox(
             throw wrapException(ex)
         }
 
-        override fun write(
-            writer: ScaleCodecWriter,
-            instance: QueryWithFilterOfFindPeersAndPeerPredicateBox,
-        ): Unit = try {
+        override fun write(writer: ScaleCodecWriter, instance: QueryWithFilterOfFindPeersAndPeerPredicateBox): Unit = try {
             FindPeers.write(writer, instance.query)
             CompoundPredicateOfPeerPredicateBox.write(writer, instance.predicate)
         } catch (ex: Exception) {

@@ -16,10 +16,7 @@ import kotlin.Unit
  *
  * Generated from 'Pagination' regular structure
  */
-public data class Pagination(
-    public val limit: NonZeroOfu64? = null,
-    public val offset: BigInteger,
-) {
+public data class Pagination(public val limit: NonZeroOfu64? = null, public val offset: BigInteger) {
     public companion object : ScaleReader<Pagination>, ScaleWriter<Pagination> {
         override fun read(reader: ScaleCodecReader): Pagination = try {
             Pagination(
