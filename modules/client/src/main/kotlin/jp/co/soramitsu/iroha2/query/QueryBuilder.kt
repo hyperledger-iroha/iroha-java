@@ -1,26 +1,6 @@
 package jp.co.soramitsu.iroha2.query
 
-import jp.co.soramitsu.iroha2.AccountExtractor
-import jp.co.soramitsu.iroha2.AccountsExtractor
-import jp.co.soramitsu.iroha2.AssetDefinitionExtractor
-import jp.co.soramitsu.iroha2.AssetDefinitionsExtractor
-import jp.co.soramitsu.iroha2.AssetExtractor
-import jp.co.soramitsu.iroha2.AssetsExtractor
-import jp.co.soramitsu.iroha2.BlockHeadersExtractor
-import jp.co.soramitsu.iroha2.BlocksValueExtractor
-import jp.co.soramitsu.iroha2.DomainExtractor
-import jp.co.soramitsu.iroha2.DomainsExtractor
-import jp.co.soramitsu.iroha2.PeersExtractor
-import jp.co.soramitsu.iroha2.PermissionTokensExtractor
-import jp.co.soramitsu.iroha2.ResultExtractor
-import jp.co.soramitsu.iroha2.RoleIdsExtractor
-import jp.co.soramitsu.iroha2.RolesExtractor
-import jp.co.soramitsu.iroha2.TransactionsExtractor
-import jp.co.soramitsu.iroha2.TriggerBoxesExtractor
-import jp.co.soramitsu.iroha2.TriggerIdsExtractor
-import jp.co.soramitsu.iroha2.asName
-import jp.co.soramitsu.iroha2.asSignatureOf
-import jp.co.soramitsu.iroha2.asString
+import jp.co.soramitsu.iroha2.*
 import jp.co.soramitsu.iroha2.generated.Account
 import jp.co.soramitsu.iroha2.generated.AccountId
 import jp.co.soramitsu.iroha2.generated.AccountIdPredicateBox
@@ -66,7 +46,10 @@ import jp.co.soramitsu.iroha2.generated.SignedQuery
 import jp.co.soramitsu.iroha2.generated.SignedQueryV1
 import jp.co.soramitsu.iroha2.generated.Sorting
 import jp.co.soramitsu.iroha2.generated.StringPredicateBox
-import jp.co.soramitsu.iroha2.sign
+import jp.co.soramitsu.iroha2.generated.Trigger
+import jp.co.soramitsu.iroha2.generated.TriggerId
+import jp.co.soramitsu.iroha2.generated.TriggerIdPredicateBox
+import jp.co.soramitsu.iroha2.generated.TriggerPredicateBox
 import java.math.BigInteger
 import java.security.KeyPair
 
@@ -206,6 +189,14 @@ class QueryBuilder<R>(private val query: QueryBox, private val extractor: Result
         }
 
         @JvmStatic
+        fun findTriggerById(triggerId: TriggerId): QueryBuilder<Trigger?> {
+            val predicate = CompoundPredicateOfTriggerPredicateBox.Atom(
+                TriggerPredicateBox.Id(TriggerIdPredicateBox.Name(StringPredicateBox.Equals(triggerId.asString()))),
+            )
+            return QueryBuilder(Queries.findTriggers(predicate), TriggerExtractor)
+        }
+
+        @JvmStatic
         @JvmOverloads
         fun findPeers(predicate: CompoundPredicateOfPeerPredicateBox? = null) = QueryBuilder(
             Queries.findPeers(predicate ?: CompoundPredicateOfPeerPredicateBox.And(emptyList())),
@@ -251,7 +242,7 @@ class QueryBuilder<R>(private val query: QueryBox, private val extractor: Result
         @JvmOverloads
         fun findTriggers(predicate: CompoundPredicateOfTriggerPredicateBox? = null) = QueryBuilder(
             Queries.findTriggers(predicate ?: CompoundPredicateOfTriggerPredicateBox.And(emptyList())),
-            TriggerBoxesExtractor,
+            TriggersExtractor,
         )
 
         @JvmStatic

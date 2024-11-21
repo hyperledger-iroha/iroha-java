@@ -1,20 +1,6 @@
 package jp.co.soramitsu.iroha2
 
-import jp.co.soramitsu.iroha2.generated.AssetDefinitionId
-import jp.co.soramitsu.iroha2.generated.AssetId
-import jp.co.soramitsu.iroha2.generated.BlockParameters
-import jp.co.soramitsu.iroha2.generated.CanUnregisterAccount
-import jp.co.soramitsu.iroha2.generated.ChainId
-import jp.co.soramitsu.iroha2.generated.Metadata
-import jp.co.soramitsu.iroha2.generated.Name
-import jp.co.soramitsu.iroha2.generated.NonZeroOfu64
-import jp.co.soramitsu.iroha2.generated.Parameters
-import jp.co.soramitsu.iroha2.generated.RawGenesisTransaction
-import jp.co.soramitsu.iroha2.generated.Repeats
-import jp.co.soramitsu.iroha2.generated.SmartContractParameters
-import jp.co.soramitsu.iroha2.generated.SumeragiParameters
-import jp.co.soramitsu.iroha2.generated.TransactionParameters
-import jp.co.soramitsu.iroha2.generated.TriggerId
+import jp.co.soramitsu.iroha2.generated.*
 import jp.co.soramitsu.iroha2.transaction.EventFilters
 import jp.co.soramitsu.iroha2.transaction.Instructions
 import org.junit.jupiter.api.Test
@@ -131,7 +117,7 @@ class SerializerTest {
                         listOf(Instructions.mint(assetId, 1)),
                         Repeats.Indefinitely(),
                         aliceAccountId,
-                        Metadata(mapOf()),
+                        Metadata(mapOf(Pair("key".asName(), Json.writeValue("value")))),
                         EventFilters.timeEventFilter(
                             BigInteger.valueOf(1715676978L),
                             BigInteger.valueOf(1L),
@@ -175,18 +161,16 @@ class SerializerTest {
                   "Mint": {
                     "Asset": {
                       "object": "100",
-                      "destination": "xor#wonderland#ed0120ce7fa46c9dce7ea4b125e2e36bdb63ea33073e7590ac92816ae1e861b7048b03@wonderland"
+                      "destination": "xor#wonderland#ed0120CE7FA46C9DCE7EA4B125E2E36BDB63EA33073E7590AC92816AE1E861B7048B03@wonderland"
                     }
                   }
                 },
                 {
                   "SetKeyValue": {
                     "Asset": {
-                      "object": "xor#wonderland#ed0120ce7fa46c9dce7ea4b125e2e36bdb63ea33073e7590ac92816ae1e861b7048b03@wonderland",
+                      "object": "xor#wonderland#ed0120CE7FA46C9DCE7EA4B125E2E36BDB63EA33073E7590AC92816AE1E861B7048B03@wonderland",
                       "key": "key",
-                      "value": {
-                        "string": "value"
-                      }
+                      "value": "value"
                     }
                   }
                 },
@@ -196,14 +180,16 @@ class SerializerTest {
                       "id": "time_trigger",
                       "action": {
                         "executable": {
-                          "Instructions": [{
-                            "Mint": {
-                              "Asset": {
-                                "object": "1",
-                                "destination": "xor#wonderland#ed0120ce7fa46c9dce7ea4b125e2e36bdb63ea33073e7590ac92816ae1e861b7048b03@wonderland"
+                          "Instructions": [
+                            {
+                              "Mint": {
+                                "Asset": {
+                                  "object": "1",
+                                  "destination": "xor#wonderland#ed0120CE7FA46C9DCE7EA4B125E2E36BDB63EA33073E7590AC92816AE1E861B7048B03@wonderland"
+                                }
                               }
                             }
-                          }]
+                          ]
                         },
                         "repeats": "Indefinitely",
                         "authority": "ed0120CE7FA46C9DCE7EA4B125E2E36BDB63EA33073E7590AC92816AE1E861B7048B03@wonderland",
@@ -215,7 +201,9 @@ class SerializerTest {
                             }
                           }
                         },
-                        "metadata": {}
+                        "metadata": {
+                          "key": "value"
+                        }
                       }
                     }
                   }
@@ -226,7 +214,7 @@ class SerializerTest {
               "topology": []
             }
         """.trimIndent()
-        val json = JSON_SERDE.writeValueAsString(genesis.transaction).trimIndent()
-        assertEquals(expectedJson.asPrettyJson().lowercase(), json.asPrettyJson().lowercase())
+        val json = JSON_SERDE.writeValueAsString(genesis.transaction)
+        assertEquals(expectedJson, json.asPrettyJson())
     }
 }

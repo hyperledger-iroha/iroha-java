@@ -1,51 +1,6 @@
 package jp.co.soramitsu.iroha2.query
 
-import jp.co.soramitsu.iroha2.generated.AccountId
-import jp.co.soramitsu.iroha2.generated.AssetDefinitionId
-import jp.co.soramitsu.iroha2.generated.CompoundPredicateOfAccountPredicateBox
-import jp.co.soramitsu.iroha2.generated.CompoundPredicateOfAssetDefinitionPredicateBox
-import jp.co.soramitsu.iroha2.generated.CompoundPredicateOfAssetPredicateBox
-import jp.co.soramitsu.iroha2.generated.CompoundPredicateOfBlockHeaderPredicateBox
-import jp.co.soramitsu.iroha2.generated.CompoundPredicateOfCommittedTransactionPredicateBox
-import jp.co.soramitsu.iroha2.generated.CompoundPredicateOfDomainPredicateBox
-import jp.co.soramitsu.iroha2.generated.CompoundPredicateOfPeerPredicateBox
-import jp.co.soramitsu.iroha2.generated.CompoundPredicateOfPermissionPredicateBox
-import jp.co.soramitsu.iroha2.generated.CompoundPredicateOfRoleIdPredicateBox
-import jp.co.soramitsu.iroha2.generated.CompoundPredicateOfRolePredicateBox
-import jp.co.soramitsu.iroha2.generated.CompoundPredicateOfSignedBlockPredicateBox
-import jp.co.soramitsu.iroha2.generated.CompoundPredicateOfTriggerIdPredicateBox
-import jp.co.soramitsu.iroha2.generated.CompoundPredicateOfTriggerPredicateBox
-import jp.co.soramitsu.iroha2.generated.FindAccounts
-import jp.co.soramitsu.iroha2.generated.FindAccountsWithAsset
-import jp.co.soramitsu.iroha2.generated.FindActiveTriggerIds
-import jp.co.soramitsu.iroha2.generated.FindAssets
-import jp.co.soramitsu.iroha2.generated.FindAssetsDefinitions
-import jp.co.soramitsu.iroha2.generated.FindBlockHeaders
-import jp.co.soramitsu.iroha2.generated.FindBlocks
-import jp.co.soramitsu.iroha2.generated.FindDomains
-import jp.co.soramitsu.iroha2.generated.FindPeers
-import jp.co.soramitsu.iroha2.generated.FindPermissionsByAccountId
-import jp.co.soramitsu.iroha2.generated.FindRoleIds
-import jp.co.soramitsu.iroha2.generated.FindRoles
-import jp.co.soramitsu.iroha2.generated.FindRolesByAccountId
-import jp.co.soramitsu.iroha2.generated.FindTransactions
-import jp.co.soramitsu.iroha2.generated.FindTriggers
-import jp.co.soramitsu.iroha2.generated.QueryBox
-import jp.co.soramitsu.iroha2.generated.QueryWithFilterOfFindAccountsAndAccountPredicateBox
-import jp.co.soramitsu.iroha2.generated.QueryWithFilterOfFindAccountsWithAssetAndAccountPredicateBox
-import jp.co.soramitsu.iroha2.generated.QueryWithFilterOfFindActiveTriggerIdsAndTriggerIdPredicateBox
-import jp.co.soramitsu.iroha2.generated.QueryWithFilterOfFindAssetsAndAssetPredicateBox
-import jp.co.soramitsu.iroha2.generated.QueryWithFilterOfFindAssetsDefinitionsAndAssetDefinitionPredicateBox
-import jp.co.soramitsu.iroha2.generated.QueryWithFilterOfFindBlockHeadersAndBlockHeaderPredicateBox
-import jp.co.soramitsu.iroha2.generated.QueryWithFilterOfFindBlocksAndSignedBlockPredicateBox
-import jp.co.soramitsu.iroha2.generated.QueryWithFilterOfFindDomainsAndDomainPredicateBox
-import jp.co.soramitsu.iroha2.generated.QueryWithFilterOfFindPeersAndPeerPredicateBox
-import jp.co.soramitsu.iroha2.generated.QueryWithFilterOfFindPermissionsByAccountIdAndPermissionPredicateBox
-import jp.co.soramitsu.iroha2.generated.QueryWithFilterOfFindRoleIdsAndRoleIdPredicateBox
-import jp.co.soramitsu.iroha2.generated.QueryWithFilterOfFindRolesAndRolePredicateBox
-import jp.co.soramitsu.iroha2.generated.QueryWithFilterOfFindRolesByAccountIdAndRoleIdPredicateBox
-import jp.co.soramitsu.iroha2.generated.QueryWithFilterOfFindTransactionsAndCommittedTransactionPredicateBox
-import jp.co.soramitsu.iroha2.generated.QueryWithFilterOfFindTriggersAndTriggerPredicateBox
+import jp.co.soramitsu.iroha2.generated.*
 
 /**
  * Queries are sent to an Iroha peer and prompt a response with details from the current world state view.
@@ -186,5 +141,33 @@ object Queries {
             FindBlockHeaders(),
             predicate,
         ),
+    )
+
+    fun findExecutorDataModel() = SingularQueryBox.FindExecutorDataModel(
+        FindExecutorDataModel(),
+    )
+
+    fun findParameters() = SingularQueryBox.FindParameters(
+        FindParameters(),
+    )
+
+    fun findDomainMetadata(id: DomainId, key: Name) = SingularQueryBox.FindDomainMetadata(
+        FindDomainMetadata(id, key),
+    )
+
+    fun findAccountMetadata(id: AccountId, key: Name) = SingularQueryBox.FindAccountMetadata(
+        FindAccountMetadata(id, key),
+    )
+
+    fun findAssetMetadata(id: AssetId, key: Name) = SingularQueryBox.FindAssetMetadata(
+        FindAssetMetadata(id, key),
+    )
+
+    fun findAssetDefinitionMetadata(id: AssetDefinitionId, key: Name) = SingularQueryBox.FindAssetDefinitionMetadata(
+        FindAssetDefinitionMetadata(id, key),
+    )
+
+    fun findTriggerMetadata(id: TriggerId, key: Name) = SingularQueryBox.FindTriggerMetadata(
+        FindTriggerMetadata(id, key),
     )
 }

@@ -15,6 +15,8 @@ import jp.co.soramitsu.iroha2.testengine.AliceAndBobEachHave100Xor
 import jp.co.soramitsu.iroha2.testengine.AliceHas100XorAndPermissionToMintAndBurn
 import jp.co.soramitsu.iroha2.testengine.AliceHasPermissionToRegisterDomain
 import jp.co.soramitsu.iroha2.testengine.AliceHasPermissionToUnregisterDomain
+import jp.co.soramitsu.iroha2.testengine.AliceHasRoleWithAccessToBobsMetadata
+import jp.co.soramitsu.iroha2.testengine.AliceWithTestAssets
 import jp.co.soramitsu.iroha2.testengine.BOB_ACCOUNT_ID
 import jp.co.soramitsu.iroha2.testengine.BOB_KEYPAIR
 import jp.co.soramitsu.iroha2.testengine.BobCanManageRoles
@@ -23,12 +25,17 @@ import jp.co.soramitsu.iroha2.testengine.DEFAULT_ASSET_DEFINITION_ID
 import jp.co.soramitsu.iroha2.testengine.DEFAULT_ASSET_ID
 import jp.co.soramitsu.iroha2.testengine.DEFAULT_DOMAIN_ID
 import jp.co.soramitsu.iroha2.testengine.DefaultGenesis
+import jp.co.soramitsu.iroha2.testengine.FatGenesis
 import jp.co.soramitsu.iroha2.testengine.IROHA_CONFIG_DELIMITER
 import jp.co.soramitsu.iroha2.testengine.IrohaTest
+import jp.co.soramitsu.iroha2.testengine.NewAccountWithMetadata
+import jp.co.soramitsu.iroha2.testengine.NewDomainWithMetadata
+import jp.co.soramitsu.iroha2.testengine.RubbishToTestMultipleGenesis
 import jp.co.soramitsu.iroha2.testengine.StoreAssetWithMetadata
 import jp.co.soramitsu.iroha2.testengine.WithDomainTransferredToBob
 import jp.co.soramitsu.iroha2.testengine.WithIroha
 import jp.co.soramitsu.iroha2.testengine.WithIrohaManual
+import jp.co.soramitsu.iroha2.testengine.XorAndValAssets
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.time.withTimeout
 import org.apache.commons.lang3.RandomStringUtils.randomAlphabetic
@@ -275,10 +282,10 @@ class InstructionsTest : IrohaTest<Iroha2Client>() {
             .also { account -> assertEquals(account.id, newAccountId) }
             .metadata
         assertEquals(4, accountMetadata.sortedMapOfName.size)
-        assertEquals(Json(addressValue), accountMetadata.sortedMapOfName[addressKey])
-        assertEquals(Json(phoneValue), accountMetadata.sortedMapOfName[phoneKey])
-        assertEquals(Json(emailValue), accountMetadata.sortedMapOfName[emailKey])
-        assertEquals(Json(cityValue), accountMetadata.sortedMapOfName[cityKey])
+        assertEquals(addressValue, accountMetadata.sortedMapOfName[addressKey]!!.readValue())
+        assertEquals(phoneValue, accountMetadata.sortedMapOfName[phoneKey]!!.readValue())
+        assertEquals(emailValue, accountMetadata.sortedMapOfName[emailKey]!!.readValue())
+        assertEquals(cityValue, accountMetadata.sortedMapOfName[cityKey]!!.readValue())
     }
 
     /**
@@ -391,7 +398,7 @@ class InstructionsTest : IrohaTest<Iroha2Client>() {
         }
 
         client.tx(ALICE_ACCOUNT_ID, ALICE_KEYPAIR) {
-            setKeyValue(domainId, randomAlphabetic(10).asName(), Json(randomAlphabetic(10)))
+            setKeyValue(domainId, randomAlphabetic(10).asName(), Json.writeValue(randomAlphabetic(10)))
         }
     }
 
@@ -425,7 +432,7 @@ class InstructionsTest : IrohaTest<Iroha2Client>() {
 //        assertEquals(aliceAssetId.definition.name, asset?.id?.definition?.name)
 //        assertEquals(aliceAssetId.definition.domain, asset?.id?.definition?.domain)
 //        when (val value = asset?.value) {
-//            is AssetValue.Store -> assertEquals("bar", value.metadata.sortedMapOfName["foo".asName()]!!.string)
+//            is AssetValue.Store -> assertEquals("bar", value.metadata.sortedMapOfName["foo".asName()]!!.readValue())
 //            else -> fail("Expected result asset value has type `AssetValue.Store`, but it was `${asset!!.value::class.simpleName}`")
 //        }
 //
@@ -536,7 +543,7 @@ class InstructionsTest : IrohaTest<Iroha2Client>() {
         }
 
         // add/update salt value in Bob's account metadata
-        val salt = Json(randomAlphabetic(10))
+        val salt = randomAlphabetic(10)
         client.tx { setKeyValue(BOB_ACCOUNT_ID, saltKey.asName(), salt) }
 
         // check new metadata in Bob's account
@@ -544,7 +551,7 @@ class InstructionsTest : IrohaTest<Iroha2Client>() {
             .account(super.account)
             .buildSigned(super.keyPair)
             .let { query -> client.sendQuery(query)!!.metadata.sortedMapOfName }
-        assertEquals(salt, bobAccountMetadata["salt".asName()])
+        assertEquals(salt, bobAccountMetadata["salt".asName()]!!.readValue())
     }
 
     @Test
@@ -596,8 +603,8 @@ class InstructionsTest : IrohaTest<Iroha2Client>() {
         val assetKey = StoreAssetWithMetadata.ASSET_KEY
 
         val assetBefore = getAsset(assetId)
-        val value = assetBefore.value.cast<AssetValue.Store>().metadata.sortedMapOfName[assetKey]
-        assertEquals(Json(StoreAssetWithMetadata.ASSET_VALUE), value)
+        val value = assetBefore.value.cast<AssetValue.Store>().metadata.sortedMapOfName[assetKey]!!
+        assertEquals(StoreAssetWithMetadata.ASSET_VALUE, value.readValue())
         client.tx { removeKeyValue(assetId, assetKey) }
 
         val assetAfter = getAsset(assetId)
@@ -674,15 +681,13 @@ class InstructionsTest : IrohaTest<Iroha2Client>() {
 //    fun `register asset with metadata`(): Unit = runBlocking {
 //        val assetKey = "asset_metadata_key".asName()
 //        val assetValue = "some string value"
-//        val metadata = Metadata(mapOf(assetKey to assetValue))
+//        val metadata = Metadata(mapOf(assetKey to Json.writeValue(assetValue)))
 //
 //        client.tx {
-//            registerAssetDefinition(DEFAULT_ASSET_DEFINITION_ID, AssetType.Store(), metadata)
+//            register(DEFAULT_ASSET_DEFINITION_ID, AssetType.Store(), metadata)
 //        }
 //
-//        QueryBuilder.findAssetDefinitionKeyValueByIdAndKey(DEFAULT_ASSET_DEFINITION_ID, assetKey)
-//            .account(super.account)
-//            .buildSigned(super.keyPair)
+//        Queries.findAssetDefinitionMetadata(DEFAULT_ASSET_DEFINITION_ID, assetKey)
 //            .let { query -> client.sendQuery(query) }
 //            .also { value ->
 //                Assertions.assertEquals(value, assetValue)
@@ -739,8 +744,8 @@ class InstructionsTest : IrohaTest<Iroha2Client>() {
             .let { query -> client.sendQuery(query)!! }
             .also { asset ->
                 assertEquals(
-                    asset.value.cast<AssetValue.Store>().metadata.sortedMapOfName["key".asName()],
-                    Json("value"),
+                    asset.value.cast<AssetValue.Store>().metadata.sortedMapOfName["key".asName()]!!.readValue(),
+                    "value",
                 )
             }
 
@@ -774,63 +779,63 @@ class InstructionsTest : IrohaTest<Iroha2Client>() {
             .also { Assertions.assertNull(it) }
     }
 
-//    @Test
-//    @WithIroha(
-//        [
-//            DefaultGenesis::class,
-//            AliceHas100XorAndPermissionToMintAndBurn::class,
-//            StoreAssetWithMetadata::class,
-//            AliceHasRoleWithAccessToBobsMetadata::class,
-//            AliceWithTestAssets::class,
-//            AliceAndBobEachHave100Xor::class,
-//            XorAndValAssets::class,
-//            NewAccountWithMetadata::class,
-//            NewDomainWithMetadata::class,
-//            RubbishToTestMultipleGenesis::class,
-//        ],
-//    )
-//    @Feature("Configurations")
-//    @Permission("no_permission_required")
-//    fun `multiple genesis`(): Unit = runBlocking {
-//        val assetId = StoreAssetWithMetadata.ASSET_ID
-//        val assetKey = StoreAssetWithMetadata.ASSET_KEY
-//
-//        val assetBefore = getAsset(assetId)
-//        assertEquals(
-//            StoreAssetWithMetadata.ASSET_VALUE,
-//            assetBefore.value.cast<AssetValue.Store>().metadata.sortedMapOfName[assetKey]!!.string,
-//        )
-//        QueryBuilder.findAccountById(ALICE_ACCOUNT_ID)
-//            .account(super.account)
-//            .buildSigned(super.keyPair)
-//            .let { query -> client.sendQuery(query)!! }
-//            .also { alice ->
-//                assertEquals(
-//                    RubbishToTestMultipleGenesis.ALICE_KEY_VALUE,
-//                    alice.metadata.sortedMapOfName[RubbishToTestMultipleGenesis.ALICE_KEY_VALUE.asName()]!!.string,
-//                )
-//            }
-//        QueryBuilder.findAccountById(BOB_ACCOUNT_ID)
-//            .account(BOB_ACCOUNT_ID)
-//            .buildSigned(BOB_KEYPAIR)
-//            .let { query -> client.sendQuery(query)!! }
-//            .also { bob ->
-//                assertEquals(
-//                    RubbishToTestMultipleGenesis.BOB_KEY_VALUE,
-//                    bob.metadata.sortedMapOfName[RubbishToTestMultipleGenesis.BOB_KEY_VALUE.asName()]!!.string,
-//                )
-//            }
-//        QueryBuilder.findDomainById(DEFAULT_DOMAIN_ID)
-//            .account(super.account)
-//            .buildSigned(super.keyPair)
-//            .let { query -> client.sendQuery(query)!! }
-//            .also { domain ->
-//                assertEquals(
-//                    RubbishToTestMultipleGenesis.DOMAIN_KEY_VALUE,
-//                    domain.metadata.sortedMapOfName[RubbishToTestMultipleGenesis.DOMAIN_KEY_VALUE.asName()]!!.string,
-//                )
-//            }
-//    }
+    @Test
+    @WithIroha(
+        [
+            DefaultGenesis::class,
+            AliceHas100XorAndPermissionToMintAndBurn::class,
+            StoreAssetWithMetadata::class,
+            AliceHasRoleWithAccessToBobsMetadata::class,
+            AliceWithTestAssets::class,
+            AliceAndBobEachHave100Xor::class,
+            XorAndValAssets::class,
+            NewAccountWithMetadata::class,
+            NewDomainWithMetadata::class,
+            RubbishToTestMultipleGenesis::class,
+        ],
+    )
+    @Feature("Configurations")
+    @Permission("no_permission_required")
+    fun `multiple genesis`(): Unit = runBlocking {
+        val assetId = StoreAssetWithMetadata.ASSET_ID
+        val assetKey = StoreAssetWithMetadata.ASSET_KEY
+
+        val assetBefore = getAsset(assetId)
+        assertEquals(
+            StoreAssetWithMetadata.ASSET_VALUE,
+            assetBefore.value.cast<AssetValue.Store>().metadata.sortedMapOfName[assetKey]!!.readValue(),
+        )
+        QueryBuilder.findAccountById(ALICE_ACCOUNT_ID)
+            .account(super.account)
+            .buildSigned(super.keyPair)
+            .let { query -> client.sendQuery(query)!! }
+            .also { alice ->
+                assertEquals(
+                    RubbishToTestMultipleGenesis.ALICE_KEY_VALUE,
+                    alice.metadata.sortedMapOfName[RubbishToTestMultipleGenesis.ALICE_KEY_VALUE.asName()]!!.readValue(),
+                )
+            }
+        QueryBuilder.findAccountById(BOB_ACCOUNT_ID)
+            .account(BOB_ACCOUNT_ID)
+            .buildSigned(BOB_KEYPAIR)
+            .let { query -> client.sendQuery(query)!! }
+            .also { bob ->
+                assertEquals(
+                    RubbishToTestMultipleGenesis.BOB_KEY_VALUE,
+                    bob.metadata.sortedMapOfName[RubbishToTestMultipleGenesis.BOB_KEY_VALUE.asName()]!!.readValue(),
+                )
+            }
+        QueryBuilder.findDomainById(DEFAULT_DOMAIN_ID)
+            .account(super.account)
+            .buildSigned(super.keyPair)
+            .let { query -> client.sendQuery(query)!! }
+            .also { domain ->
+                assertEquals(
+                    RubbishToTestMultipleGenesis.DOMAIN_KEY_VALUE,
+                    domain.metadata.sortedMapOfName[RubbishToTestMultipleGenesis.DOMAIN_KEY_VALUE.asName()]!!.readValue(),
+                )
+            }
+    }
 
     @Test
     @WithIroha([WithDomainTransferredToBob::class])
@@ -843,11 +848,11 @@ class InstructionsTest : IrohaTest<Iroha2Client>() {
         client.tx(BOB_ACCOUNT_ID, BOB_KEYPAIR) {
             setKeyValue(WithDomainTransferredToBob.DOMAIN_ID, key, value)
         }
-        val extractedValue = QueryBuilder.findDomainById(WithDomainTransferredToBob.DOMAIN_ID)
+        val extractedValue: String = QueryBuilder.findDomainById(WithDomainTransferredToBob.DOMAIN_ID)
             .account(ALICE_ACCOUNT_ID)
             .buildSigned(ALICE_KEYPAIR)
             .let { query -> client.sendQuery(query)!! }
-            .metadata.sortedMapOfName[key]!!.string
+            .metadata.sortedMapOfName[key]!!.readValue()
         assertEquals(value, extractedValue)
     }
 
@@ -884,28 +889,28 @@ class InstructionsTest : IrohaTest<Iroha2Client>() {
         val value = randomAlphabetic(5)
         client.tx(BOB_ACCOUNT_ID, BOB_KEYPAIR) { setKeyValue(domainId, key, value) }
 
-        val extractedValue = QueryBuilder.findDomainById(domainId)
+        val extractedValue: String = QueryBuilder.findDomainById(domainId)
             .account(ALICE_ACCOUNT_ID)
             .buildSigned(ALICE_KEYPAIR)
             .let { query -> client.sendQuery(query)!! }
-            .metadata.sortedMapOfName[key]!!.string
+            .metadata.sortedMapOfName[key]!!.readValue()
         assertEquals(value, extractedValue)
     }
 
-//    @Test
-//    @Permission("no_permission_required")
-//    @Feature("Сonfiguration")
-//    @Story("Initiator starts network with fat genesis")
-//    @SdkTestId("initiator_start_network_with_fat_genesis")
-//    @WithIroha([FatGenesis::class])
-//    fun `fat genesis apply`(): Unit = runBlocking {
-//        QueryBuilder.findAccounts()
-//            .account(ALICE_ACCOUNT_ID)
-//            .buildSigned(ALICE_KEYPAIR)
-//            .let { query -> client.sendQuery(query) }
-//            .also { accounts -> assert(accounts.any { it.id == ALICE_ACCOUNT_ID }) }
-//            .also { accounts -> assert(accounts.any { it.id == BOB_ACCOUNT_ID }) }
-//    }
+    @Test
+    @Permission("no_permission_required")
+    @Feature("Сonfiguration")
+    @Story("Initiator starts network with fat genesis")
+    @SdkTestId("initiator_start_network_with_fat_genesis")
+    @WithIroha([FatGenesis::class])
+    fun `fat genesis apply`(): Unit = runBlocking {
+        QueryBuilder.findAccounts()
+            .account(ALICE_ACCOUNT_ID)
+            .buildSigned(ALICE_KEYPAIR)
+            .let { query -> client.sendQuery(query) }
+            .also { accounts -> assert(accounts.any { it.id == ALICE_ACCOUNT_ID }) }
+            .also { accounts -> assert(accounts.any { it.id == BOB_ACCOUNT_ID }) }
+    }
 
     private suspend fun registerAccount(id: AccountId) {
         client.sendTransaction {

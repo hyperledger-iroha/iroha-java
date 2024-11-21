@@ -94,7 +94,7 @@ open class WithDomainTransferredToBob :
     }
 }
 
-open class AliceCanUnregisterAnyPeer :
+open class AliceCanManagePeers :
     Genesis(
         rawGenesisTx(
             Instructions.grant(
@@ -149,7 +149,6 @@ open class AliceHasRoleWithAccessToBobsMetadata :
                 ROLE_ID,
                 CanModifyAccountMetadata(BOB_ACCOUNT_ID),
             ),
-            Instructions.grant(ROLE_ID, ALICE_ACCOUNT_ID),
         ),
     ) {
     companion object {
@@ -268,7 +267,7 @@ open class StoreAssetWithMetadata :
             Instructions.register(
                 DEFINITION_ID,
                 AssetType.Store(),
-                Metadata(mapOf(ASSET_KEY to Json(ASSET_VALUE))),
+                Metadata(mapOf(ASSET_KEY to Json.writeValue(ASSET_VALUE))),
             ),
             Instructions.setKeyValue(ASSET_ID, ASSET_KEY, ASSET_VALUE),
         ),
@@ -318,7 +317,7 @@ open class NewAccountWithMetadata :
         rawGenesisTx(
             Instructions.register(
                 id = ACCOUNT_ID,
-                metadata = Metadata(mapOf(KEY to Json(VALUE))),
+                metadata = Metadata(mapOf(KEY to Json.writeValue(VALUE))),
             ),
         ),
     ) {
@@ -339,7 +338,7 @@ open class NewDomainWithMetadata :
         rawGenesisTx(
             Instructions.register(
                 domainId = DOMAIN_ID,
-                metadata = mapOf(KEY to Json(VALUE)),
+                metadata = mapOf(KEY to Json.writeValue(VALUE)),
             ),
             Instructions.transfer(GENESIS_ACCOUNT, DOMAIN_ID, ALICE_ACCOUNT_ID),
         ),
@@ -368,15 +367,15 @@ open class RubbishToTestMultipleGenesis :
         rawGenesisTx(
             Instructions.register(
                 DEFAULT_DOMAIN_ID,
-                mapOf(DOMAIN_KEY_VALUE.asName() to Json(DOMAIN_KEY_VALUE)),
+                mapOf(DOMAIN_KEY_VALUE.asName() to Json.writeValue(DOMAIN_KEY_VALUE)),
             ),
             Instructions.register(
                 ALICE_ACCOUNT_ID,
-                Metadata(mapOf(ALICE_KEY_VALUE.asName() to Json(ALICE_KEY_VALUE))),
+                Metadata(mapOf(ALICE_KEY_VALUE.asName() to Json.writeValue(ALICE_KEY_VALUE))),
             ),
             Instructions.register(
                 BOB_ACCOUNT_ID,
-                Metadata(mapOf(BOB_KEY_VALUE.asName() to Json(BOB_KEY_VALUE))),
+                Metadata(mapOf(BOB_KEY_VALUE.asName() to Json.writeValue(BOB_KEY_VALUE))),
             ),
         ),
     ) {
@@ -395,11 +394,11 @@ open class FatGenesis :
         rawGenesisTx(
             Instructions.register(
                 randomAlphabetic(10).asDomainId(),
-                mapOf(randomAlphabetic(10).asName() to Json(randomAlphabetic(10))),
+                mapOf(randomAlphabetic(10).asName() to Json.writeValue(randomAlphabetic(10))),
             ),
             Instructions.register(
                 AccountId(domain = DEFAULT_DOMAIN_ID, signatory = generatePublicKey()),
-                Metadata(mapOf(randomAlphabetic(10).asName() to Json(randomAlphabetic(10)))),
+                Metadata(mapOf(randomAlphabetic(10).asName() to Json.writeValue(randomAlphabetic(10)))),
             ),
             Instructions.register(DEFAULT_ASSET_DEFINITION_ID, AssetType.numeric()),
             Instructions.grant(
@@ -413,7 +412,7 @@ open class FatGenesis :
             Instructions.register(
                 DEFINITION_ID,
                 AssetType.Store(),
-                Metadata(mapOf(randomAlphabetic(10).asName() to Json(randomAlphabetic(10)))),
+                Metadata(mapOf(randomAlphabetic(10).asName() to Json.writeValue(randomAlphabetic(10)))),
             ),
             Instructions.register(
                 BOB_ACCOUNT_ID,

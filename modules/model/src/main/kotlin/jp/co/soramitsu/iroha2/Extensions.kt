@@ -2,16 +2,11 @@
 
 package jp.co.soramitsu.iroha2
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.NullNode
-import com.fasterxml.jackson.databind.node.TextNode
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.google.gson.GsonBuilder
-import jp.co.soramitsu.iroha2.generated.Account
 import jp.co.soramitsu.iroha2.generated.AccountId
 import jp.co.soramitsu.iroha2.generated.Algorithm
 import jp.co.soramitsu.iroha2.generated.Asset
-import jp.co.soramitsu.iroha2.generated.AssetDefinition
 import jp.co.soramitsu.iroha2.generated.AssetDefinitionId
 import jp.co.soramitsu.iroha2.generated.AssetId
 import jp.co.soramitsu.iroha2.generated.AssetType
@@ -48,7 +43,6 @@ import jp.co.soramitsu.iroha2.generated.SocketAddr
 import jp.co.soramitsu.iroha2.generated.SocketAddrHost
 import jp.co.soramitsu.iroha2.generated.Trigger
 import jp.co.soramitsu.iroha2.generated.TriggerId
-import jp.co.soramitsu.iroha2.transaction.TransactionBuilder
 import net.i2p.crypto.eddsa.EdDSAEngine
 import org.bouncycastle.jcajce.provider.digest.Blake2b
 import org.bouncycastle.util.encoders.Hex
@@ -57,8 +51,6 @@ import java.math.BigInteger
 import java.security.MessageDigest
 import java.security.PrivateKey
 import java.security.PublicKey
-import java.util.Locale
-import java.util.StringTokenizer
 import kotlin.experimental.or
 import jp.co.soramitsu.iroha2.generated.PublicKey as IrohaPublicKey
 
@@ -177,31 +169,25 @@ inline fun <reified B> Any.cast(): B = this as? B
 
 fun AssetId.asString(withPrefix: Boolean = true) = this.definition.asString() + ASSET_ID_DELIMITER + this.account.asString(withPrefix)
 
-fun AssetId.asJson(withPrefix: Boolean = true) = "{\"asset\": " +
-    "\"${this.definition.asString() + ASSET_ID_DELIMITER + this.account.asString(withPrefix)}\"}"
-
 fun AssetDefinitionId.asString() = this.name.string + ASSET_ID_DELIMITER + this.domain.name.string
-
-fun AssetDefinitionId.asJson(): Json =
-    Json.writeValue("{\"asset_definition\": \"${this.name.string + ASSET_ID_DELIMITER + this.domain.name.string}\"}")
 
 fun AccountId.asString(withPrefix: Boolean = true) = this.signatory.payload.toHex(withPrefix) +
     ACCOUNT_ID_DELIMITER + this.domain.name.string
 
-fun AccountId.asJson(withPrefix: Boolean = true): Json = Json.writeValue(
-    "{\"account\": \"${this.signatory.payload.toHex(withPrefix) + ACCOUNT_ID_DELIMITER + this.domain.name.string}\"}",
-)
-
 inline fun <reified T> Json.readValue(): T = JSON_SERDE.readValue(this.string)
-fun Json.Companion.writeValue(value: Any): Json = JSON_SERDE.convertValue(value, Json::class.java)
+fun <V> Json.Companion.writeValue(value: V): Json {
+    val value = JSON_SERDE.writeValueAsString(value)
+
+    if (value == "{ }") {
+        return Json("null")
+    }
+
+    return Json(value)
+}
 
 fun DomainId.asString() = this.name.string
 
-fun DomainId.asJson() = Json.writeValue("{\"domain\": \"${this.name.string}\"}")
-
 fun RoleId.asString() = this.name.string
-
-fun RoleId.asJson() = Json.writeValue("{\"role\": \"${this.name.string}\"}")
 
 fun SocketAddr.asString() = when (this) {
     is SocketAddr.Host -> this.socketAddrHost.let { "${it.host}:${it.port}" }
@@ -215,21 +201,9 @@ fun Metadata.merge(extra: Metadata) = Metadata(
     this.sortedMapOfName.toMutableMap().also { it.putAll(extra.sortedMapOfName) },
 )
 
-fun InstructionBox.Register.extractBox() = when (this.registerBox.discriminant()) {
-    0 -> this.registerBox.cast<RegisterBox>() as RegisterBox
-    1 -> this.registerBox.cast<Domain>() as RegisterBox
-    2 -> this.registerBox.cast<Account>() as RegisterBox
-    3 -> this.registerBox.cast<AssetDefinition>() as RegisterBox
-    4 -> this.registerBox.cast<Asset>() as RegisterBox
-    5 -> this.registerBox.cast<Role>() as RegisterBox
-    6 -> this.registerBox.cast<Trigger>() as RegisterBox
-    else -> null
-}
-
 fun Iterable<InstructionBox>.extractRegisterBoxes() = this.asSequence()
     .filterIsInstance<InstructionBox.Register>()
     .map { it.registerBox }
-
 fun IdBox.extractId(): Any = when (this) {
     is IdBox.RoleId -> this.roleId
     is IdBox.AccountId -> this.accountId
@@ -307,17 +281,11 @@ fun BlockPayload.height() = this.header.height
 
 fun Asset.metadata() = this.value.cast<AssetValue.Store>().metadata.sortedMapOfName
 
-fun TransactionBuilder.merge(other: TransactionBuilder) = this.instructions.value.addAll(other.instructions.value)
-
 fun String.toSocketAddr() = this.split(":").let { parts ->
     if (parts.size != 2) throw IrohaSdkException("Incorrect address")
 
     SocketAddr.Host(SocketAddrHost(parts.first(), parts.last().toInt()))
 }
-
-fun String.replace(oldValue: String) = this.replace(oldValue, "")
-
-fun String.replace(regex: Regex) = this.replace(regex, "")
 
 fun FindError.extract() = when (this) {
     is FindError.Account -> this.accountId.asString()
@@ -333,39 +301,6 @@ fun FindError.extract() = when (this) {
     is FindError.Trigger -> this.triggerId.asString()
     is FindError.Transaction -> this.hashOf.hash.arrayOfU8.toHex()
 }
-
-fun String.toCamelCase(name: String): String {
-    val tokenizer = StringTokenizer(name, "_")
-    return if (tokenizer.hasMoreTokens()) {
-        val resultBuilder = StringBuilder(tokenizer.nextToken())
-        for (token in tokenizer) {
-            resultBuilder.append((token as String).replaceFirstChar(Char::uppercase))
-        }
-        resultBuilder.toString()
-    } else {
-        name
-    }
-}
-
-fun String.toCamelCase() = this.lowercase(Locale.getDefault())
-    .split(" ", "_")
-    .withIndex()
-    .joinToString("") { value ->
-        when (value.index) {
-            0 -> value.value
-            else -> value.value.replaceFirstChar {
-                when (it.isLowerCase()) {
-                    true -> it.titlecase(Locale.getDefault())
-                    else -> it.toString()
-                }
-            }
-        }
-    }
-
-fun String.toSnakeCase() = this
-    .split("(?<=.)(?=\\p{Lu})|\\s".toRegex())
-    .joinToString("_")
-    .lowercase(Locale.getDefault())
 
 fun Number.asNumeric() = when (this) {
     is Int -> this.asNumeric()
@@ -404,21 +339,6 @@ fun Numeric.asNumber() = when (this.scale) {
 fun Numeric.asString() = this.asNumber().toString()
 
 fun AssetType.Companion.numeric(scale: Long? = null) = AssetType.Numeric(NumericSpec(scale))
-
-fun Metadata.getStringValue(key: String) = this.sortedMapOfName[key.asName()]
-
-fun Metadata.getBooleanValue(key: String) = this.sortedMapOfName[key.asName()]
-
-fun Metadata.getNameValue(key: String) = this.sortedMapOfName[key.asName()]
-
-fun Metadata.getFixedValue(key: String) = this.sortedMapOfName[key.asName()]
-
-fun JsonNode.asStringOrNull() = when (this) {
-    is NullNode -> null
-    is TextNode -> this.asText()
-    else -> this.toString()
-}
-
 fun String.asPrettyJson(): String {
     val gson = GsonBuilder().setPrettyPrinting().create()
     val jsonElement = com.google.gson.JsonParser.parseString(this)

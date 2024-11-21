@@ -152,7 +152,7 @@ class TransactionBuilder(builder: TransactionBuilder.() -> Unit = {}) {
         instructions.value.add(Instructions.unregister(id))
     }
 
-    fun unregisterTrigger(id: TriggerId) = this.apply {
+    fun unregister(id: TriggerId) = this.apply {
         instructions.value.add(
             Instructions.unregister(id),
         )

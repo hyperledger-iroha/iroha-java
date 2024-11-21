@@ -2,10 +2,11 @@
 
 package jp.co.soramitsu.iroha2.transaction
 
-import jp.co.soramitsu.iroha2.JSON_SERDE
 import jp.co.soramitsu.iroha2.ModelPermission
+import jp.co.soramitsu.iroha2.TriggerArgs
 import jp.co.soramitsu.iroha2.asNumeric
 import jp.co.soramitsu.iroha2.generated.*
+import jp.co.soramitsu.iroha2.writeValue
 import java.math.BigDecimal
 
 /**
@@ -189,9 +190,9 @@ object Instructions {
         assetId: AssetId,
         key: Name,
         value: V,
-    ) = InstructionBox.SetKeyValue(
+    ): InstructionBox = InstructionBox.SetKeyValue(
         SetKeyValueBox.Asset(
-            SetKeyValueOfAsset(assetId, key, Json(JSON_SERDE.writeValueAsString(value))),
+            SetKeyValueOfAsset(assetId, key, Json.writeValue(value)),
         ),
     )
 
@@ -204,7 +205,7 @@ object Instructions {
         value: V,
     ) = InstructionBox.SetKeyValue(
         SetKeyValueBox.Trigger(
-            SetKeyValueOfTrigger(triggerId, key, Json(JSON_SERDE.writeValueAsString(value))),
+            SetKeyValueOfTrigger(triggerId, key, Json.writeValue(value)),
         ),
     )
 
@@ -217,7 +218,7 @@ object Instructions {
         value: V,
     ) = InstructionBox.SetKeyValue(
         SetKeyValueBox.AssetDefinition(
-            SetKeyValueOfAssetDefinition(definitionId, key, Json(JSON_SERDE.writeValueAsString(value))),
+            SetKeyValueOfAssetDefinition(definitionId, key, Json.writeValue(value)),
         ),
     )
 
@@ -230,7 +231,7 @@ object Instructions {
         value: V,
     ) = InstructionBox.SetKeyValue(
         SetKeyValueBox.Domain(
-            SetKeyValueOfDomain(domainId, key, Json(JSON_SERDE.writeValueAsString(value))),
+            SetKeyValueOfDomain(domainId, key, Json.writeValue(value)),
         ),
     )
 
@@ -243,7 +244,7 @@ object Instructions {
         value: V,
     ) = InstructionBox.SetKeyValue(
         SetKeyValueBox.Account(
-            SetKeyValueOfAccount(accountId, key, Json(JSON_SERDE.writeValueAsString(value))),
+            SetKeyValueOfAccount(accountId, key, Json.writeValue(value)),
         ),
     )
 
@@ -257,10 +258,10 @@ object Instructions {
     /**
      * Execute a trigger
      */
-    fun <V> executeTrigger(triggerId: TriggerId, args: V?) = InstructionBox.ExecuteTrigger(
+    fun <V : TriggerArgs> executeTrigger(triggerId: TriggerId, args: V?) = InstructionBox.ExecuteTrigger(
         ExecuteTrigger(
             triggerId,
-            Json(JSON_SERDE.writeValueAsString(args)),
+            Json.writeValue(args),
         ),
     )
 

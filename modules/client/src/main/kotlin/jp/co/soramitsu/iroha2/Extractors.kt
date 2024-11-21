@@ -6,14 +6,13 @@ import jp.co.soramitsu.iroha2.generated.AssetDefinition
 import jp.co.soramitsu.iroha2.generated.BlockHeader
 import jp.co.soramitsu.iroha2.generated.CommittedTransaction
 import jp.co.soramitsu.iroha2.generated.Domain
-import jp.co.soramitsu.iroha2.generated.Peer
+import jp.co.soramitsu.iroha2.generated.PeerId
 import jp.co.soramitsu.iroha2.generated.Permission
 import jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox
 import jp.co.soramitsu.iroha2.generated.QueryResponse
 import jp.co.soramitsu.iroha2.generated.Role
 import jp.co.soramitsu.iroha2.generated.RoleId
 import jp.co.soramitsu.iroha2.generated.SignedBlock
-import jp.co.soramitsu.iroha2.generated.SingularQueryOutputBox
 import jp.co.soramitsu.iroha2.generated.Trigger
 import jp.co.soramitsu.iroha2.generated.TriggerId
 
@@ -25,7 +24,7 @@ interface ResultExtractor<T> {
 }
 
 /**
- * Extract a list of accounts from a query [result]
+ * Extract a list of accounts from a [QueryResponse]
  */
 object AccountsExtractor : ResultExtractor<List<Account>> {
     override fun extract(result: QueryResponse): List<Account> = extract(
@@ -34,16 +33,16 @@ object AccountsExtractor : ResultExtractor<List<Account>> {
 }
 
 /**
- * Extract an account from a query [result]
+ * Extract an account from a [QueryResponse]
  */
 object AccountExtractor : ResultExtractor<Account?> {
-    override fun extract(result: QueryResponse): Account? = extract<Account?>(
+    override fun extract(result: QueryResponse): Account? = extract<Account>(
         result.cast<QueryResponse.Iterable>().queryOutput.batch,
     ).firstOrNull()
 }
 
 /**
- * Extract a list of assets from a query [result]
+ * Extract a list of assets from a [QueryResponse]
  */
 object AssetsExtractor : ResultExtractor<List<Asset>> {
     override fun extract(result: QueryResponse): List<Asset> = extract(
@@ -52,16 +51,16 @@ object AssetsExtractor : ResultExtractor<List<Asset>> {
 }
 
 /**
- * Extract an asset from a query [result]
+ * Extract an asset from a [QueryResponse]
  */
 object AssetExtractor : ResultExtractor<Asset?> {
-    override fun extract(result: QueryResponse): Asset? = extract<Asset?>(
+    override fun extract(result: QueryResponse): Asset? = extract<Asset>(
         result.cast<QueryResponse.Iterable>().queryOutput.batch,
     ).firstOrNull()
 }
 
 /**
- * Extract a list of asset definitions from a query [result]
+ * Extract a list of asset definitions from a [QueryResponse]
  */
 object AssetDefinitionsExtractor : ResultExtractor<List<AssetDefinition>> {
     override fun extract(result: QueryResponse): List<AssetDefinition> = extract(
@@ -70,16 +69,16 @@ object AssetDefinitionsExtractor : ResultExtractor<List<AssetDefinition>> {
 }
 
 /**
- * Extract an asset definition from a query [result]
+ * Extract an asset definition from a [QueryResponse]
  */
 object AssetDefinitionExtractor : ResultExtractor<AssetDefinition?> {
-    override fun extract(result: QueryResponse): AssetDefinition? = extract<AssetDefinition?>(
+    override fun extract(result: QueryResponse): AssetDefinition? = extract<AssetDefinition>(
         result.cast<QueryResponse.Iterable>().queryOutput.batch,
     ).firstOrNull()
 }
 
 /**
- * Extract a list of domains from a query [result]
+ * Extract a list of domains from a [QueryResponse]
  */
 object DomainsExtractor : ResultExtractor<List<Domain>> {
     override fun extract(result: QueryResponse): List<Domain> = extract(
@@ -88,43 +87,43 @@ object DomainsExtractor : ResultExtractor<List<Domain>> {
 }
 
 /**
- * Extract a domain from a query [result]
+ * Extract a domain from a [QueryResponse]
  */
 object DomainExtractor : ResultExtractor<Domain?> {
-    override fun extract(result: QueryResponse): Domain? = extract<Domain?>(
+    override fun extract(result: QueryResponse): Domain? = extract<Domain>(
         result.cast<QueryResponse.Iterable>().queryOutput.batch,
     ).firstOrNull()
 }
 
 /**
- * Extract a lost of peers from a query [result]
+ * Extract a lost of peers from a [QueryResponse]
  */
-object PeersExtractor : ResultExtractor<List<Peer>> {
-    override fun extract(result: QueryResponse): List<Peer> = extract(
+object PeersExtractor : ResultExtractor<List<PeerId>> {
+    override fun extract(result: QueryResponse): List<PeerId> = extract(
         result.cast<QueryResponse.Iterable>().queryOutput.batch,
     )
 }
 
 /**
- * Extract a trigger from a query [result]
+ * Extract a trigger from a [QueryResponse]
  */
-object TriggerBoxExtractor : ResultExtractor<Trigger> {
-    override fun extract(result: QueryResponse): Trigger = result.cast<QueryResponse.Singular>()
-        .singularQueryOutputBox.cast<SingularQueryOutputBox.Trigger>()
-        .trigger
+object TriggerExtractor : ResultExtractor<Trigger?> {
+    override fun extract(result: QueryResponse): Trigger? = extract<Trigger>(
+        result.cast<QueryResponse.Iterable>().queryOutput.batch,
+    ).firstOrNull()
 }
 
 /**
- * Extract a list of triggers from a query [result]
+ * Extract a list of triggers from a [QueryResponse]
  */
-object TriggerBoxesExtractor : ResultExtractor<List<Trigger>> {
+object TriggersExtractor : ResultExtractor<List<Trigger>> {
     override fun extract(result: QueryResponse): List<Trigger> = extract(
         result.cast<QueryResponse.Iterable>().queryOutput.batch,
     )
 }
 
 /**
- * Extract a list of trigger IDs from a query [result]
+ * Extract a list of trigger IDs from a [QueryResponse]
  */
 object TriggerIdsExtractor : ResultExtractor<List<TriggerId>> {
     override fun extract(result: QueryResponse): List<TriggerId> = extract(
@@ -133,7 +132,7 @@ object TriggerIdsExtractor : ResultExtractor<List<TriggerId>> {
 }
 
 /**
- * Extract a list of permission tokens from a query [result]
+ * Extract a list of permission tokens from a [QueryResponse]
  */
 object PermissionTokensExtractor : ResultExtractor<List<Permission>> {
     override fun extract(result: QueryResponse): List<Permission> = extract(
@@ -142,7 +141,7 @@ object PermissionTokensExtractor : ResultExtractor<List<Permission>> {
 }
 
 /**
- * Extract a list of commited transactions from a query [result]
+ * Extract a list of commited transactions from a [QueryResponse]
  */
 object TransactionsExtractor : ResultExtractor<List<CommittedTransaction>> {
     override fun extract(result: QueryResponse): List<CommittedTransaction> = extract(
@@ -163,7 +162,7 @@ object BlockHeadersExtractor : ResultExtractor<List<BlockHeader>> {
 }
 
 /**
- * Extract a list of roles from a query [result]
+ * Extract a list of roles from a [QueryResponse]
  */
 object RolesExtractor : ResultExtractor<List<Role>> {
     override fun extract(result: QueryResponse): List<Role> = extract(
@@ -172,7 +171,7 @@ object RolesExtractor : ResultExtractor<List<Role>> {
 }
 
 /**
- * Extract a list of role IDs from a query [result]
+ * Extract a list of role IDs from a [QueryResponse]
  */
 object RoleIdsExtractor : ResultExtractor<List<RoleId>> {
     override fun extract(result: QueryResponse): List<RoleId> = extract(
