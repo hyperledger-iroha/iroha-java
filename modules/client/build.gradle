@@ -5,19 +5,12 @@ plugins {
 dependencies {
     api project(":model")
 
-    implementation('com.google.code.gson:gson:2.8.9')
-
     implementation("com.github.docker-java:docker-java:3.3.0")
 
     // kotlin support
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVer"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVer"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:$coroutinesVer"
-
-    // crypto
-    api "org.bouncycastle:bcprov-jdk15on:$bouncyCastleVer"
-    api "net.i2p.crypto:eddsa:$i2pCryptoEddsa"
-    api "com.github.multiformats:java-multihash:$multihashVersion"
 
     // http client
     api "io.ktor:ktor-client-core:$ktorVer"

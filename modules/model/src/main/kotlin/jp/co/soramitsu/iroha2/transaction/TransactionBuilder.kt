@@ -90,8 +90,8 @@ class TransactionBuilder(builder: TransactionBuilder.() -> Unit = {}) {
             checkNotNull(accountId) { "Account Id is required" },
             creationTimeMillis ?: fallbackCreationTime(),
             Executable.Instructions(instructions.value),
-            NonZeroOfu64(timeToLiveMillis ?: DURATION_OF_24_HOURS_IN_MILLIS),
-            NonZeroOfu32(nonce ?: throw IrohaClientException("Nonce must not be null")),
+            NonZeroOfu64(timeToLiveMillis?.takeIf { it > BigInteger.ZERO } ?: DURATION_OF_24_HOURS_IN_MILLIS),
+            nonce?.takeIf { it > 0 }?.let(::NonZeroOfu32),
             Metadata(metadata.value),
         )
         val encodedPayload = TransactionPayload.encode(payload)

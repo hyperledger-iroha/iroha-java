@@ -3,6 +3,7 @@ package jp.co.soramitsu.iroha2
 import jp.co.soramitsu.iroha2.generated.AssetDefinitionId
 import jp.co.soramitsu.iroha2.generated.AssetId
 import jp.co.soramitsu.iroha2.generated.BlockParameters
+import jp.co.soramitsu.iroha2.generated.CanUnregisterAccount
 import jp.co.soramitsu.iroha2.generated.ChainId
 import jp.co.soramitsu.iroha2.generated.Metadata
 import jp.co.soramitsu.iroha2.generated.Name
@@ -23,6 +24,9 @@ import kotlin.test.assertEquals
 class SerializerTest {
     @Test
     fun `should serialize grant permission token genesis block`() {
+        val account = "ed012004FF5B81046DDCCF19E2E451C45DFB6F53759D4EB30FA2EFA807284D1CC33016${ACCOUNT_ID_DELIMITER}wonderland"
+        val destination = "ed0120CE7FA46C9DCE7EA4B125E2E36BDB63EA33073E7590AC92816AE1E861B7048B03${ACCOUNT_ID_DELIMITER}wonderland"
+
         val genesis = Genesis(
             RawGenesisTransaction(
                 ChainId("00000000-0000-0000-0000-000000000000"),
@@ -35,12 +39,12 @@ class SerializerTest {
                     SmartContractParameters(NonZeroOfu64(BigInteger.valueOf(9)), NonZeroOfu64(BigInteger.valueOf(10))),
                     emptyMap(),
                 ),
-                Instructions.grant(
-                    Permissions.CanUnregisterAccount,
-                    "ed012004FF5B81046DDCCF19E2E451C45DFB6F53759D4EB30FA2EFA807284D1CC33016${ACCOUNT_ID_DELIMITER}wonderland".asAccountId()
-                        .asJson(withPrefix = true),
-                    "ed0120CE7FA46C9DCE7EA4B125E2E36BDB63EA33073E7590AC92816AE1E861B7048B03${ACCOUNT_ID_DELIMITER}wonderland".asAccountId(),
-                ).let { listOf(it) },
+                listOf(
+                    Instructions.grant(
+                        CanUnregisterAccount(account.asAccountId()),
+                        destination.asAccountId(),
+                    ),
+                ),
                 "",
                 emptyList(),
                 emptyList(),

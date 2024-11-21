@@ -7,5 +7,5 @@ import jp.co.soramitsu.iroha2.generated.Permission
  * Permission
  */
 interface ModelPermission {
-    fun asRaw(): Permission = Permission(this.javaClass.name, Json("KITA"))
+    fun asRaw(): Permission = Permission(this.javaClass.simpleName, Json(JSON_SERDE.writeValueAsString(this)))
 }

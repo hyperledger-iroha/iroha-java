@@ -99,3 +99,13 @@ fun Key.bytes(): ByteArray = when (this) {
     is EdDSAPrivateKey -> seed
     else -> this.encoded ?: ByteArray(0)
 }
+
+/**
+ * Throw if there is an exception related to cryptography
+ */
+class CryptoException(message: String? = null, cause: Throwable? = null) : IrohaSdkException(message, cause)
+
+/**
+ * Throw if there is an exception during hex encoding/decoding
+ */
+class HexCodecException(message: String? = null, cause: Throwable? = null) : IrohaSdkException(message, cause)

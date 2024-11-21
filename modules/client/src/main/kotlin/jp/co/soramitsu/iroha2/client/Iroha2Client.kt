@@ -52,7 +52,6 @@ import jp.co.soramitsu.iroha2.hash
 import jp.co.soramitsu.iroha2.height
 import jp.co.soramitsu.iroha2.model.IrohaUrls
 import jp.co.soramitsu.iroha2.query.QueryAndExtractor
-import jp.co.soramitsu.iroha2.toFrame
 import jp.co.soramitsu.iroha2.toHex
 import jp.co.soramitsu.iroha2.transaction.Filters
 import jp.co.soramitsu.iroha2.transaction.TransactionBuilder
@@ -67,6 +66,7 @@ import kotlinx.coroutines.sync.Mutex
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.math.BigInteger
+import java.net.URI
 import java.net.URL
 import java.time.Duration
 import kotlin.coroutines.CoroutineContext
@@ -119,8 +119,8 @@ open class Iroha2Client(
         eventReadTimeoutInMills: Long = 250,
         eventReadMaxAttempts: Int = 10,
     ) : this(
-        URL(apiUrl),
-        URL(peerUrl),
+        URI(apiUrl).toURL(),
+        URI(peerUrl).toURL(),
         log,
         credentials,
         eventReadTimeoutInMills,
@@ -357,7 +357,7 @@ open class Iroha2Client(
                 path = WS_ENDPOINT,
             ) {
                 logger.debug("WebSocket opened")
-                send(payload.toFrame())
+                send(Frame.Binary(true, payload))
 
                 afterSubscription?.invoke()
                 logger.debug("Subscription was accepted by peer")

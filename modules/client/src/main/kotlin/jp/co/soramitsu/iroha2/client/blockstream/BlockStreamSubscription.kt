@@ -2,6 +2,7 @@ package jp.co.soramitsu.iroha2.client.blockstream
 
 import io.ktor.client.plugins.websocket.webSocket
 import io.ktor.http.HttpMethod
+import io.ktor.websocket.Frame
 import io.ktor.websocket.close
 import io.ktor.websocket.readBytes
 import jp.co.soramitsu.iroha2.IrohaSdkException
@@ -11,7 +12,6 @@ import jp.co.soramitsu.iroha2.client.Iroha2Client
 import jp.co.soramitsu.iroha2.generated.BlockMessage
 import jp.co.soramitsu.iroha2.generated.BlockSubscriptionRequest
 import jp.co.soramitsu.iroha2.generated.NonZeroOfu64
-import jp.co.soramitsu.iroha2.toFrame
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -114,7 +114,7 @@ open class BlockStreamSubscription private constructor(private val context: Bloc
         ) {
             try {
                 logger.debug("WebSocket opened")
-                send(BlockSubscriptionRequest.encode(request).toFrame())
+                send(Frame.Binary(true, BlockSubscriptionRequest.encode(request)))
                 val idsToRemove = mutableListOf<UUID>()
 
                 for (frame in incoming) {

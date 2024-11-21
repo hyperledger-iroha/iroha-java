@@ -25,13 +25,3 @@ class IrohaClientException(
  * Throw if a transaction was rejected by a peer
  */
 class TransactionRejectedException(message: String? = null, cause: Throwable? = null) : IrohaSdkException(message, cause)
-
-/**
- * Throw if there is an exception related to cryptography
- */
-class CryptoException(message: String? = null, cause: Throwable? = null) : IrohaSdkException(message, cause)
-
-/**
- * Throw if there is an exception during hex encoding/decoding
- */
-class HexCodecException(message: String? = null, cause: Throwable? = null) : IrohaSdkException(message, cause)

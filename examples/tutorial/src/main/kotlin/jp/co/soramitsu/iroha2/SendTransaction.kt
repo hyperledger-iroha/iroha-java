@@ -4,6 +4,7 @@ import jp.co.soramitsu.iroha2.generated.AccountId
 import jp.co.soramitsu.iroha2.generated.AssetId
 import jp.co.soramitsu.iroha2.generated.AssetType
 import jp.co.soramitsu.iroha2.generated.AssetValue
+import jp.co.soramitsu.iroha2.generated.Json
 import jp.co.soramitsu.iroha2.generated.Metadata
 import jp.co.soramitsu.iroha2.generated.Mintable
 import jp.co.soramitsu.iroha2.generated.Name
@@ -21,7 +22,7 @@ class SendTransaction(
 
     suspend fun registerDomain(
         id: String,
-        metadata: Map<Name, String> = mapOf(),
+        metadata: Map<Name, Json> = mapOf(),
         admin: AccountId = this.admin,
         keyPair: KeyPair = this.keyPair,
     ) {
@@ -37,7 +38,7 @@ class SendTransaction(
 
     suspend fun registerAccount(
         id: String,
-        metadata: Map<Name, String> = mapOf(),
+        metadata: Map<Name, Json> = mapOf(),
         admin: AccountId = this.admin,
         keyPair: KeyPair = this.keyPair,
     ) {
@@ -54,7 +55,7 @@ class SendTransaction(
     suspend fun registerAssetDefinition(
         id: String,
         type: AssetType = AssetType.Store(),
-        metadata: Map<Name, String> = mapOf(),
+        metadata: Map<Name, Json> = mapOf(),
         mintable: Mintable = Mintable.Infinitely(),
         admin: AccountId = this.admin,
         keyPair: KeyPair = this.keyPair,

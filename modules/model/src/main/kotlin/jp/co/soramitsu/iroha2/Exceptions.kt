@@ -14,3 +14,17 @@ class ScaleCodecException(message: String? = null, cause: Throwable? = null) : I
  * Throw if there is an exception during conversion from or into a fixed-point number
  */
 class FixedPointConversionException(message: String? = null, cause: Throwable? = null) : IrohaSdkException(message, cause)
+
+/**
+ * Throw if there is an issue with deserialization.
+ *
+ * @param message The explanation of the issue
+ */
+class DeserializationException(message: String) : RuntimeException(message)
+
+/**
+ * Throw if there is an issue with serialization
+ *
+ * @param message The explanation of the issue
+ */
+class SerializationException(message: String) : RuntimeException(message)

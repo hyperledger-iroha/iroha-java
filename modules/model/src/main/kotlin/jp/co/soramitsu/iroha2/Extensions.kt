@@ -5,10 +5,8 @@ package jp.co.soramitsu.iroha2
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.node.NullNode
 import com.fasterxml.jackson.databind.node.TextNode
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.google.gson.GsonBuilder
-import io.ktor.websocket.Frame
 import jp.co.soramitsu.iroha2.generated.Account
 import jp.co.soramitsu.iroha2.generated.AccountId
 import jp.co.soramitsu.iroha2.generated.Algorithm
@@ -102,8 +100,6 @@ fun String.asRoleId() = RoleId(Name(this))
 
 fun String.asName() = Name(this)
 
-fun ByteArray.toFrame(fin: Boolean = true) = Frame.Binary(fin, this)
-
 fun ByteArray.toHex(withPrefix: Boolean = false): String = try {
     val prefix = when (withPrefix) {
         true -> "ed0120"
@@ -196,15 +192,8 @@ fun AccountId.asJson(withPrefix: Boolean = true): Json = Json.writeValue(
     "{\"account\": \"${this.signatory.payload.toHex(withPrefix) + ACCOUNT_ID_DELIMITER + this.domain.name.string}\"}",
 )
 
-object JsonMapper {
-    val mapper = jacksonObjectMapper()
-}
-
-inline fun <reified T> Json.readValue(): T = JsonMapper.mapper.readValue(this.string)
-fun Json.Companion.writeValue(value: Any): Json {
-    println("KITA: " + JsonMapper.mapper.convertValue(value, Json::class.java))
-    return JsonMapper.mapper.convertValue(value, Json::class.java)
-}
+inline fun <reified T> Json.readValue(): T = JSON_SERDE.readValue(this.string)
+fun Json.Companion.writeValue(value: Any): Json = JSON_SERDE.convertValue(value, Json::class.java)
 
 fun DomainId.asString() = this.name.string
 

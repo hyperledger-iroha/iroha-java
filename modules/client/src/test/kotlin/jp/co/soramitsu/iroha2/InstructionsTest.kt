@@ -1,6 +1,5 @@
 package jp.co.soramitsu.iroha2
 
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.qameta.allure.Feature
 import io.qameta.allure.Owner
 import io.qameta.allure.Story
@@ -47,10 +46,6 @@ import kotlin.test.*
 @Owner("akostyuchenko")
 @Sdk("Java/Kotlin")
 class InstructionsTest : IrohaTest<Iroha2Client>() {
-    companion object {
-        private val mapper = jacksonObjectMapper()
-    }
-
     @Test
     @Disabled // EXAMPLE
     @WithIrohaManual(

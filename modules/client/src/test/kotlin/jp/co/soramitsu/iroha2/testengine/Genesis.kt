@@ -6,6 +6,15 @@ import jp.co.soramitsu.iroha2.generated.AssetDefinitionId
 import jp.co.soramitsu.iroha2.generated.AssetId
 import jp.co.soramitsu.iroha2.generated.AssetType
 import jp.co.soramitsu.iroha2.generated.BlockParameters
+import jp.co.soramitsu.iroha2.generated.CanBurnAssetWithDefinition
+import jp.co.soramitsu.iroha2.generated.CanManagePeers
+import jp.co.soramitsu.iroha2.generated.CanManageRoles
+import jp.co.soramitsu.iroha2.generated.CanMintAssetWithDefinition
+import jp.co.soramitsu.iroha2.generated.CanModifyAccountMetadata
+import jp.co.soramitsu.iroha2.generated.CanRegisterDomain
+import jp.co.soramitsu.iroha2.generated.CanTransferAssetWithDefinition
+import jp.co.soramitsu.iroha2.generated.CanUnregisterDomain
+import jp.co.soramitsu.iroha2.generated.CanUpgradeExecutor
 import jp.co.soramitsu.iroha2.generated.ChainId
 import jp.co.soramitsu.iroha2.generated.DomainId
 import jp.co.soramitsu.iroha2.generated.InstructionBox

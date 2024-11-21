@@ -11,6 +11,7 @@ import jp.co.soramitsu.iroha2.client.Iroha2Client
 import jp.co.soramitsu.iroha2.generated.Peer
 import jp.co.soramitsu.iroha2.model.IrohaUrls
 import kotlinx.coroutines.runBlocking
+import java.net.URI
 import java.net.URL
 
 /**
@@ -45,7 +46,7 @@ open class AdminIroha2Client(
         log: Boolean = false,
         credentials: String? = null,
         balancingHealthCheck: Boolean = true,
-    ) : this(URL(apiUrl), URL(peerUrl), log, credentials, balancingHealthCheck)
+    ) : this(URI(apiUrl).toURL(), URI(peerUrl).toURL(), log, credentials, balancingHealthCheck)
 
     /**
      * Send metrics request

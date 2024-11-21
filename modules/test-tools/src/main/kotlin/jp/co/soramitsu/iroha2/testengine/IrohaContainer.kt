@@ -11,6 +11,7 @@ import org.testcontainers.utility.DockerImageName
 import org.testcontainers.utility.MountableFile
 import org.testcontainers.utility.MountableFile.forHostPath
 import java.io.IOException
+import java.net.URI
 import java.net.URL
 import java.nio.file.Files
 import java.time.Duration
@@ -156,9 +157,9 @@ open class IrohaContainer : GenericContainer<IrohaContainer> {
         logger().debug("Iroha container stopped")
     }
 
-    fun getP2pUrl(): URL = URL("http", host, this.getMappedPort(p2pPort), "")
+    fun getP2pUrl(): URL = URI("http://$host:${getMappedPort(p2pPort)}").toURL()
 
-    fun getApiUrl(): URL = URL("http", host, this.getMappedPort(apiPort), "")
+    fun getApiUrl(): URL = URI("http://$host:${getMappedPort(apiPort)}").toURL()
 
     private fun String.readStatusBlocks() = JSON_SERDE.readTree(this).get("blocks")?.doubleValue()
 

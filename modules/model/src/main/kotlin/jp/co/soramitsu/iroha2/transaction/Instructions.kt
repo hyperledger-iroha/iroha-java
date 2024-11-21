@@ -2,7 +2,7 @@
 
 package jp.co.soramitsu.iroha2.transaction
 
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import jp.co.soramitsu.iroha2.JSON_SERDE
 import jp.co.soramitsu.iroha2.ModelPermission
 import jp.co.soramitsu.iroha2.asNumeric
 import jp.co.soramitsu.iroha2.generated.*
@@ -13,8 +13,6 @@ import java.math.BigDecimal
  * @see [Iroha2 Tutorial on Iroha Special Instructions](https://hyperledger.github.io/iroha-2-docs/guide/advanced/isi.html)
  */
 object Instructions {
-    private val mapper = jacksonObjectMapper()
-
     /**
      * Register a role that has the specified permissions
      */
@@ -193,7 +191,7 @@ object Instructions {
         value: V,
     ) = InstructionBox.SetKeyValue(
         SetKeyValueBox.Asset(
-            SetKeyValueOfAsset(assetId, key, Json(mapper.writeValueAsString(value))),
+            SetKeyValueOfAsset(assetId, key, Json(JSON_SERDE.writeValueAsString(value))),
         ),
     )
 
@@ -206,7 +204,7 @@ object Instructions {
         value: V,
     ) = InstructionBox.SetKeyValue(
         SetKeyValueBox.Trigger(
-            SetKeyValueOfTrigger(triggerId, key, Json(mapper.writeValueAsString(value))),
+            SetKeyValueOfTrigger(triggerId, key, Json(JSON_SERDE.writeValueAsString(value))),
         ),
     )
 
@@ -219,7 +217,7 @@ object Instructions {
         value: V,
     ) = InstructionBox.SetKeyValue(
         SetKeyValueBox.AssetDefinition(
-            SetKeyValueOfAssetDefinition(definitionId, key, Json(mapper.writeValueAsString(value))),
+            SetKeyValueOfAssetDefinition(definitionId, key, Json(JSON_SERDE.writeValueAsString(value))),
         ),
     )
 
@@ -232,7 +230,7 @@ object Instructions {
         value: V,
     ) = InstructionBox.SetKeyValue(
         SetKeyValueBox.Domain(
-            SetKeyValueOfDomain(domainId, key, Json(mapper.writeValueAsString(value))),
+            SetKeyValueOfDomain(domainId, key, Json(JSON_SERDE.writeValueAsString(value))),
         ),
     )
 
@@ -245,7 +243,7 @@ object Instructions {
         value: V,
     ) = InstructionBox.SetKeyValue(
         SetKeyValueBox.Account(
-            SetKeyValueOfAccount(accountId, key, Json(mapper.writeValueAsString(value))),
+            SetKeyValueOfAccount(accountId, key, Json(JSON_SERDE.writeValueAsString(value))),
         ),
     )
 
@@ -262,33 +260,33 @@ object Instructions {
     fun <V> executeTrigger(triggerId: TriggerId, args: V?) = InstructionBox.ExecuteTrigger(
         ExecuteTrigger(
             triggerId,
-            Json(mapper.writeValueAsString(args)),
+            Json(JSON_SERDE.writeValueAsString(args)),
         ),
     )
 
     /**
-     * Mint an asset of the [AssetType.Quantity] asset value type
+     * Mint an asset of the [AssetType.Numeric] asset value type
      */
     fun mint(assetId: AssetId, quantity: Int) = InstructionBox.Mint(
         MintBox.Asset(MintOfNumericAndAsset(quantity.asNumeric(), assetId)),
     )
 
     /**
-     * Mint an asset of the [AssetType.Fixed] asset value type
+     * Mint an asset of the [AssetType.Numeric] asset value type
      */
     fun mint(assetId: AssetId, quantity: BigDecimal) = InstructionBox.Mint(
         MintBox.Asset(MintOfNumericAndAsset(quantity.asNumeric(), assetId)),
     )
 
     /**
-     * Burn an asset of the [AssetType.Quantity] asset value type
+     * Burn an asset of the [AssetType.Numeric] asset value type
      */
     fun burn(assetId: AssetId, value: Int) = InstructionBox.Burn(
         BurnBox.Asset(BurnOfNumericAndAsset(value.asNumeric(), assetId)),
     )
 
     /**
-     * Burn an asset of the [AssetType.Fixed] asset value type
+     * Burn an asset of the [AssetType.Numeric] asset value type
      */
     fun burn(assetId: AssetId, value: BigDecimal) = InstructionBox.Burn(
         BurnBox.Asset(BurnOfNumericAndAsset(value.asNumeric(), assetId)),
