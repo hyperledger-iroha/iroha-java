@@ -94,10 +94,7 @@ public sealed class AssetType : ModelEnum {
     }
 
     public companion object : ScaleReader<AssetType>, ScaleWriter<AssetType> {
-        override fun read(reader: ScaleCodecReader): AssetType = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
+        override fun read(reader: ScaleCodecReader): AssetType = when (val discriminant = reader.readUByte()) {
             0 -> Numeric.read(reader)
             1 -> Store.read(reader)
             else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")

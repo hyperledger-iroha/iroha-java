@@ -193,10 +193,7 @@ public sealed class BlockStatus : ModelEnum {
     }
 
     public companion object : ScaleReader<BlockStatus>, ScaleWriter<BlockStatus> {
-        override fun read(reader: ScaleCodecReader): BlockStatus = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
+        override fun read(reader: ScaleCodecReader): BlockStatus = when (val discriminant = reader.readUByte()) {
             0 -> Created.read(reader)
             1 -> Approved.read(reader)
             2 -> Rejected.read(reader)

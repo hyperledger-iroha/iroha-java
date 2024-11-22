@@ -79,10 +79,7 @@ public sealed class CompoundPredicateOfTriggerPredicateBox : ModelEnum {
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.CompoundPredicateOfTriggerPredicateBox.Not,
             ): Unit = try {
-                CompoundPredicateOfTriggerPredicateBox.write(
-                    writer,
-                    instance.compoundPredicateOfTriggerPredicateBox,
-                )
+                CompoundPredicateOfTriggerPredicateBox.write(writer, instance.compoundPredicateOfTriggerPredicateBox)
             } catch (ex: Exception) {
                 throw wrapException(ex)
             }
@@ -158,10 +155,7 @@ public sealed class CompoundPredicateOfTriggerPredicateBox : ModelEnum {
     public companion object :
         ScaleReader<CompoundPredicateOfTriggerPredicateBox>,
         ScaleWriter<CompoundPredicateOfTriggerPredicateBox> {
-        override fun read(reader: ScaleCodecReader): CompoundPredicateOfTriggerPredicateBox = when (
-            val
-            discriminant = reader.readUByte()
-        ) {
+        override fun read(reader: ScaleCodecReader): CompoundPredicateOfTriggerPredicateBox = when (val discriminant = reader.readUByte()) {
             0 -> Atom.read(reader)
             1 -> Not.read(reader)
             2 -> And.read(reader)

@@ -79,10 +79,7 @@ public sealed class MintBox : ModelEnum {
     }
 
     public companion object : ScaleReader<MintBox>, ScaleWriter<MintBox> {
-        override fun read(reader: ScaleCodecReader): MintBox = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
+        override fun read(reader: ScaleCodecReader): MintBox = when (val discriminant = reader.readUByte()) {
             0 -> Asset.read(reader)
             1 -> TriggerRepetitions.read(reader)
             else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")

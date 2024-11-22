@@ -51,10 +51,7 @@ public sealed class SignedBlock : ModelEnum {
     }
 
     public companion object : ScaleReader<SignedBlock>, ScaleWriter<SignedBlock> {
-        override fun read(reader: ScaleCodecReader): SignedBlock = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
+        override fun read(reader: ScaleCodecReader): SignedBlock = when (val discriminant = reader.readUByte()) {
             1 -> V1.read(reader)
             else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
         }

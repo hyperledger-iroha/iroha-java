@@ -1,5 +1,3 @@
-@file:Suppress("UNCHECKED_CAST")
-
 package jp.co.soramitsu.iroha2.client
 
 import com.fasterxml.jackson.core.JsonParser
@@ -19,56 +17,34 @@ import io.ktor.client.plugins.auth.providers.basic
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.plugins.websocket.WebSockets
-import io.ktor.client.plugins.websocket.webSocket
 import io.ktor.client.request.parameter
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
 import io.ktor.serialization.jackson.jackson
-import io.ktor.websocket.Frame
-import io.ktor.websocket.readBytes
 import jp.co.soramitsu.iroha2.IrohaClientException
-import jp.co.soramitsu.iroha2.TransactionRejectedException
-import jp.co.soramitsu.iroha2.WebSocketProtocolException
 import jp.co.soramitsu.iroha2.cast
-import jp.co.soramitsu.iroha2.client.balancing.RoundRobinStrategy
 import jp.co.soramitsu.iroha2.client.blockstream.BlockStreamContext
 import jp.co.soramitsu.iroha2.client.blockstream.BlockStreamStorage
 import jp.co.soramitsu.iroha2.client.blockstream.BlockStreamSubscription
-import jp.co.soramitsu.iroha2.extract
 import jp.co.soramitsu.iroha2.extractBlock
+import jp.co.soramitsu.iroha2.generated.AccountId
 import jp.co.soramitsu.iroha2.generated.BlockMessage
-import jp.co.soramitsu.iroha2.generated.EventBox
-import jp.co.soramitsu.iroha2.generated.EventMessage
-import jp.co.soramitsu.iroha2.generated.EventSubscriptionRequest
 import jp.co.soramitsu.iroha2.generated.ForwardCursor
-import jp.co.soramitsu.iroha2.generated.PipelineEventBox
 import jp.co.soramitsu.iroha2.generated.QueryResponse
 import jp.co.soramitsu.iroha2.generated.SignedQuery
-import jp.co.soramitsu.iroha2.generated.SignedTransaction
-import jp.co.soramitsu.iroha2.generated.TransactionRejectionReason
-import jp.co.soramitsu.iroha2.generated.TransactionStatus
-import jp.co.soramitsu.iroha2.hash
 import jp.co.soramitsu.iroha2.height
-import jp.co.soramitsu.iroha2.model.IrohaUrls
 import jp.co.soramitsu.iroha2.query.QueryAndExtractor
-import jp.co.soramitsu.iroha2.toHex
-import jp.co.soramitsu.iroha2.transaction.Filters
-import jp.co.soramitsu.iroha2.transaction.TransactionBuilder
-import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.sync.Mutex
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.math.BigInteger
-import java.net.URI
 import java.net.URL
+import java.security.KeyPair
 import java.time.Duration
+import java.util.UUID
 import kotlin.coroutines.CoroutineContext
 
 /**
@@ -76,60 +52,20 @@ import kotlin.coroutines.CoroutineContext
  *
  * @param credentials <username>:<password>
  */
-@Suppress("unused")
 open class Iroha2Client(
-    open val urls: List<IrohaUrls>,
-    open val log: Boolean = false,
+    open val apiUrl: URL,
+    open val chain: UUID,
+    open val authority: AccountId,
+    open val keyPair: KeyPair,
     open val credentials: String? = null,
+    open val log: Boolean = true,
     open val eventReadTimeoutInMills: Long = 250,
     open val eventReadMaxAttempts: Int = 10,
     override val coroutineContext: CoroutineContext = Dispatchers.IO + SupervisorJob(),
-) : RoundRobinStrategy(urls),
-    AutoCloseable,
+) : AutoCloseable,
     CoroutineScope {
-
-    constructor(
-        url: IrohaUrls,
-        log: Boolean = false,
-        credentials: String? = null,
-        eventReadTimeoutInMills: Long = 250,
-        eventReadMaxAttempts: Int = 10,
-    ) : this(mutableListOf(url), log, credentials, eventReadTimeoutInMills, eventReadMaxAttempts)
-
-    constructor(
-        apiUrl: URL,
-        peerUrl: URL,
-        log: Boolean = false,
-        credentials: String? = null,
-        eventReadTimeoutInMills: Long = 250,
-        eventReadMaxAttempts: Int = 10,
-    ) : this(
-        IrohaUrls(apiUrl, peerUrl),
-        log,
-        credentials,
-        eventReadTimeoutInMills,
-        eventReadMaxAttempts,
-    )
-
-    constructor(
-        apiUrl: String,
-        peerUrl: String,
-        log: Boolean = true,
-        credentials: String? = null,
-        eventReadTimeoutInMills: Long = 250,
-        eventReadMaxAttempts: Int = 10,
-    ) : this(
-        URI(apiUrl).toURL(),
-        URI(peerUrl).toURL(),
-        log,
-        credentials,
-        eventReadTimeoutInMills,
-        eventReadMaxAttempts,
-    )
-
     companion object {
         const val TRANSACTION_ENDPOINT = "/transaction"
-        const val PENDING_TRANSACTIONS_ENDPOINT = "/pending_transactions"
         const val QUERY_ENDPOINT = "/query"
         const val WS_ENDPOINT = "/events"
         const val WS_ENDPOINT_BLOCK_STREAM = "/block/stream"
@@ -195,46 +131,14 @@ open class Iroha2Client(
     }
 
     /**
-     * Send a transaction to an Iroha peer without waiting for the final transaction status (committed or rejected).
-     *
-     * With this method, the state of the transaction is not tracked after the peer responses with 2xx status code,
-     * which means that the peer accepted the transaction and the transaction passed the stateless validation.
-     */
-    suspend fun fireAndForget(transaction: TransactionBuilder.() -> SignedTransaction): ByteArray {
-        val signedTransaction = transaction(TransactionBuilder.builder())
-        val hash = signedTransaction.hash()
-        logger.debug("Sending transaction with hash {}", hash.toHex())
-        val response: HttpResponse = client.post("${getApiUrl()}$TRANSACTION_ENDPOINT") {
-            setBody(SignedTransaction.encode(signedTransaction))
-        }
-        response.body<Unit>()
-        return hash
-    }
-
-    /**
-     * Send a transaction to an Iroha peer and wait until it is committed or rejected.
-     */
-    suspend fun sendTransaction(transaction: TransactionBuilder.() -> SignedTransaction): CompletableDeferred<ByteArray> = coroutineScope {
-        val signedTransaction = transaction(TransactionBuilder())
-
-        val lock = Mutex(locked = true)
-        subscribeToTransactionStatus(signedTransaction.hash()) {
-            lock.unlock() // 2. unlock after subscription
-        }.also {
-            lock.lock() // 1. waiting for unlock
-            fireAndForget { signedTransaction }
-        }
-    }
-
-    /**
-     * @see subscribeToBlockStream below
+     * @see blocks below
      */
     @JvmOverloads
-    fun subscribeToBlockStream(
+    fun blocks(
         from: Long = 1,
         count: Long,
         autoStart: Boolean = true,
-    ): Pair<Iterable<BlockStreamStorage>, BlockStreamSubscription> = subscribeToBlockStream(
+    ): Pair<Iterable<BlockStreamStorage>, BlockStreamSubscription> = blocks(
         from,
         onBlock = { block -> block },
         cancelIf = { block -> block.extractBlock().height().u64 == BigInteger.valueOf(from + count - 1) },
@@ -251,7 +155,7 @@ open class Iroha2Client(
      * @param onClose - the code that will be invoked right before closing
      */
     @JvmOverloads
-    fun subscribeToBlockStream(
+    fun blocks(
         from: Long = 1,
         onBlock: (block: BlockMessage) -> Any,
         onFailure: suspend (t: Throwable) -> Unit = { throwable ->
@@ -260,7 +164,7 @@ open class Iroha2Client(
         cancelIf: suspend (block: BlockMessage) -> Boolean = { false },
         onClose: () -> Unit = { logger.info("Block stream subscription execution was finished") },
         autoStart: Boolean = true,
-    ): Pair<Iterable<BlockStreamStorage>, BlockStreamSubscription> = subscribeToBlockStream(
+    ): Pair<Iterable<BlockStreamStorage>, BlockStreamSubscription> = blocks(
         from,
         listOf(
             BlockStreamStorage(
@@ -284,14 +188,14 @@ open class Iroha2Client(
      * otherwise calling 'start' method required
      */
     @JvmOverloads
-    fun subscribeToBlockStream(
+    fun blocks(
         from: Long = 1,
         blockStreamStorages: Iterable<BlockStreamStorage>,
         onClose: () -> Unit = { logger.info("Block stream subscription execution was finished") },
         autoStart: Boolean = true,
     ): Pair<Iterable<BlockStreamStorage>, BlockStreamSubscription> {
         val context = BlockStreamContext(
-            getApiUrl(),
+            apiUrl,
             client,
             from,
             blockStreamStorages,
@@ -301,13 +205,8 @@ open class Iroha2Client(
             .apply { if (autoStart) start() }
     }
 
-    /**
-     * Subscribe to track the transaction status
-     */
-    fun subscribeToTransactionStatus(hash: ByteArray) = subscribeToTransactionStatus(hash, null)
-
     private suspend fun sendQueryRequest(query: SignedQuery, cursor: ForwardCursor? = null): QueryResponse {
-        val response: HttpResponse = client.post("${getApiUrl()}$QUERY_ENDPOINT") {
+        val response: HttpResponse = client.post("${apiUrl}$QUERY_ENDPOINT") {
             if (cursor != null) {
                 parameter("query", cursor.query)
                 parameter("cursor", cursor.cursor.u64)
@@ -336,115 +235,6 @@ open class Iroha2Client(
 //            }
 //        }
 //    }
-
-    /**
-     * @param hash - Signed transaction hash
-     * @param afterSubscription - Expression that is invoked after subscription
-     */
-    private fun subscribeToTransactionStatus(hash: ByteArray, afterSubscription: (() -> Unit)? = null): CompletableDeferred<ByteArray> {
-        val hexHash = hash.toHex()
-        logger.debug("Creating subscription to transaction status: {}", hexHash)
-
-        val subscriptionRequest = eventSubscriberMessageOf(hash)
-        val payload = EventSubscriptionRequest.encode(subscriptionRequest)
-        val result: CompletableDeferred<ByteArray> = CompletableDeferred()
-        val apiUrl = getApiUrl()
-
-        launch {
-            client.webSocket(
-                host = apiUrl.host,
-                port = apiUrl.port,
-                path = WS_ENDPOINT,
-            ) {
-                logger.debug("WebSocket opened")
-                send(Frame.Binary(true, payload))
-
-                afterSubscription?.invoke()
-                logger.debug("Subscription was accepted by peer")
-
-                for (i in 1..eventReadMaxAttempts) {
-                    try {
-                        val income = readMessage(incoming.receive())
-                        val processed = pipelineEventProcess(income, hash, hexHash)
-                        if (processed != null) {
-                            result.complete(processed)
-                            break
-                        }
-                    } catch (e: TransactionRejectedException) {
-                        result.completeExceptionally(e)
-                        break
-                    }
-                    delay(eventReadTimeoutInMills)
-                }
-            }
-        }
-        return result
-    }
-
-    private fun pipelineEventProcess(
-        eventPublisherMessage: EventMessage,
-        hash: ByteArray,
-        hexHash: String,
-    ): ByteArray? {
-        when (val event = eventPublisherMessage.eventBox) {
-            is EventBox.Pipeline -> {
-                val eventBox = event.pipelineEventBox
-                if (eventBox is PipelineEventBox.Transaction && hash.contentEquals(eventBox.transactionEvent.hash.hash.arrayOfU8)) {
-                    when (val status = eventBox.transactionEvent.status) {
-                        is TransactionStatus.Approved -> {
-                            logger.debug("Transaction {} approved", hexHash)
-                            return hash
-                        }
-
-                        is TransactionStatus.Rejected -> {
-                            val reason = status.transactionRejectionReason.message()
-                            logger.error("Transaction {} was rejected by reason: `{}`", hexHash, reason)
-                            throw TransactionRejectedException("Transaction rejected with reason '$reason'")
-                        }
-
-                        is TransactionStatus.Expired -> logger.debug("Transaction {} is expired", hexHash)
-                        is TransactionStatus.Queued -> logger.debug("Transaction {} is queued", hexHash)
-                    }
-                }
-                return null
-            }
-
-            else -> throw WebSocketProtocolException(
-                "Expected message with type ${EventBox.Pipeline::class.qualifiedName}, " +
-                    "but was ${event::class.qualifiedName}",
-            )
-        }
-    }
-
-    /**
-     * Extract the rejection reason
-     */
-    private fun TransactionRejectionReason.message(): String = when (this) {
-        is TransactionRejectionReason.InstructionExecution -> this.instructionExecutionFail.reason
-        is TransactionRejectionReason.WasmExecution -> this.wasmExecutionFail.reason
-        is TransactionRejectionReason.LimitCheck -> this.transactionLimitError.reason
-        is TransactionRejectionReason.AccountDoesNotExist -> this.findError.extract()
-        is TransactionRejectionReason.Validation -> this.validationFail.toString()
-    }
-
-    /**
-     * Read the message from the frame
-     */
-    private fun readMessage(frame: Frame): EventMessage = when (frame) {
-        is Frame.Binary -> {
-            frame.readBytes().let {
-                EventMessage.decode(it)
-            }
-        }
-
-        else -> throw WebSocketProtocolException(
-            "Expected server will `${Frame.Binary::class.qualifiedName}` frame, but was `${frame::class.qualifiedName}`",
-        )
-    }
-
-    private fun eventSubscriberMessageOf(hash: ByteArray) = EventSubscriptionRequest(
-        listOf(Filters.pipelineTransaction(hash)),
-    )
 
     object DurationDeserializer : JsonDeserializer<Duration>() {
         override fun deserialize(p: JsonParser, ctxt: DeserializationContext): Duration {

@@ -110,10 +110,7 @@ public sealed class AssetIdPredicateBox : ModelEnum {
     }
 
     public companion object : ScaleReader<AssetIdPredicateBox>, ScaleWriter<AssetIdPredicateBox> {
-        override fun read(reader: ScaleCodecReader): AssetIdPredicateBox = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
+        override fun read(reader: ScaleCodecReader): AssetIdPredicateBox = when (val discriminant = reader.readUByte()) {
             0 -> Equals.read(reader)
             1 -> DefinitionId.read(reader)
             2 -> AccountId.read(reader)

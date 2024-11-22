@@ -1,9 +1,29 @@
 package jp.co.soramitsu.iroha2
 
-import jp.co.soramitsu.iroha2.generated.*
+import jp.co.soramitsu.iroha2.generated.AssetDefinitionId
+import jp.co.soramitsu.iroha2.generated.AssetId
+import jp.co.soramitsu.iroha2.generated.BlockParameters
+import jp.co.soramitsu.iroha2.generated.CanUnregisterAccount
+import jp.co.soramitsu.iroha2.generated.ChainId
+import jp.co.soramitsu.iroha2.generated.EventFilterBox
+import jp.co.soramitsu.iroha2.generated.Json
+import jp.co.soramitsu.iroha2.generated.Metadata
+import jp.co.soramitsu.iroha2.generated.Name
+import jp.co.soramitsu.iroha2.generated.NonZeroOfu64
+import jp.co.soramitsu.iroha2.generated.Parameters
+import jp.co.soramitsu.iroha2.generated.RawGenesisTransaction
+import jp.co.soramitsu.iroha2.generated.Repeats
+import jp.co.soramitsu.iroha2.generated.SmartContractParameters
+import jp.co.soramitsu.iroha2.generated.SumeragiParameters
+import jp.co.soramitsu.iroha2.generated.TransactionParameters
+import jp.co.soramitsu.iroha2.generated.TriggerId
 import jp.co.soramitsu.iroha2.transaction.EventFilters
-import jp.co.soramitsu.iroha2.transaction.Instructions
+import jp.co.soramitsu.iroha2.transaction.Grant
+import jp.co.soramitsu.iroha2.transaction.Mint
+import jp.co.soramitsu.iroha2.transaction.Register
+import jp.co.soramitsu.iroha2.transaction.SetKeyValue
 import org.junit.jupiter.api.Test
+import java.math.BigDecimal
 import java.math.BigInteger
 import kotlin.test.assertEquals
 
@@ -26,10 +46,10 @@ class SerializerTest {
                     emptyMap(),
                 ),
                 listOf(
-                    Instructions.grant(
+                    Grant.accountPermission(
                         CanUnregisterAccount(account.asAccountId()),
                         destination.asAccountId(),
-                    ),
+                    ).asInstructionBox(),
                 ),
                 "",
                 emptyList(),
@@ -110,19 +130,21 @@ class SerializerTest {
                     emptyMap(),
                 ),
                 listOf(
-                    Instructions.mint(assetId, 100),
-                    Instructions.setKeyValue(assetId, "key".asName(), "value"),
-                    Instructions.register(
+                    Mint.asset(assetId, BigDecimal(100)).asInstructionBox(),
+                    SetKeyValue.asset(assetId, "key".asName(), "value").asInstructionBox(),
+                    Register.trigger(
                         triggerId,
-                        listOf(Instructions.mint(assetId, 1)),
+                        listOf(Mint.asset(assetId, BigDecimal(1))),
                         Repeats.Indefinitely(),
                         aliceAccountId,
-                        Metadata(mapOf(Pair("key".asName(), Json.writeValue("value")))),
-                        EventFilters.timeEventFilter(
-                            BigInteger.valueOf(1715676978L),
-                            BigInteger.valueOf(1L),
+                        EventFilterBox.Time(
+                            EventFilters.timeEventFilter(
+                                BigInteger.valueOf(1715676978L),
+                                BigInteger.valueOf(1L),
+                            ),
                         ),
-                    ),
+                        Metadata(mapOf(Pair("key".asName(), Json.writeValue("value")))),
+                    ).asInstructionBox(),
                 ),
                 "",
                 emptyList(),

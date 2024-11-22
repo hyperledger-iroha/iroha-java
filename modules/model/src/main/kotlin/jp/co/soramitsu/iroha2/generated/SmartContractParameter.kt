@@ -79,11 +79,10 @@ public sealed class SmartContractParameter : ModelEnum {
         }
     }
 
-    public companion object : ScaleReader<SmartContractParameter>, ScaleWriter<SmartContractParameter> {
-        override fun read(reader: ScaleCodecReader): SmartContractParameter = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
+    public companion object :
+        ScaleReader<SmartContractParameter>,
+        ScaleWriter<SmartContractParameter> {
+        override fun read(reader: ScaleCodecReader): SmartContractParameter = when (val discriminant = reader.readUByte()) {
             0 -> Fuel.read(reader)
             1 -> Memory.read(reader)
             else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")

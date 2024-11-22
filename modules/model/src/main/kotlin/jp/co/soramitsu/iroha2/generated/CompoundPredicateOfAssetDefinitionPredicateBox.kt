@@ -83,10 +83,7 @@ public sealed class CompoundPredicateOfAssetDefinitionPredicateBox : ModelEnum {
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.CompoundPredicateOfAssetDefinitionPredicateBox.Not,
             ): Unit = try {
-                CompoundPredicateOfAssetDefinitionPredicateBox.write(
-                    writer,
-                    instance.compoundPredicateOfAssetDefinitionPredicateBox,
-                )
+                CompoundPredicateOfAssetDefinitionPredicateBox.write(writer, instance.compoundPredicateOfAssetDefinitionPredicateBox)
             } catch (ex: Exception) {
                 throw wrapException(ex)
             }

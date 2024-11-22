@@ -80,10 +80,7 @@ public sealed class CompoundPredicateOfTriggerIdPredicateBox : ModelEnum {
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.CompoundPredicateOfTriggerIdPredicateBox.Not,
             ): Unit = try {
-                CompoundPredicateOfTriggerIdPredicateBox.write(
-                    writer,
-                    instance.compoundPredicateOfTriggerIdPredicateBox,
-                )
+                CompoundPredicateOfTriggerIdPredicateBox.write(writer, instance.compoundPredicateOfTriggerIdPredicateBox)
             } catch (ex: Exception) {
                 throw wrapException(ex)
             }
@@ -161,16 +158,14 @@ public sealed class CompoundPredicateOfTriggerIdPredicateBox : ModelEnum {
     public companion object :
         ScaleReader<CompoundPredicateOfTriggerIdPredicateBox>,
         ScaleWriter<CompoundPredicateOfTriggerIdPredicateBox> {
-        override fun read(reader: ScaleCodecReader): CompoundPredicateOfTriggerIdPredicateBox = when (
-            val
-            discriminant = reader.readUByte()
-        ) {
-            0 -> Atom.read(reader)
-            1 -> Not.read(reader)
-            2 -> And.read(reader)
-            3 -> Or.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
-        }
+        override fun read(reader: ScaleCodecReader): CompoundPredicateOfTriggerIdPredicateBox =
+            when (val discriminant = reader.readUByte()) {
+                0 -> Atom.read(reader)
+                1 -> Not.read(reader)
+                2 -> And.read(reader)
+                3 -> Or.read(reader)
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
 
         override fun write(writer: ScaleCodecWriter, instance: CompoundPredicateOfTriggerIdPredicateBox) {
             writer.directWrite(instance.discriminant())

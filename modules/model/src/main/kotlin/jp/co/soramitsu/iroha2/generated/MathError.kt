@@ -262,10 +262,7 @@ public sealed class MathError : ModelEnum {
     }
 
     public companion object : ScaleReader<MathError>, ScaleWriter<MathError> {
-        override fun read(reader: ScaleCodecReader): MathError = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
+        override fun read(reader: ScaleCodecReader): MathError = when (val discriminant = reader.readUByte()) {
             0 -> Overflow.read(reader)
             1 -> NotEnoughQuantity.read(reader)
             2 -> DivideByZero.read(reader)

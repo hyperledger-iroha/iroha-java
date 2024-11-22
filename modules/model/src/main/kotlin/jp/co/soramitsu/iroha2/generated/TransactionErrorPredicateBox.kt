@@ -72,10 +72,7 @@ public sealed class TransactionErrorPredicateBox : ModelEnum {
     public companion object :
         ScaleReader<TransactionErrorPredicateBox>,
         ScaleWriter<TransactionErrorPredicateBox> {
-        override fun read(reader: ScaleCodecReader): TransactionErrorPredicateBox = when (
-            val
-            discriminant = reader.readUByte()
-        ) {
+        override fun read(reader: ScaleCodecReader): TransactionErrorPredicateBox = when (val discriminant = reader.readUByte()) {
             0 -> IsSome.read(reader)
             else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
         }

@@ -21,11 +21,10 @@ public sealed class PermissionPredicateBox : ModelEnum {
      */
     public abstract fun discriminant(): Int
 
-    public companion object : ScaleReader<PermissionPredicateBox>, ScaleWriter<PermissionPredicateBox> {
-        override fun read(reader: ScaleCodecReader): PermissionPredicateBox = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
+    public companion object :
+        ScaleReader<PermissionPredicateBox>,
+        ScaleWriter<PermissionPredicateBox> {
+        override fun read(reader: ScaleCodecReader): PermissionPredicateBox = when (val discriminant = reader.readUByte()) {
             else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
         }
 

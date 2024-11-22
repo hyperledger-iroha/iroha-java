@@ -80,10 +80,7 @@ public sealed class CompoundPredicateOfBlockHeaderPredicateBox : ModelEnum {
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.CompoundPredicateOfBlockHeaderPredicateBox.Not,
             ): Unit = try {
-                CompoundPredicateOfBlockHeaderPredicateBox.write(
-                    writer,
-                    instance.compoundPredicateOfBlockHeaderPredicateBox,
-                )
+                CompoundPredicateOfBlockHeaderPredicateBox.write(writer, instance.compoundPredicateOfBlockHeaderPredicateBox)
             } catch (ex: Exception) {
                 throw wrapException(ex)
             }
@@ -93,8 +90,7 @@ public sealed class CompoundPredicateOfBlockHeaderPredicateBox : ModelEnum {
     /**
      * 'And' variant
      */
-    public data class And(public val vec: List<CompoundPredicateOfBlockHeaderPredicateBox>) :
-        CompoundPredicateOfBlockHeaderPredicateBox() {
+    public data class And(public val vec: List<CompoundPredicateOfBlockHeaderPredicateBox>) : CompoundPredicateOfBlockHeaderPredicateBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :

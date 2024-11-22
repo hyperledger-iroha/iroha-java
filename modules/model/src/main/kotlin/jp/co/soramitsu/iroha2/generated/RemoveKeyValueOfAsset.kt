@@ -3,10 +3,13 @@
 //
 package jp.co.soramitsu.iroha2.generated
 
+import jp.co.soramitsu.iroha2.asInstructionBoxExt
 import jp.co.soramitsu.iroha2.codec.ScaleCodecReader
 import jp.co.soramitsu.iroha2.codec.ScaleCodecWriter
 import jp.co.soramitsu.iroha2.codec.ScaleReader
 import jp.co.soramitsu.iroha2.codec.ScaleWriter
+import jp.co.soramitsu.iroha2.generated.InstructionBox
+import jp.co.soramitsu.iroha2.transaction.Instruction
 import jp.co.soramitsu.iroha2.wrapException
 import kotlin.Unit
 
@@ -15,7 +18,9 @@ import kotlin.Unit
  *
  * Generated from 'RemoveKeyValueOfAsset' regular structure
  */
-public data class RemoveKeyValueOfAsset(public val `object`: AssetId, public val key: Name) {
+public data class RemoveKeyValueOfAsset(public val `object`: AssetId, public val key: Name) : Instruction {
+    override fun asInstructionBox(): InstructionBox = asInstructionBoxExt()
+
     public companion object : ScaleReader<RemoveKeyValueOfAsset>, ScaleWriter<RemoveKeyValueOfAsset> {
         override fun read(reader: ScaleCodecReader): RemoveKeyValueOfAsset = try {
             RemoveKeyValueOfAsset(

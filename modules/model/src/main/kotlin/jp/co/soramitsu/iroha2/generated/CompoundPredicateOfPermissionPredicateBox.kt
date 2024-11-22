@@ -80,10 +80,7 @@ public sealed class CompoundPredicateOfPermissionPredicateBox : ModelEnum {
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.CompoundPredicateOfPermissionPredicateBox.Not,
             ): Unit = try {
-                CompoundPredicateOfPermissionPredicateBox.write(
-                    writer,
-                    instance.compoundPredicateOfPermissionPredicateBox,
-                )
+                CompoundPredicateOfPermissionPredicateBox.write(writer, instance.compoundPredicateOfPermissionPredicateBox)
             } catch (ex: Exception) {
                 throw wrapException(ex)
             }

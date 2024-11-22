@@ -80,10 +80,7 @@ public sealed class CompoundPredicateOfSignedBlockPredicateBox : ModelEnum {
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.CompoundPredicateOfSignedBlockPredicateBox.Not,
             ): Unit = try {
-                CompoundPredicateOfSignedBlockPredicateBox.write(
-                    writer,
-                    instance.compoundPredicateOfSignedBlockPredicateBox,
-                )
+                CompoundPredicateOfSignedBlockPredicateBox.write(writer, instance.compoundPredicateOfSignedBlockPredicateBox)
             } catch (ex: Exception) {
                 throw wrapException(ex)
             }
@@ -93,8 +90,7 @@ public sealed class CompoundPredicateOfSignedBlockPredicateBox : ModelEnum {
     /**
      * 'And' variant
      */
-    public data class And(public val vec: List<CompoundPredicateOfSignedBlockPredicateBox>) :
-        CompoundPredicateOfSignedBlockPredicateBox() {
+    public data class And(public val vec: List<CompoundPredicateOfSignedBlockPredicateBox>) : CompoundPredicateOfSignedBlockPredicateBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :

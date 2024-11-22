@@ -28,11 +28,7 @@ public data class MultisigRegister(
         override fun read(reader: ScaleCodecReader): MultisigRegister = try {
             MultisigRegister(
                 AccountId.read(reader),
-                reader.readMap(
-                    reader.readCompactInt(),
-                    { AccountId.read(reader) },
-                    { reader.readUByte().toShort() },
-                ),
+                reader.readMap(reader.readCompactInt(), { AccountId.read(reader) }, { reader.readUByte().toShort() }),
                 NonZeroOfu16.read(reader),
                 NonZeroOfu64.read(reader),
             )

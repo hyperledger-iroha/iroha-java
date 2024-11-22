@@ -45,10 +45,7 @@ public sealed class QueryBox : ModelEnum {
             }
 
             override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.QueryBox.FindDomains): Unit = try {
-                QueryWithFilterOfFindDomainsAndDomainPredicateBox.write(
-                    writer,
-                    instance.queryWithFilterOfFindDomainsAndDomainPredicateBox,
-                )
+                QueryWithFilterOfFindDomainsAndDomainPredicateBox.write(writer, instance.queryWithFilterOfFindDomainsAndDomainPredicateBox)
             } catch (ex: Exception) {
                 throw wrapException(ex)
             }
@@ -109,10 +106,7 @@ public sealed class QueryBox : ModelEnum {
             }
 
             override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.QueryBox.FindAssets): Unit = try {
-                QueryWithFilterOfFindAssetsAndAssetPredicateBox.write(
-                    writer,
-                    instance.queryWithFilterOfFindAssetsAndAssetPredicateBox,
-                )
+                QueryWithFilterOfFindAssetsAndAssetPredicateBox.write(writer, instance.queryWithFilterOfFindAssetsAndAssetPredicateBox)
             } catch (ex: Exception) {
                 throw wrapException(ex)
             }
@@ -174,10 +168,7 @@ public sealed class QueryBox : ModelEnum {
             }
 
             override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.QueryBox.FindRoles): Unit = try {
-                QueryWithFilterOfFindRolesAndRolePredicateBox.write(
-                    writer,
-                    instance.queryWithFilterOfFindRolesAndRolePredicateBox,
-                )
+                QueryWithFilterOfFindRolesAndRolePredicateBox.write(writer, instance.queryWithFilterOfFindRolesAndRolePredicateBox)
             } catch (ex: Exception) {
                 throw wrapException(ex)
             }
@@ -206,10 +197,7 @@ public sealed class QueryBox : ModelEnum {
             }
 
             override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.QueryBox.FindRoleIds): Unit = try {
-                QueryWithFilterOfFindRoleIdsAndRoleIdPredicateBox.write(
-                    writer,
-                    instance.queryWithFilterOfFindRoleIdsAndRoleIdPredicateBox,
-                )
+                QueryWithFilterOfFindRoleIdsAndRoleIdPredicateBox.write(writer, instance.queryWithFilterOfFindRoleIdsAndRoleIdPredicateBox)
             } catch (ex: Exception) {
                 throw wrapException(ex)
             }
@@ -340,10 +328,7 @@ public sealed class QueryBox : ModelEnum {
             }
 
             override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.QueryBox.FindPeers): Unit = try {
-                QueryWithFilterOfFindPeersAndPeerPredicateBox.write(
-                    writer,
-                    instance.queryWithFilterOfFindPeersAndPeerPredicateBox,
-                )
+                QueryWithFilterOfFindPeersAndPeerPredicateBox.write(writer, instance.queryWithFilterOfFindPeersAndPeerPredicateBox)
             } catch (ex: Exception) {
                 throw wrapException(ex)
             }
@@ -514,10 +499,7 @@ public sealed class QueryBox : ModelEnum {
     }
 
     public companion object : ScaleReader<QueryBox>, ScaleWriter<QueryBox> {
-        override fun read(reader: ScaleCodecReader): QueryBox = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
+        override fun read(reader: ScaleCodecReader): QueryBox = when (val discriminant = reader.readUByte()) {
             0 -> FindDomains.read(reader)
             1 -> FindAccounts.read(reader)
             2 -> FindAssets.read(reader)

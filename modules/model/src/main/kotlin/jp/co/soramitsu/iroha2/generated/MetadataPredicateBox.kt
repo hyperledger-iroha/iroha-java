@@ -22,10 +22,7 @@ public sealed class MetadataPredicateBox : ModelEnum {
     public abstract fun discriminant(): Int
 
     public companion object : ScaleReader<MetadataPredicateBox>, ScaleWriter<MetadataPredicateBox> {
-        override fun read(reader: ScaleCodecReader): MetadataPredicateBox = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
+        override fun read(reader: ScaleCodecReader): MetadataPredicateBox = when (val discriminant = reader.readUByte()) {
             else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
         }
 

@@ -108,10 +108,7 @@ public sealed class TriggerCompletedOutcomeType : ModelEnum {
     public companion object :
         ScaleReader<TriggerCompletedOutcomeType>,
         ScaleWriter<TriggerCompletedOutcomeType> {
-        override fun read(reader: ScaleCodecReader): TriggerCompletedOutcomeType = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
+        override fun read(reader: ScaleCodecReader): TriggerCompletedOutcomeType = when (val discriminant = reader.readUByte()) {
             0 -> Success.read(reader)
             1 -> Failure.read(reader)
             else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")

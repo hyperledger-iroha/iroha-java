@@ -186,10 +186,7 @@ public sealed class Parameter : ModelEnum {
     }
 
     public companion object : ScaleReader<Parameter>, ScaleWriter<Parameter> {
-        override fun read(reader: ScaleCodecReader): Parameter = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
+        override fun read(reader: ScaleCodecReader): Parameter = when (val discriminant = reader.readUByte()) {
             0 -> Sumeragi.read(reader)
             1 -> Block.read(reader)
             2 -> Transaction.read(reader)

@@ -162,10 +162,7 @@ public sealed class RemoveKeyValueBox : ModelEnum {
     }
 
     public companion object : ScaleReader<RemoveKeyValueBox>, ScaleWriter<RemoveKeyValueBox> {
-        override fun read(reader: ScaleCodecReader): RemoveKeyValueBox = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
+        override fun read(reader: ScaleCodecReader): RemoveKeyValueBox = when (val discriminant = reader.readUByte()) {
             0 -> Domain.read(reader)
             1 -> Account.read(reader)
             2 -> AssetDefinition.read(reader)

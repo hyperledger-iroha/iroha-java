@@ -65,8 +65,7 @@ public sealed class Level : ModelEnum {
                 throw wrapException(ex)
             }
 
-            public fun equals(o1: jp.co.soramitsu.iroha2.generated.Level.TRACE, o2: Any?): Boolean = when
-                (o2) {
+            public fun equals(o1: jp.co.soramitsu.iroha2.generated.Level.TRACE, o2: Any?): Boolean = when (o2) {
                 null -> false
                 else -> o2::class == o1::class
             }
@@ -97,8 +96,7 @@ public sealed class Level : ModelEnum {
                 throw wrapException(ex)
             }
 
-            public fun equals(o1: jp.co.soramitsu.iroha2.generated.Level.DEBUG, o2: Any?): Boolean = when
-                (o2) {
+            public fun equals(o1: jp.co.soramitsu.iroha2.generated.Level.DEBUG, o2: Any?): Boolean = when (o2) {
                 null -> false
                 else -> o2::class == o1::class
             }
@@ -129,8 +127,7 @@ public sealed class Level : ModelEnum {
                 throw wrapException(ex)
             }
 
-            public fun equals(o1: jp.co.soramitsu.iroha2.generated.Level.INFO, o2: Any?): Boolean = when
-                (o2) {
+            public fun equals(o1: jp.co.soramitsu.iroha2.generated.Level.INFO, o2: Any?): Boolean = when (o2) {
                 null -> false
                 else -> o2::class == o1::class
             }
@@ -161,8 +158,7 @@ public sealed class Level : ModelEnum {
                 throw wrapException(ex)
             }
 
-            public fun equals(o1: jp.co.soramitsu.iroha2.generated.Level.WARN, o2: Any?): Boolean = when
-                (o2) {
+            public fun equals(o1: jp.co.soramitsu.iroha2.generated.Level.WARN, o2: Any?): Boolean = when (o2) {
                 null -> false
                 else -> o2::class == o1::class
             }
@@ -193,8 +189,7 @@ public sealed class Level : ModelEnum {
                 throw wrapException(ex)
             }
 
-            public fun equals(o1: jp.co.soramitsu.iroha2.generated.Level.ERROR, o2: Any?): Boolean = when
-                (o2) {
+            public fun equals(o1: jp.co.soramitsu.iroha2.generated.Level.ERROR, o2: Any?): Boolean = when (o2) {
                 null -> false
                 else -> o2::class == o1::class
             }

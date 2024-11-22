@@ -166,10 +166,7 @@ public sealed class Algorithm : ModelEnum {
     }
 
     public companion object : ScaleReader<Algorithm>, ScaleWriter<Algorithm> {
-        override fun read(reader: ScaleCodecReader): Algorithm = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
+        override fun read(reader: ScaleCodecReader): Algorithm = when (val discriminant = reader.readUByte()) {
             0 -> Ed25519.read(reader)
             1 -> Secp256k1.read(reader)
             2 -> BlsNormal.read(reader)

@@ -52,10 +52,7 @@ public sealed class BlockParameter : ModelEnum {
     }
 
     public companion object : ScaleReader<BlockParameter>, ScaleWriter<BlockParameter> {
-        override fun read(reader: ScaleCodecReader): BlockParameter = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
+        override fun read(reader: ScaleCodecReader): BlockParameter = when (val discriminant = reader.readUByte()) {
             0 -> MaxTransactions.read(reader)
             else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
         }

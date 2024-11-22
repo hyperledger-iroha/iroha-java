@@ -81,11 +81,10 @@ public sealed class PipelineEventFilterBox : ModelEnum {
         }
     }
 
-    public companion object : ScaleReader<PipelineEventFilterBox>, ScaleWriter<PipelineEventFilterBox> {
-        override fun read(reader: ScaleCodecReader): PipelineEventFilterBox = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
+    public companion object :
+        ScaleReader<PipelineEventFilterBox>,
+        ScaleWriter<PipelineEventFilterBox> {
+        override fun read(reader: ScaleCodecReader): PipelineEventFilterBox = when (val discriminant = reader.readUByte()) {
             0 -> Transaction.read(reader)
             1 -> Block.read(reader)
             else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")

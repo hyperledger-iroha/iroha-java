@@ -78,10 +78,7 @@ public sealed class PeerEvent : ModelEnum {
     }
 
     public companion object : ScaleReader<PeerEvent>, ScaleWriter<PeerEvent> {
-        override fun read(reader: ScaleCodecReader): PeerEvent = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
+        override fun read(reader: ScaleCodecReader): PeerEvent = when (val discriminant = reader.readUByte()) {
             0 -> Added.read(reader)
             1 -> Removed.read(reader)
             else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")

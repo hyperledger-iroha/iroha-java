@@ -3,10 +3,13 @@
 //
 package jp.co.soramitsu.iroha2.generated
 
+import jp.co.soramitsu.iroha2.asInstructionBoxExt
 import jp.co.soramitsu.iroha2.codec.ScaleCodecReader
 import jp.co.soramitsu.iroha2.codec.ScaleCodecWriter
 import jp.co.soramitsu.iroha2.codec.ScaleReader
 import jp.co.soramitsu.iroha2.codec.ScaleWriter
+import jp.co.soramitsu.iroha2.generated.InstructionBox
+import jp.co.soramitsu.iroha2.transaction.Instruction
 import jp.co.soramitsu.iroha2.wrapException
 import kotlin.Unit
 
@@ -15,7 +18,9 @@ import kotlin.Unit
  *
  * Generated from 'RegisterOfTrigger' regular structure
  */
-public data class RegisterOfTrigger(public val `object`: Trigger) {
+public data class RegisterOfTrigger(public val `object`: Trigger) : Instruction {
+    override fun asInstructionBox(): InstructionBox = asInstructionBoxExt()
+
     public companion object : ScaleReader<RegisterOfTrigger>, ScaleWriter<RegisterOfTrigger> {
         override fun read(reader: ScaleCodecReader): RegisterOfTrigger = try {
             RegisterOfTrigger(

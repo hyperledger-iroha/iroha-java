@@ -162,10 +162,7 @@ public sealed class TransactionStatus : ModelEnum {
     }
 
     public companion object : ScaleReader<TransactionStatus>, ScaleWriter<TransactionStatus> {
-        override fun read(reader: ScaleCodecReader): TransactionStatus = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
+        override fun read(reader: ScaleCodecReader): TransactionStatus = when (val discriminant = reader.readUByte()) {
             0 -> Queued.read(reader)
             1 -> Expired.read(reader)
             2 -> Approved.read(reader)

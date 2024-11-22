@@ -43,10 +43,7 @@ public sealed class AssetTransferBox : ModelEnum {
             }
 
             override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.AssetTransferBox.Numeric): Unit = try {
-                TransferOfAssetAndNumericAndAccount.write(
-                    writer,
-                    instance.transferOfAssetAndNumericAndAccount,
-                )
+                TransferOfAssetAndNumericAndAccount.write(writer, instance.transferOfAssetAndNumericAndAccount)
             } catch (ex: Exception) {
                 throw wrapException(ex)
             }
@@ -73,10 +70,7 @@ public sealed class AssetTransferBox : ModelEnum {
             }
 
             override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.AssetTransferBox.Store): Unit = try {
-                TransferOfAssetAndMetadataAndAccount.write(
-                    writer,
-                    instance.transferOfAssetAndMetadataAndAccount,
-                )
+                TransferOfAssetAndMetadataAndAccount.write(writer, instance.transferOfAssetAndMetadataAndAccount)
             } catch (ex: Exception) {
                 throw wrapException(ex)
             }
@@ -84,10 +78,7 @@ public sealed class AssetTransferBox : ModelEnum {
     }
 
     public companion object : ScaleReader<AssetTransferBox>, ScaleWriter<AssetTransferBox> {
-        override fun read(reader: ScaleCodecReader): AssetTransferBox = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
+        override fun read(reader: ScaleCodecReader): AssetTransferBox = when (val discriminant = reader.readUByte()) {
             0 -> Numeric.read(reader)
             1 -> Store.read(reader)
             else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")

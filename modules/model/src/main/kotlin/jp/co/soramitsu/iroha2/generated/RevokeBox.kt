@@ -105,10 +105,7 @@ public sealed class RevokeBox : ModelEnum {
     }
 
     public companion object : ScaleReader<RevokeBox>, ScaleWriter<RevokeBox> {
-        override fun read(reader: ScaleCodecReader): RevokeBox = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
+        override fun read(reader: ScaleCodecReader): RevokeBox = when (val discriminant = reader.readUByte()) {
             0 -> Permission.read(reader)
             1 -> Role.read(reader)
             2 -> RolePermission.read(reader)

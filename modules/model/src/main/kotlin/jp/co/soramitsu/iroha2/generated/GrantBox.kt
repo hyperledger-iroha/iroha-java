@@ -105,10 +105,7 @@ public sealed class GrantBox : ModelEnum {
     }
 
     public companion object : ScaleReader<GrantBox>, ScaleWriter<GrantBox> {
-        override fun read(reader: ScaleCodecReader): GrantBox = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
+        override fun read(reader: ScaleCodecReader): GrantBox = when (val discriminant = reader.readUByte()) {
             0 -> Permission.read(reader)
             1 -> Role.read(reader)
             2 -> RolePermission.read(reader)

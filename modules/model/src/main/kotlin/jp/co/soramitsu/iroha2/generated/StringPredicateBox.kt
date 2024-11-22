@@ -136,10 +136,7 @@ public sealed class StringPredicateBox : ModelEnum {
     }
 
     public companion object : ScaleReader<StringPredicateBox>, ScaleWriter<StringPredicateBox> {
-        override fun read(reader: ScaleCodecReader): StringPredicateBox = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
+        override fun read(reader: ScaleCodecReader): StringPredicateBox = when (val discriminant = reader.readUByte()) {
             0 -> Equals.read(reader)
             1 -> Contains.read(reader)
             2 -> StartsWith.read(reader)

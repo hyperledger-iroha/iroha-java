@@ -271,10 +271,7 @@ public sealed class AccountEvent : ModelEnum {
     }
 
     public companion object : ScaleReader<AccountEvent>, ScaleWriter<AccountEvent> {
-        override fun read(reader: ScaleCodecReader): AccountEvent = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
+        override fun read(reader: ScaleCodecReader): AccountEvent = when (val discriminant = reader.readUByte()) {
             0 -> Created.read(reader)
             1 -> Deleted.read(reader)
             2 -> Asset.read(reader)

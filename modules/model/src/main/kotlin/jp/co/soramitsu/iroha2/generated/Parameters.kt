@@ -33,11 +33,7 @@ public data class Parameters(
                 TransactionParameters.read(reader),
                 SmartContractParameters.read(reader),
                 SmartContractParameters.read(reader),
-                reader.readMap(
-                    reader.readCompactInt(),
-                    { CustomParameterId.read(reader) },
-                    { CustomParameter.read(reader) },
-                ),
+                reader.readMap(reader.readCompactInt(), { CustomParameterId.read(reader) }, { CustomParameter.read(reader) }),
             )
         } catch (ex: Exception) {
             throw wrapException(ex)

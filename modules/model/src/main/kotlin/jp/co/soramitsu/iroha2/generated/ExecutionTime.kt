@@ -94,10 +94,7 @@ public sealed class ExecutionTime : ModelEnum {
     }
 
     public companion object : ScaleReader<ExecutionTime>, ScaleWriter<ExecutionTime> {
-        override fun read(reader: ScaleCodecReader): ExecutionTime = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
+        override fun read(reader: ScaleCodecReader): ExecutionTime = when (val discriminant = reader.readUByte()) {
             0 -> PreCommit.read(reader)
             1 -> Schedule.read(reader)
             else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")

@@ -228,11 +228,10 @@ public sealed class SingularQueryOutputBox : ModelEnum {
         }
     }
 
-    public companion object : ScaleReader<SingularQueryOutputBox>, ScaleWriter<SingularQueryOutputBox> {
-        override fun read(reader: ScaleCodecReader): SingularQueryOutputBox = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
+    public companion object :
+        ScaleReader<SingularQueryOutputBox>,
+        ScaleWriter<SingularQueryOutputBox> {
+        override fun read(reader: ScaleCodecReader): SingularQueryOutputBox = when (val discriminant = reader.readUByte()) {
             0 -> Numeric.read(reader)
             1 -> ExecutorDataModel.read(reader)
             2 -> Json.read(reader)

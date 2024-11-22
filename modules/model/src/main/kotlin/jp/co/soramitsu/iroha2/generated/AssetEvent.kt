@@ -188,10 +188,7 @@ public sealed class AssetEvent : ModelEnum {
     }
 
     public companion object : ScaleReader<AssetEvent>, ScaleWriter<AssetEvent> {
-        override fun read(reader: ScaleCodecReader): AssetEvent = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
+        override fun read(reader: ScaleCodecReader): AssetEvent = when (val discriminant = reader.readUByte()) {
             0 -> Created.read(reader)
             1 -> Deleted.read(reader)
             2 -> Added.read(reader)

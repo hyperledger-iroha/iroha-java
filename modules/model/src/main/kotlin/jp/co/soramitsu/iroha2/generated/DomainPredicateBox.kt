@@ -79,10 +79,7 @@ public sealed class DomainPredicateBox : ModelEnum {
     }
 
     public companion object : ScaleReader<DomainPredicateBox>, ScaleWriter<DomainPredicateBox> {
-        override fun read(reader: ScaleCodecReader): DomainPredicateBox = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
+        override fun read(reader: ScaleCodecReader): DomainPredicateBox = when (val discriminant = reader.readUByte()) {
             0 -> Id.read(reader)
             1 -> Metadata.read(reader)
             else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")

@@ -4,6 +4,7 @@ import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier
+import com.squareup.kotlinpoet.MemberName
 import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.ParameterizedTypeName
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
@@ -14,6 +15,8 @@ import com.squareup.kotlinpoet.TypeVariableName
 import com.squareup.kotlinpoet.WildcardTypeName
 import jp.co.soramitsu.iroha2.ModelPermission
 import jp.co.soramitsu.iroha2.codegen.blueprint.Blueprint
+import jp.co.soramitsu.iroha2.generated.InstructionBox
+import jp.co.soramitsu.iroha2.transaction.Instruction
 import jp.co.soramitsu.iroha2.type.CompositeType
 
 /**
@@ -120,7 +123,27 @@ abstract class AbstractGenerator<T : Blueprint<*>> {
             .build()
     }
 
-    open fun implFunctions(blueprint: T, clazz: TypeSpec.Builder) = Unit
+    open fun implFunctions(blueprint: T, clazz: TypeSpec.Builder) {
+        if (blueprint.className.startsWith("RegisterOf")) {
+            clazz.addFunction(asInstructionBoxFun())
+        } else if (blueprint.className.startsWith("UnregisterOf")) {
+            clazz.addFunction(asInstructionBoxFun())
+        } else if (blueprint.className.startsWith("SetKeyValueOf")) {
+            clazz.addFunction(asInstructionBoxFun())
+        } else if (blueprint.className.startsWith("RemoveKeyValueOf")) {
+            clazz.addFunction(asInstructionBoxFun())
+        } else if (blueprint.className.startsWith("MintOf")) {
+            clazz.addFunction(asInstructionBoxFun())
+        } else if (blueprint.className.startsWith("BurnOf")) {
+            clazz.addFunction(asInstructionBoxFun())
+        } else if (blueprint.className.startsWith("TransferOf")) {
+            clazz.addFunction(asInstructionBoxFun())
+        } else if (blueprint.className.startsWith("GrantOf")) {
+            clazz.addFunction(asInstructionBoxFun())
+        } else if (blueprint.className.startsWith("RevokeOf")) {
+            clazz.addFunction(asInstructionBoxFun())
+        }
+    }
 
     open fun implInnerClasses(blueprint: T, clazz: TypeSpec.Builder) = Unit
 
@@ -133,6 +156,24 @@ abstract class AbstractGenerator<T : Blueprint<*>> {
     open fun implSuperClasses(blueprint: T, clazz: TypeSpec.Builder) {
         if (blueprint.className.startsWith("Can")) {
             clazz.addSuperinterface(ModelPermission::class)
+        } else if (blueprint.className.startsWith("RegisterOf")) {
+            clazz.addSuperinterface(Instruction::class)
+        } else if (blueprint.className.startsWith("UnregisterOf")) {
+            clazz.addSuperinterface(Instruction::class)
+        } else if (blueprint.className.startsWith("SetKeyValueOf")) {
+            clazz.addSuperinterface(Instruction::class)
+        } else if (blueprint.className.startsWith("RemoveKeyValueOf")) {
+            clazz.addSuperinterface(Instruction::class)
+        } else if (blueprint.className.startsWith("MintOf")) {
+            clazz.addSuperinterface(Instruction::class)
+        } else if (blueprint.className.startsWith("BurnOf")) {
+            clazz.addSuperinterface(Instruction::class)
+        } else if (blueprint.className.startsWith("TransferOf")) {
+            clazz.addSuperinterface(Instruction::class)
+        } else if (blueprint.className.startsWith("GrantOf")) {
+            clazz.addSuperinterface(Instruction::class)
+        } else if (blueprint.className.startsWith("RevokeOf")) {
+            clazz.addSuperinterface(Instruction::class)
         }
     }
 
@@ -165,6 +206,12 @@ abstract class AbstractGenerator<T : Blueprint<*>> {
         .addParameter(ParameterSpec.builder("instance", type).build())
         .addCode(scaleWriterCode(blueprint))
         .addModifiers(KModifier.OVERRIDE)
+        .build()
+
+    private fun asInstructionBoxFun() = FunSpec.builder("asInstructionBox")
+        .addCode(CodeBlock.of("return %M()", MemberName("jp.co.soramitsu.iroha2", "asInstructionBoxExt")))
+        .addModifiers(KModifier.OVERRIDE)
+        .returns(InstructionBox::class)
         .build()
 
     private fun readFun(type: TypeName, blueprint: T) = FunSpec.builder("read")

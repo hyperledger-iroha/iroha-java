@@ -7,6 +7,7 @@ import io.qameta.allure.Story
 import jp.co.soramitsu.iroha2.annotations.Sdk
 import jp.co.soramitsu.iroha2.annotations.SdkTestId
 import jp.co.soramitsu.iroha2.client.blockstream.BlockStreamStorage
+import jp.co.soramitsu.iroha2.generated.AssetDefinitionId
 import jp.co.soramitsu.iroha2.generated.AssetType
 import jp.co.soramitsu.iroha2.generated.BlockMessage
 import jp.co.soramitsu.iroha2.generated.BlockPayload
@@ -27,6 +28,9 @@ import jp.co.soramitsu.iroha2.testengine.GENESIS_DOMAIN
 import jp.co.soramitsu.iroha2.testengine.IrohaTest
 import jp.co.soramitsu.iroha2.testengine.NewAccountWithMetadata
 import jp.co.soramitsu.iroha2.testengine.WithIroha
+import jp.co.soramitsu.iroha2.transaction.Register
+import jp.co.soramitsu.iroha2.transaction.SetKeyValue
+import jp.co.soramitsu.iroha2.transaction.Transfer
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.parallel.ResourceLock
@@ -48,16 +52,16 @@ class BlockStreamTest : IrohaTest<AdminIroha2Client>() {
     @Issue("https://app.zenhub.com/workspaces/iroha-v2-60ddb820813b9100181fc060/issues/gh/hyperledger/iroha-java/361")
     @ResourceLock("blockStream")
     fun `subscription to block stream`(): Unit = runBlocking {
-        val idToSubscription = client.subscribeToBlockStream(from = 1, count = 3)
+        val idToSubscription = client.blocks(from = 1, count = 3)
         val actionId = idToSubscription.first.first().id
         val subscription = idToSubscription.second
         val newAssetName = "rox"
 
         client.tx {
-            transfer(ALICE_ACCOUNT_ID, DEFAULT_DOMAIN_ID, BOB_ACCOUNT_ID)
+            Transfer.domain(ALICE_ACCOUNT_ID, DEFAULT_DOMAIN_ID, BOB_ACCOUNT_ID)
         }
         client.tx(BOB_ACCOUNT_ID, BOB_KEYPAIR) {
-            register(newAssetName.asName(), DEFAULT_DOMAIN_ID, AssetType.Store())
+            Register.assetDefinition(AssetDefinitionId(DEFAULT_DOMAIN_ID, newAssetName.asName()), AssetType.Store())
         }
 
         val blocks = mutableListOf<BlockMessage>()
@@ -89,7 +93,7 @@ class BlockStreamTest : IrohaTest<AdminIroha2Client>() {
     fun `subscription to endless block stream`(): Unit = runBlocking {
         val repeatTimes = 5
         val shift = 1 // to test not to take more than was ordered
-        val idToSubscription = client.subscribeToBlockStream(
+        val idToSubscription = client.blocks(
             onBlock = { block -> block.extractBlock().height() },
             cancelIf = { block -> block.extractBlock().height().u64 == BigInteger.valueOf(repeatTimes.toLong()) },
         )
@@ -100,7 +104,7 @@ class BlockStreamTest : IrohaTest<AdminIroha2Client>() {
         subscription.receive<NonZeroOfu64>(initialActionId) { heightSum += it.u64 }
 
         repeat(repeatTimes + shift) {
-            client.tx { setKeyValue(ALICE_ACCOUNT_ID, randomAlphabetic(16).asName(), randomAlphabetic(16)) }
+            client.tx { SetKeyValue.account(ALICE_ACCOUNT_ID, randomAlphabetic(16).asName(), randomAlphabetic(16)) }
         }
         assertEquals((1..repeatTimes.toLong()).sum(), heightSum.toLong())
 
@@ -115,7 +119,7 @@ class BlockStreamTest : IrohaTest<AdminIroha2Client>() {
         lateinit var lastValue: String
         repeat(repeatTimes * 2) {
             lastValue = randomAlphabetic(16)
-            client.tx { setKeyValue(ALICE_ACCOUNT_ID, randomAlphabetic(16).asName(), lastValue) }
+            client.tx { SetKeyValue.account(ALICE_ACCOUNT_ID, randomAlphabetic(16).asName(), lastValue) }
         }
         Thread.sleep(5000)
         val actual = isi.last().cast<InstructionBox.SetKeyValue>().setKeyValueBox

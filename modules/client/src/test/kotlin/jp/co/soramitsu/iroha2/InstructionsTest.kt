@@ -36,6 +36,7 @@ import jp.co.soramitsu.iroha2.testengine.WithDomainTransferredToBob
 import jp.co.soramitsu.iroha2.testengine.WithIroha
 import jp.co.soramitsu.iroha2.testengine.WithIrohaManual
 import jp.co.soramitsu.iroha2.testengine.XorAndValAssets
+import jp.co.soramitsu.iroha2.transaction.*
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.time.withTimeout
 import org.apache.commons.lang3.RandomStringUtils.randomAlphabetic
@@ -65,16 +66,12 @@ class InstructionsTest : IrohaTest<Iroha2Client>() {
     fun `register domain with manual initialized Iroha`(): Unit = runBlocking {
         val domainId = "new_domain_name".asDomainId()
 
-        client.sendTransaction {
-            account(super.account)
-            register(domainId)
-            buildSigned(super.keyPair)
-        }.also { d ->
+        Register.domain(domainId).execute(client).also { d ->
             withTimeout(txTimeout) { d.await() }
         }
 
-        QueryBuilder.findDomainById(domainId).account(super.account)
-            .buildSigned(super.keyPair)
+        QueryBuilder.findDomainById(domainId).account(client.authority)
+            .buildSigned(client.keyPair)
             .let { query -> client.sendQuery(query)!! }
             .also { result -> assertEquals(result.id, domainId) }
     }
@@ -90,17 +87,13 @@ class InstructionsTest : IrohaTest<Iroha2Client>() {
     fun `register domain with manual initialized Iroha via docker-compose`(): Unit = runBlocking {
         val domainId = "new_domain_name".asDomainId()
 
-        client.sendTransaction {
-            account(super.account)
-            register(domainId)
-            buildSigned(super.keyPair)
-        }.also { d ->
+        Register.domain(domainId).execute(client).also { d ->
             withTimeout(txTimeout) { d.await() }
         }
 
         QueryBuilder.findDomainById(domainId)
-            .account(super.account)
-            .buildSigned(super.keyPair)
+            .account(client.authority)
+            .buildSigned(client.keyPair)
             .let { query -> client.sendQuery(query)!! }
             .also { result -> assertEquals(result.id, domainId) }
     }
@@ -118,17 +111,13 @@ class InstructionsTest : IrohaTest<Iroha2Client>() {
     fun `register domain`(): Unit = runBlocking {
         val domainId = "new_domain_name".asDomainId()
 
-        client.sendTransaction {
-            account(super.account)
-            register(domainId)
-            buildSigned(super.keyPair)
-        }.also { d ->
+        Register.domain(domainId).execute(client).also { d ->
             withTimeout(txTimeout) { d.await() }
         }
 
         QueryBuilder.findDomainById(domainId)
-            .account(super.account)
-            .buildSigned(super.keyPair)
+            .account(client.authority)
+            .buildSigned(client.keyPair)
             .let { query -> client.sendQuery(query)!! }
             .also { result -> assertEquals(result.id, domainId) }
     }
@@ -147,17 +136,13 @@ class InstructionsTest : IrohaTest<Iroha2Client>() {
     fun `register account`(): Unit = runBlocking {
         val accountId = AccountId(DEFAULT_DOMAIN_ID, generatePublicKey())
 
-        client.sendTransaction {
-            account(super.account)
-            register(accountId)
-            buildSigned(super.keyPair)
-        }.also { d ->
+        Register.account(accountId).execute(client).also { d ->
             withTimeout(txTimeout) { d.await() }
         }
 
         QueryBuilder.findAccountById(accountId)
-            .account(super.account)
-            .buildSigned(super.keyPair)
+            .account(client.authority)
+            .buildSigned(client.keyPair)
             .let { query -> client.sendQuery(query)!! }
             .also { account -> assertEquals(account.id, accountId) }
     }
@@ -174,20 +159,23 @@ class InstructionsTest : IrohaTest<Iroha2Client>() {
     fun `register and unregister account`(): Unit = runBlocking {
         val joeKeyPair = generateKeyPair()
         val joeId = AccountId(DEFAULT_DOMAIN_ID, joeKeyPair.public.toIrohaPublicKey())
-        client.tx { register(joeId) }
+        Register.account(joeId).execute(client).also { d ->
+            withTimeout(txTimeout) { d.await() }
+        }
 
         QueryBuilder.findAccountById(joeId)
-            .account(super.account)
-            .buildSigned(super.keyPair)
+            .account(client.authority)
+            .buildSigned(client.keyPair)
             .let { query -> client.sendQuery(query)!! }
             .also { account -> assertEquals(account.id, joeId) }
 
-        client.tx(joeId, joeKeyPair) {
-            unregister(joeId)
-        }
+        Unregister.account(joeId).executeAs(joeId, joeKeyPair, client)
+            .also { d ->
+                withTimeout(txTimeout) { d.await() }
+            }
         QueryBuilder.findAccountById(joeId)
-            .account(super.account)
-            .buildSigned(super.keyPair)
+            .account(client.authority)
+            .buildSigned(client.keyPair)
             .let { query -> client.sendQuery(query) }
             .also { account -> assertNull(account) }
     }
@@ -202,28 +190,40 @@ class InstructionsTest : IrohaTest<Iroha2Client>() {
     @SdkTestId("unregister_asset_definition")
     fun `register and unregister asset`(): Unit = runBlocking {
         val assetDefinitionId = AssetDefinitionId(DEFAULT_DOMAIN_ID, "XSTUSD".asName())
-        client.tx { register(assetDefinitionId, AssetType.numeric()) }
+        Register.assetDefinition(assetDefinitionId, AssetType.numeric()).execute(client)
+            .also { d ->
+                withTimeout(txTimeout) { d.await() }
+            }
 
         val assetId = AssetId(ALICE_ACCOUNT_ID, assetDefinitionId)
-        client.tx { register(assetId, AssetValue.Numeric(0.asNumeric())) }
+        Register.asset(assetId, AssetValue.Numeric(0.asNumeric())).execute(client)
+            .also { d ->
+                withTimeout(txTimeout) { d.await() }
+            }
 
         QueryBuilder.findAssetById(assetId)
-            .account(super.account)
-            .buildSigned(super.keyPair)
+            .account(client.authority)
+            .buildSigned(client.keyPair)
             .let { query -> client.sendQuery(query)!! }
             .also { asset -> assertEquals(asset.id, assetId) }
 
-        client.tx { unregister(assetId) }
+        Unregister.asset(assetId).execute(client)
+            .also { d ->
+                withTimeout(txTimeout) { d.await() }
+            }
         QueryBuilder.findAssetById(assetId)
-            .account(super.account)
-            .buildSigned(super.keyPair)
+            .account(client.authority)
+            .buildSigned(client.keyPair)
             .let { query -> client.sendQuery(query) }
             .also { asset -> assertNull(asset) }
 
-        client.tx { unregister(assetDefinitionId) }
+        Unregister.assetDefinition(assetDefinitionId).execute(client)
+            .also { d ->
+                withTimeout(txTimeout) { d.await() }
+            }
         QueryBuilder.findAssetDefinitionById(assetDefinitionId)
-            .account(super.account)
-            .buildSigned(super.keyPair)
+            .account(client.authority)
+            .buildSigned(client.keyPair)
             .let { query -> client.sendQuery(query) }
             .also { definition -> assertNull(definition) }
     }
@@ -235,10 +235,13 @@ class InstructionsTest : IrohaTest<Iroha2Client>() {
     @Permission("CanUnregisterDomain")
     @SdkTestId("unregister_domain")
     fun `unregister domain`(): Unit = runBlocking {
-        client.tx { unregister(AliceHasPermissionToUnregisterDomain.NEW_DOMAIN_ID) }
+        Unregister.domain(AliceHasPermissionToUnregisterDomain.NEW_DOMAIN_ID).execute(client)
+            .also { d ->
+                withTimeout(txTimeout) { d.await() }
+            }
         QueryBuilder.findDomainById(AliceHasPermissionToUnregisterDomain.NEW_DOMAIN_ID)
-            .account(super.account)
-            .buildSigned(super.keyPair)
+            .account(client.authority)
+            .buildSigned(client.keyPair)
             .let { query -> client.sendQuery(query) }
             .also { domain -> assertNull(domain) }
     }
@@ -267,17 +270,13 @@ class InstructionsTest : IrohaTest<Iroha2Client>() {
             ),
         )
         val newAccountId = AccountId(DEFAULT_DOMAIN_ID, generatePublicKey())
-        client.sendTransaction {
-            account(super.account)
-            register(newAccountId, metadata)
-            buildSigned(super.keyPair)
-        }.also { d ->
+        Register.account(newAccountId, metadata).execute(client).also { d ->
             withTimeout(txTimeout) { d.await() }
         }
 
         val accountMetadata = QueryBuilder.findAccountById(newAccountId)
-            .account(super.account)
-            .buildSigned(super.keyPair)
+            .account(client.authority)
+            .buildSigned(client.keyPair)
             .let { query -> client.sendQuery(query)!! }
             .also { account -> assertEquals(account.id, newAccountId) }
             .metadata
@@ -299,16 +298,13 @@ class InstructionsTest : IrohaTest<Iroha2Client>() {
     @Permission("no_permission_required")
     @SdkTestId("DEPRECATE CANDIDATE")
     fun `register asset`(): Unit = runBlocking {
-        client.sendTransaction {
-            account(super.account)
-            register(DEFAULT_ASSET_DEFINITION_ID, AssetType.numeric())
-            buildSigned(super.keyPair)
-        }.also { d ->
-            withTimeout(txTimeout) { d.await() }
-        }
+        Register.assetDefinition(DEFAULT_ASSET_DEFINITION_ID, AssetType.numeric()).execute(client)
+            .also { d ->
+                withTimeout(txTimeout) { d.await() }
+            }
         val assetDefinitions = QueryBuilder.findAssetsDefinitions()
-            .account(super.account)
-            .buildSigned(super.keyPair)
+            .account(client.authority)
+            .buildSigned(client.keyPair)
             .let { q -> client.sendQuery(q) }
 
         assetDefinitions.find { it.id == DEFAULT_ASSET_DEFINITION_ID } ?: fail(
@@ -329,16 +325,19 @@ class InstructionsTest : IrohaTest<Iroha2Client>() {
         val pair2 = "key2".asName() to "true"
         val pair3 = "key3".asName() to "12345"
 
-        client.tx {
-            register(DEFAULT_ASSET_DEFINITION_ID, AssetType.Store())
-            setKeyValue(DEFAULT_ASSET_ID, pair1.first, pair1.second)
-            setKeyValue(DEFAULT_ASSET_ID, pair2.first, pair2.second)
-            setKeyValue(DEFAULT_ASSET_ID, pair3.first, pair3.second)
-        }
+        listOf(
+            Register.assetDefinition(DEFAULT_ASSET_DEFINITION_ID, AssetType.Store()),
+            SetKeyValue.asset(DEFAULT_ASSET_ID, pair1.first, pair1.second),
+            SetKeyValue.asset(DEFAULT_ASSET_ID, pair2.first, pair2.second),
+            SetKeyValue.asset(DEFAULT_ASSET_ID, pair3.first, pair3.second),
+        ).execute(client)
+            .also { d ->
+                withTimeout(txTimeout) { d.await() }
+            }
 
         val findAssetByIdQry = QueryBuilder.findAssetById(DEFAULT_ASSET_ID)
-            .account(super.account)
-            .buildSigned(super.keyPair)
+            .account(client.authority)
+            .buildSigned(client.keyPair)
         val asset = client.sendQuery(findAssetByIdQry)
 
         assertEquals(DEFAULT_ASSET_ID.definition.name, asset?.id?.definition?.name)
@@ -355,8 +354,8 @@ class InstructionsTest : IrohaTest<Iroha2Client>() {
 
         // try to find saved assets by domain name
         val findAssetsByDomainNameQry = QueryBuilder.findAssetsByDomainId(DEFAULT_DOMAIN_ID)
-            .account(super.account)
-            .buildSigned(super.keyPair)
+            .account(client.authority)
+            .buildSigned(client.keyPair)
         val assetsByDomainName = client.sendQuery(findAssetsByDomainNameQry)
         assertEquals(1, assetsByDomainName.size)
         assertEquals(asset.id, assetsByDomainName.first().id)
@@ -375,10 +374,11 @@ class InstructionsTest : IrohaTest<Iroha2Client>() {
         val key = "key".asName()
         val value = randomAlphabetic(5000)
 
-        client.tx {
-            // 5000 characters string would be rejected by Iroha with default WSV_ACCOUNT_METADATA_LIMITS config
-            setKeyValue(ALICE_ACCOUNT_ID, key, Json.writeValue(value))
-        }
+        // 5000 characters string would be rejected by Iroha with default WSV_ACCOUNT_METADATA_LIMITS config
+        SetKeyValue.account(ALICE_ACCOUNT_ID, key, Json.writeValue(value)).execute(client)
+            .also { d ->
+                withTimeout(txTimeout) { d.await() }
+            }
     }
 
     @Test
@@ -389,17 +389,22 @@ class InstructionsTest : IrohaTest<Iroha2Client>() {
     @WithIroha([BobHasPermissionToRegisterDomain::class])
     fun `domain metadata set key value with permissions`(): Unit = runBlocking {
         val domainId = DomainId(randomAlphabetic(10).asName())
-        client.tx(BOB_ACCOUNT_ID, BOB_KEYPAIR) {
-            register(domainId)
-            grant(
+
+        listOf(
+            Register.domain(domainId),
+            Grant.accountPermission(
                 CanModifyDomainMetadata(domainId),
                 ALICE_ACCOUNT_ID,
-            )
-        }
+            ),
+        ).executeAs(BOB_ACCOUNT_ID, BOB_KEYPAIR, client)
+            .also { d ->
+                withTimeout(txTimeout) { d.await() }
+            }
 
-        client.tx(ALICE_ACCOUNT_ID, ALICE_KEYPAIR) {
-            setKeyValue(domainId, randomAlphabetic(10).asName(), Json.writeValue(randomAlphabetic(10)))
-        }
+        SetKeyValue.domain(domainId, randomAlphabetic(10).asName(), Json.writeValue(randomAlphabetic(10))).execute(client)
+            .also { d ->
+                withTimeout(txTimeout) { d.await() }
+            }
     }
 
 //    @Test
@@ -411,7 +416,7 @@ class InstructionsTest : IrohaTest<Iroha2Client>() {
 //    fun `grant access to asset key-value and then revoke`(): Unit = runBlocking {
 //        val aliceAssetId = DEFAULT_ASSET_ID
 //
-//        client.tx {
+//        listOf(
 //            registerAssetDefinition(aliceAssetId.definition, AssetType.Store())
 //            // grant by Alice to Bob permissions to set key value in Asset.Store
 //            grantPermission(
@@ -419,14 +424,16 @@ class InstructionsTest : IrohaTest<Iroha2Client>() {
 //                aliceAssetId.asJson(true),
 //                BOB_ACCOUNT_ID,
 //            )
-//        }
+//        ).execute(client)
+//            .also { d ->
+//                withTimeout(txTimeout) { d.await() }
 //        client.tx(BOB_ACCOUNT_ID, BOB_KEYPAIR) {
-//            setKeyValue(aliceAssetId, "foo".asName(), Json("bar"))
+//            SetKeyValue.setKeyValue(aliceAssetId, "foo".asName(), Json("bar"))
 //        }
 //
 //        val query = QueryBuilder.findAssetById(aliceAssetId)
-//            .account(super.account)
-//            .buildSigned(super.keyPair)
+//            .account(client.authority)
+//            .buildSigned(client.keyPair)
 //        val asset = client.sendQuery(query)
 //
 //        assertEquals(aliceAssetId.definition.name, asset?.id?.definition?.name)
@@ -436,9 +443,9 @@ class InstructionsTest : IrohaTest<Iroha2Client>() {
 //            else -> fail("Expected result asset value has type `AssetValue.Store`, but it was `${asset!!.value::class.simpleName}`")
 //        }
 //
-//        client.tx {
-//            revokeSetKeyValueAsset(aliceAssetId, BOB_ACCOUNT_ID)
-//        }
+//        revokeSetKeyValueAsset(aliceAssetId, BOB_ACCOUNT_ID).execute(client)
+//            .also { d ->
+//                withTimeout(txTimeout) { d.await() }
 //        QueryBuilder.findPermissionsByAccountId(BOB_ACCOUNT_ID)
 //            .account(BOB_ACCOUNT_ID)
 //            .buildSigned(BOB_KEYPAIR)
@@ -457,18 +464,17 @@ class InstructionsTest : IrohaTest<Iroha2Client>() {
     @Permission("no_permission_required")
     @SdkTestId("mint_asset_for_account_in_same_domain")
     fun `mint asset`(): Unit = runBlocking {
-        client.sendTransaction {
-            account(super.account)
-            register(DEFAULT_ASSET_DEFINITION_ID, AssetType.numeric())
-            mint(DEFAULT_ASSET_ID, 5)
-            buildSigned(super.keyPair)
-        }.also { d ->
-            withTimeout(txTimeout) { d.await() }
-        }
+        listOf<Instruction>(
+            Register.assetDefinition(DEFAULT_ASSET_DEFINITION_ID, AssetType.numeric()),
+            Mint.asset(DEFAULT_ASSET_ID, BigDecimal(5)),
+        ).execute(client)
+            .also { d ->
+                withTimeout(txTimeout) { d.await() }
+            }
 
         QueryBuilder.findAssetsByAccountId(ALICE_ACCOUNT_ID)
-            .account(super.account)
-            .buildSigned(super.keyPair)
+            .account(client.authority)
+            .buildSigned(client.keyPair)
             .let { query -> client.sendQuery(query) }
             .also { result ->
                 assertEquals(5, result.get(DEFAULT_ASSET_ID)!!.value.cast<AssetValue.Numeric>().numeric.asInt())
@@ -485,12 +491,15 @@ class InstructionsTest : IrohaTest<Iroha2Client>() {
     fun `burn asset`(): Unit = runBlocking {
         // check balance before burn
         val query = QueryBuilder.findAssetsByAccountId(ALICE_ACCOUNT_ID)
-            .account(super.account)
-            .buildSigned(super.keyPair)
+            .account(client.authority)
+            .buildSigned(client.keyPair)
         var result = client.sendQuery(query)
         assertEquals(100, result.get(DEFAULT_ASSET_ID)!!.value.cast<AssetValue.Numeric>().numeric.asInt())
 
-        client.tx { burn(DEFAULT_ASSET_ID, 50) }
+        Burn.asset(DEFAULT_ASSET_ID, BigDecimal(50)).execute(client)
+            .also { d ->
+                withTimeout(txTimeout) { d.await() }
+            }
 
         // check balance after burn
         result = client.sendQuery(query)
@@ -504,19 +513,26 @@ class InstructionsTest : IrohaTest<Iroha2Client>() {
     @Permission("CanBurnAssetsWithDefinition")
     @SdkTestId("burn_other_user_xasset")
     fun `burn other user asset`(): Unit = runBlocking {
-        client.tx {
-            register(DEFAULT_ASSET_DEFINITION_ID, AssetType.numeric())
-            mint(DEFAULT_ASSET_ID, 100)
-            grant(
+        listOf(
+            Register.assetDefinition(DEFAULT_ASSET_DEFINITION_ID, AssetType.numeric()),
+            Mint.asset(DEFAULT_ASSET_ID, BigDecimal(100)),
+            Grant.accountPermission(
                 CanBurnAssetWithDefinition(DEFAULT_ASSET_DEFINITION_ID),
                 BOB_ACCOUNT_ID,
-            )
-        }
-        client.tx(BOB_ACCOUNT_ID, BOB_KEYPAIR) { burn(DEFAULT_ASSET_ID, 50) }
+            ),
+        ).execute(client)
+            .also { d ->
+                withTimeout(txTimeout) { d.await() }
+            }
+
+        Burn.asset(DEFAULT_ASSET_ID, BigDecimal(50)).executeAs(BOB_ACCOUNT_ID, BOB_KEYPAIR, client)
+            .also { d ->
+                withTimeout(txTimeout) { d.await() }
+            }
 
         val result = QueryBuilder.findAssetsByAccountId(ALICE_ACCOUNT_ID)
-            .account(super.account)
-            .buildSigned(super.keyPair)
+            .account(client.authority)
+            .buildSigned(client.keyPair)
             .let { query -> client.sendQuery(query) }
         assertEquals(50, result.get(DEFAULT_ASSET_ID)!!.value.cast<AssetValue.Numeric>().numeric.asInt())
     }
@@ -531,25 +547,24 @@ class InstructionsTest : IrohaTest<Iroha2Client>() {
         val saltKey = "salt"
 
         // grant permission to Alice to change Bob's account metadata
-        client.sendTransaction {
-            account(BOB_ACCOUNT_ID)
-            grant(
-                CanModifyAccountMetadata(BOB_ACCOUNT_ID),
-                ALICE_ACCOUNT_ID,
-            )
-            buildSigned(BOB_KEYPAIR)
-        }.also { d ->
+        Grant.accountPermission(
+            CanModifyAccountMetadata(BOB_ACCOUNT_ID),
+            ALICE_ACCOUNT_ID,
+        ).executeAs(BOB_ACCOUNT_ID, BOB_KEYPAIR, client).also { d ->
             withTimeout(txTimeout) { d.await() }
         }
 
         // add/update salt value in Bob's account metadata
         val salt = randomAlphabetic(10)
-        client.tx { setKeyValue(BOB_ACCOUNT_ID, saltKey.asName(), salt) }
+        SetKeyValue.account(BOB_ACCOUNT_ID, saltKey.asName(), salt).execute(client)
+            .also { d ->
+                withTimeout(txTimeout) { d.await() }
+            }
 
         // check new metadata in Bob's account
         val bobAccountMetadata = QueryBuilder.findAccountById(BOB_ACCOUNT_ID)
-            .account(super.account)
-            .buildSigned(super.keyPair)
+            .account(client.authority)
+            .buildSigned(client.keyPair)
             .let { query -> client.sendQuery(query)!!.metadata.sortedMapOfName }
         assertEquals(salt, bobAccountMetadata["salt".asName()]!!.readValue())
     }
@@ -567,27 +582,39 @@ class InstructionsTest : IrohaTest<Iroha2Client>() {
         assertEquals(100, getAccountAmount(aliceAssetId))
         assertEquals(100, getAccountAmount(bobAssetId))
 
-        client.tx { transfer(aliceAssetId, 40, BOB_ACCOUNT_ID) }
+        Transfer.asset(aliceAssetId, BigDecimal(40), BOB_ACCOUNT_ID).execute(client)
+            .also { d ->
+                withTimeout(txTimeout) { d.await() }
+            }
         assertEquals(60, getAccountAmount(aliceAssetId))
         assertEquals(140, getAccountAmount(bobAssetId))
 
-        client.tx(BOB_ACCOUNT_ID, BOB_KEYPAIR) { transfer(bobAssetId, 40, ALICE_ACCOUNT_ID) }
+        Transfer.asset(bobAssetId, BigDecimal(40), ALICE_ACCOUNT_ID).executeAs(BOB_ACCOUNT_ID, BOB_KEYPAIR, client)
+            .also { d ->
+                withTimeout(txTimeout) { d.await() }
+            }
         assertEquals(100, getAccountAmount(aliceAssetId))
         assertEquals(100, getAccountAmount(bobAssetId))
 
         val joeDomain = "joe_domain".asDomainId()
-        client.tx { register(joeDomain) }
+        Register.domain(joeDomain).execute(client)
+            .also { d ->
+                withTimeout(txTimeout) { d.await() }
+            }
 
         val joeKeyPair = generateKeyPair()
         val joeId = AccountId(joeDomain, joeKeyPair.public.toIrohaPublicKey())
-        registerAccount(joeId)
+        Register.account(joeId).execute(client)
 
-        client.tx {
-            grant(CanTransferAsset(aliceAssetId), joeId)
-        }
-        client.tx(account = joeId, joeKeyPair) {
-            transfer(aliceAssetId, 40, BOB_ACCOUNT_ID)
-        }
+        Grant.accountPermission(CanTransferAsset(aliceAssetId), joeId).execute(client)
+            .also { d ->
+                withTimeout(txTimeout) { d.await() }
+            }
+        Transfer.asset(bobAssetId, BigDecimal(40), ALICE_ACCOUNT_ID)
+            .executeAs(BOB_ACCOUNT_ID, BOB_KEYPAIR, client)
+            .also { d ->
+                withTimeout(txTimeout) { d.await() }
+            }
         assertEquals(60, getAccountAmount(aliceAssetId))
         assertEquals(140, getAccountAmount(bobAssetId))
     }
@@ -605,7 +632,10 @@ class InstructionsTest : IrohaTest<Iroha2Client>() {
         val assetBefore = getAsset(assetId)
         val value = assetBefore.value.cast<AssetValue.Store>().metadata.sortedMapOfName[assetKey]!!
         assertEquals(StoreAssetWithMetadata.ASSET_VALUE, value.readValue())
-        client.tx { removeKeyValue(assetId, assetKey) }
+        RemoveKeyValue.asset(assetId, assetKey).execute(client)
+            .also { d ->
+                withTimeout(txTimeout) { d.await() }
+            }
 
         val assetAfter = getAsset(assetId)
         assert(assetAfter.value.cast<AssetValue.Store>().metadata.sortedMapOfName.isEmpty())
@@ -622,7 +652,10 @@ class InstructionsTest : IrohaTest<Iroha2Client>() {
     @Permission("no_permission_required")
     @SdkTestId("burn_fixed_asset")
     fun `check assets with type Fixed are properly minted and burned`(): Unit = runBlocking {
-        client.tx { register(DEFAULT_ASSET_DEFINITION_ID, AssetType.numeric()) }
+        Register.assetDefinition(DEFAULT_ASSET_DEFINITION_ID, AssetType.numeric()).execute(client)
+            .also { d ->
+                withTimeout(txTimeout) { d.await() }
+            }
 
         // counter to track all changes in balance
         var counter = BigDecimal.ZERO
@@ -638,19 +671,24 @@ class InstructionsTest : IrohaTest<Iroha2Client>() {
                 .setScale(random.nextInt(DEFAULT_SCALE), RoundingMode.DOWN)
         }
         val mintAsset: suspend (BigDecimal) -> Unit = {
-            client.tx { mint(DEFAULT_ASSET_ID, it) }
+            Mint.asset(DEFAULT_ASSET_ID, it).execute(client)
+                .also { d ->
+                    withTimeout(txTimeout) { d.await() }
+                }
             counter += it
         }
         val burnAsset: suspend (BigDecimal) -> Unit = {
-            client.tx { burn(DEFAULT_ASSET_ID, it) }
+            Burn.asset(DEFAULT_ASSET_ID, it).execute(client)
+                .also { d ->
+                    withTimeout(txTimeout) { d.await() }
+                }
             counter -= it
         }
         val assertBalance: suspend (BigDecimal) -> Unit = { expectedBalance ->
             val asset = QueryBuilder.findAssetsByAccountId(ALICE_ACCOUNT_ID)
-                .account(super.account)
-                .buildSigned(super.keyPair)
-                .let { query -> client.sendQuery(query) }
-                .let { assets -> assets.get(DEFAULT_ASSET_ID) }
+                .account(client.authority)
+                .buildSigned(client.keyPair)
+                .let { query -> client.sendQuery(query) }.get(DEFAULT_ASSET_ID)
 
             asset?.value?.cast<AssetValue.Numeric>()?.numeric?.asBigDecimal() ?: BigDecimal.ZERO
                 .also { actualBalance ->
@@ -683,9 +721,10 @@ class InstructionsTest : IrohaTest<Iroha2Client>() {
 //        val assetValue = "some string value"
 //        val metadata = Metadata(mapOf(assetKey to Json.writeValue(assetValue)))
 //
-//        client.tx {
-//            register(DEFAULT_ASSET_DEFINITION_ID, AssetType.Store(), metadata)
-//        }
+//        register(DEFAULT_ASSET_DEFINITION_ID, AssetType.Store(), metadata).execute(client)
+//            .also { d ->
+//                withTimeout(txTimeout) { d.await() }
+//            }
 //
 //        Queries.findAssetDefinitionMetadata(DEFAULT_ASSET_DEFINITION_ID, assetKey)
 //            .let { query -> client.sendQuery(query) }
@@ -702,9 +741,15 @@ class InstructionsTest : IrohaTest<Iroha2Client>() {
     @SdkTestId("register_existence_domain")
     fun `double domain registration should fail`(): Unit = runBlocking {
         val domainId = UUID.randomUUID().toString().asDomainId()
-        client.tx { register(domainId) }
+        Register.domain(domainId).execute(client)
+            .also { d ->
+                withTimeout(txTimeout) { d.await() }
+            }
         assertThrows<TransactionRejectedException> {
-            runBlocking { client.tx { register(domainId) } }
+            runBlocking { Register.domain(domainId).execute(client) }
+                .also { d ->
+                    withTimeout(txTimeout) { d.await() }
+                }
         }
     }
 
@@ -725,22 +770,28 @@ class InstructionsTest : IrohaTest<Iroha2Client>() {
     fun `register and grant role to account and then revoke it`(): Unit = runBlocking {
         val domainId = "Kingdom".asDomainId()
         val assetDefinitionName = AssetDefinitionId(domainId, "kita".asName())
-        client.tx(BOB_ACCOUNT_ID, BOB_KEYPAIR) { register(domainId) }
-        client.tx(BOB_ACCOUNT_ID, BOB_KEYPAIR) {
-            register(assetDefinitionName, AssetType.Store())
-        }
+        listOf(
+            Register.domain(domainId),
+            Register.assetDefinition(assetDefinitionName, AssetType.Store()),
+        ).executeAs(BOB_ACCOUNT_ID, BOB_KEYPAIR, client)
+            .also { d ->
+                withTimeout(txTimeout) { d.await() }
+            }
 
         val assetId = AssetId(BOB_ACCOUNT_ID, assetDefinitionName)
         val roleId = RoleId("BOB_ASSET_ACCESS".asName())
-        client.tx(BOB_ACCOUNT_ID, BOB_KEYPAIR) {
-            register(BOB_ACCOUNT_ID, roleId)
-            grantRole(roleId, ALICE_ACCOUNT_ID)
-            setKeyValue(assetId, "key".asName(), "value")
-        }
+        listOf(
+            Register.role(BOB_ACCOUNT_ID, roleId),
+            Grant.accountRole(roleId, ALICE_ACCOUNT_ID),
+            SetKeyValue.asset(assetId, "key".asName(), "value"),
+        ).executeAs(BOB_ACCOUNT_ID, BOB_KEYPAIR, client)
+            .also { d ->
+                withTimeout(txTimeout) { d.await() }
+            }
 
         QueryBuilder.findAssetById(assetId)
-            .account(super.account)
-            .buildSigned(super.keyPair)
+            .account(client.authority)
+            .buildSigned(client.keyPair)
             .let { query -> client.sendQuery(query)!! }
             .also { asset ->
                 assertEquals(
@@ -749,9 +800,11 @@ class InstructionsTest : IrohaTest<Iroha2Client>() {
                 )
             }
 
-        client.tx(BOB_ACCOUNT_ID, BOB_KEYPAIR) {
-            revoke(roleId, ALICE_ACCOUNT_ID)
-        }
+        Revoke.accountRole(roleId, ALICE_ACCOUNT_ID)
+            .executeAs(BOB_ACCOUNT_ID, BOB_KEYPAIR, client)
+            .also { d ->
+                withTimeout(txTimeout) { d.await() }
+            }
         QueryBuilder.findRolesByAccountId(ALICE_ACCOUNT_ID)
             .account(BOB_ACCOUNT_ID)
             .buildSigned(BOB_KEYPAIR)
@@ -768,9 +821,11 @@ class InstructionsTest : IrohaTest<Iroha2Client>() {
             .firstOrNull { it.id == roleId }
             .also { Assertions.assertNotNull(it) }
 
-        client.tx(BOB_ACCOUNT_ID, BOB_KEYPAIR) {
-            unregisterRole(roleId)
-        }
+        Unregister.role(roleId)
+            .executeAs(BOB_ACCOUNT_ID, BOB_KEYPAIR, client)
+            .also { d ->
+                withTimeout(txTimeout) { d.await() }
+            }
         QueryBuilder.findRoles()
             .account(BOB_ACCOUNT_ID)
             .buildSigned(BOB_KEYPAIR)
@@ -806,8 +861,8 @@ class InstructionsTest : IrohaTest<Iroha2Client>() {
             assetBefore.value.cast<AssetValue.Store>().metadata.sortedMapOfName[assetKey]!!.readValue(),
         )
         QueryBuilder.findAccountById(ALICE_ACCOUNT_ID)
-            .account(super.account)
-            .buildSigned(super.keyPair)
+            .account(client.authority)
+            .buildSigned(client.keyPair)
             .let { query -> client.sendQuery(query)!! }
             .also { alice ->
                 assertEquals(
@@ -826,8 +881,8 @@ class InstructionsTest : IrohaTest<Iroha2Client>() {
                 )
             }
         QueryBuilder.findDomainById(DEFAULT_DOMAIN_ID)
-            .account(super.account)
-            .buildSigned(super.keyPair)
+            .account(client.authority)
+            .buildSigned(client.keyPair)
             .let { query -> client.sendQuery(query)!! }
             .also { domain ->
                 assertEquals(
@@ -845,9 +900,10 @@ class InstructionsTest : IrohaTest<Iroha2Client>() {
     fun `transfer domain ownership in genesis`(): Unit = runBlocking {
         val key = randomAlphabetic(5).asName()
         val value = randomAlphabetic(5)
-        client.tx(BOB_ACCOUNT_ID, BOB_KEYPAIR) {
-            setKeyValue(WithDomainTransferredToBob.DOMAIN_ID, key, value)
-        }
+        SetKeyValue.domain(WithDomainTransferredToBob.DOMAIN_ID, key, value).executeAs(BOB_ACCOUNT_ID, BOB_KEYPAIR, client)
+            .also { d ->
+                withTimeout(txTimeout) { d.await() }
+            }
         val extractedValue: String = QueryBuilder.findDomainById(WithDomainTransferredToBob.DOMAIN_ID)
             .account(ALICE_ACCOUNT_ID)
             .buildSigned(ALICE_KEYPAIR)
@@ -863,12 +919,16 @@ class InstructionsTest : IrohaTest<Iroha2Client>() {
     @SdkTestId("transfer_domain_ownership")
     fun `transfer domain ownership`(): Unit = runBlocking {
         val domainId = "Kingdom".asDomainId()
-        client.tx(ALICE_ACCOUNT_ID, ALICE_KEYPAIR) { register(domainId) }
+        Register.domain(domainId).execute(client)
+            .also { d ->
+                withTimeout(txTimeout) { d.await() }
+            }
 
         assertFailsWith(TransactionRejectedException::class) {
-            client.tx(BOB_ACCOUNT_ID, BOB_KEYPAIR) {
-                setKeyValue(domainId, randomAlphabetic(5).asName(), randomAlphabetic(5))
-            }
+            SetKeyValue.domain(domainId, randomAlphabetic(5).asName(), randomAlphabetic(5)).executeAs(BOB_ACCOUNT_ID, BOB_KEYPAIR, client)
+                .also { d ->
+                    withTimeout(txTimeout) { d.await() }
+                }
         }
         var kingdomDomainOwnedBy = QueryBuilder.findDomainById(domainId)
             .account(ALICE_ACCOUNT_ID)
@@ -876,9 +936,10 @@ class InstructionsTest : IrohaTest<Iroha2Client>() {
             .let { query -> client.sendQuery(query)!! }.ownedBy
         assertEquals(ALICE_ACCOUNT_ID, kingdomDomainOwnedBy)
 
-        client.tx(ALICE_ACCOUNT_ID, ALICE_KEYPAIR) {
-            transfer(ALICE_ACCOUNT_ID, domainId, BOB_ACCOUNT_ID)
-        }
+        Transfer.domain(ALICE_ACCOUNT_ID, domainId, BOB_ACCOUNT_ID).execute(client)
+            .also { d ->
+                withTimeout(txTimeout) { d.await() }
+            }
         kingdomDomainOwnedBy = QueryBuilder.findDomainById(domainId)
             .account(ALICE_ACCOUNT_ID)
             .buildSigned(ALICE_KEYPAIR)
@@ -887,7 +948,10 @@ class InstructionsTest : IrohaTest<Iroha2Client>() {
 
         val key = randomAlphabetic(5).asName()
         val value = randomAlphabetic(5)
-        client.tx(BOB_ACCOUNT_ID, BOB_KEYPAIR) { setKeyValue(domainId, key, value) }
+        SetKeyValue.domain(domainId, key, value).executeAs(BOB_ACCOUNT_ID, BOB_KEYPAIR, client)
+            .also { d ->
+                withTimeout(txTimeout) { d.await() }
+            }
 
         val extractedValue: String = QueryBuilder.findDomainById(domainId)
             .account(ALICE_ACCOUNT_ID)
@@ -913,29 +977,25 @@ class InstructionsTest : IrohaTest<Iroha2Client>() {
     }
 
     private suspend fun registerAccount(id: AccountId) {
-        client.sendTransaction {
-            account(super.account)
-            register(id)
-            buildSigned(super.keyPair)
-        }.also { d ->
+        Register.account(id).execute(client).also { d ->
             withTimeout(txTimeout) { d.await() }
         }
     }
 
     private suspend fun getAccountAmount(assetId: AssetId = DEFAULT_ASSET_ID) = QueryBuilder
         .findAssetById(assetId)
-        .account(super.account)
-        .buildSigned(super.keyPair)
+        .account(client.authority)
+        .buildSigned(client.keyPair)
         .let { query ->
             client.sendQuery(query)!!.value
         }.let { value ->
-            (value as AssetValue.Numeric).numeric.asLong() ?: 0
-        }!!
+            (value as AssetValue.Numeric).numeric.asLong()
+        }
 
     private suspend fun getAsset(assetId: AssetId? = null) = QueryBuilder
         .findAssetById(assetId ?: DEFAULT_ASSET_ID)
-        .account(super.account)
-        .buildSigned(super.keyPair)
+        .account(client.authority)
+        .buildSigned(client.keyPair)
         .let { query ->
             client.sendQuery(query)
         }!!

@@ -13,8 +13,7 @@ import kotlin.Unit
 /**
  * QueryWithFilterOfFindAssetsDefinitionsAndAssetDefinitionPredicateBox
  *
- * Generated from 'QueryWithFilterOfFindAssetsDefinitionsAndAssetDefinitionPredicateBox' regular
- * structure
+ * Generated from 'QueryWithFilterOfFindAssetsDefinitionsAndAssetDefinitionPredicateBox' regular structure
  */
 public data class QueryWithFilterOfFindAssetsDefinitionsAndAssetDefinitionPredicateBox(
     public val query: FindAssetsDefinitions,
@@ -32,14 +31,12 @@ public data class QueryWithFilterOfFindAssetsDefinitionsAndAssetDefinitionPredic
             throw wrapException(ex)
         }
 
-        override fun write(
-            writer: ScaleCodecWriter,
-            instance: QueryWithFilterOfFindAssetsDefinitionsAndAssetDefinitionPredicateBox,
-        ): Unit = try {
-            FindAssetsDefinitions.write(writer, instance.query)
-            CompoundPredicateOfAssetDefinitionPredicateBox.write(writer, instance.predicate)
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(writer: ScaleCodecWriter, instance: QueryWithFilterOfFindAssetsDefinitionsAndAssetDefinitionPredicateBox): Unit =
+            try {
+                FindAssetsDefinitions.write(writer, instance.query)
+                CompoundPredicateOfAssetDefinitionPredicateBox.write(writer, instance.predicate)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

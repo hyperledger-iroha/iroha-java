@@ -103,10 +103,7 @@ public sealed class AssetDefinitionEvent : ModelEnum {
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.AssetDefinitionEvent.MetadataInserted,
             ): Unit = try {
-                MetadataChangedOfAssetDefinitionId.write(
-                    writer,
-                    instance.metadataChangedOfAssetDefinitionId,
-                )
+                MetadataChangedOfAssetDefinitionId.write(writer, instance.metadataChangedOfAssetDefinitionId)
             } catch (ex: Exception) {
                 throw wrapException(ex)
             }
@@ -137,10 +134,7 @@ public sealed class AssetDefinitionEvent : ModelEnum {
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.AssetDefinitionEvent.MetadataRemoved,
             ): Unit = try {
-                MetadataChangedOfAssetDefinitionId.write(
-                    writer,
-                    instance.metadataChangedOfAssetDefinitionId,
-                )
+                MetadataChangedOfAssetDefinitionId.write(writer, instance.metadataChangedOfAssetDefinitionId)
             } catch (ex: Exception) {
                 throw wrapException(ex)
             }
@@ -201,10 +195,7 @@ public sealed class AssetDefinitionEvent : ModelEnum {
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.AssetDefinitionEvent.TotalQuantityChanged,
             ): Unit = try {
-                AssetDefinitionTotalQuantityChanged.write(
-                    writer,
-                    instance.assetDefinitionTotalQuantityChanged,
-                )
+                AssetDefinitionTotalQuantityChanged.write(writer, instance.assetDefinitionTotalQuantityChanged)
             } catch (ex: Exception) {
                 throw wrapException(ex)
             }
@@ -242,10 +233,7 @@ public sealed class AssetDefinitionEvent : ModelEnum {
     }
 
     public companion object : ScaleReader<AssetDefinitionEvent>, ScaleWriter<AssetDefinitionEvent> {
-        override fun read(reader: ScaleCodecReader): AssetDefinitionEvent = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
+        override fun read(reader: ScaleCodecReader): AssetDefinitionEvent = when (val discriminant = reader.readUByte()) {
             0 -> Created.read(reader)
             1 -> Deleted.read(reader)
             2 -> MetadataInserted.read(reader)

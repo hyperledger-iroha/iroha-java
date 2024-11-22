@@ -98,22 +98,17 @@ public sealed class AccountIdPredicateBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.AccountIdPredicateBox.Signatory,
-            ): Unit = try {
-                PublicKeyPredicateBox.write(writer, instance.publicKeyPredicateBox)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.AccountIdPredicateBox.Signatory): Unit =
+                try {
+                    PublicKeyPredicateBox.write(writer, instance.publicKeyPredicateBox)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
     public companion object : ScaleReader<AccountIdPredicateBox>, ScaleWriter<AccountIdPredicateBox> {
-        override fun read(reader: ScaleCodecReader): AccountIdPredicateBox = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
+        override fun read(reader: ScaleCodecReader): AccountIdPredicateBox = when (val discriminant = reader.readUByte()) {
             0 -> Equals.read(reader)
             1 -> DomainId.read(reader)
             2 -> Signatory.read(reader)

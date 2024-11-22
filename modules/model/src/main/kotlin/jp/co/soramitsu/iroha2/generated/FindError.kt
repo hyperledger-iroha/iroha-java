@@ -348,10 +348,7 @@ public sealed class FindError : ModelEnum {
     }
 
     public companion object : ScaleReader<FindError>, ScaleWriter<FindError> {
-        override fun read(reader: ScaleCodecReader): FindError = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
+        override fun read(reader: ScaleCodecReader): FindError = when (val discriminant = reader.readUByte()) {
             0 -> Asset.read(reader)
             1 -> AssetDefinition.read(reader)
             2 -> Account.read(reader)

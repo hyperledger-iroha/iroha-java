@@ -53,13 +53,11 @@ public sealed class TriggerCompletedOutcome : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.TriggerCompletedOutcome.Success,
-            ): Unit = try {
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.TriggerCompletedOutcome.Success): Unit =
+                try {
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             public fun equals(o1: jp.co.soramitsu.iroha2.generated.TriggerCompletedOutcome.Success, o2: Any?): Boolean = when (o2) {
                 null -> false
@@ -89,24 +87,19 @@ public sealed class TriggerCompletedOutcome : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.TriggerCompletedOutcome.Failure,
-            ): Unit = try {
-                writer.writeAsList(instance.string.toByteArray(Charsets.UTF_8))
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.TriggerCompletedOutcome.Failure): Unit =
+                try {
+                    writer.writeAsList(instance.string.toByteArray(Charsets.UTF_8))
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
     public companion object :
         ScaleReader<TriggerCompletedOutcome>,
         ScaleWriter<TriggerCompletedOutcome> {
-        override fun read(reader: ScaleCodecReader): TriggerCompletedOutcome = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
+        override fun read(reader: ScaleCodecReader): TriggerCompletedOutcome = when (val discriminant = reader.readUByte()) {
             0 -> Success.read(reader)
             1 -> Failure.read(reader)
             else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")

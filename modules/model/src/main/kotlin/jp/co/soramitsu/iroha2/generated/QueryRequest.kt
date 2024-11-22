@@ -105,10 +105,7 @@ public sealed class QueryRequest : ModelEnum {
     }
 
     public companion object : ScaleReader<QueryRequest>, ScaleWriter<QueryRequest> {
-        override fun read(reader: ScaleCodecReader): QueryRequest = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
+        override fun read(reader: ScaleCodecReader): QueryRequest = when (val discriminant = reader.readUByte()) {
             0 -> Singular.read(reader)
             1 -> Start.read(reader)
             2 -> Continue.read(reader)

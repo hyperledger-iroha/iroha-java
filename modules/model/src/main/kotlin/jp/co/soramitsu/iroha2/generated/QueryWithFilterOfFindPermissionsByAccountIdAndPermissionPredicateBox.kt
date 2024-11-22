@@ -13,8 +13,7 @@ import kotlin.Unit
 /**
  * QueryWithFilterOfFindPermissionsByAccountIdAndPermissionPredicateBox
  *
- * Generated from 'QueryWithFilterOfFindPermissionsByAccountIdAndPermissionPredicateBox' regular
- * structure
+ * Generated from 'QueryWithFilterOfFindPermissionsByAccountIdAndPermissionPredicateBox' regular structure
  */
 public data class QueryWithFilterOfFindPermissionsByAccountIdAndPermissionPredicateBox(
     public val query: FindPermissionsByAccountId,
@@ -32,14 +31,12 @@ public data class QueryWithFilterOfFindPermissionsByAccountIdAndPermissionPredic
             throw wrapException(ex)
         }
 
-        override fun write(
-            writer: ScaleCodecWriter,
-            instance: QueryWithFilterOfFindPermissionsByAccountIdAndPermissionPredicateBox,
-        ): Unit = try {
-            FindPermissionsByAccountId.write(writer, instance.query)
-            CompoundPredicateOfPermissionPredicateBox.write(writer, instance.predicate)
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(writer: ScaleCodecWriter, instance: QueryWithFilterOfFindPermissionsByAccountIdAndPermissionPredicateBox): Unit =
+            try {
+                FindPermissionsByAccountId.write(writer, instance.query)
+                CompoundPredicateOfPermissionPredicateBox.write(writer, instance.predicate)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

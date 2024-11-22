@@ -304,10 +304,7 @@ public sealed class QueryExecutionFail : ModelEnum {
     }
 
     public companion object : ScaleReader<QueryExecutionFail>, ScaleWriter<QueryExecutionFail> {
-        override fun read(reader: ScaleCodecReader): QueryExecutionFail = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
+        override fun read(reader: ScaleCodecReader): QueryExecutionFail = when (val discriminant = reader.readUByte()) {
             0 -> Find.read(reader)
             1 -> Conversion.read(reader)
             2 -> NotFound.read(reader)

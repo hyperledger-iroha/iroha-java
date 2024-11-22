@@ -81,10 +81,7 @@ public sealed class TypeError : ModelEnum {
     }
 
     public companion object : ScaleReader<TypeError>, ScaleWriter<TypeError> {
-        override fun read(reader: ScaleCodecReader): TypeError = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
+        override fun read(reader: ScaleCodecReader): TypeError = when (val discriminant = reader.readUByte()) {
             0 -> AssetType.read(reader)
             1 -> NumericAssetTypeExpected.read(reader)
             else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")

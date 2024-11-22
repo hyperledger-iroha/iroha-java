@@ -28,11 +28,7 @@ public data class ExecutorDataModel(
     public companion object : ScaleReader<ExecutorDataModel>, ScaleWriter<ExecutorDataModel> {
         override fun read(reader: ScaleCodecReader): ExecutorDataModel = try {
             ExecutorDataModel(
-                reader.readMap(
-                    reader.readCompactInt(),
-                    { CustomParameterId.read(reader) },
-                    { CustomParameter.read(reader) },
-                ),
+                reader.readMap(reader.readCompactInt(), { CustomParameterId.read(reader) }, { CustomParameter.read(reader) }),
                 reader.readVec(reader.readCompactInt()) { reader.readString() },
                 reader.readVec(reader.readCompactInt()) { reader.readString() },
                 Json.read(reader),

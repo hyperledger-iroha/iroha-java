@@ -100,10 +100,7 @@ public sealed class InvalidParameterError : ModelEnum {
     }
 
     public companion object : ScaleReader<InvalidParameterError>, ScaleWriter<InvalidParameterError> {
-        override fun read(reader: ScaleCodecReader): InvalidParameterError = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
+        override fun read(reader: ScaleCodecReader): InvalidParameterError = when (val discriminant = reader.readUByte()) {
             0 -> Wasm.read(reader)
             1 -> TimeTriggerInThePast.read(reader)
             else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")

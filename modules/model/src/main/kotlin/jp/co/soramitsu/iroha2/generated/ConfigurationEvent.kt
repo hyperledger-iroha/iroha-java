@@ -52,10 +52,7 @@ public sealed class ConfigurationEvent : ModelEnum {
     }
 
     public companion object : ScaleReader<ConfigurationEvent>, ScaleWriter<ConfigurationEvent> {
-        override fun read(reader: ScaleCodecReader): ConfigurationEvent = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
+        override fun read(reader: ScaleCodecReader): ConfigurationEvent = when (val discriminant = reader.readUByte()) {
             0 -> Changed.read(reader)
             else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
         }

@@ -13,8 +13,7 @@ import kotlin.Unit
 /**
  * QueryWithFilterOfFindTransactionsAndCommittedTransactionPredicateBox
  *
- * Generated from 'QueryWithFilterOfFindTransactionsAndCommittedTransactionPredicateBox' regular
- * structure
+ * Generated from 'QueryWithFilterOfFindTransactionsAndCommittedTransactionPredicateBox' regular structure
  */
 public data class QueryWithFilterOfFindTransactionsAndCommittedTransactionPredicateBox(
     public val query: FindTransactions,
@@ -32,14 +31,12 @@ public data class QueryWithFilterOfFindTransactionsAndCommittedTransactionPredic
             throw wrapException(ex)
         }
 
-        override fun write(
-            writer: ScaleCodecWriter,
-            instance: QueryWithFilterOfFindTransactionsAndCommittedTransactionPredicateBox,
-        ): Unit = try {
-            FindTransactions.write(writer, instance.query)
-            CompoundPredicateOfCommittedTransactionPredicateBox.write(writer, instance.predicate)
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(writer: ScaleCodecWriter, instance: QueryWithFilterOfFindTransactionsAndCommittedTransactionPredicateBox): Unit =
+            try {
+                FindTransactions.write(writer, instance.query)
+                CompoundPredicateOfCommittedTransactionPredicateBox.write(writer, instance.predicate)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

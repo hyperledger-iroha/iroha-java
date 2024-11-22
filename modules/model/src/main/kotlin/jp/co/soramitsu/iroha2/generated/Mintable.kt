@@ -123,8 +123,7 @@ public sealed class Mintable : ModelEnum {
                 throw wrapException(ex)
             }
 
-            public fun equals(o1: jp.co.soramitsu.iroha2.generated.Mintable.Not, o2: Any?): Boolean = when
-                (o2) {
+            public fun equals(o1: jp.co.soramitsu.iroha2.generated.Mintable.Not, o2: Any?): Boolean = when (o2) {
                 null -> false
                 else -> o2::class == o1::class
             }
@@ -134,10 +133,7 @@ public sealed class Mintable : ModelEnum {
     }
 
     public companion object : ScaleReader<Mintable>, ScaleWriter<Mintable> {
-        override fun read(reader: ScaleCodecReader): Mintable = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
+        override fun read(reader: ScaleCodecReader): Mintable = when (val discriminant = reader.readUByte()) {
             0 -> Infinitely.read(reader)
             1 -> Once.read(reader)
             2 -> Not.read(reader)

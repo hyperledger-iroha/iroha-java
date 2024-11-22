@@ -54,13 +54,11 @@ public sealed class MintabilityError : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.MintabilityError.MintUnmintable,
-            ): Unit = try {
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.MintabilityError.MintUnmintable): Unit =
+                try {
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             public fun equals(o1: jp.co.soramitsu.iroha2.generated.MintabilityError.MintUnmintable, o2: Any?): Boolean = when (o2) {
                 null -> false
@@ -106,10 +104,7 @@ public sealed class MintabilityError : ModelEnum {
     }
 
     public companion object : ScaleReader<MintabilityError>, ScaleWriter<MintabilityError> {
-        override fun read(reader: ScaleCodecReader): MintabilityError = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
+        override fun read(reader: ScaleCodecReader): MintabilityError = when (val discriminant = reader.readUByte()) {
             0 -> MintUnmintable.read(reader)
             1 -> ForbidMintOnMintable.read(reader)
             else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")

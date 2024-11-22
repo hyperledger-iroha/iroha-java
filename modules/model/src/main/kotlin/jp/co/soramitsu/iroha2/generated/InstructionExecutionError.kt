@@ -73,14 +73,12 @@ public sealed class InstructionExecutionError : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.InstructionExecutionError.Query,
-            ): Unit = try {
-                QueryExecutionFail.write(writer, instance.queryExecutionFail)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.InstructionExecutionError.Query): Unit =
+                try {
+                    QueryExecutionFail.write(writer, instance.queryExecutionFail)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
@@ -294,10 +292,7 @@ public sealed class InstructionExecutionError : ModelEnum {
     public companion object :
         ScaleReader<InstructionExecutionError>,
         ScaleWriter<InstructionExecutionError> {
-        override fun read(reader: ScaleCodecReader): InstructionExecutionError = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
+        override fun read(reader: ScaleCodecReader): InstructionExecutionError = when (val discriminant = reader.readUByte()) {
             0 -> Evaluate.read(reader)
             1 -> Query.read(reader)
             2 -> Conversion.read(reader)

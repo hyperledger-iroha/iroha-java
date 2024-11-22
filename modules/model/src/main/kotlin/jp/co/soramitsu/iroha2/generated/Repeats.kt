@@ -95,10 +95,7 @@ public sealed class Repeats : ModelEnum {
     }
 
     public companion object : ScaleReader<Repeats>, ScaleWriter<Repeats> {
-        override fun read(reader: ScaleCodecReader): Repeats = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
+        override fun read(reader: ScaleCodecReader): Repeats = when (val discriminant = reader.readUByte()) {
             0 -> Indefinitely.read(reader)
             1 -> Exactly.read(reader)
             else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")

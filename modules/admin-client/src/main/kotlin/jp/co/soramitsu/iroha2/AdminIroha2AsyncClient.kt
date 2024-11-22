@@ -1,17 +1,23 @@
 package jp.co.soramitsu.iroha2
 
-import jp.co.soramitsu.iroha2.model.IrohaUrls
+import jp.co.soramitsu.iroha2.generated.AccountId
 import kotlinx.coroutines.future.future
+import java.net.URL
+import java.security.KeyPair
+import java.util.UUID
 
 /**
  * Extension of [AdminIroha2Client] for Java. Functionality for monitoring peers and configuration support
  */
 @Suppress("unused")
 class AdminIroha2AsyncClient @JvmOverloads constructor(
-    urls: List<IrohaUrls>,
-    log: Boolean = false,
+    override val apiUrl: URL,
+    override val chain: UUID,
+    override val authority: AccountId,
+    override val keyPair: KeyPair,
     credentials: String? = null,
-) : AdminIroha2Client(urls, log, credentials) {
+    log: Boolean = false,
+) : AdminIroha2Client(apiUrl, chain, authority, keyPair, credentials, log) {
 
     /**
      * Send health check request

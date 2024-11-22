@@ -216,10 +216,7 @@ public sealed class DomainEvent : ModelEnum {
     }
 
     public companion object : ScaleReader<DomainEvent>, ScaleWriter<DomainEvent> {
-        override fun read(reader: ScaleCodecReader): DomainEvent = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
+        override fun read(reader: ScaleCodecReader): DomainEvent = when (val discriminant = reader.readUByte()) {
             0 -> Created.read(reader)
             1 -> Deleted.read(reader)
             2 -> AssetDefinition.read(reader)

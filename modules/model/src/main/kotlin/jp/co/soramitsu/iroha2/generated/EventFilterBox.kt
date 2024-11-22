@@ -151,22 +151,17 @@ public sealed class EventFilterBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.EventFilterBox.TriggerCompleted,
-            ): Unit = try {
-                TriggerCompletedEventFilter.write(writer, instance.triggerCompletedEventFilter)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.EventFilterBox.TriggerCompleted): Unit =
+                try {
+                    TriggerCompletedEventFilter.write(writer, instance.triggerCompletedEventFilter)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
     public companion object : ScaleReader<EventFilterBox>, ScaleWriter<EventFilterBox> {
-        override fun read(reader: ScaleCodecReader): EventFilterBox = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
+        override fun read(reader: ScaleCodecReader): EventFilterBox = when (val discriminant = reader.readUByte()) {
             0 -> Pipeline.read(reader)
             1 -> Data.read(reader)
             2 -> Time.read(reader)

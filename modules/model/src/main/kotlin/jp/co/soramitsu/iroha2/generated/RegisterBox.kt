@@ -214,10 +214,7 @@ public sealed class RegisterBox : ModelEnum {
     }
 
     public companion object : ScaleReader<RegisterBox>, ScaleWriter<RegisterBox> {
-        override fun read(reader: ScaleCodecReader): RegisterBox = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
+        override fun read(reader: ScaleCodecReader): RegisterBox = when (val discriminant = reader.readUByte()) {
             0 -> Peer.read(reader)
             1 -> Domain.read(reader)
             2 -> Account.read(reader)

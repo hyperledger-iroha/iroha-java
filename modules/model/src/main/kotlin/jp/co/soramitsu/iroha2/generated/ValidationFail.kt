@@ -188,10 +188,7 @@ public sealed class ValidationFail : ModelEnum {
     }
 
     public companion object : ScaleReader<ValidationFail>, ScaleWriter<ValidationFail> {
-        override fun read(reader: ScaleCodecReader): ValidationFail = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
+        override fun read(reader: ScaleCodecReader): ValidationFail = when (val discriminant = reader.readUByte()) {
             0 -> NotPermitted.read(reader)
             1 -> InstructionFailed.read(reader)
             2 -> QueryFailed.read(reader)

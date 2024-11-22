@@ -79,10 +79,7 @@ public sealed class BurnBox : ModelEnum {
     }
 
     public companion object : ScaleReader<BurnBox>, ScaleWriter<BurnBox> {
-        override fun read(reader: ScaleCodecReader): BurnBox = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
+        override fun read(reader: ScaleCodecReader): BurnBox = when (val discriminant = reader.readUByte()) {
             0 -> Asset.read(reader)
             1 -> TriggerRepetitions.read(reader)
             else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")

@@ -82,10 +82,7 @@ public sealed class Executable : ModelEnum {
     }
 
     public companion object : ScaleReader<Executable>, ScaleWriter<Executable> {
-        override fun read(reader: ScaleCodecReader): Executable = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
+        override fun read(reader: ScaleCodecReader): Executable = when (val discriminant = reader.readUByte()) {
             0 -> Instructions.read(reader)
             1 -> Wasm.read(reader)
             else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")

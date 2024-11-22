@@ -42,14 +42,12 @@ public sealed class MultisigInstructionBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.MultisigInstructionBox.Register,
-            ): Unit = try {
-                MultisigRegister.write(writer, instance.multisigRegister)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.MultisigInstructionBox.Register): Unit =
+                try {
+                    MultisigRegister.write(writer, instance.multisigRegister)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
@@ -109,11 +107,10 @@ public sealed class MultisigInstructionBox : ModelEnum {
         }
     }
 
-    public companion object : ScaleReader<MultisigInstructionBox>, ScaleWriter<MultisigInstructionBox> {
-        override fun read(reader: ScaleCodecReader): MultisigInstructionBox = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
+    public companion object :
+        ScaleReader<MultisigInstructionBox>,
+        ScaleWriter<MultisigInstructionBox> {
+        override fun read(reader: ScaleCodecReader): MultisigInstructionBox = when (val discriminant = reader.readUByte()) {
             0 -> Register.read(reader)
             1 -> Propose.read(reader)
             2 -> Approve.read(reader)

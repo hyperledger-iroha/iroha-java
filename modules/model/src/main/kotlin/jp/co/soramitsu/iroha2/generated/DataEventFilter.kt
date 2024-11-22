@@ -192,14 +192,12 @@ public sealed class DataEventFilter : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.DataEventFilter.AssetDefinition,
-            ): Unit = try {
-                AssetDefinitionEventFilter.write(writer, instance.assetDefinitionEventFilter)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.DataEventFilter.AssetDefinition): Unit =
+                try {
+                    AssetDefinitionEventFilter.write(writer, instance.assetDefinitionEventFilter)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
@@ -313,10 +311,7 @@ public sealed class DataEventFilter : ModelEnum {
     }
 
     public companion object : ScaleReader<DataEventFilter>, ScaleWriter<DataEventFilter> {
-        override fun read(reader: ScaleCodecReader): DataEventFilter = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
+        override fun read(reader: ScaleCodecReader): DataEventFilter = when (val discriminant = reader.readUByte()) {
             0 -> Any.read(reader)
             1 -> Peer.read(reader)
             2 -> Domain.read(reader)

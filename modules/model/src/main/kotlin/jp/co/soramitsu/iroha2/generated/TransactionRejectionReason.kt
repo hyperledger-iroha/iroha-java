@@ -178,10 +178,7 @@ public sealed class TransactionRejectionReason : ModelEnum {
     public companion object :
         ScaleReader<TransactionRejectionReason>,
         ScaleWriter<TransactionRejectionReason> {
-        override fun read(reader: ScaleCodecReader): TransactionRejectionReason = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
+        override fun read(reader: ScaleCodecReader): TransactionRejectionReason = when (val discriminant = reader.readUByte()) {
             0 -> AccountDoesNotExist.read(reader)
             1 -> LimitCheck.read(reader)
             2 -> Validation.read(reader)

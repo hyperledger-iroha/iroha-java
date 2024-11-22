@@ -104,24 +104,19 @@ public sealed class InstructionEvaluationError : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.InstructionEvaluationError.Type,
-            ): Unit = try {
-                TypeError.write(writer, instance.typeError)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.InstructionEvaluationError.Type): Unit =
+                try {
+                    TypeError.write(writer, instance.typeError)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
     public companion object :
         ScaleReader<InstructionEvaluationError>,
         ScaleWriter<InstructionEvaluationError> {
-        override fun read(reader: ScaleCodecReader): InstructionEvaluationError = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
+        override fun read(reader: ScaleCodecReader): InstructionEvaluationError = when (val discriminant = reader.readUByte()) {
             0 -> Unsupported.read(reader)
             1 -> PermissionParameter.read(reader)
             2 -> Type.read(reader)

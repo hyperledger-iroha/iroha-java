@@ -1,7 +1,8 @@
 dependencies {
-    api project(":client")
-    api project(":admin-client")
-    api project(":block")
+    implementation project(":client")
+    implementation project(":admin-client")
+    implementation project(":block")
+    api project(":model")
 
     api "org.jetbrains.kotlin:kotlin-test:$kotlinVer"
     api "org.jetbrains.kotlin:kotlin-test-junit5:$kotlinVer"

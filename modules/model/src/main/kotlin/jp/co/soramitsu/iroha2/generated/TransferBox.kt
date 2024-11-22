@@ -43,10 +43,7 @@ public sealed class TransferBox : ModelEnum {
             }
 
             override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.TransferBox.Domain): Unit = try {
-                TransferOfAccountAndDomainIdAndAccount.write(
-                    writer,
-                    instance.transferOfAccountAndDomainIdAndAccount,
-                )
+                TransferOfAccountAndDomainIdAndAccount.write(writer, instance.transferOfAccountAndDomainIdAndAccount)
             } catch (ex: Exception) {
                 throw wrapException(ex)
             }
@@ -76,10 +73,7 @@ public sealed class TransferBox : ModelEnum {
 
             override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.TransferBox.AssetDefinition): Unit =
                 try {
-                    TransferOfAccountAndAssetDefinitionIdAndAccount.write(
-                        writer,
-                        instance.transferOfAccountAndAssetDefinitionIdAndAccount,
-                    )
+                    TransferOfAccountAndAssetDefinitionIdAndAccount.write(writer, instance.transferOfAccountAndAssetDefinitionIdAndAccount)
                 } catch (ex: Exception) {
                     throw wrapException(ex)
                 }
@@ -114,10 +108,7 @@ public sealed class TransferBox : ModelEnum {
     }
 
     public companion object : ScaleReader<TransferBox>, ScaleWriter<TransferBox> {
-        override fun read(reader: ScaleCodecReader): TransferBox = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
+        override fun read(reader: ScaleCodecReader): TransferBox = when (val discriminant = reader.readUByte()) {
             0 -> Domain.read(reader)
             1 -> AssetDefinition.read(reader)
             2 -> Asset.read(reader)

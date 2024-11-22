@@ -116,10 +116,7 @@ public sealed class CommittedTransactionPredicateBox : ModelEnum {
     public companion object :
         ScaleReader<CommittedTransactionPredicateBox>,
         ScaleWriter<CommittedTransactionPredicateBox> {
-        override fun read(reader: ScaleCodecReader): CommittedTransactionPredicateBox = when (
-            val
-            discriminant = reader.readUByte()
-        ) {
+        override fun read(reader: ScaleCodecReader): CommittedTransactionPredicateBox = when (val discriminant = reader.readUByte()) {
             0 -> BlockHash.read(reader)
             1 -> Value.read(reader)
             2 -> Error.read(reader)

@@ -105,10 +105,7 @@ public sealed class SocketAddr : ModelEnum {
     }
 
     public companion object : ScaleReader<SocketAddr>, ScaleWriter<SocketAddr> {
-        override fun read(reader: ScaleCodecReader): SocketAddr = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
+        override fun read(reader: ScaleCodecReader): SocketAddr = when (val discriminant = reader.readUByte()) {
             0 -> Ipv4.read(reader)
             1 -> Ipv6.read(reader)
             2 -> Host.read(reader)

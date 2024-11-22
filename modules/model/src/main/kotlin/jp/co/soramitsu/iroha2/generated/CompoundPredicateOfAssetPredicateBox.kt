@@ -78,10 +78,7 @@ public sealed class CompoundPredicateOfAssetPredicateBox : ModelEnum {
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.CompoundPredicateOfAssetPredicateBox.Not,
             ): Unit = try {
-                CompoundPredicateOfAssetPredicateBox.write(
-                    writer,
-                    instance.compoundPredicateOfAssetPredicateBox,
-                )
+                CompoundPredicateOfAssetPredicateBox.write(writer, instance.compoundPredicateOfAssetPredicateBox)
             } catch (ex: Exception) {
                 throw wrapException(ex)
             }
@@ -157,10 +154,7 @@ public sealed class CompoundPredicateOfAssetPredicateBox : ModelEnum {
     public companion object :
         ScaleReader<CompoundPredicateOfAssetPredicateBox>,
         ScaleWriter<CompoundPredicateOfAssetPredicateBox> {
-        override fun read(reader: ScaleCodecReader): CompoundPredicateOfAssetPredicateBox = when (
-            val
-            discriminant = reader.readUByte()
-        ) {
+        override fun read(reader: ScaleCodecReader): CompoundPredicateOfAssetPredicateBox = when (val discriminant = reader.readUByte()) {
             0 -> Atom.read(reader)
             1 -> Not.read(reader)
             2 -> And.read(reader)

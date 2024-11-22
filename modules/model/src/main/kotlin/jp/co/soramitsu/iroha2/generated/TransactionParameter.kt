@@ -84,10 +84,7 @@ public sealed class TransactionParameter : ModelEnum {
     }
 
     public companion object : ScaleReader<TransactionParameter>, ScaleWriter<TransactionParameter> {
-        override fun read(reader: ScaleCodecReader): TransactionParameter = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
+        override fun read(reader: ScaleCodecReader): TransactionParameter = when (val discriminant = reader.readUByte()) {
             0 -> MaxInstructions.read(reader)
             1 -> SmartContractSize.read(reader)
             else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")

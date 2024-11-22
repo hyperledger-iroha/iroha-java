@@ -28,11 +28,7 @@ public data class SignedBlockV1(
             SignedBlockV1(
                 reader.readVec(reader.readCompactInt()) { BlockSignature.read(reader) },
                 BlockPayload.read(reader),
-                reader.readMap(
-                    reader.readCompactInt(),
-                    { reader.readUint64() },
-                    { TransactionRejectionReason.read(reader) },
-                ),
+                reader.readMap(reader.readCompactInt(), { reader.readUint64() }, { TransactionRejectionReason.read(reader) }),
             )
         } catch (ex: Exception) {
             throw wrapException(ex)

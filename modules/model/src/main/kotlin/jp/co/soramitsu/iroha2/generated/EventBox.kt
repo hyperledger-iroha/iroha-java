@@ -159,10 +159,7 @@ public sealed class EventBox : ModelEnum {
     }
 
     public companion object : ScaleReader<EventBox>, ScaleWriter<EventBox> {
-        override fun read(reader: ScaleCodecReader): EventBox = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
+        override fun read(reader: ScaleCodecReader): EventBox = when (val discriminant = reader.readUByte()) {
             0 -> Pipeline.read(reader)
             1 -> Data.read(reader)
             2 -> Time.read(reader)

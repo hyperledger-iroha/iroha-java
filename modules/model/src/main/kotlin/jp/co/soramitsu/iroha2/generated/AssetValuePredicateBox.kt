@@ -21,11 +21,10 @@ public sealed class AssetValuePredicateBox : ModelEnum {
      */
     public abstract fun discriminant(): Int
 
-    public companion object : ScaleReader<AssetValuePredicateBox>, ScaleWriter<AssetValuePredicateBox> {
-        override fun read(reader: ScaleCodecReader): AssetValuePredicateBox = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
+    public companion object :
+        ScaleReader<AssetValuePredicateBox>,
+        ScaleWriter<AssetValuePredicateBox> {
+        override fun read(reader: ScaleCodecReader): AssetValuePredicateBox = when (val discriminant = reader.readUByte()) {
             else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
         }
 

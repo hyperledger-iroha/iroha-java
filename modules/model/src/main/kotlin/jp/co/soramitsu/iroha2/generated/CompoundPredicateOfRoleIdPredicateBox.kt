@@ -78,10 +78,7 @@ public sealed class CompoundPredicateOfRoleIdPredicateBox : ModelEnum {
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.CompoundPredicateOfRoleIdPredicateBox.Not,
             ): Unit = try {
-                CompoundPredicateOfRoleIdPredicateBox.write(
-                    writer,
-                    instance.compoundPredicateOfRoleIdPredicateBox,
-                )
+                CompoundPredicateOfRoleIdPredicateBox.write(writer, instance.compoundPredicateOfRoleIdPredicateBox)
             } catch (ex: Exception) {
                 throw wrapException(ex)
             }
@@ -157,10 +154,7 @@ public sealed class CompoundPredicateOfRoleIdPredicateBox : ModelEnum {
     public companion object :
         ScaleReader<CompoundPredicateOfRoleIdPredicateBox>,
         ScaleWriter<CompoundPredicateOfRoleIdPredicateBox> {
-        override fun read(reader: ScaleCodecReader): CompoundPredicateOfRoleIdPredicateBox = when (
-            val
-            discriminant = reader.readUByte()
-        ) {
+        override fun read(reader: ScaleCodecReader): CompoundPredicateOfRoleIdPredicateBox = when (val discriminant = reader.readUByte()) {
             0 -> Atom.read(reader)
             1 -> Not.read(reader)
             2 -> And.read(reader)

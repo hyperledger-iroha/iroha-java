@@ -501,10 +501,7 @@ public sealed class InstructionType : ModelEnum {
     }
 
     public companion object : ScaleReader<InstructionType>, ScaleWriter<InstructionType> {
-        override fun read(reader: ScaleCodecReader): InstructionType = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
+        override fun read(reader: ScaleCodecReader): InstructionType = when (val discriminant = reader.readUByte()) {
             0 -> Register.read(reader)
             1 -> Unregister.read(reader)
             2 -> Mint.read(reader)

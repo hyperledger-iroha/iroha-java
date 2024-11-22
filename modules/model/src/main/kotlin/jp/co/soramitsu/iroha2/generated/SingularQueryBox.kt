@@ -47,10 +47,7 @@ public sealed class SingularQueryBox : ModelEnum {
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.SingularQueryBox.FindAssetQuantityById,
             ): Unit = try {
-                jp.co.soramitsu.iroha2.generated.FindAssetQuantityById.write(
-                    writer,
-                    instance.findAssetQuantityById,
-                )
+                jp.co.soramitsu.iroha2.generated.FindAssetQuantityById.write(writer, instance.findAssetQuantityById)
             } catch (ex: Exception) {
                 throw wrapException(ex)
             }
@@ -81,10 +78,7 @@ public sealed class SingularQueryBox : ModelEnum {
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.SingularQueryBox.FindExecutorDataModel,
             ): Unit = try {
-                jp.co.soramitsu.iroha2.generated.FindExecutorDataModel.write(
-                    writer,
-                    instance.findExecutorDataModel,
-                )
+                jp.co.soramitsu.iroha2.generated.FindExecutorDataModel.write(writer, instance.findExecutorDataModel)
             } catch (ex: Exception) {
                 throw wrapException(ex)
             }
@@ -110,14 +104,12 @@ public sealed class SingularQueryBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.SingularQueryBox.FindParameters,
-            ): Unit = try {
-                jp.co.soramitsu.iroha2.generated.FindParameters.write(writer, instance.findParameters)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.SingularQueryBox.FindParameters): Unit =
+                try {
+                    jp.co.soramitsu.iroha2.generated.FindParameters.write(writer, instance.findParameters)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
@@ -145,10 +137,7 @@ public sealed class SingularQueryBox : ModelEnum {
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.SingularQueryBox.FindDomainMetadata,
             ): Unit = try {
-                jp.co.soramitsu.iroha2.generated.FindDomainMetadata.write(
-                    writer,
-                    instance.findDomainMetadata,
-                )
+                jp.co.soramitsu.iroha2.generated.FindDomainMetadata.write(writer, instance.findDomainMetadata)
             } catch (ex: Exception) {
                 throw wrapException(ex)
             }
@@ -179,10 +168,7 @@ public sealed class SingularQueryBox : ModelEnum {
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.SingularQueryBox.FindAccountMetadata,
             ): Unit = try {
-                jp.co.soramitsu.iroha2.generated.FindAccountMetadata.write(
-                    writer,
-                    instance.findAccountMetadata,
-                )
+                jp.co.soramitsu.iroha2.generated.FindAccountMetadata.write(writer, instance.findAccountMetadata)
             } catch (ex: Exception) {
                 throw wrapException(ex)
             }
@@ -246,10 +232,7 @@ public sealed class SingularQueryBox : ModelEnum {
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.SingularQueryBox.FindAssetDefinitionMetadata,
             ): Unit = try {
-                jp.co.soramitsu.iroha2.generated.FindAssetDefinitionMetadata.write(
-                    writer,
-                    instance.findAssetDefinitionMetadata,
-                )
+                jp.co.soramitsu.iroha2.generated.FindAssetDefinitionMetadata.write(writer, instance.findAssetDefinitionMetadata)
             } catch (ex: Exception) {
                 throw wrapException(ex)
             }
@@ -280,10 +263,7 @@ public sealed class SingularQueryBox : ModelEnum {
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.SingularQueryBox.FindTriggerMetadata,
             ): Unit = try {
-                jp.co.soramitsu.iroha2.generated.FindTriggerMetadata.write(
-                    writer,
-                    instance.findTriggerMetadata,
-                )
+                jp.co.soramitsu.iroha2.generated.FindTriggerMetadata.write(writer, instance.findTriggerMetadata)
             } catch (ex: Exception) {
                 throw wrapException(ex)
             }
@@ -291,10 +271,7 @@ public sealed class SingularQueryBox : ModelEnum {
     }
 
     public companion object : ScaleReader<SingularQueryBox>, ScaleWriter<SingularQueryBox> {
-        override fun read(reader: ScaleCodecReader): SingularQueryBox = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
+        override fun read(reader: ScaleCodecReader): SingularQueryBox = when (val discriminant = reader.readUByte()) {
             0 -> FindAssetQuantityById.read(reader)
             1 -> FindExecutorDataModel.read(reader)
             2 -> FindParameters.read(reader)

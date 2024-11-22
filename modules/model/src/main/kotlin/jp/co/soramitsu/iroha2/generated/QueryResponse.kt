@@ -78,10 +78,7 @@ public sealed class QueryResponse : ModelEnum {
     }
 
     public companion object : ScaleReader<QueryResponse>, ScaleWriter<QueryResponse> {
-        override fun read(reader: ScaleCodecReader): QueryResponse = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
+        override fun read(reader: ScaleCodecReader): QueryResponse = when (val discriminant = reader.readUByte()) {
             0 -> Singular.read(reader)
             1 -> Iterable.read(reader)
             else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")

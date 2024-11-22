@@ -160,10 +160,7 @@ public sealed class SetKeyValueBox : ModelEnum {
     }
 
     public companion object : ScaleReader<SetKeyValueBox>, ScaleWriter<SetKeyValueBox> {
-        override fun read(reader: ScaleCodecReader): SetKeyValueBox = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
+        override fun read(reader: ScaleCodecReader): SetKeyValueBox = when (val discriminant = reader.readUByte()) {
             0 -> Domain.read(reader)
             1 -> Account.read(reader)
             2 -> AssetDefinition.read(reader)

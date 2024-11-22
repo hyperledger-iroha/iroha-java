@@ -4,45 +4,7 @@ package jp.co.soramitsu.iroha2
 
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.google.gson.GsonBuilder
-import jp.co.soramitsu.iroha2.generated.AccountId
-import jp.co.soramitsu.iroha2.generated.Algorithm
-import jp.co.soramitsu.iroha2.generated.Asset
-import jp.co.soramitsu.iroha2.generated.AssetDefinitionId
-import jp.co.soramitsu.iroha2.generated.AssetId
-import jp.co.soramitsu.iroha2.generated.AssetType
-import jp.co.soramitsu.iroha2.generated.AssetValue
-import jp.co.soramitsu.iroha2.generated.BlockMessage
-import jp.co.soramitsu.iroha2.generated.BlockPayload
-import jp.co.soramitsu.iroha2.generated.BlockSubscriptionRequest
-import jp.co.soramitsu.iroha2.generated.Domain
-import jp.co.soramitsu.iroha2.generated.DomainId
-import jp.co.soramitsu.iroha2.generated.EventFilterBox
-import jp.co.soramitsu.iroha2.generated.Executable
-import jp.co.soramitsu.iroha2.generated.ExecutionTime
-import jp.co.soramitsu.iroha2.generated.FindError
-import jp.co.soramitsu.iroha2.generated.GrantBox
-import jp.co.soramitsu.iroha2.generated.Hash
-import jp.co.soramitsu.iroha2.generated.HashOf
-import jp.co.soramitsu.iroha2.generated.IdBox
-import jp.co.soramitsu.iroha2.generated.InstructionBox
-import jp.co.soramitsu.iroha2.generated.Json
-import jp.co.soramitsu.iroha2.generated.Metadata
-import jp.co.soramitsu.iroha2.generated.Name
-import jp.co.soramitsu.iroha2.generated.NonZeroOfu64
-import jp.co.soramitsu.iroha2.generated.Numeric
-import jp.co.soramitsu.iroha2.generated.NumericSpec
-import jp.co.soramitsu.iroha2.generated.RegisterBox
-import jp.co.soramitsu.iroha2.generated.Role
-import jp.co.soramitsu.iroha2.generated.RoleId
-import jp.co.soramitsu.iroha2.generated.SetKeyValueBox
-import jp.co.soramitsu.iroha2.generated.Signature
-import jp.co.soramitsu.iroha2.generated.SignatureOf
-import jp.co.soramitsu.iroha2.generated.SignedBlock
-import jp.co.soramitsu.iroha2.generated.SignedTransaction
-import jp.co.soramitsu.iroha2.generated.SocketAddr
-import jp.co.soramitsu.iroha2.generated.SocketAddrHost
-import jp.co.soramitsu.iroha2.generated.Trigger
-import jp.co.soramitsu.iroha2.generated.TriggerId
+import jp.co.soramitsu.iroha2.generated.*
 import net.i2p.crypto.eddsa.EdDSAEngine
 import org.bouncycastle.jcajce.provider.digest.Blake2b
 import org.bouncycastle.util.encoders.Hex
@@ -344,3 +306,50 @@ fun String.asPrettyJson(): String {
     val jsonElement = com.google.gson.JsonParser.parseString(this)
     return gson.toJson(jsonElement)
 }
+
+fun RegisterOfPeer.asInstructionBoxExt() = InstructionBox.Register(RegisterBox.Peer(this))
+fun RegisterOfDomain.asInstructionBoxExt() = InstructionBox.Register(RegisterBox.Domain(this))
+fun RegisterOfAssetDefinition.asInstructionBoxExt() = InstructionBox.Register(RegisterBox.AssetDefinition(this))
+fun RegisterOfAccount.asInstructionBoxExt() = InstructionBox.Register(RegisterBox.Account(this))
+fun RegisterOfAsset.asInstructionBoxExt() = InstructionBox.Register(RegisterBox.Asset(this))
+fun RegisterOfRole.asInstructionBoxExt() = InstructionBox.Register(RegisterBox.Role(this))
+fun RegisterOfTrigger.asInstructionBoxExt() = InstructionBox.Register(RegisterBox.Trigger(this))
+
+fun UnregisterOfPeer.asInstructionBoxExt() = InstructionBox.Unregister(UnregisterBox.Peer(this))
+fun UnregisterOfDomain.asInstructionBoxExt() = InstructionBox.Unregister(UnregisterBox.Domain(this))
+fun UnregisterOfAssetDefinition.asInstructionBoxExt() = InstructionBox.Unregister(UnregisterBox.AssetDefinition(this))
+fun UnregisterOfAccount.asInstructionBoxExt() = InstructionBox.Unregister(UnregisterBox.Account(this))
+fun UnregisterOfAsset.asInstructionBoxExt() = InstructionBox.Unregister(UnregisterBox.Asset(this))
+fun UnregisterOfRole.asInstructionBoxExt() = InstructionBox.Unregister(UnregisterBox.Role(this))
+fun UnregisterOfTrigger.asInstructionBoxExt() = InstructionBox.Unregister(UnregisterBox.Trigger(this))
+
+fun SetKeyValueOfDomain.asInstructionBoxExt() = InstructionBox.SetKeyValue(SetKeyValueBox.Domain(this))
+fun SetKeyValueOfAssetDefinition.asInstructionBoxExt() = InstructionBox.SetKeyValue(SetKeyValueBox.AssetDefinition(this))
+fun SetKeyValueOfAccount.asInstructionBoxExt() = InstructionBox.SetKeyValue(SetKeyValueBox.Account(this))
+fun SetKeyValueOfAsset.asInstructionBoxExt() = InstructionBox.SetKeyValue(SetKeyValueBox.Asset(this))
+fun SetKeyValueOfTrigger.asInstructionBoxExt() = InstructionBox.SetKeyValue(SetKeyValueBox.Trigger(this))
+
+fun RemoveKeyValueOfDomain.asInstructionBoxExt() = InstructionBox.RemoveKeyValue(RemoveKeyValueBox.Domain(this))
+fun RemoveKeyValueOfAssetDefinition.asInstructionBoxExt() = InstructionBox.RemoveKeyValue(RemoveKeyValueBox.AssetDefinition(this))
+fun RemoveKeyValueOfAccount.asInstructionBoxExt() = InstructionBox.RemoveKeyValue(RemoveKeyValueBox.Account(this))
+fun RemoveKeyValueOfAsset.asInstructionBoxExt() = InstructionBox.RemoveKeyValue(RemoveKeyValueBox.Asset(this))
+fun RemoveKeyValueOfTrigger.asInstructionBoxExt() = InstructionBox.RemoveKeyValue(RemoveKeyValueBox.Trigger(this))
+
+fun MintOfNumericAndAsset.asInstructionBoxExt() = InstructionBox.Mint(MintBox.Asset(this))
+fun MintOfu32AndTrigger.asInstructionBoxExt() = InstructionBox.Mint(MintBox.TriggerRepetitions(this))
+
+fun BurnOfNumericAndAsset.asInstructionBoxExt() = InstructionBox.Burn(BurnBox.Asset(this))
+fun BurnOfu32AndTrigger.asInstructionBoxExt() = InstructionBox.Burn(BurnBox.TriggerRepetitions(this))
+
+fun TransferOfAccountAndDomainIdAndAccount.asInstructionBoxExt() = InstructionBox.Transfer(TransferBox.Domain(this))
+fun TransferOfAccountAndAssetDefinitionIdAndAccount.asInstructionBoxExt() = InstructionBox.Transfer(TransferBox.AssetDefinition(this))
+fun TransferOfAssetAndNumericAndAccount.asInstructionBoxExt() = InstructionBox.Transfer(TransferBox.Asset(AssetTransferBox.Numeric(this)))
+fun TransferOfAssetAndMetadataAndAccount.asInstructionBoxExt() = InstructionBox.Transfer(TransferBox.Asset(AssetTransferBox.Store(this)))
+
+fun GrantOfPermissionAndAccount.asInstructionBoxExt() = InstructionBox.Grant(GrantBox.Permission(this))
+fun GrantOfRoleIdAndAccount.asInstructionBoxExt() = InstructionBox.Grant(GrantBox.Role(this))
+fun GrantOfPermissionAndRole.asInstructionBoxExt() = InstructionBox.Grant(GrantBox.RolePermission(this))
+
+fun RevokeOfPermissionAndAccount.asInstructionBoxExt() = InstructionBox.Revoke(RevokeBox.Permission(this))
+fun RevokeOfRoleIdAndAccount.asInstructionBoxExt() = InstructionBox.Revoke(RevokeBox.Role(this))
+fun RevokeOfPermissionAndRole.asInstructionBoxExt() = InstructionBox.Revoke(RevokeBox.RolePermission(this))

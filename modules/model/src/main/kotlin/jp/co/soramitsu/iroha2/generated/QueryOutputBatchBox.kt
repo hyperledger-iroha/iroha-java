@@ -260,17 +260,15 @@ public sealed class QueryOutputBatchBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.Transaction,
-            ): Unit = try {
-                writer.writeCompact(instance.vec.size)
-                instance.vec.forEach { value ->
-                    CommittedTransaction.write(writer, value)
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.Transaction): Unit =
+                try {
+                    writer.writeCompact(instance.vec.size)
+                    instance.vec.forEach { value ->
+                        CommittedTransaction.write(writer, value)
+                    }
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
                 }
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
         }
     }
 
@@ -446,25 +444,20 @@ public sealed class QueryOutputBatchBox : ModelEnum {
                 throw wrapException(ex)
             }
 
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.BlockHeader,
-            ): Unit = try {
-                writer.writeCompact(instance.vec.size)
-                instance.vec.forEach { value ->
-                    jp.co.soramitsu.iroha2.generated.BlockHeader.write(writer, value)
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.BlockHeader): Unit =
+                try {
+                    writer.writeCompact(instance.vec.size)
+                    instance.vec.forEach { value ->
+                        jp.co.soramitsu.iroha2.generated.BlockHeader.write(writer, value)
+                    }
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
                 }
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
         }
     }
 
     public companion object : ScaleReader<QueryOutputBatchBox>, ScaleWriter<QueryOutputBatchBox> {
-        override fun read(reader: ScaleCodecReader): QueryOutputBatchBox = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
+        override fun read(reader: ScaleCodecReader): QueryOutputBatchBox = when (val discriminant = reader.readUByte()) {
             0 -> Domain.read(reader)
             1 -> Account.read(reader)
             2 -> Asset.read(reader)
