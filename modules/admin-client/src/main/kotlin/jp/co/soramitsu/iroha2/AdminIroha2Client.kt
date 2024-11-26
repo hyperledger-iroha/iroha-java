@@ -18,24 +18,24 @@ import java.util.*
  */
 @Suppress("unused")
 open class AdminIroha2Client(
-    override val apiUrl: URL,
+    override val apiURL: List<URL>,
     override val chain: UUID,
     override val authority: AccountId,
     override val keyPair: KeyPair,
     credentials: String? = null,
     log: Boolean = false,
     private val balancingHealthCheck: Boolean = true,
-) : Iroha2Client(apiUrl, chain, authority, keyPair, credentials, log) {
+) : Iroha2Client(apiURL, chain, authority, keyPair, credentials, log) {
 
     /**
      * Send metrics request
      */
-    suspend fun metrics(): String = client.get("${apiUrl}$METRICS_ENDPOINT").body()
+    suspend fun metrics(): String = client.get("${getApiURL()}$METRICS_ENDPOINT").body()
 
     /**
      * Send health check request
      */
-    suspend fun health(): Int = client.get("${apiUrl}$HEALTH_ENDPOINT").status.value
+    suspend fun health(): Int = client.get("${getApiURL()}$HEALTH_ENDPOINT").status.value
 
     /**
      * Send health check request
@@ -45,17 +45,17 @@ open class AdminIroha2Client(
     /**
      * Send status check request
      */
-    suspend fun status(): PeerStatus = client.get("${apiUrl}$STATUS_ENDPOINT").body()
+    suspend fun status(): PeerStatus = client.get("${getApiURL()}$STATUS_ENDPOINT").body()
 
     /**
      * Send peers request
      */
-    suspend fun peers(): List<Peer> = client.get("${apiUrl}$PEERS_ENDPOINT").body()
+    suspend fun peers(): List<Peer> = client.get("${getApiURL()}$PEERS_ENDPOINT").body()
 
     /**
      * Send schema request
      */
-    suspend fun schema(): String = client.get("${apiUrl}$SCHEMA_ENDPOINT").body()
+    suspend fun schema(): String = client.get("${getApiURL()}$SCHEMA_ENDPOINT").body()
 
     /**
      * Request current configuration of the peer
@@ -73,7 +73,7 @@ open class AdminIroha2Client(
     }
 
     private suspend inline fun <reified T, reified B> config(body: B): T {
-        val response: HttpResponse = client.get("${apiUrl}$CONFIGURATION_ENDPOINT") {
+        val response: HttpResponse = client.get("${getApiURL()}$CONFIGURATION_ENDPOINT") {
             contentType(ContentType.Application.Json)
             setBody(body)
         }

@@ -2,9 +2,7 @@ dependencies {
     implementation "com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonKotlinVer"
 
     // crypto
-    api "org.bouncycastle:bcprov-jdk15on:$bouncyCastleVer"
+    implementation "com.github.multiformats:java-multihash:$multihashVersion"
+    implementation "org.bouncycastle:bcprov-jdk15on:$bouncyCastleVer"
     api "net.i2p.crypto:eddsa:$i2pCryptoEddsa"
-    api "com.github.multiformats:java-multihash:$multihashVersion"
-
-    api "com.google.crypto.tink:tink:$googleTinkVer"
 }

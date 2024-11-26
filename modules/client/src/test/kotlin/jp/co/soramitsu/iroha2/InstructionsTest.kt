@@ -58,7 +58,6 @@ class InstructionsTest : IrohaTest<Iroha2Client>() {
     @Disabled // EXAMPLE
     @WithIrohaManual(
         ["http://localhost:8080", "http://localhost:8081", "http://localhost:8082", "http://localhost:8083"],
-        ["http://localhost:1337", "http://localhost:1338", "http://localhost:1339", "http://localhost:1340"],
         account = "7233bfc89dcbd68c19fde6ce6158225298ec1131b6a130d1aeb454c1ab5183c0${ACCOUNT_ID_DELIMITER}wonderland",
         "7233bfc89dcbd68c19fde6ce6158225298ec1131b6a130d1aeb454c1ab5183c0",
         "9ac47abf59b356e0bd7dcbbbb4dec080e302156a48ca907e47cb6aea1d32719e",

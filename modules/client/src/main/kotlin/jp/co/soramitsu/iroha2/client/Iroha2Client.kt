@@ -24,6 +24,7 @@ import io.ktor.client.statement.HttpResponse
 import io.ktor.serialization.jackson.jackson
 import jp.co.soramitsu.iroha2.IrohaClientException
 import jp.co.soramitsu.iroha2.cast
+import jp.co.soramitsu.iroha2.client.balancing.RoundRobinStrategy
 import jp.co.soramitsu.iroha2.client.blockstream.BlockStreamContext
 import jp.co.soramitsu.iroha2.client.blockstream.BlockStreamStorage
 import jp.co.soramitsu.iroha2.client.blockstream.BlockStreamSubscription
@@ -53,7 +54,7 @@ import kotlin.coroutines.CoroutineContext
  * @param credentials <username>:<password>
  */
 open class Iroha2Client(
-    open val apiUrl: URL,
+    open val apiURL: List<URL>,
     open val chain: UUID,
     open val authority: AccountId,
     open val keyPair: KeyPair,
@@ -62,7 +63,8 @@ open class Iroha2Client(
     open val eventReadTimeoutInMills: Long = 250,
     open val eventReadMaxAttempts: Int = 10,
     override val coroutineContext: CoroutineContext = Dispatchers.IO + SupervisorJob(),
-) : AutoCloseable,
+) : RoundRobinStrategy(apiURL),
+    AutoCloseable,
     CoroutineScope {
     companion object {
         const val TRANSACTION_ENDPOINT = "/transaction"
@@ -195,7 +197,7 @@ open class Iroha2Client(
         autoStart: Boolean = true,
     ): Pair<Iterable<BlockStreamStorage>, BlockStreamSubscription> {
         val context = BlockStreamContext(
-            apiUrl,
+            getApiURL(),
             client,
             from,
             blockStreamStorages,
@@ -206,7 +208,7 @@ open class Iroha2Client(
     }
 
     private suspend fun sendQueryRequest(query: SignedQuery, cursor: ForwardCursor? = null): QueryResponse {
-        val response: HttpResponse = client.post("${apiUrl}$QUERY_ENDPOINT") {
+        val response: HttpResponse = client.post("${getApiURL()}$QUERY_ENDPOINT") {
             if (cursor != null) {
                 parameter("query", cursor.query)
                 parameter("cursor", cursor.cursor.u64)

@@ -11,13 +11,13 @@ import java.util.UUID
  */
 @Suppress("unused")
 class AdminIroha2AsyncClient @JvmOverloads constructor(
-    override val apiUrl: URL,
+    override val apiURL: List<URL>,
     override val chain: UUID,
     override val authority: AccountId,
     override val keyPair: KeyPair,
     credentials: String? = null,
     log: Boolean = false,
-) : AdminIroha2Client(apiUrl, chain, authority, keyPair, credentials, log) {
+) : AdminIroha2Client(apiURL, chain, authority, keyPair, credentials, log) {
 
     /**
      * Send health check request

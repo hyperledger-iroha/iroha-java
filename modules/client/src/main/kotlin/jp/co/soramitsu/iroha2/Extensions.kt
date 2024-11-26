@@ -7,11 +7,15 @@ import io.ktor.client.statement.*
 import io.ktor.websocket.*
 import jp.co.soramitsu.iroha2.client.Iroha2Client
 import jp.co.soramitsu.iroha2.generated.AccountId
+import jp.co.soramitsu.iroha2.generated.BlockEventFilter
+import jp.co.soramitsu.iroha2.generated.BlockStatus
 import jp.co.soramitsu.iroha2.generated.BurnOfNumericAndAsset
 import jp.co.soramitsu.iroha2.generated.BurnOfu32AndTrigger
 import jp.co.soramitsu.iroha2.generated.EventBox
+import jp.co.soramitsu.iroha2.generated.EventFilterBox
 import jp.co.soramitsu.iroha2.generated.EventMessage
 import jp.co.soramitsu.iroha2.generated.EventSubscriptionRequest
+import jp.co.soramitsu.iroha2.generated.ExecuteTrigger
 import jp.co.soramitsu.iroha2.generated.GrantOfPermissionAndAccount
 import jp.co.soramitsu.iroha2.generated.GrantOfPermissionAndRole
 import jp.co.soramitsu.iroha2.generated.GrantOfRoleIdAndAccount
@@ -19,6 +23,7 @@ import jp.co.soramitsu.iroha2.generated.InstructionBox
 import jp.co.soramitsu.iroha2.generated.MintOfNumericAndAsset
 import jp.co.soramitsu.iroha2.generated.MintOfu32AndTrigger
 import jp.co.soramitsu.iroha2.generated.PipelineEventBox
+import jp.co.soramitsu.iroha2.generated.PipelineEventFilterBox
 import jp.co.soramitsu.iroha2.generated.RegisterOfAccount
 import jp.co.soramitsu.iroha2.generated.RegisterOfAsset
 import jp.co.soramitsu.iroha2.generated.RegisterOfAssetDefinition
@@ -40,6 +45,7 @@ import jp.co.soramitsu.iroha2.generated.SetKeyValueOfAssetDefinition
 import jp.co.soramitsu.iroha2.generated.SetKeyValueOfDomain
 import jp.co.soramitsu.iroha2.generated.SetKeyValueOfTrigger
 import jp.co.soramitsu.iroha2.generated.SignedTransaction
+import jp.co.soramitsu.iroha2.generated.TransactionEventFilter
 import jp.co.soramitsu.iroha2.generated.TransactionRejectionReason
 import jp.co.soramitsu.iroha2.generated.TransactionStatus
 import jp.co.soramitsu.iroha2.generated.TransferOfAccountAndAssetDefinitionIdAndAccount
@@ -53,7 +59,6 @@ import jp.co.soramitsu.iroha2.generated.UnregisterOfDomain
 import jp.co.soramitsu.iroha2.generated.UnregisterOfPeer
 import jp.co.soramitsu.iroha2.generated.UnregisterOfRole
 import jp.co.soramitsu.iroha2.generated.UnregisterOfTrigger
-import jp.co.soramitsu.iroha2.transaction.Filters
 import jp.co.soramitsu.iroha2.transaction.Instruction
 import jp.co.soramitsu.iroha2.transaction.TransactionBuilder
 import kotlinx.coroutines.CompletableDeferred
@@ -61,6 +66,7 @@ import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
+import java.math.BigInteger
 import java.security.KeyPair
 
 /**
@@ -72,7 +78,7 @@ import java.security.KeyPair
 private suspend fun Iroha2Client.fireAndForget(signedTransaction: SignedTransaction): ByteArray {
     val hash = signedTransaction.hash()
     logger.debug("Sending transaction with hash {}", hash.toHex())
-    val response: HttpResponse = client.post("${apiUrl}${Iroha2Client.TRANSACTION_ENDPOINT}") {
+    val response: HttpResponse = client.post("${getApiURL()}${Iroha2Client.TRANSACTION_ENDPOINT}") {
         setBody(SignedTransaction.encode(signedTransaction))
     }
     response.body<Unit>()
@@ -95,7 +101,10 @@ private fun readMessage(frame: Frame): EventMessage = when (frame) {
 }
 
 private fun eventSubscriberMessageOf(hash: ByteArray) = EventSubscriptionRequest(
-    listOf(Filters.pipelineTransaction(hash)),
+    listOf(
+        EventFilterBox.Pipeline(PipelineEventFilterBox.Transaction(TransactionEventFilter(hash.asHashOf()))),
+        EventFilterBox.Pipeline(PipelineEventFilterBox.Block(BlockEventFilter(status = BlockStatus.Applied()))),
+    ),
 )
 
 /**
@@ -109,60 +118,23 @@ private fun TransactionRejectionReason.message(): String = when (this) {
     is TransactionRejectionReason.Validation -> this.validationFail.toString()
 }
 
-private fun Iroha2Client.pipelineEventProcess(
-    eventPublisherMessage: EventMessage,
-    hash: ByteArray,
-    hexHash: String,
-): ByteArray? {
-    when (val event = eventPublisherMessage.eventBox) {
-        is EventBox.Pipeline -> {
-            val eventBox = event.pipelineEventBox
-            if (eventBox is PipelineEventBox.Transaction && hash.contentEquals(eventBox.transactionEvent.hash.hash.arrayOfU8)) {
-                when (val status = eventBox.transactionEvent.status) {
-                    is TransactionStatus.Approved -> {
-                        logger.debug("Transaction {} approved", hexHash)
-                        return hash
-                    }
-
-                    is TransactionStatus.Rejected -> {
-                        val reason = status.transactionRejectionReason.message()
-                        logger.error("Transaction {} was rejected by reason: `{}`", hexHash, reason)
-                        throw TransactionRejectedException("Transaction rejected with reason '$reason'")
-                    }
-
-                    is TransactionStatus.Expired -> logger.debug("Transaction {} is expired", hexHash)
-                    is TransactionStatus.Queued -> logger.debug("Transaction {} is queued", hexHash)
-                }
-            }
-            return null
-        }
-
-        else -> throw WebSocketProtocolException(
-            "Expected message with type ${EventBox.Pipeline::class.qualifiedName}, " +
-                "but was ${event::class.qualifiedName}",
-        )
-    }
-}
-
 /**
  * @param hash - Signed transaction hash
  * @param afterSubscription - Expression that is invoked after subscription
  */
-private fun Iroha2Client.subscribeToTransactionStatus(
-    hash: ByteArray,
-    afterSubscription: (() -> Unit)? = null,
-): Deferred<ByteArray> {
+private fun Iroha2Client.subscribeToTransactionStatus(hash: ByteArray, afterSubscription: (() -> Unit)? = null): Deferred<ByteArray> {
     val hexHash = hash.toHex()
     logger.debug("Creating subscription to transaction status: {}", hexHash)
 
     val subscriptionRequest = eventSubscriberMessageOf(hash)
     val payload = EventSubscriptionRequest.encode(subscriptionRequest)
     val result: CompletableDeferred<ByteArray> = CompletableDeferred()
+    val currApiURL = getApiURL()
 
     launch {
         client.webSocket(
-            host = apiUrl.host,
-            port = apiUrl.port,
+            host = currApiURL.host,
+            port = currApiURL.port,
             path = Iroha2Client.WS_ENDPOINT,
         ) {
             logger.debug("WebSocket opened")
@@ -171,22 +143,46 @@ private fun Iroha2Client.subscribeToTransactionStatus(
             afterSubscription?.invoke()
             logger.debug("Subscription was accepted by peer")
 
+            var blockHeight: BigInteger? = null
             for (i in 1..eventReadMaxAttempts) {
                 try {
-                    val income = readMessage(incoming.receive())
-                    val processed = pipelineEventProcess(income, hash, hexHash)
-                    if (processed != null) {
-                        result.complete(processed)
-                        break
+                    val event = (readMessage(incoming.receive()).eventBox as EventBox.Pipeline).pipelineEventBox
+
+                    if (event is PipelineEventBox.Block) {
+                        if (event.blockEvent.status is BlockStatus.Applied && blockHeight == event.blockEvent.header.height.u64) {
+                            logger.debug("Transaction {} applied", hexHash)
+                            result.complete(hash)
+                            break
+                        }
+                    } else if (event is PipelineEventBox.Transaction) {
+                        when (val status = event.transactionEvent.status) {
+                            is TransactionStatus.Queued -> logger.debug("Transaction {} is queued", hexHash)
+
+                            is TransactionStatus.Rejected -> {
+                                val reason = status.transactionRejectionReason.message()
+                                logger.error("Transaction {} was rejected by reason: `{}`", hexHash, reason)
+                            }
+
+                            is TransactionStatus.Approved -> {
+                                if (hash.contentEquals(event.transactionEvent.hash.hash.arrayOfU8)) {
+                                    blockHeight = event.transactionEvent.blockHeight!!.u64
+                                    logger.debug("Transaction {} approved", hexHash)
+                                }
+                            }
+
+                            is TransactionStatus.Expired -> throw TransactionRejectedException("Transaction expired")
+                        }
                     }
                 } catch (e: TransactionRejectedException) {
                     result.completeExceptionally(e)
                     break
                 }
+
                 delay(eventReadTimeoutInMills)
             }
         }
     }
+
     return result
 }
 
@@ -448,6 +444,13 @@ suspend fun RevokeOfRoleIdAndAccount.executeAs(
 ) = executeAs(this.asInstructionBoxExt(), authority, keyPair, client)
 suspend fun RevokeOfPermissionAndRole.execute(client: Iroha2Client) = this.executeAs(client.authority, client.keyPair, client)
 suspend fun RevokeOfPermissionAndRole.executeAs(
+    authority: AccountId,
+    keyPair: KeyPair,
+    client: Iroha2Client,
+) = executeAs(this.asInstructionBoxExt(), authority, keyPair, client)
+
+suspend fun ExecuteTrigger.execute(client: Iroha2Client) = this.executeAs(client.authority, client.keyPair, client)
+suspend fun ExecuteTrigger.executeAs(
     authority: AccountId,
     keyPair: KeyPair,
     client: Iroha2Client,

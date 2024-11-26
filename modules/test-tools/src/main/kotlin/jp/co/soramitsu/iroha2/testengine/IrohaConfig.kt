@@ -19,6 +19,7 @@ import org.testcontainers.images.ImagePullPolicy
 import org.testcontainers.images.PullPolicy
 import java.security.KeyPair
 import java.time.Duration
+import java.util.UUID
 import java.util.function.Consumer
 
 /**
@@ -34,6 +35,7 @@ class IrohaConfig(
     var pullPolicy: ImagePullPolicy = PullPolicy.ageBased(Duration.ofMinutes(10)),
     var alias: String = IrohaContainer.NETWORK_ALIAS + DEFAULT_P2P_PORT,
     var keyPair: KeyPair = generateKeyPair(),
+    var chain: UUID = UUID.fromString("00000000-0000-0000-0000-000000000000"),
     var genesisKeyPair: KeyPair = keyPairFromHex(GENESIS_ADDRESS, GENESIS_PRIVATE_KEY),
     var trustedPeers: List<Peer> = listOf(
         Peer(SocketAddr.Host(SocketAddrHost(alias, DEFAULT_P2P_PORT)), PeerId(keyPair.public.toIrohaPublicKey())),
@@ -43,7 +45,6 @@ class IrohaConfig(
     var waitStrategy: Boolean = true,
     var submitGenesis: Boolean = true,
     var envs: Map<String, String> = emptyMap(),
-    var fetchSize: Int = 10,
     var executorPath: String? = null,
 ) {
     companion object {

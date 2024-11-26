@@ -13,7 +13,7 @@ import java.util.concurrent.CompletableFuture
  */
 @Suppress("unused")
 class Iroha2AsyncClient @JvmOverloads constructor(
-    override val apiUrl: URL,
+    override val apiURL: List<URL>,
     override val chain: UUID,
     override val authority: AccountId,
     override val keyPair: KeyPair,
@@ -21,7 +21,7 @@ class Iroha2AsyncClient @JvmOverloads constructor(
     log: Boolean = false,
     eventReadTimeoutInMills: Long = 250,
     eventReadMaxAttempts: Int = 10,
-) : Iroha2Client(apiUrl, chain, authority, keyPair, credentials, log, eventReadTimeoutInMills, eventReadMaxAttempts) {
+) : Iroha2Client(apiURL, chain, authority, keyPair, credentials, log, eventReadTimeoutInMills, eventReadMaxAttempts) {
 
     /**
      * Send a request to Iroha2 and extract payload.

@@ -3,7 +3,6 @@
 package jp.co.soramitsu.iroha2
 
 import com.fasterxml.jackson.module.kotlin.readValue
-import com.google.gson.GsonBuilder
 import jp.co.soramitsu.iroha2.generated.*
 import net.i2p.crypto.eddsa.EdDSAEngine
 import org.bouncycastle.jcajce.provider.digest.Blake2b
@@ -301,12 +300,6 @@ fun Numeric.asNumber() = when (this.scale) {
 fun Numeric.asString() = this.asNumber().toString()
 
 fun AssetType.Companion.numeric(scale: Long? = null) = AssetType.Numeric(NumericSpec(scale))
-fun String.asPrettyJson(): String {
-    val gson = GsonBuilder().setPrettyPrinting().create()
-    val jsonElement = com.google.gson.JsonParser.parseString(this)
-    return gson.toJson(jsonElement)
-}
-
 fun RegisterOfPeer.asInstructionBoxExt() = InstructionBox.Register(RegisterBox.Peer(this))
 fun RegisterOfDomain.asInstructionBoxExt() = InstructionBox.Register(RegisterBox.Domain(this))
 fun RegisterOfAssetDefinition.asInstructionBoxExt() = InstructionBox.Register(RegisterBox.AssetDefinition(this))
@@ -353,3 +346,5 @@ fun GrantOfPermissionAndRole.asInstructionBoxExt() = InstructionBox.Grant(GrantB
 fun RevokeOfPermissionAndAccount.asInstructionBoxExt() = InstructionBox.Revoke(RevokeBox.Permission(this))
 fun RevokeOfRoleIdAndAccount.asInstructionBoxExt() = InstructionBox.Revoke(RevokeBox.Role(this))
 fun RevokeOfPermissionAndRole.asInstructionBoxExt() = InstructionBox.Revoke(RevokeBox.RolePermission(this))
+
+fun ExecuteTrigger.asInstructionBoxExt() = InstructionBox.ExecuteTrigger(this)

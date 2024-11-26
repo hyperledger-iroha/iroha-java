@@ -6,6 +6,7 @@ import jp.co.soramitsu.iroha2.testengine.ALICE_ACCOUNT_ID
 import jp.co.soramitsu.iroha2.testengine.ALICE_KEYPAIR
 import jp.co.soramitsu.iroha2.testengine.DefaultGenesis
 import jp.co.soramitsu.iroha2.testengine.IrohaContainer
+import jp.co.soramitsu.iroha2.transaction.Register
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.time.withTimeout
 import org.junit.jupiter.api.Test
@@ -24,14 +25,10 @@ class ExampleTest {
             this.genesis = DefaultGenesis()
         }.also { it.start() }
 
-        val client = Iroha2Client(container.getApiUrl(), container.getP2pUrl(), true)
+        val client = Iroha2Client(listOf(container.getApiUrl()), container.config.chain, ALICE_ACCOUNT_ID, ALICE_KEYPAIR, log = true)
 
         val domainId = "new_domain_name".asDomainId()
-        client.sendTransaction {
-            account(ALICE_ACCOUNT_ID)
-            register(domainId)
-            buildSigned(ALICE_KEYPAIR)
-        }.also { d ->
+        Register.domain(domainId).execute(client).also { d ->
             withTimeout(Duration.ofSeconds(10)) { d.await() }
         }
 

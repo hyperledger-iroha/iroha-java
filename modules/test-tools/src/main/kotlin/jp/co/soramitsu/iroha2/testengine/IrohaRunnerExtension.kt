@@ -7,7 +7,6 @@ import jp.co.soramitsu.iroha2.DEFAULT_P2P_PORT
 import jp.co.soramitsu.iroha2.Genesis
 import jp.co.soramitsu.iroha2.Genesis.Companion.toSingle
 import jp.co.soramitsu.iroha2.IrohaSdkException
-import jp.co.soramitsu.iroha2.asAccountId
 import jp.co.soramitsu.iroha2.cast
 import jp.co.soramitsu.iroha2.client.Iroha2AsyncClient
 import jp.co.soramitsu.iroha2.client.Iroha2Client
@@ -17,8 +16,6 @@ import jp.co.soramitsu.iroha2.generated.Peer
 import jp.co.soramitsu.iroha2.generated.PeerId
 import jp.co.soramitsu.iroha2.generated.SocketAddr
 import jp.co.soramitsu.iroha2.generated.SocketAddrHost
-import jp.co.soramitsu.iroha2.keyPairFromHex
-import jp.co.soramitsu.iroha2.model.IrohaUrls
 import jp.co.soramitsu.iroha2.toIrohaPublicKey
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
@@ -34,8 +31,11 @@ import org.yaml.snakeyaml.Yaml
 import java.io.File
 import java.lang.reflect.Field
 import java.lang.reflect.Method
+import java.net.URI
 import java.security.KeyPair
 import java.util.Collections
+import java.util.UUID
+import kotlin.collections.ArrayList
 import kotlin.reflect.KClass
 import kotlin.reflect.KMutableProperty1
 import kotlin.reflect.KProperty1
@@ -98,12 +98,7 @@ class IrohaRunnerExtension :
         utilizedResources.addAll(containers)
 
         val properties = testInstance::class.memberProperties
-
-        // inject `KeyPair` if it is declared in test class
-        setPropertyValue(properties, testInstance) { ALICE_ACCOUNT_ID }
-
-        // inject `AccountId` if it is declared in test class
-        setPropertyValue(properties, testInstance) { ALICE_KEYPAIR }
+        val defaultChainId = UUID.fromString("00000000-0000-0000-0000-000000000000")
 
         // inject `List<IrohaContainer>` if it is declared in test class
         setPropertyValue(properties, testInstance) { containers }
@@ -111,32 +106,44 @@ class IrohaRunnerExtension :
         // inject `Iroha2Client` if it is declared in test class
         setPropertyValue(properties, testInstance) {
             Iroha2Client(
-                containers.map { IrohaUrls(it.getApiUrl(), it.getP2pUrl()) }.toMutableList(),
-                true,
+                containers.map { it.getApiUrl() }.toMutableList(),
+                defaultChainId,
+                ALICE_ACCOUNT_ID,
+                ALICE_KEYPAIR,
+                log = true,
             ).also { utilizedResources.add(it) }
         }
 
         // inject `AdminIroha2Client` if it is declared in test class
         setPropertyValue(properties, testInstance) {
             AdminIroha2Client(
-                containers.map { IrohaUrls(it.getApiUrl(), it.getP2pUrl()) }.toMutableList(),
-                true,
+                containers.map { it.getApiUrl() }.toMutableList(),
+                defaultChainId,
+                ALICE_ACCOUNT_ID,
+                ALICE_KEYPAIR,
+                log = true,
             ).also { utilizedResources.add(it) }
         }
 
         // inject `Iroha2AsyncClient` if it is declared in test class
         setPropertyValue(properties, testInstance) {
             Iroha2AsyncClient(
-                containers.map { IrohaUrls(it.getApiUrl(), it.getP2pUrl()) }.toMutableList(),
-                true,
+                containers.map { it.getApiUrl() }.toMutableList(),
+                defaultChainId,
+                ALICE_ACCOUNT_ID,
+                ALICE_KEYPAIR,
+                log = true,
             ).also { utilizedResources.add(it) }
         }
 
         // inject `AdminIroha2AsyncClient` if it is declared in test class
         setPropertyValue(properties, testInstance) {
             AdminIroha2AsyncClient(
-                containers.map { IrohaUrls(it.getApiUrl(), it.getP2pUrl()) }.toMutableList(),
-                true,
+                containers.map { it.getApiUrl() }.toMutableList(),
+                defaultChainId,
+                ALICE_ACCOUNT_ID,
+                ALICE_KEYPAIR,
+                log = true,
             ).also { utilizedResources.add(it) }
         }
 
@@ -148,30 +155,30 @@ class IrohaRunnerExtension :
         val properties = testInstance::class.memberProperties
 
         val urls = when (this.dockerComposeFile.isEmpty()) {
-            true -> this.apiUrls.mapIndexed { idx, url -> IrohaUrls(url, peerUrls[idx]) }
-            else -> File(this.dockerComposeFile).readDockerComposeData()
+            true -> this.apiUrls.map { url -> URI.create(url).toURL() }
+            else -> File(this.dockerComposeFile).readDockerComposeData()?.map { url -> URI.create(url).toURL() }
         } ?: throw IrohaSdkException("Iroha URLs required")
 
-        // inject `KeyPair` if it is declared in test class
-        setPropertyValue(properties, testInstance) { keyPairFromHex(this.publicKey, this.privateKey) }
+        // // inject `KeyPair` if it is declared in test class
+        // setPropertyValue(properties, testInstance) { keyPairFromHex(this.publicKey, this.privateKey) }
 
-        // inject `AccountId` if it is declared in test class
-        setPropertyValue(properties, testInstance) { this.account.asAccountId() }
+        // // inject `AccountId` if it is declared in test class
+        // setPropertyValue(properties, testInstance) { this.account.asAccountId() }
 
-        // inject `Iroha2Client` if it is declared in test class
-        setPropertyValue(properties, testInstance) { Iroha2Client(urls) }
+        // // inject `Iroha2Client` if it is declared in test class
+        // setPropertyValue(properties, testInstance) { Iroha2Client(urls, chain, this.a, keyPair) }
 
-        // inject `AdminIroha2Client` if it is declared in test class
-        setPropertyValue(properties, testInstance) { AdminIroha2Client(urls) }
+        // // inject `AdminIroha2Client` if it is declared in test class
+        // setPropertyValue(properties, testInstance) { AdminIroha2Client(urls, chain, authority, keyPair) }
 
-        // inject `Iroha2AsyncClient` if it is declared in test class
-        setPropertyValue(properties, testInstance) { Iroha2AsyncClient(urls) }
+        // // inject `Iroha2AsyncClient` if it is declared in test class
+        // setPropertyValue(properties, testInstance) { Iroha2AsyncClient(urls, chain, authority, keyPair) }
 
-        // inject `AdminIroha2AsyncClient` if it is declared in test class
-        setPropertyValue(properties, testInstance) { AdminIroha2AsyncClient(urls) }
+        // // inject `AdminIroha2AsyncClient` if it is declared in test class
+        // setPropertyValue(properties, testInstance) { AdminIroha2AsyncClient(urls, chain, authority, keyPair) }
     }
 
-    private fun File.readDockerComposeData(): List<IrohaUrls>? {
+    private fun File.readDockerComposeData(): List<String>? {
         fun String?.convertUrl() = this
             ?.replace("${IrohaContainer.NETWORK_ALIAS}[0-9]*".toRegex(), "localhost")
             ?.let { "http://$it" }
@@ -185,10 +192,7 @@ class IrohaRunnerExtension :
         }.onFailure { return null }.getOrThrow()
 
         return all.map {
-            IrohaUrls(
-                it["TORII_API_URL"].convertUrl(),
-                it["TORII_P2P_ADDR"].convertUrl(),
-            )
+            it["TORII_API_URL"].convertUrl()
         }
     }
 
@@ -232,7 +236,7 @@ class IrohaRunnerExtension :
         repeat(withIroha.amount) { n ->
             async {
                 val p2pPort = portsList[n][IrohaConfig.P2P_PORT_IDX]
-                val container = IrohaContainer {
+                val container: IrohaContainer = IrohaContainer {
                     this.networkToJoin = testInstance.network
                     when {
                         withIroha.source.isNotEmpty() -> genesisPath = withIroha.source
@@ -277,7 +281,7 @@ class IrohaRunnerExtension :
 
     private fun genesisInstance(clazz: KClass<out Genesis>): Genesis = clazz.createInstance().let { genesis ->
         val tx = genesis.transaction.copy(
-            chain = ChainId("00000000-0000-0000-0000-000000000000"),
+            ChainId("00000000-0000-0000-0000-000000000000"),
         )
         val transactionField = findField(clazz.java, "transaction")
         transactionField.isAccessible = true

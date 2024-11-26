@@ -2,5 +2,6 @@ dependencies {
     api project(":model")
     api project(":client")
 
-    testApi project(":test-tools")
+    implementation "io.ktor:ktor-client-core:$ktorVer"
+    implementation "io.ktor:ktor-client-cio:$ktorVer"
 }

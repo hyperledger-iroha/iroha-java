@@ -142,6 +142,8 @@ abstract class AbstractGenerator<T : Blueprint<*>> {
             clazz.addFunction(asInstructionBoxFun())
         } else if (blueprint.className.startsWith("RevokeOf")) {
             clazz.addFunction(asInstructionBoxFun())
+        } else if (blueprint.className == "ExecuteTrigger") {
+            clazz.addFunction(asInstructionBoxFun())
         }
     }
 
@@ -173,6 +175,8 @@ abstract class AbstractGenerator<T : Blueprint<*>> {
         } else if (blueprint.className.startsWith("GrantOf")) {
             clazz.addSuperinterface(Instruction::class)
         } else if (blueprint.className.startsWith("RevokeOf")) {
+            clazz.addSuperinterface(Instruction::class)
+        } else if (blueprint.className == "ExecuteTrigger") {
             clazz.addSuperinterface(Instruction::class)
         }
     }

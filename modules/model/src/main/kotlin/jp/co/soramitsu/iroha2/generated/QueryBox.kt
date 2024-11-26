@@ -277,8 +277,7 @@ public sealed class QueryBox : ModelEnum {
      * 'FindAccountsWithAsset' variant
      */
     public data class FindAccountsWithAsset(
-        public val queryWithFilterOfFindAccountsWithAssetAndAccountPredicateBox:
-        QueryWithFilterOfFindAccountsWithAssetAndAccountPredicateBox,
+        public val queryWithFilterOfFindAccountsWithAssetAndAccountPredicateBox: QueryWithFilterOfFindAccountsWithAssetAndAccountPredicateBox,
     ) : QueryBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
@@ -339,8 +338,7 @@ public sealed class QueryBox : ModelEnum {
      * 'FindActiveTriggerIds' variant
      */
     public data class FindActiveTriggerIds(
-        public val queryWithFilterOfFindActiveTriggerIdsAndTriggerIdPredicateBox:
-        QueryWithFilterOfFindActiveTriggerIdsAndTriggerIdPredicateBox,
+        public val queryWithFilterOfFindActiveTriggerIdsAndTriggerIdPredicateBox: QueryWithFilterOfFindActiveTriggerIdsAndTriggerIdPredicateBox,
     ) : QueryBox() {
         override fun discriminant(): Int = DISCRIMINANT
 

@@ -34,7 +34,6 @@ annotation class WithIroha(
 @Inherited
 annotation class WithIrohaManual(
     val apiUrls: Array<String> = [],
-    val peerUrls: Array<String> = [],
     val account: String = "",
     val publicKey: String = "",
     val privateKey: String = "",

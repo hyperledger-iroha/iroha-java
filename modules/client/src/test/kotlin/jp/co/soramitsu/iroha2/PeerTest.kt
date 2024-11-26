@@ -7,7 +7,6 @@ import jp.co.soramitsu.iroha2.annotations.Permission
 import jp.co.soramitsu.iroha2.annotations.Sdk
 import jp.co.soramitsu.iroha2.annotations.SdkTestId
 import jp.co.soramitsu.iroha2.client.Iroha2Client
-import jp.co.soramitsu.iroha2.generated.AccountId
 import jp.co.soramitsu.iroha2.generated.DomainId
 import jp.co.soramitsu.iroha2.generated.Peer
 import jp.co.soramitsu.iroha2.generated.PeerId
@@ -23,8 +22,9 @@ import jp.co.soramitsu.iroha2.testengine.IrohaConfig
 import jp.co.soramitsu.iroha2.testengine.IrohaContainer
 import jp.co.soramitsu.iroha2.testengine.IrohaTest
 import jp.co.soramitsu.iroha2.testengine.WithIroha
+import jp.co.soramitsu.iroha2.transaction.Register
+import jp.co.soramitsu.iroha2.transaction.Unregister
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
@@ -33,7 +33,6 @@ import kotlinx.coroutines.withContext
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Timeout
 import java.security.KeyPair
-import java.time.Duration
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
@@ -54,20 +53,12 @@ class PeerTest : IrohaTest<AdminIroha2Client>() {
     @Permission("no_permission_required")
     @SdkTestId("register_peer")
     fun `register peer`(): Unit = runBlocking {
-        val p2pPort = DEFAULT_P2P_PORT + PEER_AMOUNT
-        val alias = "iroha$p2pPort"
-        val address = "$alias:$p2pPort"
         val keyPair = generateKeyPair()
         val payload = keyPair.public.bytes()
 
-        val containerJob = async {
-            startNewContainer(keyPair, alias, PEER_AMOUNT)
+        Register.peer(PeerId(keyPair.public.toIrohaPublicKey())).execute(client).also { d ->
+            withTimeout(txTimeout) { d.await() }
         }
-        val registerJob = async {
-            registerPeer(PeerId(keyPair.public.toIrohaPublicKey()))
-        }
-        containerJob.await()
-        registerJob.await()
 
         assertTrue(isPeerRegistered(payload))
     }
@@ -85,10 +76,15 @@ class PeerTest : IrohaTest<AdminIroha2Client>() {
         val payload = keyPair.public.bytes()
 
         startNewContainer(keyPair, alias, PEER_AMOUNT).use {
-            registerPeer(PeerId(keyPair.public.toIrohaPublicKey()))
-            assertTrue(isPeerRegistered(payload))
+            Register.peer(PeerId(keyPair.public.toIrohaPublicKey())).execute(client).also { d ->
+                withTimeout(txTimeout) { d.await() }
+            }
 
-            unregisterPeer(PeerId(keyPair.public.toIrohaPublicKey()))
+            assertTrue(isPeerRegistered(payload))
+            Unregister.peer(PeerId(keyPair.public.toIrohaPublicKey())).execute(client).also { d ->
+                withTimeout(txTimeout) { d.await() }
+            }
+
             assertFalse(isPeerRegistered(payload))
         }
     }
@@ -103,11 +99,12 @@ class PeerTest : IrohaTest<AdminIroha2Client>() {
         val payload = keyPair.public.bytes()
 
         startNewContainer(keyPair, alias, PEER_AMOUNT).use { container ->
-            registerPeer(PeerId(keyPair.public.toIrohaPublicKey()))
+            Register.peer(PeerId(keyPair.public.toIrohaPublicKey())).execute(client).also { d ->
+                withTimeout(txTimeout) { d.await() }
+            }
             assertTrue(isPeerRegistered(payload))
 
             delay(5000)
-
             val peersCount = QueryBuilder.findPeers()
                 .account(ALICE_ACCOUNT_ID)
                 .buildSigned(ALICE_KEYPAIR)
@@ -119,8 +116,10 @@ class PeerTest : IrohaTest<AdminIroha2Client>() {
                 .buildSigned(ALICE_KEYPAIR)
                 .let {
                     Iroha2Client(
-                        container.getApiUrl(),
-                        container.getP2pUrl(),
+                        listOf(container.getApiUrl()),
+                        container.config.chain,
+                        ALICE_ACCOUNT_ID,
+                        ALICE_KEYPAIR,
                     ).sendQuery(it)
                 }
                 .also { peers -> assertEquals(peers.size, peersCount) }
@@ -164,30 +163,6 @@ class PeerTest : IrohaTest<AdminIroha2Client>() {
             peer.publicKey.payload.contentEquals(payload)
         }
 
-    private suspend fun unregisterPeer(peerId: PeerId, keyPair: KeyPair = ALICE_KEYPAIR) {
-        client.sendTransaction {
-            account(ALICE_ACCOUNT_ID)
-            unregister(peerId)
-            buildSigned(keyPair)
-        }.also { d ->
-            withTimeout(txTimeout.plus(Duration.ofSeconds(20))) { d.await() }
-        }
-    }
-
-    private suspend fun registerPeer(
-        peerId: PeerId,
-        account: AccountId = ALICE_ACCOUNT_ID,
-        keyPair: KeyPair = ALICE_KEYPAIR,
-    ) {
-        client.sendTransaction {
-            account(account)
-            register(peerId)
-            buildSigned(keyPair)
-        }.also { d ->
-            withTimeout(txTimeout.plus(Duration.ofSeconds(20))) { d.await() }
-        }
-    }
-
     private fun IrohaContainer.extractPeer() = Peer(
         SocketAddr.Host(
             SocketAddrHost(
@@ -200,7 +175,7 @@ class PeerTest : IrohaTest<AdminIroha2Client>() {
 
     private suspend fun findDomain(id: DomainId = DEFAULT_DOMAIN_ID) = QueryBuilder
         .findDomainById(id)
-        .account(super.account)
-        .buildSigned(super.keyPair)
+        .account(client.authority)
+        .buildSigned(client.keyPair)
         .let { client.sendQuery(it)!! }
 }

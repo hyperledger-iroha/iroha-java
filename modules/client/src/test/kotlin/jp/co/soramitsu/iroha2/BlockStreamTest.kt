@@ -7,8 +7,6 @@ import io.qameta.allure.Story
 import jp.co.soramitsu.iroha2.annotations.Sdk
 import jp.co.soramitsu.iroha2.annotations.SdkTestId
 import jp.co.soramitsu.iroha2.client.blockstream.BlockStreamStorage
-import jp.co.soramitsu.iroha2.generated.AssetDefinitionId
-import jp.co.soramitsu.iroha2.generated.AssetType
 import jp.co.soramitsu.iroha2.generated.BlockMessage
 import jp.co.soramitsu.iroha2.generated.BlockPayload
 import jp.co.soramitsu.iroha2.generated.Executable
@@ -28,10 +26,10 @@ import jp.co.soramitsu.iroha2.testengine.GENESIS_DOMAIN
 import jp.co.soramitsu.iroha2.testengine.IrohaTest
 import jp.co.soramitsu.iroha2.testengine.NewAccountWithMetadata
 import jp.co.soramitsu.iroha2.testengine.WithIroha
-import jp.co.soramitsu.iroha2.transaction.Register
 import jp.co.soramitsu.iroha2.transaction.SetKeyValue
 import jp.co.soramitsu.iroha2.transaction.Transfer
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.time.withTimeout
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.parallel.ResourceLock
 import org.testcontainers.shaded.org.apache.commons.lang3.RandomStringUtils.randomAlphabetic
@@ -57,11 +55,11 @@ class BlockStreamTest : IrohaTest<AdminIroha2Client>() {
         val subscription = idToSubscription.second
         val newAssetName = "rox"
 
-        client.tx {
-            Transfer.domain(ALICE_ACCOUNT_ID, DEFAULT_DOMAIN_ID, BOB_ACCOUNT_ID)
+        Transfer.domain(ALICE_ACCOUNT_ID, DEFAULT_DOMAIN_ID, BOB_ACCOUNT_ID).execute(client).also { d ->
+            withTimeout(txTimeout) { d.await() }
         }
-        client.tx(BOB_ACCOUNT_ID, BOB_KEYPAIR) {
-            Register.assetDefinition(AssetDefinitionId(DEFAULT_DOMAIN_ID, newAssetName.asName()), AssetType.Store())
+        Transfer.domain(ALICE_ACCOUNT_ID, DEFAULT_DOMAIN_ID, BOB_ACCOUNT_ID).executeAs(BOB_ACCOUNT_ID, BOB_KEYPAIR, client).also { d ->
+            withTimeout(txTimeout) { d.await() }
         }
 
         val blocks = mutableListOf<BlockMessage>()
@@ -104,7 +102,9 @@ class BlockStreamTest : IrohaTest<AdminIroha2Client>() {
         subscription.receive<NonZeroOfu64>(initialActionId) { heightSum += it.u64 }
 
         repeat(repeatTimes + shift) {
-            client.tx { SetKeyValue.account(ALICE_ACCOUNT_ID, randomAlphabetic(16).asName(), randomAlphabetic(16)) }
+            SetKeyValue.account(ALICE_ACCOUNT_ID, randomAlphabetic(16).asName(), randomAlphabetic(16)).execute(client).also { d ->
+                withTimeout(txTimeout) { d.await() }
+            }
         }
         assertEquals((1..repeatTimes.toLong()).sum(), heightSum.toLong())
 
@@ -119,7 +119,9 @@ class BlockStreamTest : IrohaTest<AdminIroha2Client>() {
         lateinit var lastValue: String
         repeat(repeatTimes * 2) {
             lastValue = randomAlphabetic(16)
-            client.tx { SetKeyValue.account(ALICE_ACCOUNT_ID, randomAlphabetic(16).asName(), lastValue) }
+            SetKeyValue.account(ALICE_ACCOUNT_ID, randomAlphabetic(16).asName(), lastValue).execute(client).also { d ->
+                withTimeout(txTimeout) { d.await() }
+            }
         }
         Thread.sleep(5000)
         val actual = isi.last().cast<InstructionBox.SetKeyValue>().setKeyValueBox

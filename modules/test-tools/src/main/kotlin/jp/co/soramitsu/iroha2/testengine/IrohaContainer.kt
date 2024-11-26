@@ -49,7 +49,7 @@ open class IrohaContainer : GenericContainer<IrohaContainer> {
         this.config = config
 
         this.withNetwork(config.networkToJoin)
-            .withEnv("CHAIN", "00000000-0000-0000-0000-000000000000")
+            .withEnv("CHAIN", config.chain.toString())
             .withEnv(
                 "TRUSTED_PEERS",
                 "[" +
@@ -67,7 +67,6 @@ open class IrohaContainer : GenericContainer<IrohaContainer> {
             .withEnv("P2P_PUBLIC_ADDRESS", "${config.alias}:$p2pPort")
             .withEnv("P2P_ADDRESS", "${config.alias}:$p2pPort")
             .withEnv("API_ADDRESS", "${config.alias}:$apiPort")
-            .withEnv("TORII_FETCH_SIZE", config.fetchSize.toString())
             .withCreateContainerCmdModifier { cmd -> cmd.withName(containerName) }
             .also { container ->
                 if (config.submitGenesis) {
@@ -136,9 +135,9 @@ open class IrohaContainer : GenericContainer<IrohaContainer> {
     private val executorFileLocation = Path("$configDirLocation/$DEFAULT_EXECUTOR_FILE_NAME")
 
     override fun start() {
-        logger().debug("Starting Iroha container")
+        logger().info("Starting Iroha container")
         super.start()
-        logger().debug("Iroha container started")
+        logger().info("Iroha container started")
     }
 
     override fun stop() {
@@ -156,8 +155,6 @@ open class IrohaContainer : GenericContainer<IrohaContainer> {
         }
         logger().debug("Iroha container stopped")
     }
-
-    fun getP2pUrl(): URL = URI("http://$host:${getMappedPort(p2pPort)}").toURL()
 
     fun getApiUrl(): URL = URI("http://$host:${getMappedPort(apiPort)}").toURL()
 

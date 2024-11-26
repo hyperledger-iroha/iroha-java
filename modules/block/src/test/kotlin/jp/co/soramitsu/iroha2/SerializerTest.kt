@@ -1,5 +1,6 @@
 package jp.co.soramitsu.iroha2
 
+import com.google.gson.GsonBuilder
 import jp.co.soramitsu.iroha2.generated.AssetDefinitionId
 import jp.co.soramitsu.iroha2.generated.AssetId
 import jp.co.soramitsu.iroha2.generated.BlockParameters
@@ -239,4 +240,10 @@ class SerializerTest {
         val json = JSON_SERDE.writeValueAsString(genesis.transaction)
         assertEquals(expectedJson, json.asPrettyJson())
     }
+}
+
+fun String.asPrettyJson(): String {
+    val gson = GsonBuilder().setPrettyPrinting().create()
+    val jsonElement = com.google.gson.JsonParser.parseString(this)
+    return gson.toJson(jsonElement)
 }

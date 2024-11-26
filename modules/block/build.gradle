@@ -1,8 +1,10 @@
 dependencies {
-    api project(":model")
+    implementation project(":model")
 
     implementation "com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonKotlinVer"
 
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit5:$kotlinVer"
     testImplementation "org.jetbrains.kotlin:kotlin-test:$kotlinVer"
+
+    testImplementation "com.google.crypto.tink:tink:$googleTinkVer"
 }

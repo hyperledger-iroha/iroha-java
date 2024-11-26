@@ -13,8 +13,11 @@ import jp.co.soramitsu.iroha2.testengine.IROHA_CONFIG_DELIMITER
 import jp.co.soramitsu.iroha2.testengine.IrohaContainer
 import jp.co.soramitsu.iroha2.testengine.IrohaTest
 import jp.co.soramitsu.iroha2.testengine.WithIroha
+import jp.co.soramitsu.iroha2.transaction.Register
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.time.withTimeout
 import org.junit.jupiter.api.Test
+import java.time.Duration
 import kotlin.test.assertEquals
 
 class GenesisTest : IrohaTest<Iroha2Client>() {
@@ -35,7 +38,7 @@ class GenesisTest : IrohaTest<Iroha2Client>() {
             this.genesisPath = path
         }.also { it.start() }
 
-        val client = Iroha2Client(container.getApiUrl(), container.getP2pUrl(), true)
+        val client = Iroha2Client(listOf(container.getApiUrl()), container.config.chain, ALICE_ACCOUNT_ID, ALICE_KEYPAIR, log = true)
         client.checkAliceAndBobExists()
     }
 
@@ -43,11 +46,13 @@ class GenesisTest : IrohaTest<Iroha2Client>() {
     @WithIroha([DefaultGenesis::class], executorSource = "src/test/resources/executor.wasm")
     fun `custom executor path`(): Unit = runBlocking {
         val definitionId = AssetDefinitionId(DEFAULT_DOMAIN_ID, "XSTUSD".asName())
-        client.tx { register(definitionId, AssetType.numeric()) }
+        Register.assetDefinition(definitionId, AssetType.numeric()).execute(client).also { d ->
+            withTimeout(Duration.ofSeconds(10)) { d.await() }
+        }
 
         QueryBuilder.findAssetsDefinitions()
-            .account(super.account)
-            .buildSigned(super.keyPair)
+            .account(client.authority)
+            .buildSigned(client.keyPair)
             .let { query -> client.sendQuery(query) }
             .first { it.id == definitionId }
             .also { assetDefinition -> assertEquals(assetDefinition.id, definitionId) }

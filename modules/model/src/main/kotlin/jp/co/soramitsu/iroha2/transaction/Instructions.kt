@@ -1,5 +1,3 @@
-@file:Suppress("ktlint:standard:no-wildcard-imports")
-
 package jp.co.soramitsu.iroha2.transaction
 
 import jp.co.soramitsu.iroha2.ModelPermission
@@ -66,7 +64,7 @@ class Register {
             repeats: Repeats,
             accountId: AccountId,
             filter: EventFilterBox,
-            metadata: Metadata,
+            metadata: Metadata = Metadata(mapOf()),
         ) = RegisterOfTrigger(
             Trigger(
                 triggerId,
@@ -83,7 +81,7 @@ class Register {
             repeats: Repeats,
             accountId: AccountId,
             filter: EventFilterBox,
-            metadata: Metadata,
+            metadata: Metadata = Metadata(mapOf()),
         ) = RegisterOfTrigger(
             Trigger(
                 triggerId,
@@ -318,5 +316,14 @@ class Revoke {
          * Revoke permission from the given role
          */
         fun <P : ModelPermission> rolePermission(permission: P, roleId: RoleId) = RevokeOfPermissionAndRole(permission.asRaw(), roleId)
+    }
+}
+
+class Execute {
+    companion object {
+        /**
+         * Execute a pre-registered trigger
+         */
+        fun trigger(triggerId: TriggerId, args: Json = Json.writeValue(null)) = ExecuteTrigger(triggerId, args)
     }
 }
