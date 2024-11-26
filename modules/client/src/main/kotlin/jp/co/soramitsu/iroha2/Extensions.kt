@@ -161,6 +161,7 @@ private fun Iroha2Client.subscribeToTransactionStatus(hash: ByteArray, afterSubs
                             is TransactionStatus.Rejected -> {
                                 val reason = status.transactionRejectionReason.message()
                                 logger.error("Transaction {} was rejected by reason: `{}`", hexHash, reason)
+                                throw TransactionRejectedException("$hexHash: $reason")
                             }
 
                             is TransactionStatus.Approved -> {
@@ -199,6 +200,7 @@ suspend fun List<Instruction>.executeAs(
     keyPair: KeyPair,
     client: Iroha2Client,
 ) = TransactionBuilder(client.chain, authority).addInstructions(this.map { it.asInstructionBox() }).buildSigned(keyPair).executeAs(client)
+
 suspend fun SignedTransaction.execute(client: Iroha2Client) = this.executeAs(client)
 suspend fun SignedTransaction.executeAs(client: Iroha2Client): Deferred<ByteArray> {
     val lock = Mutex(locked = true)

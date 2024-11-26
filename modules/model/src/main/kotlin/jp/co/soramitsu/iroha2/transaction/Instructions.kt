@@ -9,6 +9,7 @@ import java.math.BigDecimal
 interface Instruction {
     fun asInstructionBox(): InstructionBox
 }
+
 class Register {
     companion object {
         /**

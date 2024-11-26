@@ -5,13 +5,13 @@ import jp.co.soramitsu.iroha2.generated.AssetId
 import jp.co.soramitsu.iroha2.generated.AssetType
 import jp.co.soramitsu.iroha2.generated.AssetValue
 import kotlinx.coroutines.runBlocking
+import java.math.BigDecimal
 import java.net.URI
 import java.util.UUID
 
-fun main(args: Array<String>): Unit = runBlocking {
+fun main(): Unit = runBlocking {
     val chainId = UUID.fromString("00000000-0000-0000-0000-000000000000")
     val apiUrl = "http://127.0.0.1:8080"
-    val peerUrl = "http://127.0.0.1:1337"
     val admin = AccountId(
         "wonderland".asDomainId(),
         publicKeyFromHex("CE7FA46C9DCE7EA4B125E2E36BDB63EA33073E7590AC92816AE1E861B7048B03").toIrohaPublicKey(),
@@ -29,7 +29,7 @@ fun main(args: Array<String>): Unit = runBlocking {
     query.findAllAssets()
         .also { println("ALL ASSETS: ${it.map { d -> d.id.asString() }}") }
 
-    val sendTransaction = SendTransaction(client, admin, adminKeyPair, chainId)
+    val sendTransaction = SendTransaction(client)
 
     val domain = "looking_glass_${System.currentTimeMillis()}"
     sendTransaction.registerDomain(domain).also { println("DOMAIN $domain CREATED") }
@@ -56,12 +56,12 @@ fun main(args: Array<String>): Unit = runBlocking {
     sendTransaction.registerAsset(whiteRabbitAsset, AssetValue.Numeric(0.asNumeric()))
         .also { println("ASSET $whiteRabbitAsset CREATED") }
 
-    sendTransaction.transferAsset(madHatterAsset, 10, whiteRabbit.asString(), madHatter, madHatterKeyPair)
+    sendTransaction.transferAsset(madHatterAsset, BigDecimal(10), whiteRabbit.asString())
         .also { println("$madHatter TRANSFERRED FROM $madHatterAsset TO $whiteRabbitAsset: 10") }
     query.getAccountAmount(madHatter, madHatterAsset.definition).also { println("$madHatterAsset BALANCE: $it") }
     query.getAccountAmount(whiteRabbit, whiteRabbitAsset.definition).also { println("$whiteRabbitAsset BALANCE: $it") }
 
-    sendTransaction.burnAssets(madHatterAsset, 10, madHatter, madHatterKeyPair)
+    sendTransaction.burnAssets(madHatterAsset, BigDecimal(10))
         .also { println("$madHatterAsset WAS BURN") }
 
     query.getAccountAmount(madHatter, madHatterAsset.definition)

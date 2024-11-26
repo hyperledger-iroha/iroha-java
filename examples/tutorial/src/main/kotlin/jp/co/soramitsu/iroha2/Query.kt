@@ -3,8 +3,9 @@ package jp.co.soramitsu.iroha2
 import jp.co.soramitsu.iroha2.generated.AccountId
 import jp.co.soramitsu.iroha2.generated.AssetDefinitionId
 import jp.co.soramitsu.iroha2.generated.AssetValue
-import jp.co.soramitsu.iroha2.generated.GenericPredicateBox
-import jp.co.soramitsu.iroha2.generated.QueryOutputPredicate
+import jp.co.soramitsu.iroha2.generated.CompoundPredicateOfDomainPredicateBox
+import jp.co.soramitsu.iroha2.generated.CompoundPredicateOfAccountPredicateBox
+import jp.co.soramitsu.iroha2.generated.CompoundPredicateOfAssetPredicateBox
 import jp.co.soramitsu.iroha2.query.QueryBuilder
 import java.math.BigInteger
 import java.security.KeyPair
@@ -15,20 +16,20 @@ open class Query(
     private val keyPair: KeyPair,
 ) {
 
-    suspend fun findAllDomains(queryFilter: GenericPredicateBox<QueryOutputPredicate>? = null) = QueryBuilder
-        .findDomains(queryFilter)
+    suspend fun findAllDomains(filter: CompoundPredicateOfDomainPredicateBox? = null) = QueryBuilder
+        .findDomains(filter)
         .account(admin)
         .buildSigned(keyPair)
         .let { client.sendQuery(it) }
 
-    suspend fun findAllAccounts(queryFilter: GenericPredicateBox<QueryOutputPredicate>? = null) = QueryBuilder
-        .findAccounts(queryFilter)
+    suspend fun findAllAccounts(filter: CompoundPredicateOfAccountPredicateBox? = null) = QueryBuilder
+        .findAccounts(filter)
         .account(admin)
         .buildSigned(keyPair)
         .let { client.sendQuery(it) }
 
-    suspend fun findAllAssets(queryFilter: GenericPredicateBox<QueryOutputPredicate>? = null) = QueryBuilder
-        .findAssets(queryFilter)
+    suspend fun findAllAssets(filter: CompoundPredicateOfAssetPredicateBox? = null) = QueryBuilder
+        .findAssets(filter)
         .account(admin)
         .buildSigned(keyPair)
         .let { client.sendQuery(it) }

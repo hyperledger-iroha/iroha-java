@@ -8,30 +8,22 @@ import jp.co.soramitsu.iroha2.generated.Json
 import jp.co.soramitsu.iroha2.generated.Metadata
 import jp.co.soramitsu.iroha2.generated.Mintable
 import jp.co.soramitsu.iroha2.generated.Name
+import jp.co.soramitsu.iroha2.transaction.Burn
+import jp.co.soramitsu.iroha2.transaction.Register
+import jp.co.soramitsu.iroha2.transaction.Transfer
 import kotlinx.coroutines.withTimeout
-import java.security.KeyPair
-import java.util.UUID
+import java.math.BigDecimal
 
 class SendTransaction(
     private val client: AdminIroha2Client,
-    private val admin: AccountId,
-    private val keyPair: KeyPair,
-    private val chainUuid: UUID,
     private val timeout: Long = 10000,
 ) {
 
     suspend fun registerDomain(
         id: String,
         metadata: Map<Name, Json> = mapOf(),
-        admin: AccountId = this.admin,
-        keyPair: KeyPair = this.keyPair,
     ) {
-        client.sendTransaction {
-            account(admin)
-            chainId(chainUuid)
-            register(id.asDomainId(), metadata)
-            buildSigned(keyPair)
-        }.also {
+        Register.domain(id.asDomainId(), metadata).execute(client).also {
             withTimeout(timeout) { it.await() }
         }
     }
@@ -39,15 +31,8 @@ class SendTransaction(
     suspend fun registerAccount(
         id: String,
         metadata: Map<Name, Json> = mapOf(),
-        admin: AccountId = this.admin,
-        keyPair: KeyPair = this.keyPair,
     ) {
-        client.sendTransaction {
-            account(admin)
-            chainId(chainUuid)
-            register(id.asAccountId(), Metadata(metadata))
-            buildSigned(keyPair)
-        }.also {
+        Register.account(id.asAccountId(), Metadata(metadata)).execute(client).also {
             withTimeout(timeout) { it.await() }
         }
     }
@@ -57,15 +42,8 @@ class SendTransaction(
         type: AssetType = AssetType.Store(),
         metadata: Map<Name, Json> = mapOf(),
         mintable: Mintable = Mintable.Infinitely(),
-        admin: AccountId = this.admin,
-        keyPair: KeyPair = this.keyPair,
     ) {
-        client.sendTransaction {
-            account(admin)
-            chainId(chainUuid)
-            register(id.asAssetDefinitionId(), type, Metadata(metadata), mintable)
-            buildSigned(keyPair)
-        }.also {
+        Register.assetDefinition(id.asAssetDefinitionId(), type, mintable, metadata = Metadata(metadata)).execute(client).also {
             withTimeout(timeout) { it.await() }
         }
     }
@@ -73,48 +51,27 @@ class SendTransaction(
     suspend fun registerAsset(
         id: AssetId,
         value: AssetValue,
-        admin: AccountId = this.admin,
-        keyPair: KeyPair = this.keyPair,
     ) {
-        client.sendTransaction {
-            account(admin)
-            chainId(chainUuid)
-            register(id, value)
-            buildSigned(keyPair)
-        }.also {
+        Register.asset(id, value).execute(client).also {
             withTimeout(timeout) { it.await() }
         }
     }
 
     suspend fun transferAsset(
         from: AssetId,
-        value: Int,
+        value: BigDecimal,
         to: String,
-        admin: AccountId = this.admin,
-        keyPair: KeyPair = this.keyPair,
     ) {
-        client.sendTransaction {
-            account(admin)
-            chainId(chainUuid)
-            transfer(from, value, to.asAccountId())
-            buildSigned(keyPair)
-        }.also {
+        Transfer.asset(from, value, to.asAccountId()).execute(client).also {
             withTimeout(timeout) { it.await() }
         }
     }
 
     suspend fun burnAssets(
         assetId: AssetId,
-        value: Int,
-        admin: AccountId = this.admin,
-        keyPair: KeyPair = this.keyPair,
+        value: BigDecimal,
     ) {
-        client.sendTransaction {
-            account(admin)
-            chainId(chainUuid)
-            burn(assetId, value)
-            buildSigned(keyPair)
-        }.also {
+        Burn.asset(assetId, value).execute(client).also {
             withTimeout(timeout) { it.await() }
         }
     }

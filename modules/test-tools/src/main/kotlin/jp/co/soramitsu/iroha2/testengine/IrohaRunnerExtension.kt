@@ -8,7 +8,6 @@ import jp.co.soramitsu.iroha2.Genesis
 import jp.co.soramitsu.iroha2.Genesis.Companion.toSingle
 import jp.co.soramitsu.iroha2.IrohaSdkException
 import jp.co.soramitsu.iroha2.cast
-import jp.co.soramitsu.iroha2.client.Iroha2AsyncClient
 import jp.co.soramitsu.iroha2.client.Iroha2Client
 import jp.co.soramitsu.iroha2.generateKeyPair
 import jp.co.soramitsu.iroha2.generated.ChainId
@@ -117,17 +116,6 @@ class IrohaRunnerExtension :
         // inject `AdminIroha2Client` if it is declared in test class
         setPropertyValue(properties, testInstance) {
             AdminIroha2Client(
-                containers.map { it.getApiUrl() }.toMutableList(),
-                defaultChainId,
-                ALICE_ACCOUNT_ID,
-                ALICE_KEYPAIR,
-                log = true,
-            ).also { utilizedResources.add(it) }
-        }
-
-        // inject `Iroha2AsyncClient` if it is declared in test class
-        setPropertyValue(properties, testInstance) {
-            Iroha2AsyncClient(
                 containers.map { it.getApiUrl() }.toMutableList(),
                 defaultChainId,
                 ALICE_ACCOUNT_ID,
