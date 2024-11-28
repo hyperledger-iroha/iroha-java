@@ -1,12 +1,16 @@
 package jp.co.soramitsu.iroha2.client
 
 import jp.co.soramitsu.iroha2.generated.AccountId
+import jp.co.soramitsu.iroha2.generated.SignedTransaction
 import jp.co.soramitsu.iroha2.query.QueryAndExtractor
+import kotlinx.coroutines.future.asCompletableFuture
 import kotlinx.coroutines.future.future
+import kotlinx.coroutines.runBlocking
 import java.net.URL
 import java.security.KeyPair
 import java.util.UUID
 import java.util.concurrent.CompletableFuture
+import java.util.concurrent.Future
 
 /**
  * Extension of [Iroha2Client] for Java
@@ -29,5 +33,12 @@ class Iroha2AsyncClient @JvmOverloads constructor(
      */
     fun <T> sendQueryAsync(queryAndExtractor: QueryAndExtractor<T>): CompletableFuture<T> = future {
         sendQuery(queryAndExtractor)
+    }
+
+    /**
+     * Send a transaction to an Iroha peer and wait until it is committed or rejected.
+     */
+    fun sendTransactionAsync(transaction: SignedTransaction): Future<ByteArray> = runBlocking {
+        submitTransaction(transaction).asCompletableFuture()
     }
 }

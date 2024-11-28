@@ -84,13 +84,13 @@ class TriggersTest : IrohaTest<Iroha2Client>() {
         val filter = EventFilterBox.Data(
             EntityFilters.byAssetDefinition(1),
         )
-        Register.trigger(
+        client.submit(Register.trigger(
             triggerId,
             listOf(Mint.asset(DEFAULT_ASSET_ID, BigDecimal(1))),
             Repeats.Indefinitely(),
             ALICE_ACCOUNT_ID,
             filter,
-        ).execute(client)
+        ))
             .also { d ->
                 withTimeout(txTimeout) { d.await() }
             }
@@ -124,14 +124,13 @@ class TriggersTest : IrohaTest<Iroha2Client>() {
         assertEquals(100L, prevQuantity)
 
         // register pre commit trigger
-        Register.trigger(
+        client.submit(Register.trigger(
             triggerId,
             listOf(Mint.asset(DEFAULT_ASSET_ID, BigDecimal(10))),
             Repeats.Indefinitely(),
             ALICE_ACCOUNT_ID,
             EventFilterBox.Time(TimeEventFilter(ExecutionTime.PreCommit())),
-        ).execute(client)
-            .also { d ->
+        )).also { d ->
                 withTimeout(txTimeout) { d.await() }
             }
 
@@ -148,7 +147,7 @@ class TriggersTest : IrohaTest<Iroha2Client>() {
         assertEquals(120L, newQuantity)
 
         // transfer asset instruction just to test trigger
-        Transfer.asset(DEFAULT_ASSET_ID, BigDecimal(100), BOB_ACCOUNT_ID).execute(client)
+        client.submit(Transfer.asset(DEFAULT_ASSET_ID, BigDecimal(100), BOB_ACCOUNT_ID))
             .also { d ->
                 withTimeout(txTimeout) { d.await() }
             }
@@ -165,7 +164,7 @@ class TriggersTest : IrohaTest<Iroha2Client>() {
     fun `executable trigger`(): Unit = runBlocking {
         val triggerId = TriggerId("executable_trigger".asName())
 
-        listOf(
+    client.submit(
             Register.trigger(
                 triggerId,
                 listOf(Mint.asset(DEFAULT_ASSET_ID, BigDecimal(1))),
@@ -174,7 +173,7 @@ class TriggersTest : IrohaTest<Iroha2Client>() {
                 EventFilterBox.ExecuteTrigger(ExecuteTriggerEventFilter(triggerId)),
             ),
             Execute.trigger(triggerId),
-        ).execute(client).also { d ->
+        ).also { d ->
             withTimeout(txTimeout) { d.await() }
         }
 
@@ -233,18 +232,18 @@ class TriggersTest : IrohaTest<Iroha2Client>() {
             .getResource("create_nft_for_alice_smartcontract.wasm")
             .readBytes()
 
-        Register.trigger(
+        client.submit(Register.trigger(
             triggerId,
             wasm,
             Repeats.Indefinitely(),
             ALICE_ACCOUNT_ID,
             filter,
-        ).execute(client)
+        ))
         keepNetworkBusyAndCheckAssetDefinitionIds()
 
         val testKey = "key02357123".asName()
         val testValue = "value986441123"
-        SetKeyValue.trigger(triggerId, testKey, testValue).execute(client)
+        client.submit(SetKeyValue.trigger(triggerId, testKey, testValue))
             .also { d ->
                 withTimeout(txTimeout) { d.await() }
             }
@@ -273,19 +272,19 @@ class TriggersTest : IrohaTest<Iroha2Client>() {
             .getResource("create_nft_for_alice_smartcontract.wasm")
             .readBytes()
 
-        Register.trigger(
+        client.submit(Register.trigger(
             wasmTriggerId,
             wasm,
             Repeats.Indefinitely(),
             ALICE_ACCOUNT_ID,
             filter,
-        ).execute(client)
+        ))
             .also { d ->
                 withTimeout(txTimeout) { d.await() }
             }
         val testKey = "key".asName()
         val testValue = "value"
-        listOf(
+        client.submit(
             Register.trigger(
                 setKeyValueTriggerId,
                 listOf(SetKeyValue.trigger(wasmTriggerId, testKey, testValue)),
@@ -294,7 +293,7 @@ class TriggersTest : IrohaTest<Iroha2Client>() {
                 EventFilterBox.ExecuteTrigger(ExecuteTriggerEventFilter(setKeyValueTriggerId)),
             ),
             Execute.trigger(setKeyValueTriggerId),
-        ).execute(client)
+        )
 
         keepNetworkBusyAndCheckAssetDefinitionIds()
 
@@ -313,18 +312,18 @@ class TriggersTest : IrohaTest<Iroha2Client>() {
         val triggerName = "executable_trigger"
         val triggerId = TriggerId(name = triggerName.asName())
 
-        Register.trigger(
+        client.submit(Register.trigger(
             triggerId,
             listOf(Mint.asset(DEFAULT_ASSET_ID, BigDecimal(1))),
             Repeats.Exactly(1L),
             ALICE_ACCOUNT_ID,
             EventFilterBox.ExecuteTrigger(ExecuteTriggerEventFilter(triggerId)),
-        ).execute(client)
+        ))
             .also { d ->
                 withTimeout(txTimeout) { d.await() }
             }
 
-        Unregister.trigger(triggerId).execute(client)
+        client.submit(Unregister.trigger(triggerId))
             .also { d ->
                 withTimeout(txTimeout) { d.await() }
             }
@@ -341,7 +340,7 @@ class TriggersTest : IrohaTest<Iroha2Client>() {
 
     private suspend fun sendAndWait10Txs() {
         repeat(10) { i ->
-            SetKeyValue.account(ALICE_ACCOUNT_ID, "key$i".asName(), "value$i").execute(client)
+            client.submit(SetKeyValue.account(ALICE_ACCOUNT_ID, "key$i".asName(), "value$i"))
                 .also { d ->
                     delay(1000)
                     withTimeout(txTimeout) { d.await() }
@@ -365,7 +364,7 @@ class TriggersTest : IrohaTest<Iroha2Client>() {
         instruction: I,
         accountId: AccountId = ALICE_ACCOUNT_ID,
     ) {
-        Register.trigger(
+        client.submit(Register.trigger(
             triggerId,
             listOf(instruction),
             repeats,
@@ -376,7 +375,7 @@ class TriggersTest : IrohaTest<Iroha2Client>() {
                     BigInteger.valueOf(500L),
                 ),
             ),
-        ).execute(client)
+        ))
             .also { d ->
                 withTimeout(txTimeout) { d.await() }
             }
@@ -384,7 +383,7 @@ class TriggersTest : IrohaTest<Iroha2Client>() {
 
     private suspend fun createNewAsset(assetName: String, prevSize: Int) {
         val newAsset = AssetDefinitionId(DEFAULT_DOMAIN_ID, assetName.asName())
-        Register.assetDefinition(newAsset, AssetType.numeric()).execute(client)
+        client.submit(Register.assetDefinition(newAsset, AssetType.numeric()))
             .also { d ->
                 withTimeout(txTimeout) { d.await() }
             }
@@ -409,7 +408,7 @@ class TriggersTest : IrohaTest<Iroha2Client>() {
     private suspend fun keepNetworkBusyAndCheckAssetDefinitionIds() {
         // send some transactions to keep Iroha2 network busy
         repeat(5) { i ->
-            SetKeyValue.account(ALICE_ACCOUNT_ID, "test$i".asName(), "test$i").execute(client)
+            client.submit(SetKeyValue.account(ALICE_ACCOUNT_ID, "test$i".asName(), "test$i"))
                 .also { d ->
                     withTimeout(Duration.ofSeconds(60)) { d.await() }
                 }

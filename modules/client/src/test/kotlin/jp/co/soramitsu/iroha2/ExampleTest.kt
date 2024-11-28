@@ -28,7 +28,7 @@ class ExampleTest {
         val client = Iroha2Client(listOf(container.getApiUrl()), container.config.chain, ALICE_ACCOUNT_ID, ALICE_KEYPAIR, log = true)
 
         val domainId = "new_domain_name".asDomainId()
-        Register.domain(domainId).execute(client).also { d ->
+        client.submit(Register.domain(domainId)).also { d ->
             withTimeout(Duration.ofSeconds(10)) { d.await() }
         }
 

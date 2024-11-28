@@ -56,7 +56,7 @@ class PeerTest : IrohaTest<AdminIroha2Client>() {
         val keyPair = generateKeyPair()
         val payload = keyPair.public.bytes()
 
-        Register.peer(PeerId(keyPair.public.toIrohaPublicKey())).execute(client).also { d ->
+        client.submit(Register.peer(PeerId(keyPair.public.toIrohaPublicKey()))).also { d ->
             withTimeout(txTimeout) { d.await() }
         }
 
@@ -76,12 +76,12 @@ class PeerTest : IrohaTest<AdminIroha2Client>() {
         val payload = keyPair.public.bytes()
 
         startNewContainer(keyPair, alias, PEER_AMOUNT).use {
-            Register.peer(PeerId(keyPair.public.toIrohaPublicKey())).execute(client).also { d ->
+            client.submit(Register.peer(PeerId(keyPair.public.toIrohaPublicKey()))).also { d ->
                 withTimeout(txTimeout) { d.await() }
             }
 
             assertTrue(isPeerRegistered(payload))
-            Unregister.peer(PeerId(keyPair.public.toIrohaPublicKey())).execute(client).also { d ->
+            client.submit(Unregister.peer(PeerId(keyPair.public.toIrohaPublicKey()))).also { d ->
                 withTimeout(txTimeout) { d.await() }
             }
 
@@ -99,7 +99,7 @@ class PeerTest : IrohaTest<AdminIroha2Client>() {
         val payload = keyPair.public.bytes()
 
         startNewContainer(keyPair, alias, PEER_AMOUNT).use { container ->
-            Register.peer(PeerId(keyPair.public.toIrohaPublicKey())).execute(client).also { d ->
+            client.submit(Register.peer(PeerId(keyPair.public.toIrohaPublicKey()))).also { d ->
                 withTimeout(txTimeout) { d.await() }
             }
             assertTrue(isPeerRegistered(payload))

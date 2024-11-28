@@ -3,9 +3,9 @@ package jp.co.soramitsu.iroha2
 import jp.co.soramitsu.iroha2.generated.AccountId
 import jp.co.soramitsu.iroha2.generated.AssetDefinitionId
 import jp.co.soramitsu.iroha2.generated.AssetValue
-import jp.co.soramitsu.iroha2.generated.CompoundPredicateOfDomainPredicateBox
 import jp.co.soramitsu.iroha2.generated.CompoundPredicateOfAccountPredicateBox
 import jp.co.soramitsu.iroha2.generated.CompoundPredicateOfAssetPredicateBox
+import jp.co.soramitsu.iroha2.generated.CompoundPredicateOfDomainPredicateBox
 import jp.co.soramitsu.iroha2.query.QueryBuilder
 import java.math.BigInteger
 import java.security.KeyPair

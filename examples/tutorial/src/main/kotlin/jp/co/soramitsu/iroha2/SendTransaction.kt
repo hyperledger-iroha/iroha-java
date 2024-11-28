@@ -1,6 +1,5 @@
 package jp.co.soramitsu.iroha2
 
-import jp.co.soramitsu.iroha2.generated.AccountId
 import jp.co.soramitsu.iroha2.generated.AssetId
 import jp.co.soramitsu.iroha2.generated.AssetType
 import jp.co.soramitsu.iroha2.generated.AssetValue
@@ -14,24 +13,15 @@ import jp.co.soramitsu.iroha2.transaction.Transfer
 import kotlinx.coroutines.withTimeout
 import java.math.BigDecimal
 
-class SendTransaction(
-    private val client: AdminIroha2Client,
-    private val timeout: Long = 10000,
-) {
+class SendTransaction(private val client: AdminIroha2Client, private val timeout: Long = 10000) {
 
-    suspend fun registerDomain(
-        id: String,
-        metadata: Map<Name, Json> = mapOf(),
-    ) {
+    suspend fun registerDomain(id: String, metadata: Map<Name, Json> = mapOf()) {
         Register.domain(id.asDomainId(), metadata).execute(client).also {
             withTimeout(timeout) { it.await() }
         }
     }
 
-    suspend fun registerAccount(
-        id: String,
-        metadata: Map<Name, Json> = mapOf(),
-    ) {
+    suspend fun registerAccount(id: String, metadata: Map<Name, Json> = mapOf()) {
         Register.account(id.asAccountId(), Metadata(metadata)).execute(client).also {
             withTimeout(timeout) { it.await() }
         }
@@ -48,10 +38,7 @@ class SendTransaction(
         }
     }
 
-    suspend fun registerAsset(
-        id: AssetId,
-        value: AssetValue,
-    ) {
+    suspend fun registerAsset(id: AssetId, value: AssetValue) {
         Register.asset(id, value).execute(client).also {
             withTimeout(timeout) { it.await() }
         }
@@ -67,10 +54,7 @@ class SendTransaction(
         }
     }
 
-    suspend fun burnAssets(
-        assetId: AssetId,
-        value: BigDecimal,
-    ) {
+    suspend fun burnAssets(assetId: AssetId, value: BigDecimal) {
         Burn.asset(assetId, value).execute(client).also {
             withTimeout(timeout) { it.await() }
         }

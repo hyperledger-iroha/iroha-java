@@ -7,45 +7,45 @@ import jp.co.soramitsu.iroha2.generated.*
 import java.math.BigInteger
 import java.security.KeyPair
 import java.time.Duration
-import java.time.Instant
 import java.util.UUID
 
 class TransactionBuilder(var chain: UUID, var authority: AccountId) {
-    val instructions: Lazy<ArrayList<InstructionBox>> = lazy { ArrayList() }
-    var creationTimeMillis: BigInteger? = null
-    var timeToLiveMillis: BigInteger? = null
-    var nonce: Long? = null
-    var metadata: Lazy<HashMap<Name, Json>> = lazy { HashMap() }
+    private val instructions: Lazy<ArrayList<InstructionBox>> = lazy { ArrayList() }
+    private var timeToLiveMillis: BigInteger = DURATION_OF_24_HOURS_IN_MILLIS
+    private var nonce: Long? = null
+    private var metadata: Lazy<HashMap<Name, Json>> = lazy { HashMap() }
 
-    fun withChainId(uuid: UUID) = this.apply { chain = uuid }
+    companion object {
+        val DURATION_OF_24_HOURS_IN_MILLIS = Duration.ofHours(24).toMillis().toBigInteger()
+    }
 
-    fun withAuthority(accountId: AccountId) = this.apply { this.authority = accountId }
+    fun addInstructions(vararg instructions: Instruction) = this.apply {
+        this.instructions.value.addAll(
+            instructions.map {
+                it.asInstructionBox()
+            },
+        )
+    }
 
-    fun addInstructions(vararg instructions: InstructionBox) = this.apply { this.instructions.value.addAll(instructions) }
+    fun addInstructions(instructions: Iterable<Instruction>) = this.apply {
+        this.instructions.value.addAll(
+            instructions.map {
+                it.asInstructionBox()
+            },
+        )
+    }
 
-    fun addInstructions(instructions: Iterable<InstructionBox>) = this.apply { this.instructions.value.addAll(instructions) }
+    fun addInstruction(instruction: Instruction) = this.apply { this.instructions.value.add(instruction.asInstructionBox()) }
 
-    fun addInstruction(instruction: InstructionBox) = this.apply { this.instructions.value.add(instruction) }
+    fun timeToLive(ttl: Duration) = this.apply { this.timeToLiveMillis = ttl.toMillis().toBigInteger() }
 
-    fun creationTime(creationTimeMillis: BigInteger) = this.apply { this.creationTimeMillis = creationTimeMillis }
-
-    fun creationTime(creationTime: Instant) = this.apply { this.creationTime(creationTime.toEpochMilli()) }
-
-    fun creationTime(creationTimeMillis: Long) = this.apply { this.creationTime(creationTimeMillis.toBigInteger()) }
-
-    fun timeToLive(ttlMillis: BigInteger) = this.apply { this.timeToLiveMillis = ttlMillis }
-
-    fun timeToLive(ttl: Duration) = this.apply { this.timeToLive(ttl.toMillis()) }
-
-    fun timeToLive(ttlMillis: Long) = this.apply { this.timeToLive(ttlMillis.toBigInteger()) }
-
-    fun buildSigned(keyPair: KeyPair): SignedTransaction {
+    fun sign(keyPair: KeyPair): SignedTransaction {
         val payload = TransactionPayload(
             ChainId(chain.toString()),
             authority,
-            creationTimeMillis ?: fallbackCreationTime(),
+            System.currentTimeMillis().toBigInteger(),
             Executable.Instructions(instructions.value),
-            NonZeroOfu64(timeToLiveMillis?.takeIf { it > BigInteger.ZERO } ?: Companion.DURATION_OF_24_HOURS_IN_MILLIS),
+            NonZeroOfu64(timeToLiveMillis),
             nonce?.takeIf { it > 0 }?.let(::NonZeroOfu32),
             Metadata(metadata.value),
         )
@@ -55,11 +55,5 @@ class TransactionBuilder(var chain: UUID, var authority: AccountId) {
         return SignedTransaction.V1(
             SignedTransactionV1(TransactionSignature(signature), payload),
         )
-    }
-
-    private fun fallbackCreationTime() = System.currentTimeMillis().toBigInteger()
-
-    companion object {
-        private val DURATION_OF_24_HOURS_IN_MILLIS = Duration.ofHours(24).toMillis().toBigInteger()
     }
 }

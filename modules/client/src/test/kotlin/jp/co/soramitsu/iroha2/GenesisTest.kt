@@ -46,7 +46,7 @@ class GenesisTest : IrohaTest<Iroha2Client>() {
     @WithIroha([DefaultGenesis::class], executorSource = "src/test/resources/executor.wasm")
     fun `custom executor path`(): Unit = runBlocking {
         val definitionId = AssetDefinitionId(DEFAULT_DOMAIN_ID, "XSTUSD".asName())
-        Register.assetDefinition(definitionId, AssetType.numeric()).execute(client).also { d ->
+        client.submit(Register.assetDefinition(definitionId, AssetType.numeric())).also { d ->
             withTimeout(Duration.ofSeconds(10)) { d.await() }
         }
 

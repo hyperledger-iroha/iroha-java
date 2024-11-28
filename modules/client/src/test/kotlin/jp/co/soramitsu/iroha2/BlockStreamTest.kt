@@ -55,10 +55,10 @@ class BlockStreamTest : IrohaTest<AdminIroha2Client>() {
         val subscription = idToSubscription.second
         val newAssetName = "rox"
 
-        Transfer.domain(ALICE_ACCOUNT_ID, DEFAULT_DOMAIN_ID, BOB_ACCOUNT_ID).execute(client).also { d ->
+        client.submit(Transfer.domain(ALICE_ACCOUNT_ID, DEFAULT_DOMAIN_ID, BOB_ACCOUNT_ID)).also { d ->
             withTimeout(txTimeout) { d.await() }
         }
-        Transfer.domain(ALICE_ACCOUNT_ID, DEFAULT_DOMAIN_ID, BOB_ACCOUNT_ID).executeAs(BOB_ACCOUNT_ID, BOB_KEYPAIR, client).also { d ->
+        client.submitAs(BOB_ACCOUNT_ID, BOB_KEYPAIR, Transfer.domain(ALICE_ACCOUNT_ID, DEFAULT_DOMAIN_ID, BOB_ACCOUNT_ID)).also { d ->
             withTimeout(txTimeout) { d.await() }
         }
 
@@ -102,7 +102,7 @@ class BlockStreamTest : IrohaTest<AdminIroha2Client>() {
         subscription.receive<NonZeroOfu64>(initialActionId) { heightSum += it.u64 }
 
         repeat(repeatTimes + shift) {
-            SetKeyValue.account(ALICE_ACCOUNT_ID, randomAlphabetic(16).asName(), randomAlphabetic(16)).execute(client).also { d ->
+            client.submit(SetKeyValue.account(ALICE_ACCOUNT_ID, randomAlphabetic(16).asName(), randomAlphabetic(16))).also { d ->
                 withTimeout(txTimeout) { d.await() }
             }
         }
@@ -119,7 +119,7 @@ class BlockStreamTest : IrohaTest<AdminIroha2Client>() {
         lateinit var lastValue: String
         repeat(repeatTimes * 2) {
             lastValue = randomAlphabetic(16)
-            SetKeyValue.account(ALICE_ACCOUNT_ID, randomAlphabetic(16).asName(), lastValue).execute(client).also { d ->
+            client.submit(SetKeyValue.account(ALICE_ACCOUNT_ID, randomAlphabetic(16).asName(), lastValue)).also { d ->
                 withTimeout(txTimeout) { d.await() }
             }
         }
