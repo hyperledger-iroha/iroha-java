@@ -16,13 +16,13 @@ import java.math.BigDecimal
 class SendTransaction(private val client: AdminIroha2Client, private val timeout: Long = 10000) {
 
     suspend fun registerDomain(id: String, metadata: Map<Name, Json> = mapOf()) {
-        Register.domain(id.asDomainId(), metadata).execute(client).also {
+        client.submit(Register.domain(id.asDomainId(), metadata)).also {
             withTimeout(timeout) { it.await() }
         }
     }
 
     suspend fun registerAccount(id: String, metadata: Map<Name, Json> = mapOf()) {
-        Register.account(id.asAccountId(), Metadata(metadata)).execute(client).also {
+        client.submit(Register.account(id.asAccountId(), Metadata(metadata))).also {
             withTimeout(timeout) { it.await() }
         }
     }
@@ -33,13 +33,13 @@ class SendTransaction(private val client: AdminIroha2Client, private val timeout
         metadata: Map<Name, Json> = mapOf(),
         mintable: Mintable = Mintable.Infinitely(),
     ) {
-        Register.assetDefinition(id.asAssetDefinitionId(), type, mintable, metadata = Metadata(metadata)).execute(client).also {
+        client.submit(Register.assetDefinition(id.asAssetDefinitionId(), type, mintable, metadata = Metadata(metadata))).also {
             withTimeout(timeout) { it.await() }
         }
     }
 
     suspend fun registerAsset(id: AssetId, value: AssetValue) {
-        Register.asset(id, value).execute(client).also {
+        client.submit(Register.asset(id, value)).also {
             withTimeout(timeout) { it.await() }
         }
     }
@@ -49,13 +49,13 @@ class SendTransaction(private val client: AdminIroha2Client, private val timeout
         value: BigDecimal,
         to: String,
     ) {
-        Transfer.asset(from, value, to.asAccountId()).execute(client).also {
+        client.submit(Transfer.asset(from, value, to.asAccountId())).also {
             withTimeout(timeout) { it.await() }
         }
     }
 
     suspend fun burnAssets(assetId: AssetId, value: BigDecimal) {
-        Burn.asset(assetId, value).execute(client).also {
+        client.submit(Burn.asset(assetId, value)).also {
             withTimeout(timeout) { it.await() }
         }
     }

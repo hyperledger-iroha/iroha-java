@@ -16,12 +16,17 @@ import kotlin.collections.List
  *
  * Generated from 'MultisigPropose' regular structure
  */
-public data class MultisigPropose(public val account: AccountId, public val instructions: List<InstructionBox>) {
+public data class MultisigPropose(
+    public val account: AccountId,
+    public val instructions: List<InstructionBox>,
+    public val transactionTtlMs: NonZeroOfu64? = null,
+) {
     public companion object : ScaleReader<MultisigPropose>, ScaleWriter<MultisigPropose> {
         override fun read(reader: ScaleCodecReader): MultisigPropose = try {
             MultisigPropose(
                 AccountId.read(reader),
                 reader.readVec(reader.readCompactInt()) { InstructionBox.read(reader) },
+                reader.readNullable(NonZeroOfu64) as NonZeroOfu64?,
             )
         } catch (ex: Exception) {
             throw wrapException(ex)
@@ -33,6 +38,7 @@ public data class MultisigPropose(public val account: AccountId, public val inst
             instance.instructions.forEach { value ->
                 InstructionBox.write(writer, value)
             }
+            writer.writeNullable(NonZeroOfu64, instance.transactionTtlMs)
         } catch (ex: Exception) {
             throw wrapException(ex)
         }

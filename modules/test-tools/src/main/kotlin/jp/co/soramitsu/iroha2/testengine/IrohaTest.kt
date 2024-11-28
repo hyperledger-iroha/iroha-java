@@ -33,8 +33,6 @@ abstract class IrohaTest<T : Iroha2Client>(
     suspend fun Iroha2Client.submitAs(
         account: AccountId,
         keyPair: KeyPair,
-        vararg instructions: Instruction
-    ): Deferred<ByteArray> {
-        return submitTransaction(TransactionBuilder(chain, account).addInstructions(*instructions).sign(keyPair))
-    }
+        vararg instructions: Instruction,
+    ): Deferred<ByteArray> = submit(TransactionBuilder(chain).addInstructions(*instructions).signAs(account, keyPair))
 }

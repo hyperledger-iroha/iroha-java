@@ -9,7 +9,7 @@ import java.security.KeyPair
 import java.time.Duration
 import java.util.UUID
 
-class TransactionBuilder(var chain: UUID, var authority: AccountId) {
+class TransactionBuilder(var chain: UUID) {
     private val instructions: Lazy<ArrayList<InstructionBox>> = lazy { ArrayList() }
     private var timeToLiveMillis: BigInteger = DURATION_OF_24_HOURS_IN_MILLIS
     private var nonce: Long? = null
@@ -39,10 +39,10 @@ class TransactionBuilder(var chain: UUID, var authority: AccountId) {
 
     fun timeToLive(ttl: Duration) = this.apply { this.timeToLiveMillis = ttl.toMillis().toBigInteger() }
 
-    fun sign(keyPair: KeyPair): SignedTransaction {
+    fun signAs(accountId: AccountId, keyPair: KeyPair): SignedTransaction {
         val payload = TransactionPayload(
             ChainId(chain.toString()),
-            authority,
+            accountId,
             System.currentTimeMillis().toBigInteger(),
             Executable.Instructions(instructions.value),
             NonZeroOfu64(timeToLiveMillis),
@@ -50,7 +50,7 @@ class TransactionBuilder(var chain: UUID, var authority: AccountId) {
             Metadata(metadata.value),
         )
         val encodedPayload = TransactionPayload.encode(payload)
-        val signature = Signature(keyPair.private.sign(encodedPayload)).asSignatureOf<TransactionPayload>()
+        val signature = Signature(keyPair.private.signAs(encodedPayload)).asSignatureOf<TransactionPayload>()
 
         return SignedTransaction.V1(
             SignedTransactionV1(TransactionSignature(signature), payload),

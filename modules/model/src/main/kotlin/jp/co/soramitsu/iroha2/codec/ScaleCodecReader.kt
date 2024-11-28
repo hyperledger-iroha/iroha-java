@@ -81,6 +81,10 @@ class ScaleCodecReader(private val source: ByteArray) {
             true -> readUint64()
             else -> null
         } as T?
+        Boolean::class -> when (readBoolean()) {
+            true -> readBoolean()
+            else -> null
+        } as T?
         Long::class -> when (readBoolean()) {
             true -> readUint32()
             else -> null

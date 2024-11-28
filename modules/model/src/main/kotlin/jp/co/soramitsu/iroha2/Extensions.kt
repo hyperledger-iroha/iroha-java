@@ -79,7 +79,7 @@ fun PublicKey.toIrohaPublicKey(): IrohaPublicKey = IrohaPublicKey(Algorithm.Ed25
  *
  * Note: the message must not be prehashed
  */
-fun PrivateKey.sign(message: ByteArray): ByteArray = try {
+fun PrivateKey.signAs(message: ByteArray): ByteArray = try {
     val sgr = EdDSAEngine(MessageDigest.getInstance(DEFAULT_SPEC.hashAlgorithm))
     sgr.initSign(this)
     sgr.update(message.hash())

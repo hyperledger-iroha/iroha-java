@@ -50,19 +50,13 @@ class GenesisTest : IrohaTest<Iroha2Client>() {
             withTimeout(Duration.ofSeconds(10)) { d.await() }
         }
 
-        QueryBuilder.findAssetsDefinitions()
-            .account(client.authority)
-            .buildSigned(client.keyPair)
-            .let { query -> client.sendQuery(query) }
+        client.submit(QueryBuilder.findAssetsDefinitions())
             .first { it.id == definitionId }
             .also { assetDefinition -> assertEquals(assetDefinition.id, definitionId) }
     }
 
     private suspend fun Iroha2Client.checkAliceAndBobExists() {
-        QueryBuilder.findAccounts()
-            .account(ALICE_ACCOUNT_ID)
-            .buildSigned(ALICE_KEYPAIR)
-            .let { query -> this.sendQuery(query) }
+        submit(QueryBuilder.findAccounts())
             .also { accounts -> assert(accounts.any { it.id == ALICE_ACCOUNT_ID }) }
             .also { accounts -> assert(accounts.any { it.id == BOB_ACCOUNT_ID }) }
     }

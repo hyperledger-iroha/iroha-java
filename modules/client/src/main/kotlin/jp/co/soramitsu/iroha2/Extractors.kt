@@ -27,18 +27,23 @@ interface ResultExtractor<T> {
  * Extract a list of accounts from a [QueryResponse]
  */
 object AccountsExtractor : ResultExtractor<List<Account>> {
-    override fun extract(result: QueryResponse): List<Account> = extract(
-        result.cast<QueryResponse.Iterable>().queryOutput.batch,
+    override fun extract(result: QueryResponse): List<Account> = extract<Account>(
+        result.cast<QueryResponse.Iterable>().queryOutput.batch.tuple.takeIf { it.size == 1 }!!.first(),
     )
 }
 
 /**
  * Extract an account from a [QueryResponse]
  */
-object AccountExtractor : ResultExtractor<Account?> {
-    override fun extract(result: QueryResponse): Account? = extract<Account>(
-        result.cast<QueryResponse.Iterable>().queryOutput.batch,
-    ).firstOrNull()
+object AccountExtractor : ResultExtractor<Account> {
+    override fun extract(result: QueryResponse): Account = AccountsExtractor.extract(result).first()
+}
+
+/**
+ * Extract an account from a [QueryResponse]
+ */
+object AccountOrNullExtractor : ResultExtractor<Account?> {
+    override fun extract(result: QueryResponse): Account? = AccountsExtractor.extract(result).firstOrNull()
 }
 
 /**
@@ -46,17 +51,22 @@ object AccountExtractor : ResultExtractor<Account?> {
  */
 object AssetsExtractor : ResultExtractor<List<Asset>> {
     override fun extract(result: QueryResponse): List<Asset> = extract(
-        result.cast<QueryResponse.Iterable>().queryOutput.batch,
+        result.cast<QueryResponse.Iterable>().queryOutput.batch.tuple.takeIf { it.size == 1 }!!.first(),
     )
 }
 
 /**
  * Extract an asset from a [QueryResponse]
  */
-object AssetExtractor : ResultExtractor<Asset?> {
-    override fun extract(result: QueryResponse): Asset? = extract<Asset>(
-        result.cast<QueryResponse.Iterable>().queryOutput.batch,
-    ).firstOrNull()
+object AssetExtractor : ResultExtractor<Asset> {
+    override fun extract(result: QueryResponse): Asset = AssetsExtractor.extract(result).first()
+}
+
+/**
+ * Extract an asset from a [QueryResponse]
+ */
+object AssetOrNullExtractor : ResultExtractor<Asset?> {
+    override fun extract(result: QueryResponse): Asset? = AssetsExtractor.extract(result).firstOrNull()
 }
 
 /**
@@ -64,17 +74,22 @@ object AssetExtractor : ResultExtractor<Asset?> {
  */
 object AssetDefinitionsExtractor : ResultExtractor<List<AssetDefinition>> {
     override fun extract(result: QueryResponse): List<AssetDefinition> = extract(
-        result.cast<QueryResponse.Iterable>().queryOutput.batch,
+        result.cast<QueryResponse.Iterable>().queryOutput.batch.tuple.takeIf { it.size == 1 }!!.first(),
     )
 }
 
 /**
  * Extract an asset definition from a [QueryResponse]
  */
-object AssetDefinitionExtractor : ResultExtractor<AssetDefinition?> {
-    override fun extract(result: QueryResponse): AssetDefinition? = extract<AssetDefinition>(
-        result.cast<QueryResponse.Iterable>().queryOutput.batch,
-    ).firstOrNull()
+object AssetDefinitionExtractor : ResultExtractor<AssetDefinition> {
+    override fun extract(result: QueryResponse): AssetDefinition = AssetDefinitionsExtractor.extract(result).first()
+}
+
+/**
+ * Extract an asset definition from a [QueryResponse]
+ */
+object AssetDefinitionOrNullExtractor : ResultExtractor<AssetDefinition?> {
+    override fun extract(result: QueryResponse): AssetDefinition? = AssetDefinitionsExtractor.extract(result).firstOrNull()
 }
 
 /**
@@ -82,17 +97,22 @@ object AssetDefinitionExtractor : ResultExtractor<AssetDefinition?> {
  */
 object DomainsExtractor : ResultExtractor<List<Domain>> {
     override fun extract(result: QueryResponse): List<Domain> = extract(
-        result.cast<QueryResponse.Iterable>().queryOutput.batch,
+        result.cast<QueryResponse.Iterable>().queryOutput.batch.tuple.takeIf { it.size == 1 }!!.first(),
     )
 }
 
 /**
  * Extract a domain from a [QueryResponse]
  */
-object DomainExtractor : ResultExtractor<Domain?> {
-    override fun extract(result: QueryResponse): Domain? = extract<Domain>(
-        result.cast<QueryResponse.Iterable>().queryOutput.batch,
-    ).firstOrNull()
+object DomainExtractor : ResultExtractor<Domain> {
+    override fun extract(result: QueryResponse): Domain = DomainsExtractor.extract(result).first()
+}
+
+/**
+ * Extract a domain from a [QueryResponse]
+ */
+object DomainOrNullExtractor : ResultExtractor<Domain?> {
+    override fun extract(result: QueryResponse): Domain? = DomainsExtractor.extract(result).firstOrNull()
 }
 
 /**
@@ -100,17 +120,22 @@ object DomainExtractor : ResultExtractor<Domain?> {
  */
 object PeersExtractor : ResultExtractor<List<PeerId>> {
     override fun extract(result: QueryResponse): List<PeerId> = extract(
-        result.cast<QueryResponse.Iterable>().queryOutput.batch,
+        result.cast<QueryResponse.Iterable>().queryOutput.batch.tuple.takeIf { it.size == 1 }!!.first(),
     )
 }
 
 /**
  * Extract a trigger from a [QueryResponse]
  */
-object TriggerExtractor : ResultExtractor<Trigger?> {
-    override fun extract(result: QueryResponse): Trigger? = extract<Trigger>(
-        result.cast<QueryResponse.Iterable>().queryOutput.batch,
-    ).firstOrNull()
+object TriggerExtractor : ResultExtractor<Trigger> {
+    override fun extract(result: QueryResponse): Trigger = TriggersExtractor.extract(result).first()
+}
+
+/**
+ * Extract a trigger from a [QueryResponse]
+ */
+object TriggerOrNullExtractor : ResultExtractor<Trigger?> {
+    override fun extract(result: QueryResponse): Trigger? = TriggersExtractor.extract(result).firstOrNull()
 }
 
 /**
@@ -118,7 +143,7 @@ object TriggerExtractor : ResultExtractor<Trigger?> {
  */
 object TriggersExtractor : ResultExtractor<List<Trigger>> {
     override fun extract(result: QueryResponse): List<Trigger> = extract(
-        result.cast<QueryResponse.Iterable>().queryOutput.batch,
+        result.cast<QueryResponse.Iterable>().queryOutput.batch.tuple.takeIf { it.size == 1 }!!.first(),
     )
 }
 
@@ -127,7 +152,7 @@ object TriggersExtractor : ResultExtractor<List<Trigger>> {
  */
 object TriggerIdsExtractor : ResultExtractor<List<TriggerId>> {
     override fun extract(result: QueryResponse): List<TriggerId> = extract(
-        result.cast<QueryResponse.Iterable>().queryOutput.batch,
+        result.cast<QueryResponse.Iterable>().queryOutput.batch.tuple.takeIf { it.size == 1 }!!.first(),
     )
 }
 
@@ -136,7 +161,7 @@ object TriggerIdsExtractor : ResultExtractor<List<TriggerId>> {
  */
 object PermissionTokensExtractor : ResultExtractor<List<Permission>> {
     override fun extract(result: QueryResponse): List<Permission> = extract(
-        result.cast<QueryResponse.Iterable>().queryOutput.batch,
+        result.cast<QueryResponse.Iterable>().queryOutput.batch.tuple.takeIf { it.size == 1 }!!.first(),
     )
 }
 
@@ -145,19 +170,19 @@ object PermissionTokensExtractor : ResultExtractor<List<Permission>> {
  */
 object TransactionsExtractor : ResultExtractor<List<CommittedTransaction>> {
     override fun extract(result: QueryResponse): List<CommittedTransaction> = extract(
-        result.cast<QueryResponse.Iterable>().queryOutput.batch,
+        result.cast<QueryResponse.Iterable>().queryOutput.batch.tuple.takeIf { it.size == 1 }!!.first(),
     )
 }
 
 object BlocksValueExtractor : ResultExtractor<List<SignedBlock>> {
     override fun extract(result: QueryResponse): List<SignedBlock> = extract(
-        result.cast<QueryResponse.Iterable>().queryOutput.batch,
+        result.cast<QueryResponse.Iterable>().queryOutput.batch.tuple.takeIf { it.size == 1 }!!.first(),
     )
 }
 
 object BlockHeadersExtractor : ResultExtractor<List<BlockHeader>> {
     override fun extract(result: QueryResponse): List<BlockHeader> = extract(
-        result.cast<QueryResponse.Iterable>().queryOutput.batch,
+        result.cast<QueryResponse.Iterable>().queryOutput.batch.tuple.takeIf { it.size == 1 }!!.first(),
     )
 }
 
@@ -166,7 +191,7 @@ object BlockHeadersExtractor : ResultExtractor<List<BlockHeader>> {
  */
 object RolesExtractor : ResultExtractor<List<Role>> {
     override fun extract(result: QueryResponse): List<Role> = extract(
-        result.cast<QueryResponse.Iterable>().queryOutput.batch,
+        result.cast<QueryResponse.Iterable>().queryOutput.batch.tuple.takeIf { it.size == 1 }!!.first(),
     )
 }
 
@@ -175,7 +200,7 @@ object RolesExtractor : ResultExtractor<List<Role>> {
  */
 object RoleIdsExtractor : ResultExtractor<List<RoleId>> {
     override fun extract(result: QueryResponse): List<RoleId> = extract(
-        result.cast<QueryResponse.Iterable>().queryOutput.batch,
+        result.cast<QueryResponse.Iterable>().queryOutput.batch.tuple.takeIf { it.size == 1 }!!.first(),
     )
 }
 
@@ -191,7 +216,6 @@ inline fun <reified R> extract(value: QueryOutputBatchBox): List<R> = when (valu
     is QueryOutputBatchBox.Permission -> value.vec.cast<List<R>>()
     is QueryOutputBatchBox.Block -> value.vec.cast<List<R>>()
     is QueryOutputBatchBox.BlockHeader -> value.vec.cast<List<R>>()
-    is QueryOutputBatchBox.Transaction -> value.vec.cast<List<R>>()
     is QueryOutputBatchBox.Trigger -> value.vec.cast<List<R>>()
 
     else -> throw QueryPayloadExtractionException(

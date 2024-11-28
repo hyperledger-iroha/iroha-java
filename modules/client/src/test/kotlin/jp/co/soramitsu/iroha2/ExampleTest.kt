@@ -32,10 +32,7 @@ class ExampleTest {
             withTimeout(Duration.ofSeconds(10)) { d.await() }
         }
 
-        QueryBuilder.findDomainById(domainId)
-            .account(ALICE_ACCOUNT_ID)
-            .buildSigned(ALICE_KEYPAIR)
-            .let { query -> client.sendQuery(query)!! }
+        client.submit(QueryBuilder.findDomainById(domainId))!!
             .also { result -> assertEquals(result.id, domainId) }
     }
 }

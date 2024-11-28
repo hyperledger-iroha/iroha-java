@@ -1,11 +1,6 @@
 package jp.co.soramitsu.iroha2
 
-import jp.co.soramitsu.iroha2.generated.AccountId
-import jp.co.soramitsu.iroha2.generated.AssetDefinitionId
-import jp.co.soramitsu.iroha2.generated.AssetValue
-import jp.co.soramitsu.iroha2.generated.CompoundPredicateOfAccountPredicateBox
-import jp.co.soramitsu.iroha2.generated.CompoundPredicateOfAssetPredicateBox
-import jp.co.soramitsu.iroha2.generated.CompoundPredicateOfDomainPredicateBox
+import jp.co.soramitsu.iroha2.generated.*
 import jp.co.soramitsu.iroha2.query.QueryBuilder
 import java.math.BigInteger
 import java.security.KeyPair
@@ -16,31 +11,30 @@ open class Query(
     private val keyPair: KeyPair,
 ) {
 
-    suspend fun findAllDomains(filter: CompoundPredicateOfDomainPredicateBox? = null) = QueryBuilder
-        .findDomains(filter)
-        .account(admin)
-        .buildSigned(keyPair)
-        .let { client.sendQuery(it) }
+    suspend fun findAllDomains(filter: CompoundPredicateOfDomain? = null) = client.submit(
+        QueryBuilder
+            .findDomains(filter)
+            .signAs(admin, keyPair),
+    )
 
-    suspend fun findAllAccounts(filter: CompoundPredicateOfAccountPredicateBox? = null) = QueryBuilder
-        .findAccounts(filter)
-        .account(admin)
-        .buildSigned(keyPair)
-        .let { client.sendQuery(it) }
+    suspend fun findAllAccounts(filter: CompoundPredicateOfAccount? = null) = client.submit(
+        QueryBuilder
+            .findAccounts(filter)
+            .signAs(admin, keyPair),
+    )
 
-    suspend fun findAllAssets(filter: CompoundPredicateOfAssetPredicateBox? = null) = QueryBuilder
-        .findAssets(filter)
-        .account(admin)
-        .buildSigned(keyPair)
-        .let { client.sendQuery(it) }
+    suspend fun findAllAssets(filter: CompoundPredicateOfAsset? = null) = client.submit(
+        QueryBuilder
+            .findAssets(filter).signAs(admin, keyPair),
+    )
 
-    suspend fun getAccountAmount(accountId: AccountId, assetDefinitionId: AssetDefinitionId): BigInteger =
+    suspend fun getAccountAmount(accountId: AccountId, assetDefinitionId: AssetDefinitionId): BigInteger = client.submit(
         QueryBuilder.findAssetsByAccountId(accountId)
-            .account(admin)
-            .buildSigned(keyPair)
-            .let { query ->
-                client.sendQuery(query).find { it.id.definition == assetDefinitionId }?.value
-            }.let { value ->
-                value?.cast<AssetValue.Numeric>()?.numeric?.mantissa
-            } ?: throw RuntimeException("NOT FOUND")
+            .signAs(admin, keyPair),
+    )
+        .let { query ->
+            query.find { it.id.definition == assetDefinitionId }?.value
+        }.let { value ->
+            value?.cast<AssetValue.Numeric>()?.numeric?.mantissa
+        } ?: throw RuntimeException("NOT FOUND")
 }

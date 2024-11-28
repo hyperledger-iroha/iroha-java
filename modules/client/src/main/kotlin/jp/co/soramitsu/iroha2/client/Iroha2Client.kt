@@ -30,6 +30,7 @@ import jp.co.soramitsu.iroha2.client.blockstream.BlockStreamStorage
 import jp.co.soramitsu.iroha2.client.blockstream.BlockStreamSubscription
 import jp.co.soramitsu.iroha2.generated.*
 import jp.co.soramitsu.iroha2.query.QueryAndExtractor
+import jp.co.soramitsu.iroha2.query.QueryBuilder
 import jp.co.soramitsu.iroha2.transaction.Instruction
 import jp.co.soramitsu.iroha2.transaction.TransactionBuilder
 import kotlinx.coroutines.*
@@ -115,9 +116,9 @@ open class Iroha2Client(
     }
 
     suspend fun submit(vararg instructions: Instruction): Deferred<ByteArray> = coroutineScope {
-        submitTransaction(TransactionBuilder(chain, authority).addInstructions(*instructions).sign(keyPair))
+        submit(TransactionBuilder(chain).addInstructions(*instructions).signAs(authority, keyPair))
     }
-    suspend fun submitTransaction(signedTransaction: SignedTransaction): Deferred<ByteArray> = coroutineScope {
+    suspend fun submit(signedTransaction: SignedTransaction): Deferred<ByteArray> = coroutineScope {
         val lock = Mutex(locked = true)
         subscribeToTransactionStatus(signedTransaction.hash()) {
             lock.unlock() // 2. unlock after subscription
@@ -130,7 +131,12 @@ open class Iroha2Client(
     /**
      * Send a request to Iroha2 and extract paginated payload
      */
-    suspend fun <T> sendQuery(queryAndExtractor: QueryAndExtractor<T>, cursor: ForwardCursor? = null): T {
+    suspend fun <R> submit(query: QueryBuilder<R>): R = submit(query.signAs(authority, keyPair))
+
+    /**
+     * Send a request to Iroha2 and extract paginated payload
+     */
+    suspend fun <T> submit(queryAndExtractor: QueryAndExtractor<T>, cursor: ForwardCursor? = null): T {
         logger.debug("Sending query")
         val query = queryAndExtractor.query
         val extractor = queryAndExtractor.extractor
@@ -343,25 +349,6 @@ open class Iroha2Client(
         }
         return response.body<ByteArray>().let { QueryResponse.decode(it) }.cast<QueryResponse>()
     }
-
-//    private suspend fun <T> getQueryResultWithCursor(
-//        queryAndExtractor: QueryAndExtractor<T>,
-//        queryCursor: ForwardCursor? = null,
-//    ): MutableList<QueryOutputBatchBox> {
-//        val resultList = mutableListOf<QueryOutputBatchBox>()
-//        val responseDecoded = sendQueryRequest(queryAndExtractor.query, queryCursor)
-//        resultList.addAll(
-//            queryAndExtractor.extractor.extract(responseDecoded.cast<QueryResponse.Iterable>()),
-//        )
-//        val cursor = responseDecoded.cast<QueryResponse.Iterable>().queryOutput.continueCursor
-//        return when (cursor?.cursor) {
-//            null -> resultList
-//            else -> {
-//                resultList.addAll(getQueryResultWithCursor(queryAndExtractor, cursor))
-//                resultList
-//            }
-//        }
-//    }
 
     private object DurationDeserializer : JsonDeserializer<Duration>() {
         override fun deserialize(p: JsonParser, ctxt: DeserializationContext): Duration {

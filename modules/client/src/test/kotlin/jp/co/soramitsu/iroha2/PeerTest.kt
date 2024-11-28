@@ -105,23 +105,14 @@ class PeerTest : IrohaTest<AdminIroha2Client>() {
             assertTrue(isPeerRegistered(payload))
 
             delay(5000)
-            val peersCount = QueryBuilder.findPeers()
-                .account(ALICE_ACCOUNT_ID)
-                .buildSigned(ALICE_KEYPAIR)
-                .let { client.sendQuery(it) }
-                .size
+            val peersCount = client.submit(QueryBuilder.findPeers()).size
 
-            QueryBuilder.findPeers()
-                .account(ALICE_ACCOUNT_ID)
-                .buildSigned(ALICE_KEYPAIR)
-                .let {
-                    Iroha2Client(
-                        listOf(container.getApiUrl()),
-                        container.config.chain,
-                        ALICE_ACCOUNT_ID,
-                        ALICE_KEYPAIR,
-                    ).sendQuery(it)
-                }
+            Iroha2Client(
+                listOf(container.getApiUrl()),
+                container.config.chain,
+                ALICE_ACCOUNT_ID,
+                ALICE_KEYPAIR,
+            ).submit(QueryBuilder.findPeers())
                 .also { peers -> assertEquals(peers.size, peersCount) }
         }
     }
@@ -154,14 +145,11 @@ class PeerTest : IrohaTest<AdminIroha2Client>() {
         }
     }
 
-    private suspend fun isPeerRegistered(payload: ByteArray, keyPair: KeyPair = ALICE_KEYPAIR): Boolean = QueryBuilder.findPeers()
-        .account(ALICE_ACCOUNT_ID)
-        .buildSigned(keyPair)
-        .let { query ->
-            client.sendQuery(query)
-        }.any { peer ->
-            peer.publicKey.payload.contentEquals(payload)
-        }
+    private suspend fun isPeerRegistered(payload: ByteArray, keyPair: KeyPair = ALICE_KEYPAIR): Boolean =
+        client.submit(QueryBuilder.findPeers())
+            .any { peer ->
+                peer.publicKey.payload.contentEquals(payload)
+            }
 
     private fun IrohaContainer.extractPeer() = Peer(
         SocketAddr.Host(
@@ -173,9 +161,5 @@ class PeerTest : IrohaTest<AdminIroha2Client>() {
         PeerId(this.config.keyPair.public.toIrohaPublicKey()),
     )
 
-    private suspend fun findDomain(id: DomainId = DEFAULT_DOMAIN_ID) = QueryBuilder
-        .findDomainById(id)
-        .account(client.authority)
-        .buildSigned(client.keyPair)
-        .let { client.sendQuery(it)!! }
+    private suspend fun findDomain(id: DomainId = DEFAULT_DOMAIN_ID) = client.submit(QueryBuilder.findDomainById(id))!!
 }

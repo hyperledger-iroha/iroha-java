@@ -32,13 +32,13 @@ class Iroha2AsyncClient @JvmOverloads constructor(
      * {@see Extractors}
      */
     fun <T> sendQueryAsync(queryAndExtractor: QueryAndExtractor<T>): CompletableFuture<T> = future {
-        sendQuery(queryAndExtractor)
+        submit(queryAndExtractor)
     }
 
     /**
      * Send a transaction to an Iroha peer and wait until it is committed or rejected.
      */
     fun sendTransactionAsync(transaction: SignedTransaction): Future<ByteArray> = runBlocking {
-        submitTransaction(transaction).asCompletableFuture()
+        submit(transaction).asCompletableFuture()
     }
 }
