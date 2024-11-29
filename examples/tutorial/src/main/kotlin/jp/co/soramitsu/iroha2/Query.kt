@@ -1,6 +1,15 @@
 package jp.co.soramitsu.iroha2
 
-import jp.co.soramitsu.iroha2.generated.*
+import jp.co.soramitsu.iroha2.generated.AccountId
+import jp.co.soramitsu.iroha2.generated.AccountIdPredicateAtom
+import jp.co.soramitsu.iroha2.generated.AccountIdProjectionOfPredicateMarker
+import jp.co.soramitsu.iroha2.generated.AssetDefinitionId
+import jp.co.soramitsu.iroha2.generated.AssetIdProjectionOfPredicateMarker
+import jp.co.soramitsu.iroha2.generated.AssetProjectionOfPredicateMarker
+import jp.co.soramitsu.iroha2.generated.AssetValue
+import jp.co.soramitsu.iroha2.generated.CompoundPredicateOfAccount
+import jp.co.soramitsu.iroha2.generated.CompoundPredicateOfAsset
+import jp.co.soramitsu.iroha2.generated.CompoundPredicateOfDomain
 import jp.co.soramitsu.iroha2.query.QueryBuilder
 import java.math.BigInteger
 import java.security.KeyPair
@@ -28,13 +37,21 @@ open class Query(
             .findAssets(filter).signAs(admin, keyPair),
     )
 
-    suspend fun getAccountAmount(accountId: AccountId, assetDefinitionId: AssetDefinitionId): BigInteger = client.submit(
-        QueryBuilder.findAssetsByAccountId(accountId)
-            .signAs(admin, keyPair),
-    )
-        .let { query ->
-            query.find { it.id.definition == assetDefinitionId }?.value
-        }.let { value ->
-            value?.cast<AssetValue.Numeric>()?.numeric?.mantissa
-        } ?: throw RuntimeException("NOT FOUND")
+    suspend fun getAccountAmount(accountId: AccountId, assetDefinitionId: AssetDefinitionId): BigInteger {
+        val byAccountIdFilter = CompoundPredicateOfAsset.Atom(
+            AssetProjectionOfPredicateMarker.Id(
+                AssetIdProjectionOfPredicateMarker.Account(
+                    AccountIdProjectionOfPredicateMarker.Atom(
+                        AccountIdPredicateAtom.Equals(accountId),
+                    ),
+                ),
+            ),
+        )
+        client.submit(QueryBuilder.findAssets(byAccountIdFilter).signAs(admin, keyPair))
+            .let { query ->
+                query.find { it.id.definition == assetDefinitionId }?.value
+            }.let { value ->
+                value?.cast<AssetValue.Numeric>()?.numeric?.mantissa
+            } ?: throw RuntimeException("NOT FOUND")
+    }
 }

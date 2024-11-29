@@ -7,7 +7,29 @@ import jp.co.soramitsu.iroha2.annotations.Permission
 import jp.co.soramitsu.iroha2.annotations.Sdk
 import jp.co.soramitsu.iroha2.annotations.SdkTestId
 import jp.co.soramitsu.iroha2.client.Iroha2Client
-import jp.co.soramitsu.iroha2.generated.*
+import jp.co.soramitsu.iroha2.generated.AccountId
+import jp.co.soramitsu.iroha2.generated.AccountIdPredicateAtom
+import jp.co.soramitsu.iroha2.generated.AccountIdProjectionOfPredicateMarker
+import jp.co.soramitsu.iroha2.generated.Asset
+import jp.co.soramitsu.iroha2.generated.AssetDefinitionId
+import jp.co.soramitsu.iroha2.generated.AssetDefinitionIdProjectionOfPredicateMarker
+import jp.co.soramitsu.iroha2.generated.AssetId
+import jp.co.soramitsu.iroha2.generated.AssetIdProjectionOfPredicateMarker
+import jp.co.soramitsu.iroha2.generated.AssetProjectionOfPredicateMarker
+import jp.co.soramitsu.iroha2.generated.AssetType
+import jp.co.soramitsu.iroha2.generated.AssetValue
+import jp.co.soramitsu.iroha2.generated.CanBurnAssetWithDefinition
+import jp.co.soramitsu.iroha2.generated.CanModifyAccountMetadata
+import jp.co.soramitsu.iroha2.generated.CanModifyAssetMetadata
+import jp.co.soramitsu.iroha2.generated.CanModifyDomainMetadata
+import jp.co.soramitsu.iroha2.generated.CanTransferAsset
+import jp.co.soramitsu.iroha2.generated.CompoundPredicateOfAsset
+import jp.co.soramitsu.iroha2.generated.DomainId
+import jp.co.soramitsu.iroha2.generated.DomainIdPredicateAtom
+import jp.co.soramitsu.iroha2.generated.DomainIdProjectionOfPredicateMarker
+import jp.co.soramitsu.iroha2.generated.Json
+import jp.co.soramitsu.iroha2.generated.Metadata
+import jp.co.soramitsu.iroha2.generated.RoleId
 import jp.co.soramitsu.iroha2.query.QueryBuilder
 import jp.co.soramitsu.iroha2.testengine.ALICE_ACCOUNT_ID
 import jp.co.soramitsu.iroha2.testengine.ALICE_KEYPAIR
@@ -36,11 +58,18 @@ import jp.co.soramitsu.iroha2.testengine.WithDomainTransferredToBob
 import jp.co.soramitsu.iroha2.testengine.WithIroha
 import jp.co.soramitsu.iroha2.testengine.WithIrohaManual
 import jp.co.soramitsu.iroha2.testengine.XorAndValAssets
-import jp.co.soramitsu.iroha2.transaction.*
+import jp.co.soramitsu.iroha2.transaction.Burn
+import jp.co.soramitsu.iroha2.transaction.Grant
+import jp.co.soramitsu.iroha2.transaction.Mint
+import jp.co.soramitsu.iroha2.transaction.Register
+import jp.co.soramitsu.iroha2.transaction.RemoveKeyValue
+import jp.co.soramitsu.iroha2.transaction.Revoke
+import jp.co.soramitsu.iroha2.transaction.SetKeyValue
+import jp.co.soramitsu.iroha2.transaction.Transfer
+import jp.co.soramitsu.iroha2.transaction.Unregister
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.time.withTimeout
 import org.apache.commons.lang3.RandomStringUtils.randomAlphabetic
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -49,7 +78,12 @@ import java.math.MathContext
 import java.math.RoundingMode
 import java.security.SecureRandom
 import java.util.UUID
-import kotlin.test.*
+import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
+import kotlin.test.assertNotNull
+import kotlin.test.assertNull
+import kotlin.test.assertTrue
+import kotlin.test.fail
 
 @Owner("akostyuchenko")
 @Sdk("Java/Kotlin")
@@ -445,12 +479,20 @@ class InstructionsTest : IrohaTest<Iroha2Client>() {
             withTimeout(txTimeout) { d.await() }
         }
 
-        client.submit(
-            QueryBuilder.findAssetsByAccountId(ALICE_ACCOUNT_ID),
+        val byAccountIdFilter = CompoundPredicateOfAsset.Atom(
+            AssetProjectionOfPredicateMarker.Id(
+                AssetIdProjectionOfPredicateMarker.Account(
+                    AccountIdProjectionOfPredicateMarker.Atom(
+                        AccountIdPredicateAtom.Equals(
+                            ALICE_ACCOUNT_ID,
+                        ),
+                    ),
+                ),
+            ),
         )
-            .also { result ->
-                assertEquals(5, result.get(DEFAULT_ASSET_ID)!!.value.cast<AssetValue.Numeric>().numeric.asInt())
-            }
+        client.submit(QueryBuilder.findAssets(byAccountIdFilter)).also { result ->
+            assertEquals(5, result.get(DEFAULT_ASSET_ID)!!.value.cast<AssetValue.Numeric>().numeric.asInt())
+        }
     }
     // #endregion java_mint_asset
 
@@ -461,8 +503,19 @@ class InstructionsTest : IrohaTest<Iroha2Client>() {
     @Permission("no_permission_required")
     @SdkTestId("burn_asset_for_account_in_same_domain")
     fun `burn asset`(): Unit = runBlocking {
+        val byAccountIdFilter = CompoundPredicateOfAsset.Atom(
+            AssetProjectionOfPredicateMarker.Id(
+                AssetIdProjectionOfPredicateMarker.Account(
+                    AccountIdProjectionOfPredicateMarker.Atom(
+                        AccountIdPredicateAtom.Equals(
+                            ALICE_ACCOUNT_ID,
+                        ),
+                    ),
+                ),
+            ),
+        )
         // check balance before burn
-        val query = QueryBuilder.findAssetsByAccountId(ALICE_ACCOUNT_ID)
+        val query = QueryBuilder.findAssets(byAccountIdFilter)
             .signAs(client.authority, client.keyPair)
         var result = client.submit(query)
         assertEquals(100, result.get(DEFAULT_ASSET_ID)!!.value.cast<AssetValue.Numeric>().numeric.asInt())
@@ -498,7 +551,18 @@ class InstructionsTest : IrohaTest<Iroha2Client>() {
             withTimeout(txTimeout) { d.await() }
         }
 
-        val result = client.submit(QueryBuilder.findAssetsByAccountId(ALICE_ACCOUNT_ID))
+        val byAccountIdFilter = CompoundPredicateOfAsset.Atom(
+            AssetProjectionOfPredicateMarker.Id(
+                AssetIdProjectionOfPredicateMarker.Account(
+                    AccountIdProjectionOfPredicateMarker.Atom(
+                        AccountIdPredicateAtom.Equals(
+                            ALICE_ACCOUNT_ID,
+                        ),
+                    ),
+                ),
+            ),
+        )
+        val result = client.submit(QueryBuilder.findAssets(byAccountIdFilter))
         assertEquals(50, result.get(DEFAULT_ASSET_ID)!!.value.cast<AssetValue.Numeric>().numeric.asInt())
     }
 
@@ -574,7 +638,7 @@ class InstructionsTest : IrohaTest<Iroha2Client>() {
         client.submit(Grant.accountPermission(CanTransferAsset(aliceAssetId), joeId)).also { d ->
             withTimeout(txTimeout) { d.await() }
         }
-        client.submitAs(BOB_ACCOUNT_ID, BOB_KEYPAIR, Transfer.asset(bobAssetId, BigDecimal(40), ALICE_ACCOUNT_ID)).also { d ->
+        client.submitAs(BOB_ACCOUNT_ID, BOB_KEYPAIR, Transfer.asset(aliceAssetId, BigDecimal(40), BOB_ACCOUNT_ID)).also { d ->
             withTimeout(txTimeout) { d.await() }
         }
         assertEquals(60, getAccountAmount(aliceAssetId))
@@ -642,8 +706,19 @@ class InstructionsTest : IrohaTest<Iroha2Client>() {
             }
             counter -= it
         }
+        val byAccountIdFilter = CompoundPredicateOfAsset.Atom(
+            AssetProjectionOfPredicateMarker.Id(
+                AssetIdProjectionOfPredicateMarker.Account(
+                    AccountIdProjectionOfPredicateMarker.Atom(
+                        AccountIdPredicateAtom.Equals(
+                            ALICE_ACCOUNT_ID,
+                        ),
+                    ),
+                ),
+            ),
+        )
         val assertBalance: suspend (BigDecimal) -> Unit = { expectedBalance ->
-            val asset = client.submit(QueryBuilder.findAssetsByAccountId(ALICE_ACCOUNT_ID))
+            val asset = client.submit(QueryBuilder.findAssets(byAccountIdFilter))
                 .get(DEFAULT_ASSET_ID)
 
             asset?.value?.cast<AssetValue.Numeric>()?.numeric?.asBigDecimal() ?: BigDecimal.ZERO
@@ -681,17 +756,8 @@ class InstructionsTest : IrohaTest<Iroha2Client>() {
             withTimeout(txTimeout) { d.await() }
         }
 
-        client.submit(
-            QueryBuilder.findAssetDefinitionById(
-                DEFAULT_ASSET_DEFINITION_ID,
-                SelectorTupleOfAssetDefinition(
-                    listOf(AssetDefinitionProjectionOfSelectorMarker.Metadata(MetadataProjectionOfSelectorMarker.Atom())),
-                ),
-            ),
-        )
-            .also { value ->
-                Assertions.assertEquals(value, assetValue)
-            }
+        client.submit(QueryBuilder.findAssetDefinitionById(DEFAULT_ASSET_DEFINITION_ID))!!
+            .also { assertEquals(assetValue, it.metadata.sortedMapOfName[assetKey]!!.readValue()) }
     }
 
     @Test
@@ -770,7 +836,7 @@ class InstructionsTest : IrohaTest<Iroha2Client>() {
             }
         client.submit(QueryBuilder.findRoles().signAs(BOB_ACCOUNT_ID, BOB_KEYPAIR))
             .firstOrNull { it.id == roleId }
-            .also { Assertions.assertNotNull(it) }
+            .also { assertNotNull(it) }
 
         client.submitAs(
             BOB_ACCOUNT_ID,
@@ -782,7 +848,7 @@ class InstructionsTest : IrohaTest<Iroha2Client>() {
             }
         client.submit(QueryBuilder.findRoles().signAs(BOB_ACCOUNT_ID, BOB_KEYPAIR))
             .firstOrNull { it.id == roleId }
-            .also { Assertions.assertNull(it) }
+            .also { assertNull(it) }
     }
 
     @Test

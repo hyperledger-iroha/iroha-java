@@ -32,8 +32,7 @@ class CryptoTest {
             override fun equals(other: Any?): Boolean {
                 if (this === other) return true
                 if (other !is ByteArrayWrapper) return false
-                if (!byteArray.contentEquals(other.byteArray)) return false
-                return true
+                return byteArray.contentEquals(other.byteArray)
             }
 
             override fun hashCode() = byteArray.contentHashCode()

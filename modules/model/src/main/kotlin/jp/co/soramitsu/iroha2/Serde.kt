@@ -183,6 +183,8 @@ public val JSON_SERDE by lazy {
 
         mapper.registerModule(module)
         mapper.propertyNamingStrategy = PropertyNamingStrategies.SNAKE_CASE
+        // mapper.configure(DeserializationFeature.FAIL_ON_MISSING_CREATOR_PROPERTIES, false)
+        // mapper.registerModule(KotlinModule.Builder().build())
         mapper.enable(SerializationFeature.INDENT_OUTPUT)
     }
 }

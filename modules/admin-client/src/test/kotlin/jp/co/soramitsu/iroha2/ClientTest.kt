@@ -45,8 +45,4 @@ class ClientTest : IrohaTest<AdminIroha2Client>() {
         val configs = client.getConfigs()
         assert(configs.isNotEmpty())
     }
-
-    companion object {
-        private const val PEER_AMOUNT = 4
-    }
 }

@@ -1,7 +1,77 @@
 package jp.co.soramitsu.iroha2.query
 
-import jp.co.soramitsu.iroha2.*
-import jp.co.soramitsu.iroha2.generated.*
+import jp.co.soramitsu.iroha2.AccountOrNullExtractor
+import jp.co.soramitsu.iroha2.AccountsExtractor
+import jp.co.soramitsu.iroha2.AssetDefinitionOrNullExtractor
+import jp.co.soramitsu.iroha2.AssetDefinitionsExtractor
+import jp.co.soramitsu.iroha2.AssetOrNullExtractor
+import jp.co.soramitsu.iroha2.AssetsExtractor
+import jp.co.soramitsu.iroha2.BlocksValueExtractor
+import jp.co.soramitsu.iroha2.DomainOrNullExtractor
+import jp.co.soramitsu.iroha2.DomainsExtractor
+import jp.co.soramitsu.iroha2.PeersExtractor
+import jp.co.soramitsu.iroha2.PermissionTokensExtractor
+import jp.co.soramitsu.iroha2.ResultExtractor
+import jp.co.soramitsu.iroha2.RoleIdsExtractor
+import jp.co.soramitsu.iroha2.RolesExtractor
+import jp.co.soramitsu.iroha2.TransactionsExtractor
+import jp.co.soramitsu.iroha2.TriggerIdsExtractor
+import jp.co.soramitsu.iroha2.TriggerOrNullExtractor
+import jp.co.soramitsu.iroha2.TriggersExtractor
+import jp.co.soramitsu.iroha2.asName
+import jp.co.soramitsu.iroha2.asSignatureOf
+import jp.co.soramitsu.iroha2.generated.Account
+import jp.co.soramitsu.iroha2.generated.AccountId
+import jp.co.soramitsu.iroha2.generated.AccountIdPredicateAtom
+import jp.co.soramitsu.iroha2.generated.AccountIdProjectionOfPredicateMarker
+import jp.co.soramitsu.iroha2.generated.AccountProjectionOfPredicateMarker
+import jp.co.soramitsu.iroha2.generated.Asset
+import jp.co.soramitsu.iroha2.generated.AssetDefinition
+import jp.co.soramitsu.iroha2.generated.AssetDefinitionId
+import jp.co.soramitsu.iroha2.generated.AssetDefinitionIdPredicateAtom
+import jp.co.soramitsu.iroha2.generated.AssetDefinitionIdProjectionOfPredicateMarker
+import jp.co.soramitsu.iroha2.generated.AssetDefinitionProjectionOfPredicateMarker
+import jp.co.soramitsu.iroha2.generated.AssetId
+import jp.co.soramitsu.iroha2.generated.AssetIdPredicateAtom
+import jp.co.soramitsu.iroha2.generated.AssetIdProjectionOfPredicateMarker
+import jp.co.soramitsu.iroha2.generated.AssetProjectionOfPredicateMarker
+import jp.co.soramitsu.iroha2.generated.CompoundPredicateOfAccount
+import jp.co.soramitsu.iroha2.generated.CompoundPredicateOfAsset
+import jp.co.soramitsu.iroha2.generated.CompoundPredicateOfAssetDefinition
+import jp.co.soramitsu.iroha2.generated.CompoundPredicateOfCommittedTransaction
+import jp.co.soramitsu.iroha2.generated.CompoundPredicateOfDomain
+import jp.co.soramitsu.iroha2.generated.CompoundPredicateOfPeerId
+import jp.co.soramitsu.iroha2.generated.CompoundPredicateOfPermission
+import jp.co.soramitsu.iroha2.generated.CompoundPredicateOfRole
+import jp.co.soramitsu.iroha2.generated.CompoundPredicateOfRoleId
+import jp.co.soramitsu.iroha2.generated.CompoundPredicateOfSignedBlock
+import jp.co.soramitsu.iroha2.generated.CompoundPredicateOfTrigger
+import jp.co.soramitsu.iroha2.generated.CompoundPredicateOfTriggerId
+import jp.co.soramitsu.iroha2.generated.Domain
+import jp.co.soramitsu.iroha2.generated.DomainId
+import jp.co.soramitsu.iroha2.generated.DomainIdPredicateAtom
+import jp.co.soramitsu.iroha2.generated.DomainIdProjectionOfPredicateMarker
+import jp.co.soramitsu.iroha2.generated.DomainProjectionOfPredicateMarker
+import jp.co.soramitsu.iroha2.generated.FetchSize
+import jp.co.soramitsu.iroha2.generated.Name
+import jp.co.soramitsu.iroha2.generated.NonZeroOfu64
+import jp.co.soramitsu.iroha2.generated.Pagination
+import jp.co.soramitsu.iroha2.generated.QueryBox
+import jp.co.soramitsu.iroha2.generated.QueryParams
+import jp.co.soramitsu.iroha2.generated.QueryRequest
+import jp.co.soramitsu.iroha2.generated.QueryRequestWithAuthority
+import jp.co.soramitsu.iroha2.generated.QuerySignature
+import jp.co.soramitsu.iroha2.generated.QueryWithParams
+import jp.co.soramitsu.iroha2.generated.Signature
+import jp.co.soramitsu.iroha2.generated.SignedQuery
+import jp.co.soramitsu.iroha2.generated.SignedQueryV1
+import jp.co.soramitsu.iroha2.generated.Sorting
+import jp.co.soramitsu.iroha2.generated.Trigger
+import jp.co.soramitsu.iroha2.generated.TriggerId
+import jp.co.soramitsu.iroha2.generated.TriggerIdPredicateAtom
+import jp.co.soramitsu.iroha2.generated.TriggerIdProjectionOfPredicateMarker
+import jp.co.soramitsu.iroha2.generated.TriggerProjectionOfPredicateMarker
+import jp.co.soramitsu.iroha2.signAs
 import java.math.BigInteger
 import java.security.KeyPair
 
@@ -18,8 +88,8 @@ class QueryBuilder<R>(val query: QueryBox, val extractor: ResultExtractor<R>) {
         this.sorting = Sorting(key)
     }
 
-    fun pagination(limit: BigInteger? = null, offset: BigInteger) = this.apply {
-        this.pagination = Pagination(limit?.let { NonZeroOfu64(limit) }, offset)
+    fun pagination(limit: BigInteger? = null, offset: BigInteger? = null) = this.apply {
+        this.pagination = Pagination(limit?.let { NonZeroOfu64(limit) }, offset ?: BigInteger.ZERO)
     }
 
     fun fetchSize(value: BigInteger) = this.apply {
@@ -50,120 +120,28 @@ class QueryBuilder<R>(val query: QueryBox, val extractor: ResultExtractor<R>) {
 
     companion object {
         @JvmStatic
-        @JvmOverloads
-        fun findAccounts(predicate: CompoundPredicateOfAccount? = null, selector: SelectorTupleOfAccount? = null) = QueryBuilder(
-            Queries.findAccounts(
-                predicate ?: CompoundPredicateOfAccount.And(emptyList()),
-                selector ?: SelectorTupleOfAccount(listOf(AccountProjectionOfSelectorMarker.Atom())),
-            ),
-            AccountsExtractor,
+        fun findPeers(predicate: CompoundPredicateOfPeerId? = null) = QueryBuilder(
+            Queries.findPeers(predicate),
+            PeersExtractor,
         )
 
+        /**
+         * Return all domains
+         */
         @JvmStatic
-        fun findAccountById(accountId: AccountId, selector: SelectorTupleOfAccount? = null): QueryBuilder<Account?> {
-            val predicate = CompoundPredicateOfAccount.Atom(
-                AccountProjectionOfPredicateMarker.Id(
-                    AccountIdProjectionOfPredicateMarker.Atom(
-                        AccountIdPredicateAtom.Equals(accountId),
-                    ),
-                ),
-            )
-
-            return QueryBuilder(
-                Queries.findAccounts(predicate, selector ?: SelectorTupleOfAccount(listOf(AccountProjectionOfSelectorMarker.Atom()))),
-                AccountOrNullExtractor,
-            )
-        }
-
-        @JvmStatic
-        @JvmOverloads
-        fun findAssets(predicate: CompoundPredicateOfAsset? = null, selector: SelectorTupleOfAsset? = null) = QueryBuilder(
-            Queries.findAssets(
-                predicate ?: CompoundPredicateOfAsset.And(emptyList()),
-                selector ?: SelectorTupleOfAsset(listOf(AssetProjectionOfSelectorMarker.Atom())),
-            ),
-            AssetsExtractor,
-        )
-
-        @JvmStatic
-        fun findAssetsByAccountId(accountId: AccountId, selector: SelectorTupleOfAsset? = null): QueryBuilder<List<Asset>> {
-            val predicate = CompoundPredicateOfAsset.Atom(
-                AssetProjectionOfPredicateMarker.Id(
-                    AssetIdProjectionOfPredicateMarker.Account(
-                        AccountIdProjectionOfPredicateMarker.Atom(
-                            AccountIdPredicateAtom.Equals(accountId),
-                        ),
-                    ),
-                ),
-            )
-
-            return QueryBuilder(
-                Queries.findAssets(predicate, selector ?: SelectorTupleOfAsset(listOf(AssetProjectionOfSelectorMarker.Atom()))),
-                AssetsExtractor,
-            )
-        }
-
-        @JvmStatic
-        fun findAssetById(assetId: AssetId, selector: SelectorTupleOfAsset? = null): QueryBuilder<Asset?> {
-            val predicate = CompoundPredicateOfAsset.Atom(
-                AssetProjectionOfPredicateMarker.Id(
-                    AssetIdProjectionOfPredicateMarker.Atom(
-                        AssetIdPredicateAtom.Equals(assetId),
-                    ),
-                ),
-            )
-
-            return QueryBuilder(
-                Queries.findAssets(predicate, selector ?: SelectorTupleOfAsset(listOf(AssetProjectionOfSelectorMarker.Atom()))),
-                AssetOrNullExtractor,
-            )
-        }
-
-        @JvmStatic
-        @JvmOverloads
-        fun findAssetsDefinitions(predicate: CompoundPredicateOfAssetDefinition? = null, selector: SelectorTupleOfAssetDefinition? = null) =
-            QueryBuilder(
-                Queries.findAssetsDefinitions(
-                    predicate ?: CompoundPredicateOfAssetDefinition.And(emptyList()),
-                    selector ?: SelectorTupleOfAssetDefinition(listOf(AssetDefinitionProjectionOfSelectorMarker.Atom())),
-                ),
-                AssetDefinitionsExtractor,
-            )
-
-        @JvmStatic
-        fun findAssetDefinitionById(
-            assetDefinitionId: AssetDefinitionId,
-            selector: SelectorTupleOfAssetDefinition? = null,
-        ): QueryBuilder<AssetDefinition?> {
-            val predicate = CompoundPredicateOfAssetDefinition.Atom(
-                AssetDefinitionProjectionOfPredicateMarker.Id(
-                    AssetDefinitionIdProjectionOfPredicateMarker.Atom(
-                        AssetDefinitionIdPredicateAtom.Equals(assetDefinitionId),
-                    ),
-                ),
-            )
-            return QueryBuilder(
-                Queries.findAssetsDefinitions(
-                    predicate,
-                    selector ?: SelectorTupleOfAssetDefinition(listOf(AssetDefinitionProjectionOfSelectorMarker.Atom())),
-                ),
-                AssetDefinitionOrNullExtractor,
-            )
-        }
-
-        @JvmStatic
-        @JvmOverloads
-        fun findDomains(predicate: CompoundPredicateOfDomain? = null, selector: SelectorTupleOfDomain? = null) = QueryBuilder(
+        fun findDomains(predicate: CompoundPredicateOfDomain? = null) = QueryBuilder(
             Queries.findDomains(
-                predicate ?: CompoundPredicateOfDomain.And(emptyList()),
-                selector ?: SelectorTupleOfDomain(listOf(DomainProjectionOfSelectorMarker.Atom())),
+                predicate,
             ),
             DomainsExtractor,
         )
 
+        /**
+         * Return domain with the given id
+         */
         @JvmStatic
-        fun findDomainById(domainId: DomainId, selector: SelectorTupleOfDomain? = null): QueryBuilder<Domain?> {
-            val predicate = CompoundPredicateOfDomain.Atom(
+        fun findDomainById(domainId: DomainId): QueryBuilder<Domain?> {
+            val byDomainIdFilter = CompoundPredicateOfDomain.Atom(
                 DomainProjectionOfPredicateMarker.Id(
                     DomainIdProjectionOfPredicateMarker.Atom(
                         DomainIdPredicateAtom.Equals(domainId),
@@ -171,171 +149,157 @@ class QueryBuilder<R>(val query: QueryBox, val extractor: ResultExtractor<R>) {
                 ),
             )
             return QueryBuilder(
-                Queries.findDomains(predicate, selector ?: SelectorTupleOfDomain(listOf(DomainProjectionOfSelectorMarker.Atom()))),
+                Queries.findDomains(byDomainIdFilter),
                 DomainOrNullExtractor,
             )
         }
 
         @JvmStatic
-        fun findTriggerById(triggerId: TriggerId, selector: SelectorTupleOfTrigger? = null): QueryBuilder<Trigger?> {
-            val predicate = CompoundPredicateOfTrigger.Atom(
-                TriggerProjectionOfPredicateMarker.Id(
-                    TriggerIdProjectionOfPredicateMarker.Name(
-                        NameProjectionOfPredicateMarker.Atom(StringPredicateAtom.Equals(triggerId.asString())),
+        fun findAssetsDefinitions(predicate: CompoundPredicateOfAssetDefinition? = null) = QueryBuilder(
+            Queries.findAssetsDefinitions(predicate),
+            AssetDefinitionsExtractor,
+        )
+
+        @JvmStatic
+        fun findAssetDefinitionById(assetDefinitionId: AssetDefinitionId): QueryBuilder<AssetDefinition?> {
+            val byAssetDefinitionIdFilter = CompoundPredicateOfAssetDefinition.Atom(
+                AssetDefinitionProjectionOfPredicateMarker.Id(
+                    AssetDefinitionIdProjectionOfPredicateMarker.Atom(
+                        AssetDefinitionIdPredicateAtom.Equals(assetDefinitionId),
                     ),
                 ),
             )
             return QueryBuilder(
-                Queries.findTriggers(predicate, selector ?: SelectorTupleOfTrigger(listOf(TriggerProjectionOfSelectorMarker.Atom()))),
-                TriggerOrNullExtractor,
+                Queries.findAssetsDefinitions(byAssetDefinitionIdFilter),
+                AssetDefinitionOrNullExtractor,
             )
         }
 
+        /**
+         * Return the values of all known accounts
+         */
         @JvmStatic
-        @JvmOverloads
-        fun findPeers(predicate: CompoundPredicateOfPeerId? = null, selector: SelectorTupleOfPeerId? = null) = QueryBuilder(
-            Queries.findPeers(
-                predicate ?: CompoundPredicateOfPeerId.And(emptyList()),
-                selector ?: SelectorTupleOfPeerId(
-                    listOf(
-                        PeerIdProjectionOfSelectorMarker.Atom(),
+        fun findAccounts(predicate: CompoundPredicateOfAccount? = null) = QueryBuilder(
+            Queries.findAccounts(predicate),
+            AccountsExtractor,
+        )
+
+        @JvmStatic
+        fun findAccountsWithAsset(definitionId: AssetDefinitionId, predicate: CompoundPredicateOfAccount? = null) = QueryBuilder(
+            Queries.findAccountsWithAsset(
+                definitionId,
+                predicate,
+            ),
+            AccountsExtractor,
+        )
+
+        @JvmStatic
+        fun findAccountById(accountId: AccountId): QueryBuilder<Account?> {
+            val byAccountIdFilter = CompoundPredicateOfAccount.Atom(
+                AccountProjectionOfPredicateMarker.Id(
+                    AccountIdProjectionOfPredicateMarker.Atom(
+                        AccountIdPredicateAtom.Equals(accountId),
                     ),
                 ),
-            ),
-            PeersExtractor,
+            )
+
+            return QueryBuilder(Queries.findAccounts(byAccountIdFilter), AccountOrNullExtractor)
+        }
+
+        @JvmStatic
+        fun findAssets(predicate: CompoundPredicateOfAsset? = null) = QueryBuilder(
+            Queries.findAssets(predicate),
+            AssetsExtractor,
         )
 
         @JvmStatic
-        @JvmOverloads
-        fun findTransactions(
-            predicate: CompoundPredicateOfCommittedTransaction? = null,
-            selector: SelectorTupleOfCommittedTransaction? = null,
-        ) = QueryBuilder(
-            Queries.findTransactions(
-                predicate ?: CompoundPredicateOfCommittedTransaction.And(emptyList()),
-                selector
-                    ?: SelectorTupleOfCommittedTransaction(
-                        listOf(
-                            CommittedTransactionProjectionOfSelectorMarker.Atom(),
-                        ),
+        fun findAssetById(assetId: AssetId): QueryBuilder<Asset?> {
+            val byAssetIdFilter = CompoundPredicateOfAsset.Atom(
+                AssetProjectionOfPredicateMarker.Id(
+                    AssetIdProjectionOfPredicateMarker.Atom(
+                        AssetIdPredicateAtom.Equals(assetId),
                     ),
-            ),
-            TransactionsExtractor,
-        )
+                ),
+            )
+
+            return QueryBuilder(Queries.findAssets(byAssetIdFilter), AssetOrNullExtractor)
+        }
 
         @JvmStatic
-        @JvmOverloads
-        fun findPermissionsByAccountId(
-            accountId: AccountId,
-            predicate: CompoundPredicateOfPermission? = null,
-            selector: SelectorTupleOfPermission? = null,
-        ) = QueryBuilder(
+        fun findPermissionsByAccountId(accountId: AccountId, predicate: CompoundPredicateOfPermission? = null) = QueryBuilder(
             Queries.findPermissionsByAccountId(
                 accountId,
-                predicate ?: CompoundPredicateOfPermission.And(emptyList()),
-                selector ?: SelectorTupleOfPermission(
-                    listOf(
-                        PermissionProjectionOfSelectorMarker.Atom(),
-                    ),
-                ),
+                predicate,
             ),
             PermissionTokensExtractor,
         )
 
         @JvmStatic
-        @JvmOverloads
-        fun findRolesByAccountId(
-            accountId: AccountId,
-            predicate: CompoundPredicateOfRoleId? = null,
-            selector: SelectorTupleOfRoleId? = null,
-        ) = QueryBuilder(
-            Queries.findRolesByAccountId(
-                accountId,
-                predicate ?: CompoundPredicateOfRoleId.And(emptyList()),
-                selector ?: SelectorTupleOfRoleId(listOf(RoleIdProjectionOfSelectorMarker.Atom())),
-            ),
-            RoleIdsExtractor,
-        )
-
-        @JvmStatic
-        @JvmOverloads
-        fun findRoleIds(predicate: CompoundPredicateOfRoleId? = null, selector: SelectorTupleOfRoleId? = null) = QueryBuilder(
-            Queries.findRoleIds(
-                predicate ?: CompoundPredicateOfRoleId.And(emptyList()),
-                selector ?: SelectorTupleOfRoleId(listOf(RoleIdProjectionOfSelectorMarker.Atom())),
-            ),
-            RoleIdsExtractor,
-        )
-
-        @JvmStatic
-        @JvmOverloads
-        fun findRoles(predicate: CompoundPredicateOfRole? = null, selector: SelectorTupleOfRole? = null) = QueryBuilder(
-            Queries.findRoles(
-                predicate ?: CompoundPredicateOfRole.And(emptyList()),
-                selector ?: SelectorTupleOfRole(listOf(RoleProjectionOfSelectorMarker.Atom())),
-            ),
+        fun findRoles(predicate: CompoundPredicateOfRole? = null) = QueryBuilder(
+            Queries.findRoles(predicate ?: CompoundPredicateOfRole.And(emptyList())),
             RolesExtractor,
         )
 
         @JvmStatic
-        @JvmOverloads
-        fun findTriggers(predicate: CompoundPredicateOfTrigger? = null, selector: SelectorTupleOfTrigger? = null) = QueryBuilder(
+        fun findRoleById(predicate: CompoundPredicateOfRole? = null) = QueryBuilder(
+            Queries.findRoles(predicate ?: CompoundPredicateOfRole.And(emptyList())),
+            RoleIdsExtractor,
+        )
+
+        @JvmStatic
+        fun findRolesByAccountId(accountId: AccountId, predicate: CompoundPredicateOfRoleId? = null) = QueryBuilder(
+            Queries.findRolesByAccountId(
+                accountId,
+                predicate,
+            ),
+            RoleIdsExtractor,
+        )
+
+        @JvmStatic
+        fun findTriggers(predicate: CompoundPredicateOfTrigger? = null) = QueryBuilder(
             Queries.findTriggers(
-                predicate ?: CompoundPredicateOfTrigger.And(emptyList()),
-                selector ?: SelectorTupleOfTrigger(listOf(TriggerProjectionOfSelectorMarker.Atom())),
+                predicate,
             ),
             TriggersExtractor,
         )
 
         @JvmStatic
-        @JvmOverloads
-        fun findActiveTriggerIds(predicate: CompoundPredicateOfTriggerId? = null, selector: SelectorTupleOfTriggerId? = null) =
-            QueryBuilder(
-                Queries.findActiveTriggerIds(
-                    predicate ?: CompoundPredicateOfTriggerId.And(emptyList()),
-                    selector ?: SelectorTupleOfTriggerId(listOf(TriggerIdProjectionOfSelectorMarker.Atom())),
+        fun findTriggerById(triggerId: TriggerId): QueryBuilder<Trigger?> {
+            val byTriggerIdFilter = CompoundPredicateOfTrigger.Atom(
+                TriggerProjectionOfPredicateMarker.Id(
+                    TriggerIdProjectionOfPredicateMarker.Atom(
+                        TriggerIdPredicateAtom.Equals(triggerId),
+                    ),
                 ),
-                TriggerIdsExtractor,
             )
+            return QueryBuilder(
+                Queries.findTriggers(byTriggerIdFilter),
+                TriggerOrNullExtractor,
+            )
+        }
 
         @JvmStatic
-        @JvmOverloads
-        fun findBlocks(predicate: CompoundPredicateOfSignedBlock? = null, selector: SelectorTupleOfSignedBlock? = null) = QueryBuilder(
-            Queries.findBlocks(
-                predicate ?: CompoundPredicateOfSignedBlock.And(emptyList()),
-                selector ?: SelectorTupleOfSignedBlock(listOf(SignedBlockProjectionOfSelectorMarker.Atom())),
+        fun findActiveTriggerIds(predicate: CompoundPredicateOfTriggerId? = null) = QueryBuilder(
+            Queries.findActiveTriggerIds(
+                predicate,
             ),
-            BlocksValueExtractor,
+            TriggerIdsExtractor,
         )
 
         @JvmStatic
-        @JvmOverloads
-        fun findBlockHeaders(predicate: CompoundPredicateOfBlockHeader? = null, selector: SelectorTupleOfBlockHeader? = null) =
-            QueryBuilder(
-                Queries.findBlockHeaders(
-                    predicate ?: CompoundPredicateOfBlockHeader.And(emptyList()),
-                    selector ?: SelectorTupleOfBlockHeader(listOf(BlockHeaderProjectionOfSelectorMarker.Atom())),
-                ),
-                BlockHeadersExtractor,
-            )
+        fun findTransactions(predicate: CompoundPredicateOfCommittedTransaction? = null) = QueryBuilder(
+            Queries.findTransactions(
+                predicate,
+            ),
+            TransactionsExtractor,
+        )
 
         @JvmStatic
-        @JvmOverloads
-        fun findAccountsWithAsset(
-            definitionId: AssetDefinitionId,
-            predicate: CompoundPredicateOfAccount? = null,
-            selector: SelectorTupleOfAccount? = null,
-        ) = QueryBuilder(
-            Queries.findAccountsWithAsset(
-                definitionId,
-                predicate ?: CompoundPredicateOfAccount.And(emptyList()),
-                selector ?: SelectorTupleOfAccount(
-                    listOf(
-                        AccountProjectionOfSelectorMarker.Atom(),
-                    ),
-                ),
+        fun findBlocks(predicate: CompoundPredicateOfSignedBlock? = null) = QueryBuilder(
+            Queries.findBlocks(
+                predicate,
             ),
-            AccountsExtractor,
+            BlocksValueExtractor,
         )
     }
 }

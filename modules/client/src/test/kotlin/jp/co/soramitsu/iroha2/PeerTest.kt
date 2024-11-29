@@ -94,7 +94,6 @@ class PeerTest : IrohaTest<AdminIroha2Client>() {
     fun `registered peer should return consistent data`(): Unit = runBlocking {
         val p2pPort = DEFAULT_P2P_PORT
         val alias = "iroha$p2pPort"
-        val address = "$alias:$p2pPort"
         val keyPair = generateKeyPair()
         val payload = keyPair.public.bytes()
 
@@ -104,16 +103,16 @@ class PeerTest : IrohaTest<AdminIroha2Client>() {
             }
             assertTrue(isPeerRegistered(payload))
 
-            delay(5000)
             val peersCount = client.submit(QueryBuilder.findPeers()).size
 
+            delay(10000)
             Iroha2Client(
                 listOf(container.getApiUrl()),
                 container.config.chain,
                 ALICE_ACCOUNT_ID,
                 ALICE_KEYPAIR,
             ).submit(QueryBuilder.findPeers())
-                .also { peers -> assertEquals(peers.size, peersCount) }
+                .also { peers -> assertEquals(peersCount, peers.size) }
         }
     }
 

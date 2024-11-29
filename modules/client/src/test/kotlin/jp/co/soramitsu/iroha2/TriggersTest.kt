@@ -7,14 +7,18 @@ import jp.co.soramitsu.iroha2.annotations.Sdk
 import jp.co.soramitsu.iroha2.annotations.SdkTestId
 import jp.co.soramitsu.iroha2.client.Iroha2Client
 import jp.co.soramitsu.iroha2.generated.AccountId
+import jp.co.soramitsu.iroha2.generated.AccountIdPredicateAtom
+import jp.co.soramitsu.iroha2.generated.AccountIdProjectionOfPredicateMarker
 import jp.co.soramitsu.iroha2.generated.AssetDefinitionId
 import jp.co.soramitsu.iroha2.generated.AssetId
+import jp.co.soramitsu.iroha2.generated.AssetIdProjectionOfPredicateMarker
+import jp.co.soramitsu.iroha2.generated.AssetProjectionOfPredicateMarker
 import jp.co.soramitsu.iroha2.generated.AssetType
 import jp.co.soramitsu.iroha2.generated.AssetValue
+import jp.co.soramitsu.iroha2.generated.CompoundPredicateOfAsset
 import jp.co.soramitsu.iroha2.generated.EventFilterBox
 import jp.co.soramitsu.iroha2.generated.ExecuteTriggerEventFilter
 import jp.co.soramitsu.iroha2.generated.ExecutionTime
-import jp.co.soramitsu.iroha2.generated.Name
 import jp.co.soramitsu.iroha2.generated.Repeats
 import jp.co.soramitsu.iroha2.generated.TimeEventFilter
 import jp.co.soramitsu.iroha2.generated.TriggerId
@@ -45,7 +49,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.time.withTimeout
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import java.math.BigDecimal
 import java.math.BigInteger
 import java.security.KeyPair
@@ -54,6 +57,7 @@ import java.time.Instant
 import java.util.Date
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
+import kotlin.test.assertNull
 
 @Feature("Triggers")
 @Owner("akostyuchenko")
@@ -185,7 +189,7 @@ class TriggersTest : IrohaTest<Iroha2Client>() {
     @Story("Endless time trigger decreases asset quantity continuously")
     @SdkTestId("endless_time_trigger")
     fun `endless time trigger`(): Unit = runBlocking {
-        val triggerId = TriggerId(name = Name("endless_time_trigger"))
+        val triggerId = TriggerId("endless_time_trigger".asName())
 
         sendAndAwaitTimeTrigger(
             triggerId,
@@ -204,7 +208,7 @@ class TriggersTest : IrohaTest<Iroha2Client>() {
     @Story("Time trigger executes a limited number of times")
     @SdkTestId("time_trigger_execution_repeats_few_times")
     fun `time trigger execution repeats few times`(): Unit = runBlocking {
-        val triggerId = TriggerId(name = Name("time_trigger"))
+        val triggerId = TriggerId("time_trigger".asName())
 
         sendAndAwaitTimeTrigger(
             triggerId,
@@ -224,7 +228,7 @@ class TriggersTest : IrohaTest<Iroha2Client>() {
     fun `wasm trigger to mint nft for every user and update trigger metadata`(): Unit = runBlocking {
         val triggerId = TriggerId(name = "wasm_trigger".asName())
 
-        val currentTime = Date().time + 10000
+        val currentTime = Date().time + 5000
         val filter = EventFilterBox.Time(
             EventFilters.timeEventFilter(BigInteger.valueOf(currentTime), BigInteger.valueOf(1000L)),
         )
@@ -328,10 +332,8 @@ class TriggersTest : IrohaTest<Iroha2Client>() {
                 withTimeout(txTimeout) { d.await() }
             }
 
-        assertThrows<IrohaClientException> {
-            runBlocking {
-                client.submit(QueryBuilder.findTriggerById(triggerId))
-            }
+        client.submit(QueryBuilder.findTriggerById(triggerId)).also {
+            assertNull(it)
         }
     }
 
@@ -405,7 +407,18 @@ class TriggersTest : IrohaTest<Iroha2Client>() {
                 }
             delay(500)
         }
-        client.submit(QueryBuilder.findAssetsByAccountId(ALICE_ACCOUNT_ID))
+        val byAccountIdFilter = CompoundPredicateOfAsset.Atom(
+            AssetProjectionOfPredicateMarker.Id(
+                AssetIdProjectionOfPredicateMarker.Account(
+                    AccountIdProjectionOfPredicateMarker.Atom(
+                        AccountIdPredicateAtom.Equals(
+                            ALICE_ACCOUNT_ID,
+                        ),
+                    ),
+                ),
+            ),
+        )
+        client.submit(QueryBuilder.findAssets(byAccountIdFilter))
             .also { assets ->
                 val expectedDefinition = AssetDefinitionId(
                     DEFAULT_DOMAIN_ID,
@@ -416,7 +429,7 @@ class TriggersTest : IrohaTest<Iroha2Client>() {
                 assert(assets.any { it.id.definition == XOR_DEFINITION_ID })
                 assert(
                     assets.any {
-                        it.id.definition.asString().lowercase() == expectedDefinition.asString().lowercase()
+                        expectedDefinition.asString().lowercase() == it.id.definition.asString().lowercase()
                     },
                 )
             }

@@ -217,6 +217,10 @@ inline fun <reified R> extract(value: QueryOutputBatchBox): List<R> = when (valu
     is QueryOutputBatchBox.Block -> value.vec.cast<List<R>>()
     is QueryOutputBatchBox.BlockHeader -> value.vec.cast<List<R>>()
     is QueryOutputBatchBox.Trigger -> value.vec.cast<List<R>>()
+    is QueryOutputBatchBox.Role -> value.vec.cast<List<R>>()
+    is QueryOutputBatchBox.RoleId -> value.vec.cast<List<R>>()
+    is QueryOutputBatchBox.TriggerId -> value.vec.cast<List<R>>()
+    is QueryOutputBatchBox.CommittedTransaction -> value.vec.cast<List<R>>()
 
     else -> throw QueryPayloadExtractionException(
         "Unexpected type `${value::class.qualifiedName}`",

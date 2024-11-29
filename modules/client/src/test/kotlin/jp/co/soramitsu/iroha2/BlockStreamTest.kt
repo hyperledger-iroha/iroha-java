@@ -7,6 +7,8 @@ import io.qameta.allure.Story
 import jp.co.soramitsu.iroha2.annotations.Sdk
 import jp.co.soramitsu.iroha2.annotations.SdkTestId
 import jp.co.soramitsu.iroha2.client.blockstream.BlockStreamStorage
+import jp.co.soramitsu.iroha2.generated.AssetDefinitionId
+import jp.co.soramitsu.iroha2.generated.AssetType
 import jp.co.soramitsu.iroha2.generated.BlockMessage
 import jp.co.soramitsu.iroha2.generated.BlockPayload
 import jp.co.soramitsu.iroha2.generated.Executable
@@ -26,6 +28,7 @@ import jp.co.soramitsu.iroha2.testengine.GENESIS_DOMAIN
 import jp.co.soramitsu.iroha2.testengine.IrohaTest
 import jp.co.soramitsu.iroha2.testengine.NewAccountWithMetadata
 import jp.co.soramitsu.iroha2.testengine.WithIroha
+import jp.co.soramitsu.iroha2.transaction.Register
 import jp.co.soramitsu.iroha2.transaction.SetKeyValue
 import jp.co.soramitsu.iroha2.transaction.Transfer
 import kotlinx.coroutines.runBlocking
@@ -50,7 +53,7 @@ class BlockStreamTest : IrohaTest<AdminIroha2Client>() {
     @Issue("https://app.zenhub.com/workspaces/iroha-v2-60ddb820813b9100181fc060/issues/gh/hyperledger/iroha-java/361")
     @ResourceLock("blockStream")
     fun `subscription to block stream`(): Unit = runBlocking {
-        val idToSubscription = client.blocks(from = 1, count = 3)
+        val idToSubscription = client.blocks(count = 3)
         val actionId = idToSubscription.first.first().id
         val subscription = idToSubscription.second
         val newAssetName = "rox"
@@ -58,21 +61,26 @@ class BlockStreamTest : IrohaTest<AdminIroha2Client>() {
         client.submit(Transfer.domain(ALICE_ACCOUNT_ID, DEFAULT_DOMAIN_ID, BOB_ACCOUNT_ID)).also { d ->
             withTimeout(txTimeout) { d.await() }
         }
-        client.submitAs(BOB_ACCOUNT_ID, BOB_KEYPAIR, Transfer.domain(ALICE_ACCOUNT_ID, DEFAULT_DOMAIN_ID, BOB_ACCOUNT_ID)).also { d ->
+        client.submitAs(
+            BOB_ACCOUNT_ID,
+            BOB_KEYPAIR,
+            Register.assetDefinition(AssetDefinitionId(DEFAULT_DOMAIN_ID, newAssetName.asName()), AssetType.Store()),
+        ).also { d ->
             withTimeout(txTimeout) { d.await() }
         }
 
         val blocks = mutableListOf<BlockMessage>()
         subscription.receive<BlockMessage>(actionId).collect { block -> blocks.add(block) }
 
-        val expectedSize = NewAccountWithMetadata().transaction.instructions.count() + 2 // + wasm + peer register
+        // upgrade executor + set parameters + isi + set topology
+        val expectedSize = NewAccountWithMetadata().transaction.instructions.count() + 12
         var isi = blocks[0].validate(1, GENESIS_DOMAIN, GENESIS_ADDRESS, expectedSize)
-        val registerDomain = isi[0].cast<InstructionBox.Register>().extractDomain().id.name.string
+        val registerDomain = isi[1].cast<InstructionBox.Register>().extractDomain().id.name.string
 
         assertEquals(DEFAULT_DOMAIN_ID.asString(), registerDomain)
-        assertEquals(ALICE_ACCOUNT_ID, isi[1].extractAccount().id)
-        assertEquals(BOB_ACCOUNT_ID, isi[2].extractAccount().id)
-        assertEquals(NewAccountWithMetadata.ACCOUNT_ID, isi[3].extractAccount().id)
+        assertEquals(ALICE_ACCOUNT_ID, isi[2].extractAccount().id)
+        assertEquals(BOB_ACCOUNT_ID, isi[3].extractAccount().id)
+        assertEquals(NewAccountWithMetadata.ACCOUNT_ID, isi[4].extractAccount().id)
 
         isi = blocks[2].validate(3, DEFAULT_DOMAIN, BOB_PUBLIC_KEY.payload.toHex(true), 1)
         val newAssetDefinition = isi[0].cast<InstructionBox.Register>().extractAssetDefinition()
