@@ -3,6 +3,7 @@
 //
 package jp.co.soramitsu.iroha2.generated
 
+import jp.co.soramitsu.iroha2.ModelCustomInstruction
 import jp.co.soramitsu.iroha2.codec.ScaleCodecReader
 import jp.co.soramitsu.iroha2.codec.ScaleCodecWriter
 import jp.co.soramitsu.iroha2.codec.ScaleReader
@@ -16,7 +17,8 @@ import kotlin.collections.List
  *
  * Generated from 'MultisigApprove' regular structure
  */
-public data class MultisigApprove(public val account: AccountId, public val instructionsHash: HashOf<List<InstructionBox>>) {
+public data class MultisigApprove(public val account: AccountId, public val instructionsHash: HashOf<List<InstructionBox>>) :
+    ModelCustomInstruction {
     public companion object : ScaleReader<MultisigApprove>, ScaleWriter<MultisigApprove> {
         override fun read(reader: ScaleCodecReader): MultisigApprove = try {
             MultisigApprove(

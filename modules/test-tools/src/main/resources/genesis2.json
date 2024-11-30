@@ -161,7 +161,7 @@
         "Asset": {
           "object": "123#test#ed0120CE7FA46C9DCE7EA4B125E2E36BDB63EA33073E7590AC92816AE1E861B7048B03@wonderland",
           "key": "id",
-          "value": "123"
+          "value": 123
         }
       }
     },
@@ -170,7 +170,7 @@
         "Asset": {
           "object": "123#test#ed0120CE7FA46C9DCE7EA4B125E2E36BDB63EA33073E7590AC92816AE1E861B7048B03@wonderland",
           "key": "wt",
-          "value": "123"
+          "value": 123
         }
       }
     },
@@ -206,7 +206,7 @@
         "Asset": {
           "object": "123#test#ed0120CE7FA46C9DCE7EA4B125E2E36BDB63EA33073E7590AC92816AE1E861B7048B03@wonderland",
           "key": "ef",
-          "value": "1234"
+          "value": 1234
         }
       }
     },
@@ -215,7 +215,7 @@
         "Asset": {
           "object": "123#test#ed0120CE7FA46C9DCE7EA4B125E2E36BDB63EA33073E7590AC92816AE1E861B7048B03@wonderland",
           "key": "cd",
-          "value": "123"
+          "value": 123
         }
       }
     },
@@ -224,7 +224,7 @@
         "Asset": {
           "object": "123#test#ed0120CE7FA46C9DCE7EA4B125E2E36BDB63EA33073E7590AC92816AE1E861B7048B03@wonderland",
           "key": "ab",
-          "value": "false"
+          "value": false
         }
       }
     },
@@ -242,5 +242,7 @@
       }
     }
   ],
+  "wasm_dir": "libs",
+  "wasm_triggers": [],
   "topology": []
 }

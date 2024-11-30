@@ -3,6 +3,7 @@
 //
 package jp.co.soramitsu.iroha2.generated
 
+import jp.co.soramitsu.iroha2.ModelCustomInstruction
 import jp.co.soramitsu.iroha2.codec.ScaleCodecReader
 import jp.co.soramitsu.iroha2.codec.ScaleCodecWriter
 import jp.co.soramitsu.iroha2.codec.ScaleReader
@@ -20,7 +21,7 @@ public data class MultisigPropose(
     public val account: AccountId,
     public val instructions: List<InstructionBox>,
     public val transactionTtlMs: NonZeroOfu64? = null,
-) {
+) : ModelCustomInstruction {
     public companion object : ScaleReader<MultisigPropose>, ScaleWriter<MultisigPropose> {
         override fun read(reader: ScaleCodecReader): MultisigPropose = try {
             MultisigPropose(

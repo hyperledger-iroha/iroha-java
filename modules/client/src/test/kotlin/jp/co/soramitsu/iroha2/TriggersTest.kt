@@ -176,7 +176,7 @@ class TriggersTest : IrohaTest<Iroha2Client>() {
                 ALICE_ACCOUNT_ID,
                 EventFilterBox.ExecuteTrigger(ExecuteTriggerEventFilter(triggerId)),
             ),
-            Execute.trigger(triggerId),
+            Execute.trigger(triggerId, null),
         ).also { d ->
             withTimeout(txTimeout) { d.await() }
         }
@@ -297,7 +297,7 @@ class TriggersTest : IrohaTest<Iroha2Client>() {
                 ALICE_ACCOUNT_ID,
                 EventFilterBox.ExecuteTrigger(ExecuteTriggerEventFilter(setKeyValueTriggerId)),
             ),
-            Execute.trigger(setKeyValueTriggerId),
+            Execute.trigger(setKeyValueTriggerId, null),
         )
 
         keepNetworkBusyAndCheckAssetDefinitionIds()

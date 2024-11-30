@@ -2,6 +2,7 @@ package jp.co.soramitsu.iroha2
 
 import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.core.JsonParser
+import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.DeserializationContext
 import com.fasterxml.jackson.databind.JsonDeserializer
 import com.fasterxml.jackson.databind.JsonNode
@@ -15,6 +16,7 @@ import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.databind.node.LongNode
 import com.fasterxml.jackson.databind.node.ObjectNode
 import com.fasterxml.jackson.databind.node.TextNode
+import com.fasterxml.jackson.module.kotlin.KotlinModule
 import io.ipfs.multihash.Multihash
 import jp.co.soramitsu.iroha2.DigestFunction.Ed25519
 import jp.co.soramitsu.iroha2.generated.AccountId
@@ -25,12 +27,14 @@ import jp.co.soramitsu.iroha2.generated.AssetDefinitionId
 import jp.co.soramitsu.iroha2.generated.AssetId
 import jp.co.soramitsu.iroha2.generated.AssetTransferBox
 import jp.co.soramitsu.iroha2.generated.AssetType
+import jp.co.soramitsu.iroha2.generated.AssetValue
 import jp.co.soramitsu.iroha2.generated.BlockParameter
 import jp.co.soramitsu.iroha2.generated.BurnBox
 import jp.co.soramitsu.iroha2.generated.BurnOfNumericAndAsset
 import jp.co.soramitsu.iroha2.generated.BurnOfu32AndTrigger
 import jp.co.soramitsu.iroha2.generated.ChainId
 import jp.co.soramitsu.iroha2.generated.CustomParameter
+import jp.co.soramitsu.iroha2.generated.CustomParameterId
 import jp.co.soramitsu.iroha2.generated.DomainId
 import jp.co.soramitsu.iroha2.generated.EventFilterBox
 import jp.co.soramitsu.iroha2.generated.Executable
@@ -62,7 +66,6 @@ import jp.co.soramitsu.iroha2.generated.Parameter
 import jp.co.soramitsu.iroha2.generated.Peer
 import jp.co.soramitsu.iroha2.generated.Permission
 import jp.co.soramitsu.iroha2.generated.PublicKey
-import jp.co.soramitsu.iroha2.generated.RawGenesisTransaction
 import jp.co.soramitsu.iroha2.generated.RegisterBox
 import jp.co.soramitsu.iroha2.generated.RegisterOfAccount
 import jp.co.soramitsu.iroha2.generated.RegisterOfAsset
@@ -105,6 +108,7 @@ public val JSON_SERDE by lazy {
         val module = SimpleModule()
 
         // deserializers
+        module.addDeserializer(AssetValue::class.java, AssetValueDeserializer)
         module.addDeserializer(PublicKey::class.java, PublicKeyDeserializer)
         module.addDeserializer(Name::class.java, NameDeserializer)
         module.addDeserializer(Mintable::class.java, MintableDeserializer)
@@ -114,6 +118,9 @@ public val JSON_SERDE by lazy {
         module.addDeserializer(AssetDefinitionId::class.java, AssetDefinitionIdDeserializer)
         module.addDeserializer(AssetId::class.java, AssetIdDeserializer)
         module.addDeserializer(RegisterBox::class.java, RegisterBoxDeserializer)
+        module.addDeserializer(MintBox::class.java, MintBoxDeserializer)
+        module.addDeserializer(Metadata::class.java, MetadataDeserializer)
+        module.addDeserializer(InstructionBox::class.java, InstructionDeserializer)
         module.addDeserializer(TriggerId::class.java, TriggerIdDeserializer)
         module.addDeserializer(GrantBox::class.java, GrantBoxDeserializer)
         module.addDeserializer(EventFilterBox::class.java, EventFilterBoxDeserializer)
@@ -127,6 +134,7 @@ public val JSON_SERDE by lazy {
         module.addDeserializer(ExecuteTriggerEventFilter::class.java, ExecuteTriggerEventFilterDeserializer)
         module.addDeserializer(Action::class.java, ActionDeserializer)
         module.addDeserializer(Executable::class.java, ExecutableDeserializer)
+        module.addDeserializer(Json::class.java, IrohaJsonDeserializer)
         module.addDeserializer(IpfsPath::class.java, IpfsPathDeserializer)
         module.addDeserializer(Repeats::class.java, RepeatsDeserializer)
         module.addDeserializer(Parameter::class.java, ParameterDeserializer)
@@ -139,12 +147,16 @@ public val JSON_SERDE by lazy {
         module.addDeserializer(TimeEventFilter::class.java, TimeEventFilterDeserializer)
         module.addDeserializer(NumericSpec::class.java, NumericSpecDeserializer)
         module.addDeserializer(Numeric::class.java, NumericDeserializer)
+        module.addDeserializer(Permission::class.java, PermissionDeserializer)
         module.addDeserializer(BurnBox::class.java, BurnBoxDeserializer)
+        module.addDeserializer(NonZeroOfu64::class.java, NonZeroOfu64Deserializer)
+        module.addDeserializer(NewRole::class.java, NewRoleDeserializer)
 
         module.addKeyDeserializer(AssetDefinitionId::class.java, AssetDefinitionIdKeyDeserializer)
         module.addKeyDeserializer(AccountId::class.java, AccountIdKeyDeserializer)
         module.addKeyDeserializer(AssetId::class.java, AssetIdKeyDeserializer)
         module.addKeyDeserializer(DomainId::class.java, DomainIdKeyDeserializer)
+        module.addKeyDeserializer(CustomParameterId::class.java, CustomParameterIdKeyDeserializer)
 
         // serializers
         module.addSerializer(Metadata::class.java, MetadataSerializer)
@@ -182,9 +194,8 @@ public val JSON_SERDE by lazy {
         module.addSerializer(Json::class.java, IrohaJsonSerializer)
 
         mapper.registerModule(module)
+        mapper.registerModule(KotlinModule.Builder().build())
         mapper.propertyNamingStrategy = PropertyNamingStrategies.SNAKE_CASE
-        // mapper.configure(DeserializationFeature.FAIL_ON_MISSING_CREATOR_PROPERTIES, false)
-        // mapper.registerModule(KotlinModule.Builder().build())
         mapper.enable(SerializationFeature.INDENT_OUTPUT)
     }
 }
@@ -238,6 +249,16 @@ object GrantBoxDeserializer : JsonDeserializer<GrantBox>() {
     }
 }
 
+object AssetValueDeserializer : JsonDeserializer<AssetValue>() {
+    override fun deserialize(p: JsonParser, ctxt: DeserializationContext): AssetValue {
+        val node = p.readValueAsTree<JsonNode>().fields().next()
+        return when (node.key) {
+            "Store" -> AssetValue.Store(Metadata(mapOf()))
+            else -> throw DeserializationException("AssetValue ${node.key} not found")
+        }
+    }
+}
+
 /**
  * Deserializer for [IdBox]
  */
@@ -262,7 +283,7 @@ object RegisterBoxDeserializer : JsonDeserializer<RegisterBox>() {
         "AssetDefinition" -> NewAssetDefinition::class.java
         "Asset" -> Asset::class.java
         "Trigger" -> Trigger::class.java
-        "Role" -> Role::class.java
+        "Role" -> NewRole::class.java
         else -> throw DeserializationException("Unknown string type: $this")
     }
 
@@ -368,7 +389,7 @@ object TransferBoxDeserializer : JsonDeserializer<TransferBox>() {
         is TransferOfAccountAndDomainIdAndAccount -> TransferBox.Domain(arg)
         is AssetTransferBox -> TransferBox.Asset(arg)
         is TransferOfAccountAndAssetDefinitionIdAndAccount -> TransferBox.AssetDefinition(arg)
-        else -> throw DeserializationException("SetKeyValue box `$arg` not found")
+        else -> throw DeserializationException("Transfer box `$arg` not found")
     }
 }
 
@@ -400,6 +421,24 @@ object SetKeyValueBoxDeserializer : JsonDeserializer<SetKeyValueBox>() {
 }
 
 /**
+ * Deserializer for [Metadata]
+ */
+object MetadataDeserializer : JsonDeserializer<Metadata>() {
+    override fun deserialize(p: JsonParser, ctxt: DeserializationContext): Metadata = deserializeMetadata(p, JSON_SERDE)
+
+    private fun deserializeMetadata(p: JsonParser, mapper: ObjectMapper): Metadata {
+        val nodeMetadata = p.readValueAsTree<JsonNode>().fields()
+        if (!nodeMetadata.hasNext()) {
+            return Metadata(mapOf())
+        }
+        val node = nodeMetadata.next()
+        val key = node.key.asName()
+        val value = node.value.toString()
+        return Metadata(mapOf(Pair(key, Json(value))))
+    }
+}
+
+/**
  * Deserializer for [AssetType]
  */
 object AssetTypeDeserializer : JsonDeserializer<AssetType>() {
@@ -423,6 +462,38 @@ object NumericSpecDeserializer : JsonDeserializer<NumericSpec>() {
  */
 object NumericDeserializer : JsonDeserializer<Numeric>() {
     override fun deserialize(p: JsonParser, ctxt: DeserializationContext): Numeric = p.readValueAs(String::class.java).asNumeric()
+}
+
+/**
+ * Deserializer for [Permission]
+ */
+object PermissionDeserializer : JsonDeserializer<Permission>() {
+    override fun deserialize(p: JsonParser, ctxt: DeserializationContext): Permission {
+        val node = p.readValueAsTree<ObjectNode>()
+        var payloadValue = node.get("payload").toString()
+        when (payloadValue.isNullOrEmpty()) {
+            true -> payloadValue = "null"
+            else -> {}
+        }
+        return Permission(node.get("name").asText(), Json(payloadValue))
+    }
+}
+
+/**
+ * Deserializer for [NewRole]
+ */
+object NewRoleDeserializer : JsonDeserializer<NewRole>() {
+    override fun deserialize(p: JsonParser, ctxt: DeserializationContext): NewRole {
+        val node = p.readValueAsTree<JsonNode>()
+        val roleId = JSON_SERDE.convertValue(node["id"], RoleId::class.java)
+        val permissions = JSON_SERDE.convertValue(
+            node["permissions"],
+            object : TypeReference<List<Permission>>() {},
+        )
+        val grantTo = JSON_SERDE.convertValue(node["grant_to"], AccountId::class.java)
+
+        return NewRole(Role(roleId, permissions), grantTo)
+    }
 }
 
 /**
@@ -772,10 +843,14 @@ object DomainIdKeyDeserializer : KeyDeserializer() {
     override fun deserializeKey(key: String, ctxt: DeserializationContext?): DomainId? = JSON_SERDE.readValue(key, DomainId::class.java)
 }
 
+object CustomParameterIdKeyDeserializer : KeyDeserializer() {
+    override fun deserializeKey(key: String, ctxt: DeserializationContext?): CustomParameterId? =
+        JSON_SERDE.readValue(key, CustomParameterId::class.java)
+}
 // ==================================================
 
 /**
- * Serializer for [RawGenesisTransaction]
+ * Serializer for [ChainId]
  */
 object ChainIdSerializer : JsonSerializer<ChainId>() {
     override fun serialize(
@@ -932,27 +1007,6 @@ object ExecutorSerializer : JsonSerializer<Executor>() {
 }
 
 /**
- * Serializer for [InstructionBox]
- */
-object InstructionBoxSerializer : JsonSerializer<InstructionBox>() {
-    override fun serialize(
-        value: InstructionBox,
-        gen: JsonGenerator,
-        serializers: SerializerProvider,
-    ) {
-        when (value) {
-            is InstructionBox.Register -> value.serializeBox<RegisterBox>(gen)
-            is InstructionBox.SetKeyValue -> value.serializeBox<SetKeyValueBox>(gen)
-            is InstructionBox.Mint -> value.serializeBox<MintBox>(gen)
-            is InstructionBox.Burn -> value.serializeBox<BurnBox>(gen)
-            is InstructionBox.Transfer -> value.serializeBox<TransferBox>(gen)
-            is InstructionBox.Grant -> value.serializeBox<GrantBox>(gen)
-            else -> throw IrohaSdkException("Unsupported type ${this::class}")
-        }
-    }
-}
-
-/**
  * Serializer for [RegisterOfDomain]
  */
 object RegisterOfDomainSerializer : JsonSerializer<RegisterOfDomain>() {
@@ -1074,6 +1128,24 @@ object AssetTransferBoxSerializer : JsonSerializer<AssetTransferBox>() {
             is AssetTransferBox.Store -> gen.writeObject(value.transferOfAssetAndMetadataAndAccount)
         }
     }
+}
+
+/**
+ * Deserializer for [NonZeroOfu64]
+ */
+object IrohaJsonDeserializer : JsonDeserializer<Json>() {
+    override fun deserialize(p: JsonParser, ctxt: DeserializationContext): Json {
+        val node = p.readValueAsTree<JsonNode>()
+        return Json(node.toString())
+    }
+}
+
+/**
+ * Deserializer for [NonZeroOfu64]
+ */
+object NonZeroOfu64Deserializer : JsonDeserializer<NonZeroOfu64>() {
+    override fun deserialize(p: JsonParser, ctxt: DeserializationContext): NonZeroOfu64 =
+        NonZeroOfu64(p.readValueAs(BigInteger::class.java))
 }
 
 /**

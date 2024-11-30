@@ -348,3 +348,8 @@ fun RevokeOfRoleIdAndAccount.asInstructionBoxExt() = InstructionBox.Revoke(Revok
 fun RevokeOfPermissionAndRole.asInstructionBoxExt() = InstructionBox.Revoke(RevokeBox.RolePermission(this))
 
 fun ExecuteTrigger.asInstructionBoxExt() = InstructionBox.ExecuteTrigger(this)
+
+fun Upgrade.asInstructionBoxExt() = InstructionBox.Upgrade(this)
+fun SetParameter.asInstructionBoxExt() = InstructionBox.SetParameter(this)
+
+fun <I : ModelCustomInstruction> I.asInstructionBoxExt() = InstructionBox.Custom(CustomInstruction(Json.writeValue(this)))

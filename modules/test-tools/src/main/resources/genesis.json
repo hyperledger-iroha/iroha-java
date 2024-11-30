@@ -29,6 +29,7 @@
       "Register": {
         "Domain": {
           "id": "wonderland",
+          "logo":null,
           "metadata": {
             "key": "value"
           }
@@ -127,6 +128,7 @@
           "id": "rose#wonderland",
           "type": "Numeric",
           "mintable": "Infinitely",
+          "logo":null,
           "metadata": {}
         }
       }
@@ -135,6 +137,7 @@
       "Register": {
         "Domain": {
           "id": "garden_of_live_flowers",
+          "logo":null,
           "metadata": {}
         }
       }
@@ -153,6 +156,7 @@
           "id": "cabbage#garden_of_live_flowers",
           "type": "Numeric",
           "mintable": "Infinitely",
+          "logo":null,
           "metadata": {}
         }
       }

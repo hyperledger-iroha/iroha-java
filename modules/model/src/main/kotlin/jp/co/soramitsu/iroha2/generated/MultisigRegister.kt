@@ -3,6 +3,7 @@
 //
 package jp.co.soramitsu.iroha2.generated
 
+import jp.co.soramitsu.iroha2.ModelCustomInstruction
 import jp.co.soramitsu.iroha2.codec.ScaleCodecReader
 import jp.co.soramitsu.iroha2.codec.ScaleCodecWriter
 import jp.co.soramitsu.iroha2.codec.ScaleReader
@@ -15,7 +16,7 @@ import kotlin.Unit
  *
  * Generated from 'MultisigRegister' regular structure
  */
-public data class MultisigRegister(public val account: AccountId, public val spec: MultisigSpec) {
+public data class MultisigRegister(public val account: AccountId, public val spec: MultisigSpec) : ModelCustomInstruction {
     public companion object : ScaleReader<MultisigRegister>, ScaleWriter<MultisigRegister> {
         override fun read(reader: ScaleCodecReader): MultisigRegister = try {
             MultisigRegister(

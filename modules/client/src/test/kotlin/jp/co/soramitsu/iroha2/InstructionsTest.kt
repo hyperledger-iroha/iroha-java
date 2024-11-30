@@ -328,8 +328,8 @@ class InstructionsTest : IrohaTest<Iroha2Client>() {
     @SdkTestId("register_asset_definition_with_store_value_type")
     fun `store asset`(): Unit = runBlocking {
         val pair1 = "key1".asName() to "bar"
-        val pair2 = "key2".asName() to "true"
-        val pair3 = "key3".asName() to "12345"
+        val pair2 = "key2".asName() to true
+        val pair3 = "key3".asName() to 12345
 
         client.submit(
             Register.assetDefinition(DEFAULT_ASSET_DEFINITION_ID, AssetType.Store()),

@@ -463,8 +463,10 @@ class QueriesTest : IrohaTest<Iroha2Client>() {
     @SdkTestId("find_permission_tokens_by_account_id")
     fun `find permission tokens by account id`(): Unit = runBlocking {
         val result = client.submit(QueryBuilder.findPermissionsByAccountId(ALICE_ACCOUNT_ID)).filter {
-            CanMintAssetWithDefinition("xor#wonderland".asAssetDefinitionId()) == it.payload.readValue() ||
-                CanBurnAssetWithDefinition("xor#wonderland".asAssetDefinitionId()) == it.payload.readValue()
+            it.name == CanMintAssetWithDefinition::class.simpleName &&
+                CanMintAssetWithDefinition("xor#wonderland".asAssetDefinitionId()) == it.payload.readValue<CanMintAssetWithDefinition>() ||
+                it.name == CanBurnAssetWithDefinition::class.simpleName &&
+                CanBurnAssetWithDefinition("xor#wonderland".asAssetDefinitionId()) == it.payload.readValue<CanBurnAssetWithDefinition>()
         }
 
         assertEquals(2, result.size)

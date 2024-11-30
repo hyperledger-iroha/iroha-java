@@ -47,7 +47,7 @@ open class Query(
                 ),
             ),
         )
-        client.submit(QueryBuilder.findAssets(byAccountIdFilter).signAs(admin, keyPair))
+        return client.submit(QueryBuilder.findAssets(byAccountIdFilter).signAs(admin, keyPair))
             .let { query ->
                 query.find { it.id.definition == assetDefinitionId }?.value
             }.let { value ->

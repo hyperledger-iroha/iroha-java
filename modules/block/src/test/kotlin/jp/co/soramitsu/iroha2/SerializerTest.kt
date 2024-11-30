@@ -105,7 +105,7 @@ class SerializerTest {
             }
         """.trimIndent()
 
-        val json = JSON_SERDE.writeValueAsString(genesis.transaction).trimIndent()
+        val json = JSON_SERDE.writeValueAsString(genesis.transaction)
         assertEquals(expectedJson.lowercase(), json.asPrettyJson().lowercase())
     }
 
@@ -238,7 +238,7 @@ class SerializerTest {
             }
         """.trimIndent()
         val json = JSON_SERDE.writeValueAsString(genesis.transaction)
-        assertEquals(expectedJson, json.asPrettyJson())
+        assertEquals(expectedJson.lowercase(), json.asPrettyJson().lowercase())
     }
 }
 

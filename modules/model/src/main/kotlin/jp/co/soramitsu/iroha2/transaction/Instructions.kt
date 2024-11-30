@@ -1,6 +1,8 @@
 package jp.co.soramitsu.iroha2.transaction
 
+import jp.co.soramitsu.iroha2.ModelParameter
 import jp.co.soramitsu.iroha2.ModelPermission
+import jp.co.soramitsu.iroha2.TriggerArgs
 import jp.co.soramitsu.iroha2.asNumeric
 import jp.co.soramitsu.iroha2.generated.AccountId
 import jp.co.soramitsu.iroha2.generated.Action
@@ -9,15 +11,20 @@ import jp.co.soramitsu.iroha2.generated.AssetDefinitionId
 import jp.co.soramitsu.iroha2.generated.AssetId
 import jp.co.soramitsu.iroha2.generated.AssetType
 import jp.co.soramitsu.iroha2.generated.AssetValue
+import jp.co.soramitsu.iroha2.generated.BlockParameter
 import jp.co.soramitsu.iroha2.generated.BurnOfNumericAndAsset
 import jp.co.soramitsu.iroha2.generated.BurnOfu32AndTrigger
+import jp.co.soramitsu.iroha2.generated.CustomParameter
+import jp.co.soramitsu.iroha2.generated.CustomParameterId
 import jp.co.soramitsu.iroha2.generated.DomainId
 import jp.co.soramitsu.iroha2.generated.EventFilterBox
 import jp.co.soramitsu.iroha2.generated.Executable
 import jp.co.soramitsu.iroha2.generated.ExecuteTrigger
+import jp.co.soramitsu.iroha2.generated.Executor
 import jp.co.soramitsu.iroha2.generated.GrantOfPermissionAndAccount
 import jp.co.soramitsu.iroha2.generated.GrantOfPermissionAndRole
 import jp.co.soramitsu.iroha2.generated.GrantOfRoleIdAndAccount
+import jp.co.soramitsu.iroha2.generated.HashOf
 import jp.co.soramitsu.iroha2.generated.InstructionBox
 import jp.co.soramitsu.iroha2.generated.IpfsPath
 import jp.co.soramitsu.iroha2.generated.Json
@@ -25,11 +32,17 @@ import jp.co.soramitsu.iroha2.generated.Metadata
 import jp.co.soramitsu.iroha2.generated.MintOfNumericAndAsset
 import jp.co.soramitsu.iroha2.generated.MintOfu32AndTrigger
 import jp.co.soramitsu.iroha2.generated.Mintable
+import jp.co.soramitsu.iroha2.generated.MultisigApprove
+import jp.co.soramitsu.iroha2.generated.MultisigPropose
+import jp.co.soramitsu.iroha2.generated.MultisigRegister
+import jp.co.soramitsu.iroha2.generated.MultisigSpec
 import jp.co.soramitsu.iroha2.generated.Name
 import jp.co.soramitsu.iroha2.generated.NewAccount
 import jp.co.soramitsu.iroha2.generated.NewAssetDefinition
 import jp.co.soramitsu.iroha2.generated.NewDomain
 import jp.co.soramitsu.iroha2.generated.NewRole
+import jp.co.soramitsu.iroha2.generated.NonZeroOfu64
+import jp.co.soramitsu.iroha2.generated.Parameter
 import jp.co.soramitsu.iroha2.generated.PeerId
 import jp.co.soramitsu.iroha2.generated.RegisterOfAccount
 import jp.co.soramitsu.iroha2.generated.RegisterOfAsset
@@ -54,6 +67,10 @@ import jp.co.soramitsu.iroha2.generated.SetKeyValueOfAsset
 import jp.co.soramitsu.iroha2.generated.SetKeyValueOfAssetDefinition
 import jp.co.soramitsu.iroha2.generated.SetKeyValueOfDomain
 import jp.co.soramitsu.iroha2.generated.SetKeyValueOfTrigger
+import jp.co.soramitsu.iroha2.generated.SetParameter
+import jp.co.soramitsu.iroha2.generated.SmartContractParameter
+import jp.co.soramitsu.iroha2.generated.SumeragiParameter
+import jp.co.soramitsu.iroha2.generated.TransactionParameter
 import jp.co.soramitsu.iroha2.generated.TransferOfAccountAndAssetDefinitionIdAndAccount
 import jp.co.soramitsu.iroha2.generated.TransferOfAccountAndDomainIdAndAccount
 import jp.co.soramitsu.iroha2.generated.TransferOfAssetAndMetadataAndAccount
@@ -67,6 +84,7 @@ import jp.co.soramitsu.iroha2.generated.UnregisterOfDomain
 import jp.co.soramitsu.iroha2.generated.UnregisterOfPeer
 import jp.co.soramitsu.iroha2.generated.UnregisterOfRole
 import jp.co.soramitsu.iroha2.generated.UnregisterOfTrigger
+import jp.co.soramitsu.iroha2.generated.Upgrade
 import jp.co.soramitsu.iroha2.generated.WasmSmartContract
 import jp.co.soramitsu.iroha2.writeValue
 import java.math.BigDecimal
@@ -390,6 +408,36 @@ class Execute {
         /**
          * Execute a pre-registered trigger
          */
-        fun trigger(triggerId: TriggerId, args: Json = Json.writeValue(null)) = ExecuteTrigger(triggerId, args)
+        fun <A : TriggerArgs> trigger(triggerId: TriggerId, args: A? = null) = ExecuteTrigger(triggerId, Json.writeValue(args))
     }
+}
+
+class Upgrade {
+    companion object {
+        /**
+         * Upgrade executor
+         */
+        fun executor(executor: Executor) = Upgrade(executor)
+    }
+}
+
+class SetParameter {
+    fun sumeragi(parameter: SumeragiParameter) = SetParameter(Parameter.Sumeragi(parameter))
+    fun block(parameter: BlockParameter) = SetParameter(Parameter.Block(parameter))
+    fun transaction(parameter: TransactionParameter) = SetParameter(Parameter.Transaction(parameter))
+    fun smartContract(parameter: SmartContractParameter) = SetParameter(Parameter.SmartContract(parameter))
+    fun executor(parameter: SmartContractParameter) = SetParameter(Parameter.Executor(parameter))
+    fun <P : ModelParameter> custom(id: CustomParameterId, value: P) =
+        SetParameter(Parameter.Custom(CustomParameter(id, Json.writeValue(value))))
+}
+
+class Multisig {
+    fun register(accountId: AccountId, spec: MultisigSpec) = MultisigRegister(accountId, spec)
+    fun propose(
+        account: AccountId,
+        instructions: List<Instruction>,
+        transactionTtlMs: NonZeroOfu64? = null,
+    ) = MultisigPropose(account, instructions.map { it.asInstructionBox() }, transactionTtlMs)
+
+    fun approve(account: AccountId, instructionsHash: HashOf<List<InstructionBox>>) = MultisigApprove(account, instructionsHash)
 }

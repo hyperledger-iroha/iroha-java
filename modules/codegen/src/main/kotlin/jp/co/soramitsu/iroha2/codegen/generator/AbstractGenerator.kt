@@ -13,6 +13,7 @@ import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.TypeVariableName
 import com.squareup.kotlinpoet.WildcardTypeName
+import jp.co.soramitsu.iroha2.ModelCustomInstruction
 import jp.co.soramitsu.iroha2.ModelPermission
 import jp.co.soramitsu.iroha2.codegen.blueprint.Blueprint
 import jp.co.soramitsu.iroha2.generated.InstructionBox
@@ -124,25 +125,19 @@ abstract class AbstractGenerator<T : Blueprint<*>> {
     }
 
     open fun implFunctions(blueprint: T, clazz: TypeSpec.Builder) {
-        if (blueprint.className.startsWith("RegisterOf")) {
-            clazz.addFunction(asInstructionBoxFun())
-        } else if (blueprint.className.startsWith("UnregisterOf")) {
-            clazz.addFunction(asInstructionBoxFun())
-        } else if (blueprint.className.startsWith("SetKeyValueOf")) {
-            clazz.addFunction(asInstructionBoxFun())
-        } else if (blueprint.className.startsWith("RemoveKeyValueOf")) {
-            clazz.addFunction(asInstructionBoxFun())
-        } else if (blueprint.className.startsWith("MintOf")) {
-            clazz.addFunction(asInstructionBoxFun())
-        } else if (blueprint.className.startsWith("BurnOf")) {
-            clazz.addFunction(asInstructionBoxFun())
-        } else if (blueprint.className.startsWith("TransferOf")) {
-            clazz.addFunction(asInstructionBoxFun())
-        } else if (blueprint.className.startsWith("GrantOf")) {
-            clazz.addFunction(asInstructionBoxFun())
-        } else if (blueprint.className.startsWith("RevokeOf")) {
-            clazz.addFunction(asInstructionBoxFun())
-        } else if (blueprint.className == "ExecuteTrigger") {
+        if (blueprint.className.startsWith("RegisterOf") ||
+            blueprint.className.startsWith("UnregisterOf") ||
+            blueprint.className.startsWith("SetKeyValueOf") ||
+            blueprint.className.startsWith("RemoveKeyValueOf") ||
+            blueprint.className.startsWith("MintOf") ||
+            blueprint.className.startsWith("BurnOf") ||
+            blueprint.className.startsWith("TransferOf") ||
+            blueprint.className.startsWith("GrantOf") ||
+            blueprint.className.startsWith("RevokeOf") ||
+            blueprint.className == "Upgrade" ||
+            blueprint.className == "SetParameter" ||
+            blueprint.className == "ExecuteTrigger"
+        ) {
             clazz.addFunction(asInstructionBoxFun())
         }
     }
@@ -158,25 +153,25 @@ abstract class AbstractGenerator<T : Blueprint<*>> {
     open fun implSuperClasses(blueprint: T, clazz: TypeSpec.Builder) {
         if (blueprint.className.startsWith("Can")) {
             clazz.addSuperinterface(ModelPermission::class)
-        } else if (blueprint.className.startsWith("RegisterOf")) {
-            clazz.addSuperinterface(Instruction::class)
-        } else if (blueprint.className.startsWith("UnregisterOf")) {
-            clazz.addSuperinterface(Instruction::class)
-        } else if (blueprint.className.startsWith("SetKeyValueOf")) {
-            clazz.addSuperinterface(Instruction::class)
-        } else if (blueprint.className.startsWith("RemoveKeyValueOf")) {
-            clazz.addSuperinterface(Instruction::class)
-        } else if (blueprint.className.startsWith("MintOf")) {
-            clazz.addSuperinterface(Instruction::class)
-        } else if (blueprint.className.startsWith("BurnOf")) {
-            clazz.addSuperinterface(Instruction::class)
-        } else if (blueprint.className.startsWith("TransferOf")) {
-            clazz.addSuperinterface(Instruction::class)
-        } else if (blueprint.className.startsWith("GrantOf")) {
-            clazz.addSuperinterface(Instruction::class)
-        } else if (blueprint.className.startsWith("RevokeOf")) {
-            clazz.addSuperinterface(Instruction::class)
-        } else if (blueprint.className == "ExecuteTrigger") {
+        } else if (
+            blueprint.className == "MultisigRegister" ||
+            blueprint.className == "MultisigPropose" ||
+            blueprint.className == "MultisigApprove"
+        ) {
+            clazz.addSuperinterface(ModelCustomInstruction::class)
+        } else if (blueprint.className.startsWith("RegisterOf") ||
+            blueprint.className.startsWith("UnregisterOf") ||
+            blueprint.className.startsWith("SetKeyValueOf") ||
+            blueprint.className.startsWith("RemoveKeyValueOf") ||
+            blueprint.className.startsWith("MintOf") ||
+            blueprint.className.startsWith("BurnOf") ||
+            blueprint.className.startsWith("TransferOf") ||
+            blueprint.className.startsWith("GrantOf") ||
+            blueprint.className.startsWith("RevokeOf") ||
+            blueprint.className == "Upgrade" ||
+            blueprint.className == "SetParameter" ||
+            blueprint.className == "ExecuteTrigger"
+        ) {
             clazz.addSuperinterface(Instruction::class)
         }
     }
