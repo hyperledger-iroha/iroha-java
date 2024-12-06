@@ -1,7 +1,7 @@
 [package]
 name = "iroha_java_executor"
 edition = "2021"
-version = "2.0.0-pre-rc.19"
+version = "2.0.0-rc.1.0"
 # TODO: teams are being deprecated update the authors URL
 authors = ["Iroha 2 team <https://github.com/orgs/soramitsu/teams/iroha2>"]
 
@@ -22,7 +22,7 @@ opt-level = "z"     # Optimize for size vs speed with "s"/"z"(removes vectorizat
 codegen-units = 1   # Further reduces binary size but increases compilation time
 
 [dependencies]
-iroha_executor = { git = "https://github.com/hyperledger/iroha/", branch = "main", features = ["debug"] }
+iroha_executor = { git = "https://github.com/hyperledger/iroha/", branch = "2.0.0-rc.1", features = ["debug"] }
 
 dlmalloc = { version = "0.2.6", features = ["global"] }
 panic-halt = "0.2.0"
