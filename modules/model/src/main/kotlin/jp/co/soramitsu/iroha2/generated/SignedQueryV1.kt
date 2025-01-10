@@ -16,22 +16,22 @@ import kotlin.Unit
  * Generated from 'SignedQueryV1' regular structure
  */
 public data class SignedQueryV1(
-    public val signature: SignatureOf<QueryPayload>,
-    public val payload: QueryPayload,
+    public val signature: QuerySignature,
+    public val payload: ClientQueryPayload,
 ) {
     public companion object : ScaleReader<SignedQueryV1>, ScaleWriter<SignedQueryV1> {
         override fun read(reader: ScaleCodecReader): SignedQueryV1 = try {
             SignedQueryV1(
-                SignatureOf.read(reader) as SignatureOf<QueryPayload>,
-                QueryPayload.read(reader),
+                QuerySignature.read(reader),
+                ClientQueryPayload.read(reader),
             )
         } catch (ex: Exception) {
             throw wrapException(ex)
         }
 
         override fun write(writer: ScaleCodecWriter, instance: SignedQueryV1): Unit = try {
-            SignatureOf.write(writer, instance.signature)
-            QueryPayload.write(writer, instance.payload)
+            QuerySignature.write(writer, instance.signature)
+            ClientQueryPayload.write(writer, instance.payload)
         } catch (ex: Exception) {
             throw wrapException(ex)
         }

@@ -16,7 +16,7 @@ import kotlin.Unit
  * Generated from 'RepetitionError' regular structure
  */
 public data class RepetitionError(
-    public val instructionType: InstructionType,
+    public val instruction: InstructionType,
     public val id: IdBox,
 ) {
     public companion object : ScaleReader<RepetitionError>, ScaleWriter<RepetitionError> {
@@ -30,7 +30,7 @@ public data class RepetitionError(
         }
 
         override fun write(writer: ScaleCodecWriter, instance: RepetitionError): Unit = try {
-            InstructionType.write(writer, instance.instructionType)
+            InstructionType.write(writer, instance.instruction)
             IdBox.write(writer, instance.id)
         } catch (ex: Exception) {
             throw wrapException(ex)

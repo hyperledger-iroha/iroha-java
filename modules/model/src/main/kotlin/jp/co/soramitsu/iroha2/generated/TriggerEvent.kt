@@ -151,6 +151,70 @@ public sealed class TriggerEvent : ModelEnum {
         }
     }
 
+    /**
+     * 'MetadataInserted' variant
+     */
+    public data class MetadataInserted(
+        public val metadataChangedOfTriggerId: MetadataChangedOfTriggerId,
+    ) : TriggerEvent() {
+        override fun discriminant(): Int = DISCRIMINANT
+
+        public companion object :
+            ScaleReader<jp.co.soramitsu.iroha2.generated.TriggerEvent.MetadataInserted>,
+            ScaleWriter<jp.co.soramitsu.iroha2.generated.TriggerEvent.MetadataInserted> {
+            public const val DISCRIMINANT: Int = 4
+
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.TriggerEvent.MetadataInserted = try {
+                MetadataInserted(
+                    MetadataChangedOfTriggerId.read(reader),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
+
+            override fun write(
+                writer: ScaleCodecWriter,
+                instance: jp.co.soramitsu.iroha2.generated.TriggerEvent.MetadataInserted,
+            ): Unit = try {
+                MetadataChangedOfTriggerId.write(writer, instance.metadataChangedOfTriggerId)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
+        }
+    }
+
+    /**
+     * 'MetadataRemoved' variant
+     */
+    public data class MetadataRemoved(
+        public val metadataChangedOfTriggerId: MetadataChangedOfTriggerId,
+    ) : TriggerEvent() {
+        override fun discriminant(): Int = DISCRIMINANT
+
+        public companion object :
+            ScaleReader<jp.co.soramitsu.iroha2.generated.TriggerEvent.MetadataRemoved>,
+            ScaleWriter<jp.co.soramitsu.iroha2.generated.TriggerEvent.MetadataRemoved> {
+            public const val DISCRIMINANT: Int = 5
+
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.TriggerEvent.MetadataRemoved = try {
+                MetadataRemoved(
+                    MetadataChangedOfTriggerId.read(reader),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
+
+            override fun write(
+                writer: ScaleCodecWriter,
+                instance: jp.co.soramitsu.iroha2.generated.TriggerEvent.MetadataRemoved,
+            ): Unit = try {
+                MetadataChangedOfTriggerId.write(writer, instance.metadataChangedOfTriggerId)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
+        }
+    }
+
     public companion object : ScaleReader<TriggerEvent>, ScaleWriter<TriggerEvent> {
         override fun read(reader: ScaleCodecReader): TriggerEvent = when (
             val discriminant =
@@ -160,6 +224,8 @@ public sealed class TriggerEvent : ModelEnum {
             1 -> Deleted.read(reader)
             2 -> Extended.read(reader)
             3 -> Shortened.read(reader)
+            4 -> MetadataInserted.read(reader)
+            5 -> MetadataRemoved.read(reader)
             else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
 
         override fun write(writer: ScaleCodecWriter, instance: TriggerEvent) {
@@ -169,6 +235,8 @@ public sealed class TriggerEvent : ModelEnum {
                 1 -> Deleted.write(writer, instance as Deleted)
                 2 -> Extended.write(writer, instance as Extended)
                 3 -> Shortened.write(writer, instance as Shortened)
+                4 -> MetadataInserted.write(writer, instance as MetadataInserted)
+                5 -> MetadataRemoved.write(writer, instance as MetadataRemoved)
                 else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
         }
     }

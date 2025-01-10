@@ -76,6 +76,7 @@ class ScaleCodecWriter(private val out: OutputStream) : Closeable {
 
     inline fun <reified T> writeNullable(value: T?) {
         when (value) {
+            is BigInteger -> BOOL.write(this, true).also { writeUint64(value) }
             is Long -> BOOL.write(this, true).also { writeUint32(value) }
             is Int -> BOOL.write(this, true).also { writeUint16(value) }
             is String -> BOOL.write(this, true).also { writeAsList(value.toByteArray(Charsets.UTF_8)) }

@@ -1,11 +1,14 @@
 package jp.co.soramitsu.iroha2;
 
+import java.security.*;
 import java.time.*;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import static jp.co.soramitsu.iroha2.CryptoUtils.generateKeyPair;
+import static jp.co.soramitsu.iroha2.ExtensionsKt.toIrohaPublicKey;
 import jp.co.soramitsu.iroha2.client.Iroha2AsyncClient;
 import jp.co.soramitsu.iroha2.client.blockstream.*;
 import jp.co.soramitsu.iroha2.generated.*;
@@ -29,21 +32,10 @@ import static jp.co.soramitsu.iroha2.testengine.TestConstsKt.ALICE_KEYPAIR;
 import static jp.co.soramitsu.iroha2.testengine.TestConstsKt.DEFAULT_ASSET_DEFINITION_ID;
 import static jp.co.soramitsu.iroha2.testengine.TestConstsKt.DEFAULT_ASSET_ID;
 import static jp.co.soramitsu.iroha2.testengine.TestConstsKt.DEFAULT_DOMAIN_ID;
-import org.junit.jupiter.api.parallel.ResourceLock;
+import org.junit.jupiter.api.parallel.*;
 import static org.testcontainers.shaded.org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 
 public class JavaTest extends IrohaTest<Iroha2AsyncClient> {
-
-    @Test
-    @WithIroha(sources = DefaultGenesis.class)
-    public void instructionFailed() {
-        final SignedTransaction transaction = TransactionBuilder.Companion.builder()
-            .account(ALICE_ACCOUNT_ID)
-            .fail("FAIL MESSAGE")
-            .buildSigned(ALICE_KEYPAIR);
-        final CompletableFuture<byte[]> future = client.sendTransactionAsync(transaction);
-        Assertions.assertThrows(ExecutionException.class, () -> future.get(getTxTimeout().getSeconds(), TimeUnit.SECONDS));
-    }
 
     @Test
     @WithIroha(sources = DefaultGenesis.class)
@@ -66,10 +58,11 @@ public class JavaTest extends IrohaTest<Iroha2AsyncClient> {
     @Test
     @WithIroha(sources = DefaultGenesis.class)
     public void registerAccount() throws Exception {
-        final AccountId accountId = new AccountId(DEFAULT_DOMAIN_ID, new Name("new_account"));
+        final KeyPair keyPair = generateKeyPair();
+        final AccountId accountId = new AccountId(DEFAULT_DOMAIN_ID, toIrohaPublicKey(keyPair.getPublic()));
         final SignedTransaction transaction = TransactionBuilder.Companion.builder()
             .account(ALICE_ACCOUNT_ID)
-            .registerAccount(accountId, new ArrayList<>())
+            .registerAccount(accountId, new Metadata(Collections.emptyMap()))
             .buildSigned(ALICE_KEYPAIR);
         client.sendTransactionAsync(transaction).get(getTxTimeout().getSeconds(), TimeUnit.SECONDS);
 
@@ -86,7 +79,7 @@ public class JavaTest extends IrohaTest<Iroha2AsyncClient> {
     public void mintAsset() throws Exception {
         final SignedTransaction registerAssetTx = TransactionBuilder.Companion.builder()
             .account(ALICE_ACCOUNT_ID)
-            .registerAssetDefinition(DEFAULT_ASSET_DEFINITION_ID, new AssetValueType.Quantity())
+            .registerAssetDefinition(DEFAULT_ASSET_DEFINITION_ID, new AssetType.Numeric(new NumericSpec()))
             .buildSigned(ALICE_KEYPAIR);
         client.sendTransactionAsync(registerAssetTx).get(getTxTimeout().getSeconds(), TimeUnit.SECONDS);
 
@@ -96,57 +89,56 @@ public class JavaTest extends IrohaTest<Iroha2AsyncClient> {
             .buildSigned(ALICE_KEYPAIR);
         client.sendTransactionAsync(mintAssetTx).get(getTxTimeout().getSeconds(), TimeUnit.SECONDS);
 
-        final QueryAndExtractor<Account> query = QueryBuilder.findAccountById(ALICE_ACCOUNT_ID)
+        final QueryAndExtractor<List<Asset>> query = QueryBuilder.findAssetsByAccountId(ALICE_ACCOUNT_ID)
             .account(ALICE_ACCOUNT_ID)
             .buildSigned(ALICE_KEYPAIR);
-        final CompletableFuture<Account> future = client.sendQueryAsync(query);
-        final Account account = future.get(getTxTimeout().getSeconds(), TimeUnit.SECONDS);
-        final AssetValue value = account.getAssets().get(DEFAULT_ASSET_ID).getValue();
-        Assertions.assertEquals(5, ((AssetValue.Quantity) value).getU32());
+        final CompletableFuture<List<Asset>> future = client.sendQueryAsync(query);
+        final List<Asset> assets = future.get(getTxTimeout().getSeconds(), TimeUnit.SECONDS);
+        Assertions.assertEquals(5, ((AssetValue.Numeric) assets.stream().findFirst().get().getValue()).getNumeric().getMantissa().intValue());
     }
 
     @Test
     @WithIroha(sources = DefaultGenesis.class)
     public void updateKeyValue() throws Exception {
         final Name assetMetadataKey = new Name("asset_metadata_key");
-        final Value.String assetMetadataValue = new Value.String("some string value");
-        final Value.String assetMetadataValue2 = new Value.String("some string value 2");
-        final Metadata metadata = new Metadata(new HashMap<Name, Value>() {{
+        final String assetMetadataValue = "some string value";
+        final String assetMetadataValue2 = "some string value 2";
+        final Metadata metadata = new Metadata(new HashMap<Name, String>() {{
             put(assetMetadataKey, assetMetadataValue);
         }});
 
         final SignedTransaction registerAssetTx = TransactionBuilder.Companion.builder()
             .account(ALICE_ACCOUNT_ID)
-            .registerAssetDefinition(DEFAULT_ASSET_DEFINITION_ID, new AssetValueType.Store(), metadata)
+            .registerAssetDefinition(DEFAULT_ASSET_DEFINITION_ID, new AssetType.Store(), metadata, new Mintable.Infinitely())
             .buildSigned(ALICE_KEYPAIR);
         client.sendTransactionAsync(registerAssetTx).get(getTxTimeout().getSeconds(), TimeUnit.SECONDS);
 
-        final AssetId assetId = new AssetId(DEFAULT_ASSET_DEFINITION_ID, ALICE_ACCOUNT_ID);
+        final AssetId assetId = new AssetId(ALICE_ACCOUNT_ID, DEFAULT_ASSET_DEFINITION_ID);
         final SignedTransaction keyValueTx = TransactionBuilder.Companion.builder()
             .account(ALICE_ACCOUNT_ID)
             .setKeyValue(assetId, assetMetadataKey, assetMetadataValue2)
             .buildSigned(ALICE_KEYPAIR);
         client.sendTransactionAsync(keyValueTx).get(30, TimeUnit.SECONDS);
 
-        final QueryAndExtractor<Value> assetDefinitionValueQuery = QueryBuilder
+        final QueryAndExtractor<String> assetDefinitionValueQuery = QueryBuilder
             .findAssetKeyValueByIdAndKey(assetId, assetMetadataKey)
             .account(ALICE_ACCOUNT_ID)
             .buildSigned(ALICE_KEYPAIR);
-        final CompletableFuture<Value> future = client.sendQueryAsync(assetDefinitionValueQuery);
+        final CompletableFuture<String> future = client.sendQueryAsync(assetDefinitionValueQuery);
 
-        final Value value = future.get(30, TimeUnit.SECONDS);
-        Assertions.assertEquals(((Value.String) value).getString(), assetMetadataValue2.getString());
+        final String value = future.get(30, TimeUnit.SECONDS);
+        Assertions.assertEquals(value, assetMetadataValue2);
     }
 
     @Test
     @WithIroha(sources = DefaultGenesis.class)
     public void setKeyValue() throws Exception {
-        final Value.String assetValue = new Value.String("some string value");
+        final String assetValue = "some string value";
         final Name assetKey = new Name("asset_metadata_key");
 
         final SignedTransaction registerAssetTx = TransactionBuilder.Companion.builder()
             .account(ALICE_ACCOUNT_ID)
-            .registerAssetDefinition(DEFAULT_ASSET_DEFINITION_ID, new AssetValueType.Store())
+            .registerAssetDefinition(DEFAULT_ASSET_DEFINITION_ID, new AssetType.Store())
             .buildSigned(ALICE_KEYPAIR);
         client.sendTransactionAsync(registerAssetTx).get(getTxTimeout().getSeconds(), TimeUnit.SECONDS);
 
@@ -156,14 +148,14 @@ public class JavaTest extends IrohaTest<Iroha2AsyncClient> {
             .buildSigned(ALICE_KEYPAIR);
         client.sendTransactionAsync(keyValueTx).get(10, TimeUnit.SECONDS);
 
-        final QueryAndExtractor<Value> assetDefinitionValueQuery = QueryBuilder
+        final QueryAndExtractor<String> assetDefinitionValueQuery = QueryBuilder
             .findAssetDefinitionKeyValueByIdAndKey(DEFAULT_ASSET_DEFINITION_ID, assetKey)
             .account(ALICE_ACCOUNT_ID)
             .buildSigned(ALICE_KEYPAIR);
-        final CompletableFuture<Value> future = client.sendQueryAsync(assetDefinitionValueQuery);
+        final CompletableFuture<String> future = client.sendQueryAsync(assetDefinitionValueQuery);
 
-        final Value value = future.get(10, TimeUnit.SECONDS);
-        Assertions.assertEquals(((Value.String) value).getString(), assetValue.getString());
+        final String value = future.get(10, TimeUnit.SECONDS);
+        Assertions.assertEquals(value, assetValue);
     }
 
     @Test
@@ -182,7 +174,7 @@ public class JavaTest extends IrohaTest<Iroha2AsyncClient> {
         for (int i = 0; i <= count + 1; i++) {
             final SignedTransaction transaction = TransactionBuilder.Companion.builder()
                 .account(ALICE_ACCOUNT_ID)
-                .setKeyValue(ALICE_ACCOUNT_ID, new Name(randomAlphabetic(10)), new Value.String(randomAlphabetic(10)))
+                .setKeyValue(ALICE_ACCOUNT_ID, new Name(randomAlphabetic(10)), new String(randomAlphabetic(10)))
                 .buildSigned(ALICE_KEYPAIR);
             client.sendTransactionAsync(transaction);
         }

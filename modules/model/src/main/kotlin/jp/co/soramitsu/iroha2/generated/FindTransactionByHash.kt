@@ -16,19 +16,19 @@ import kotlin.Unit
  * Generated from 'FindTransactionByHash' regular structure
  */
 public data class FindTransactionByHash(
-    public val hash: EvaluatesTo<HashOf<SignedTransaction>>,
+    public val hash: HashOf<SignedTransaction>,
 ) {
     public companion object : ScaleReader<FindTransactionByHash>, ScaleWriter<FindTransactionByHash> {
         override fun read(reader: ScaleCodecReader): FindTransactionByHash = try {
             FindTransactionByHash(
-                EvaluatesTo.read(reader) as EvaluatesTo<HashOf<SignedTransaction>>,
+                HashOf.read(reader) as HashOf<SignedTransaction>,
             )
         } catch (ex: Exception) {
             throw wrapException(ex)
         }
 
         override fun write(writer: ScaleCodecWriter, instance: FindTransactionByHash): Unit = try {
-            EvaluatesTo.write(writer, instance.hash)
+            HashOf.write(writer, instance.hash)
         } catch (ex: Exception) {
             throw wrapException(ex)
         }

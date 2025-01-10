@@ -1,17 +1,17 @@
 package jp.co.soramitsu.iroha2
 
-import jp.co.soramitsu.iroha2.generated.ExecutorMode
-import jp.co.soramitsu.iroha2.generated.Expression
-import jp.co.soramitsu.iroha2.generated.IdentifiableBox
-import jp.co.soramitsu.iroha2.generated.InstructionExpr
+import jp.co.soramitsu.iroha2.generated.ChainId
+import jp.co.soramitsu.iroha2.generated.InstructionBox
 import jp.co.soramitsu.iroha2.generated.Metadata
 import jp.co.soramitsu.iroha2.generated.NewAccount
 import jp.co.soramitsu.iroha2.generated.NewAssetDefinition
 import jp.co.soramitsu.iroha2.generated.NewDomain
-import jp.co.soramitsu.iroha2.generated.RawGenesisBlock
-import jp.co.soramitsu.iroha2.generated.RegisterExpr
-import jp.co.soramitsu.iroha2.generated.RegistrableBox
-import jp.co.soramitsu.iroha2.generated.Value
+import jp.co.soramitsu.iroha2.generated.Parameter
+import jp.co.soramitsu.iroha2.generated.RawGenesisTransaction
+import jp.co.soramitsu.iroha2.generated.RegisterBox
+import jp.co.soramitsu.iroha2.generated.RegisterOfAccount
+import jp.co.soramitsu.iroha2.generated.RegisterOfAssetDefinition
+import jp.co.soramitsu.iroha2.generated.RegisterOfDomain
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.StandardOpenOption
@@ -19,7 +19,7 @@ import java.nio.file.StandardOpenOption
 /**
  * Genesis block is used to initialise a blockchain
  */
-open class Genesis(open val block: RawGenesisBlock) {
+open class Genesis(open val transaction: RawGenesisTransaction) {
     /**
      * Write genesis to file
      */
@@ -33,58 +33,60 @@ open class Genesis(open val block: RawGenesisBlock) {
     /**
      * Represent genesis as JSON
      */
-    fun asJson(): String = JSON_SERDE.writeValueAsString(this.block)
+    fun asJson(): String = JSON_SERDE.writeValueAsString(this.transaction)
 
     companion object {
 
-        val executorMode = this::class.java.classLoader.getResource("executor.wasm")
-            ?.let { ExecutorMode.Path("executor.wasm") }
-            ?: throw IrohaSdkException("executor.wasm not found")
-
-        /**
-         * Return empty genesis
-         */
-        fun getEmpty() = Genesis(RawGenesisBlock(listOf(listOf()), executorMode))
+        const val EXECUTOR_FILE_NAME = "executor.wasm"
 
         /**
          * List of genesis blocks to single block with unique instructions
          */
         fun List<Genesis>.toSingle(): Genesis {
-            val uniqueIsi: MutableSet<InstructionExpr> = mutableSetOf()
-            this.forEach { genesis ->
-                uniqueIsi.addAll(genesis.block.transactions.flatten())
-            }
+            val uniqueIsi: MutableSet<InstructionBox> = mutableSetOf()
+            val uniqueParams: MutableSet<Parameter> = mutableSetOf()
 
-            return Genesis(RawGenesisBlock(listOf(uniqueIsi.mergeMetadata()), executorMode))
+            this.forEach { genesis ->
+                uniqueIsi.addAll(genesis.transaction.instructions)
+                uniqueParams.addAll(genesis.transaction.parameters)
+            }
+            return Genesis(
+                RawGenesisTransaction(
+                    ChainId("00000000-0000-0000-0000-000000000000"),
+                    EXECUTOR_FILE_NAME,
+                    uniqueParams.toList(),
+                    uniqueIsi.mergeMetadata().toList(),
+                    emptyList(),
+                ),
+            )
         }
 
-        private fun MutableSet<InstructionExpr>.mergeMetadata(): List<InstructionExpr> {
+        private fun MutableSet<InstructionBox>.mergeMetadata(): List<InstructionBox> {
+            // entity id to its metadata
             val metadataMap = mutableMapOf<Any, Metadata>()
 
-            // only for InstructionExpr.Register
-            this.extractIdentifiableBoxes().forEach { idBox ->
+            // only for InstructionBox.Register
+            this.extractRegisterBoxes().forEach { idBox ->
                 metadataMap.putMergedMetadata(idBox)
             }
-            this.findIsiToReplace(metadataMap).forEach { (metadata, toReplace) ->
+            this.findIsiToReplace(metadataMap).forEach { (idToMetadata, toReplace) ->
                 toReplace.forEach { isi -> this.remove(isi) }
 
-                val idBox = toReplace.first().extractIdentifiableBox()
-                val registrableBox = idBox?.toRegisterBox(metadata)
-                    ?: throw RuntimeException("IdentifiableBox shouldn't be null")
-                this.add(InstructionExpr.Register(RegisterExpr(registrableBox.evaluatesTo())))
+                val idBox = toReplace.first().registerBox
+                this.add(InstructionBox.Register(idBox.addMetadata(idToMetadata.second)))
             }
 
             return this.sorted()
         }
 
-        private fun MutableSet<InstructionExpr>.sorted() = this.sortedWith(
+        private fun MutableSet<InstructionBox>.sorted() = this.sortedWith(
             compareByDescending { instruction ->
                 when (instruction) {
-                    is InstructionExpr.Register -> when (instruction.extractIdentifiableBox()) {
-                        is IdentifiableBox.NewDomain -> 5
-                        is IdentifiableBox.NewAccount -> 4
-                        is IdentifiableBox.NewAssetDefinition -> 3
-                        is IdentifiableBox.NewRole -> 2
+                    is InstructionBox.Register -> when (instruction.cast<InstructionBox.Register>().registerBox) {
+                        is RegisterBox.Domain -> 5
+                        is RegisterBox.Account -> 4
+                        is RegisterBox.AssetDefinition -> 3
+                        is RegisterBox.Role -> 2
                         else -> 1
                     }
 
@@ -93,36 +95,42 @@ open class Genesis(open val block: RawGenesisBlock) {
             },
         )
 
-        private fun IdentifiableBox.toRegisterBox(metadata: Metadata) = when (this) {
-            is IdentifiableBox.NewAccount -> RegistrableBox.Account(
-                NewAccount(this.newAccount.id, this.newAccount.signatories, metadata),
+        private fun RegisterBox.addMetadata(metadata: Metadata) = when (this) {
+            is RegisterBox.Account -> RegisterBox.Account(
+                RegisterOfAccount(
+                    NewAccount(this.registerOfAccount.`object`.id, metadata),
+                ),
             )
 
-            is IdentifiableBox.NewDomain -> RegistrableBox.Domain(
-                NewDomain(this.newDomain.id, this.newDomain.logo, metadata),
+            is RegisterBox.Domain -> RegisterBox.Domain(
+                RegisterOfDomain(
+                    NewDomain(this.registerOfDomain.`object`.id, this.registerOfDomain.`object`.logo, metadata),
+                ),
             )
 
-            is IdentifiableBox.NewAssetDefinition -> RegistrableBox.AssetDefinition(
-                NewAssetDefinition(
-                    this.newAssetDefinition.id,
-                    this.newAssetDefinition.valueType,
-                    this.newAssetDefinition.mintable,
-                    metadata = metadata,
+            is RegisterBox.AssetDefinition -> RegisterBox.AssetDefinition(
+                RegisterOfAssetDefinition(
+                    NewAssetDefinition(
+                        this.registerOfAssetDefinition.`object`.id,
+                        this.registerOfAssetDefinition.`object`.type,
+                        this.registerOfAssetDefinition.`object`.mintable,
+                        metadata = metadata,
+                    ),
                 ),
             )
 
             else -> throw IrohaSdkException("Unexpected type ${this::class}")
         }
 
-        private fun MutableMap<Any, Metadata>.putMergedMetadata(idBox: IdentifiableBox) {
+        private fun MutableMap<Any, Metadata>.putMergedMetadata(idBox: RegisterBox) {
             fun MutableMap<Any, Metadata>.putOrMerge(
                 id: Any,
                 metadata: Metadata,
             ) = when (val value = this[id]) {
                 null -> this[id] = metadata
                 else -> {
-                    metadata.map.forEach { (k, v) ->
-                        if (value.map.containsKey(k) && value.map[k] != v) {
+                    metadata.sortedMapOfName.forEach { (k, v) ->
+                        if (value.sortedMapOfName.containsKey(k) && value.sortedMapOfName[k] != v) {
                             throw IrohaSdkException("Value for this key is already set in metadata")
                         }
                     }
@@ -131,36 +139,34 @@ open class Genesis(open val block: RawGenesisBlock) {
             }
 
             when (idBox) {
-                is IdentifiableBox.NewAccount -> this.putOrMerge(idBox.newAccount.id, idBox.newAccount.metadata)
-                is IdentifiableBox.NewDomain -> this.putOrMerge(idBox.newDomain.id, idBox.newDomain.metadata)
-                is IdentifiableBox.NewAssetDefinition -> this.putOrMerge(
-                    idBox.newAssetDefinition.id,
-                    idBox.newAssetDefinition.metadata,
+                is RegisterBox.Account -> this.putOrMerge(idBox.registerOfAccount.`object`.id, idBox.registerOfAccount.`object`.metadata)
+                is RegisterBox.Domain -> this.putOrMerge(idBox.registerOfDomain.`object`.id, idBox.registerOfDomain.`object`.metadata)
+                is RegisterBox.AssetDefinition -> this.putOrMerge(
+                    idBox.registerOfAssetDefinition.`object`.id,
+                    idBox.registerOfAssetDefinition.`object`.metadata,
                 )
 
                 else -> {}
             }
         }
 
-        private fun MutableSet<InstructionExpr>.findIsiToReplace(
+        private fun MutableSet<InstructionBox>.findIsiToReplace(
             metadata: Map<Any, Metadata>,
-        ): MutableMap<Metadata, MutableList<InstructionExpr.Register>> {
-            val isiToReplace = mutableMapOf<Metadata, MutableList<InstructionExpr.Register>>()
+        ): MutableMap<Pair<Any, Metadata>, MutableList<InstructionBox.Register>> {
+            val isiToReplace =
+                mutableMapOf<Pair<Any, Metadata>, MutableList<InstructionBox.Register>>()
 
             this.forEach { instruction ->
                 runCatching {
-                    instruction.cast<InstructionExpr.Register>()
-                        .registerExpr.`object`.expression
-                        .cast<Expression.Raw>().value
-                        .cast<Value.Identifiable>().identifiableBox
+                    instruction.cast<InstructionBox.Register>().registerBox
                 }.onSuccess { idBox ->
                     when (idBox) {
-                        is IdentifiableBox.NewAccount -> metadata[idBox.newAccount.id]
-                        is IdentifiableBox.NewDomain -> metadata[idBox.newDomain.id]
-                        is IdentifiableBox.NewAssetDefinition -> metadata[idBox.newAssetDefinition.id]
+                        is RegisterBox.Account -> idBox.registerOfAccount.`object`.id.let { id -> id to metadata[id]!! }
+                        is RegisterBox.Domain -> idBox.registerOfDomain.`object`.id.let { id -> id to metadata[id]!! }
+                        is RegisterBox.AssetDefinition -> idBox.registerOfAssetDefinition.`object`.id.let { id -> id to metadata[id]!! }
                         else -> null
-                    }?.takeIf { it.map.isNotEmpty() }?.let { metadata ->
-                        isiToReplace.merge(metadata, mutableListOf(instruction.cast())) { old, new ->
+                    }?.takeIf { it.second.sortedMapOfName.isNotEmpty() }?.let {
+                        isiToReplace.merge(it, mutableListOf(instruction.cast())) { old, new ->
                             old.plus(new).toMutableList()
                         }
                     }

@@ -19,13 +19,13 @@ import kotlin.collections.List
  */
 public data class Role(
     public val id: RoleId,
-    public val permissions: List<PermissionToken>,
+    public val permissions: List<Permission>,
 ) {
     public companion object : ScaleReader<Role>, ScaleWriter<Role> {
         override fun read(reader: ScaleCodecReader): Role = try {
             Role(
                 RoleId.read(reader),
-                reader.readVec(reader.readCompactInt()) { PermissionToken.read(reader) },
+                reader.readVec(reader.readCompactInt()) { Permission.read(reader) },
             )
         } catch (ex: Exception) {
             throw wrapException(ex)
@@ -35,9 +35,9 @@ public data class Role(
             RoleId.write(writer, instance.id)
             writer.writeCompact(instance.permissions.size)
             instance.permissions.sortedWith(
-                PermissionToken.comparator(),
+                Permission.comparator(),
             ).forEach { value ->
-                PermissionToken.write(writer, value)
+                Permission.write(writer, value)
             }
         } catch (ex: Exception) {
             throw wrapException(ex)

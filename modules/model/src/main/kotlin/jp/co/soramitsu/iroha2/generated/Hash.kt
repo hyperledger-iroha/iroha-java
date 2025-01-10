@@ -8,7 +8,10 @@ import jp.co.soramitsu.iroha2.codec.ScaleCodecWriter
 import jp.co.soramitsu.iroha2.codec.ScaleReader
 import jp.co.soramitsu.iroha2.codec.ScaleWriter
 import jp.co.soramitsu.iroha2.wrapException
+import kotlin.Any
+import kotlin.Boolean
 import kotlin.ByteArray
+import kotlin.Int
 import kotlin.Unit
 
 /**
@@ -19,6 +22,15 @@ import kotlin.Unit
 public data class Hash(
     public val arrayOfU8: ByteArray,
 ) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Hash) return false
+        if (!arrayOfU8.contentEquals(other.arrayOfU8)) return false
+        return true
+    }
+
+    override fun hashCode(): Int = arrayOfU8.contentHashCode()
+
     public companion object : ScaleReader<Hash>, ScaleWriter<Hash> {
         override fun read(reader: ScaleCodecReader): Hash = try {
             Hash(

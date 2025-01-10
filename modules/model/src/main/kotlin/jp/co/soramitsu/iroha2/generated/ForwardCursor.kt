@@ -17,7 +17,7 @@ import kotlin.Unit
  * Generated from 'ForwardCursor' regular structure
  */
 public data class ForwardCursor(
-    public val queryId: String? = null,
+    public val query: String? = null,
     public val cursor: NonZeroOfu64? = null,
 ) {
     public companion object : ScaleReader<ForwardCursor>, ScaleWriter<ForwardCursor> {
@@ -31,7 +31,7 @@ public data class ForwardCursor(
         }
 
         override fun write(writer: ScaleCodecWriter, instance: ForwardCursor): Unit = try {
-            writer.writeNullable(instance.queryId)
+            writer.writeNullable(instance.query)
             writer.writeNullable(NonZeroOfu64, instance.cursor)
         } catch (ex: Exception) {
             throw wrapException(ex)

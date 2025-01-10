@@ -1,9 +1,11 @@
 package jp.co.soramitsu.iroha2.testengine
 
 import jp.co.soramitsu.iroha2.Genesis
-import jp.co.soramitsu.iroha2.generated.RawGenesisBlock
+import jp.co.soramitsu.iroha2.generated.ChainId
+import jp.co.soramitsu.iroha2.generated.RawGenesisTransaction
 import org.junit.jupiter.api.Test
 import java.lang.annotation.Inherited
+import java.util.UUID
 import kotlin.reflect.KClass
 
 /**
@@ -22,6 +24,7 @@ annotation class WithIroha(
     val configs: Array<String> = [],
     val source: String = "",
     val amount: Int = 1,
+    val executorSource: String = "",
 )
 
 @MustBeDocumented
@@ -31,7 +34,6 @@ annotation class WithIroha(
 @Inherited
 annotation class WithIrohaManual(
     val apiUrls: Array<String> = [],
-    val telemetryUrls: Array<String> = [],
     val peerUrls: Array<String> = [],
     val account: String = "",
     val publicKey: String = "",
@@ -43,7 +45,7 @@ annotation class WithIrohaManual(
  * Empty genesis with no instructions
  */
 open class EmptyGenesis : Genesis(
-    RawGenesisBlock(listOf(emptyList()), executorMode),
+    RawGenesisTransaction(ChainId(UUID.randomUUID().toString()), EXECUTOR_FILE_NAME, emptyList(), emptyList(), emptyList()),
 )
 
 const val IROHA_CONFIG_DELIMITER = "="

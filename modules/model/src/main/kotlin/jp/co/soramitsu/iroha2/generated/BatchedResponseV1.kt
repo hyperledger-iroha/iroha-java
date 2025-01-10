@@ -10,15 +10,14 @@ import jp.co.soramitsu.iroha2.codec.ScaleWriter
 import jp.co.soramitsu.iroha2.wrapException
 import kotlin.Any
 import kotlin.Unit
-import kotlin.collections.List
 
 /**
  * BatchedResponseV1
  *
- * Generated from 'BatchedResponseV1<Vec<SignedTransaction>>' regular structure
+ * Generated from 'BatchedResponseV1<QueryOutputBox>' regular structure
  */
 public data class BatchedResponseV1<T0>(
-    public val batch: List<SignedTransaction>,
+    public val batch: QueryOutputBox,
     public val cursor: ForwardCursor,
 ) {
     public companion object :
@@ -26,7 +25,7 @@ public data class BatchedResponseV1<T0>(
         ScaleWriter<BatchedResponseV1<out Any>> {
         override fun read(reader: ScaleCodecReader): BatchedResponseV1<out Any> = try {
             BatchedResponseV1(
-                reader.readVec(reader.readCompactInt()) { SignedTransaction.read(reader) },
+                QueryOutputBox.read(reader),
                 ForwardCursor.read(reader),
             )
         } catch (ex: Exception) {
@@ -34,10 +33,7 @@ public data class BatchedResponseV1<T0>(
         }
 
         override fun write(writer: ScaleCodecWriter, instance: BatchedResponseV1<out Any>): Unit = try {
-            writer.writeCompact(instance.batch.size)
-            instance.batch.forEach { value ->
-                SignedTransaction.write(writer, value)
-            }
+            QueryOutputBox.write(writer, instance.batch)
             ForwardCursor.write(writer, instance.cursor)
         } catch (ex: Exception) {
             throw wrapException(ex)

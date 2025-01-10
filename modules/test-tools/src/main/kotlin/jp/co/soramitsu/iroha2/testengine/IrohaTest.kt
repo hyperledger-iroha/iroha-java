@@ -21,6 +21,8 @@ import java.time.Duration
 abstract class IrohaTest<T : Iroha2Client>(
     val txTimeout: Duration = Duration.ofSeconds(30),
     val network: Network = Network.newNetwork(),
+    val imageName: String = IrohaContainer.DEFAULT_IMAGE_NAME,
+    val imageTag: String = IrohaContainer.DEFAULT_IMAGE_TAG,
 ) {
     lateinit var client: T
     lateinit var containers: List<IrohaContainer>
@@ -31,16 +33,11 @@ abstract class IrohaTest<T : Iroha2Client>(
         account: AccountId? = null,
         keyPair: KeyPair? = null,
         builder: TransactionBuilder.() -> Unit = {},
-    ) {
-        val finalAccountId = account ?: this@IrohaTest.account
-        val finalKeyPair = keyPair ?: this@IrohaTest.keyPair
-
-        this.sendTransaction {
-            account(finalAccountId)
-            builder(this)
-            buildSigned(finalKeyPair)
-        }.also { d ->
-            withTimeout(txTimeout) { d.await() }
-        }
+    ) = this.sendTransaction {
+        account(account ?: this@IrohaTest.account)
+        builder(this)
+        buildSigned(keyPair ?: this@IrohaTest.keyPair)
+    }.also { d ->
+        withTimeout(txTimeout) { d.await() }
     }
 }

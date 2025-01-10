@@ -27,7 +27,6 @@ object EnumGenerator : AbstractGenerator<EnumBlueprint>() {
     override fun implConstructor(blueprint: EnumBlueprint, clazz: TypeSpec.Builder) = Unit
 
     override fun implFunctions(blueprint: EnumBlueprint, clazz: TypeSpec.Builder) {
-        true in blueprint.variants.map { it.properties.isEmpty() }
         clazz.addFunction(
             FunSpec.builder("discriminant")
                 .addModifiers(KModifier.ABSTRACT)
@@ -35,20 +34,7 @@ object EnumGenerator : AbstractGenerator<EnumBlueprint>() {
                 .build(),
         )
         if (true in blueprint.variants.map { it.properties.isEmpty() }) {
-            clazz.addFunction(
-                FunSpec.builder("equals")
-                    .addParameter(ParameterSpec.builder("other", ANY_TYPE.copy(nullable = true)).build())
-                    .addCode(equalsCode(blueprint))
-                    .addModifiers(KModifier.OVERRIDE)
-                    .returns(Boolean::class.java)
-                    .build(),
-            ).addFunction(
-                FunSpec.builder("hashCode")
-                    .addCode(hashcodeCode(blueprint))
-                    .addModifiers(KModifier.OVERRIDE)
-                    .returns(Int::class.java)
-                    .build(),
-            )
+            clazz.addFunction(equalsFun(blueprint)).addFunction(hashCodeFun(blueprint))
         }
     }
 
@@ -83,6 +69,23 @@ object EnumGenerator : AbstractGenerator<EnumBlueprint>() {
     override fun implSuperClasses(blueprint: EnumBlueprint, clazz: TypeSpec.Builder) {
         super.implSuperClasses(blueprint, clazz)
         clazz.addSuperinterface(ModelEnum::class)
+    }
+
+    private fun hashCodeFun(blueprint: EnumBlueprint): FunSpec {
+        return FunSpec.builder("hashCode")
+            .addCode(hashcodeCode(blueprint))
+            .addModifiers(KModifier.OVERRIDE)
+            .returns(Int::class.java)
+            .build()
+    }
+
+    private fun equalsFun(blueprint: EnumBlueprint): FunSpec {
+        return FunSpec.builder("equals")
+            .addParameter(ParameterSpec.builder("other", ANY_TYPE.copy(nullable = true)).build())
+            .addCode(equalsCode(blueprint))
+            .addModifiers(KModifier.OVERRIDE)
+            .returns(Boolean::class.java)
+            .build()
     }
 
     private fun equalsCode(blueprint: EnumBlueprint): CodeBlock {

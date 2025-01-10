@@ -16,14 +16,14 @@ import kotlin.Unit
  * Generated from 'TransactionQueryOutput' regular structure
  */
 public data class TransactionQueryOutput(
-    public val blockHash: HashOf<SignedBlock>,
-    public val transaction: TransactionValue,
+    public val blockHash: HashOf<BlockHeader>,
+    public val transaction: CommittedTransaction,
 ) {
     public companion object : ScaleReader<TransactionQueryOutput>, ScaleWriter<TransactionQueryOutput> {
         override fun read(reader: ScaleCodecReader): TransactionQueryOutput = try {
             TransactionQueryOutput(
-                HashOf.read(reader) as HashOf<SignedBlock>,
-                TransactionValue.read(reader),
+                HashOf.read(reader) as HashOf<BlockHeader>,
+                CommittedTransaction.read(reader),
             )
         } catch (ex: Exception) {
             throw wrapException(ex)
@@ -31,7 +31,7 @@ public data class TransactionQueryOutput(
 
         override fun write(writer: ScaleCodecWriter, instance: TransactionQueryOutput): Unit = try {
             HashOf.write(writer, instance.blockHash)
-            TransactionValue.write(writer, instance.transaction)
+            CommittedTransaction.write(writer, instance.transaction)
         } catch (ex: Exception) {
             throw wrapException(ex)
         }

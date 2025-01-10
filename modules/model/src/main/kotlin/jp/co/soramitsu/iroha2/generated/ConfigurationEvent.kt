@@ -27,7 +27,7 @@ public sealed class ConfigurationEvent : ModelEnum {
      * 'Changed' variant
      */
     public data class Changed(
-        public val parameterId: ParameterId,
+        public val parameterChanged: ParameterChanged,
     ) : ConfigurationEvent() {
         override fun discriminant(): Int = DISCRIMINANT
 
@@ -38,7 +38,7 @@ public sealed class ConfigurationEvent : ModelEnum {
 
             override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.ConfigurationEvent.Changed = try {
                 Changed(
-                    ParameterId.read(reader),
+                    ParameterChanged.read(reader),
                 )
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -48,71 +48,7 @@ public sealed class ConfigurationEvent : ModelEnum {
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.ConfigurationEvent.Changed,
             ): Unit = try {
-                ParameterId.write(writer, instance.parameterId)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
-        }
-    }
-
-    /**
-     * 'Created' variant
-     */
-    public data class Created(
-        public val parameterId: ParameterId,
-    ) : ConfigurationEvent() {
-        override fun discriminant(): Int = DISCRIMINANT
-
-        public companion object :
-            ScaleReader<jp.co.soramitsu.iroha2.generated.ConfigurationEvent.Created>,
-            ScaleWriter<jp.co.soramitsu.iroha2.generated.ConfigurationEvent.Created> {
-            public const val DISCRIMINANT: Int = 1
-
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.ConfigurationEvent.Created = try {
-                Created(
-                    ParameterId.read(reader),
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
-
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.ConfigurationEvent.Created,
-            ): Unit = try {
-                ParameterId.write(writer, instance.parameterId)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
-        }
-    }
-
-    /**
-     * 'Deleted' variant
-     */
-    public data class Deleted(
-        public val parameterId: ParameterId,
-    ) : ConfigurationEvent() {
-        override fun discriminant(): Int = DISCRIMINANT
-
-        public companion object :
-            ScaleReader<jp.co.soramitsu.iroha2.generated.ConfigurationEvent.Deleted>,
-            ScaleWriter<jp.co.soramitsu.iroha2.generated.ConfigurationEvent.Deleted> {
-            public const val DISCRIMINANT: Int = 2
-
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.ConfigurationEvent.Deleted = try {
-                Deleted(
-                    ParameterId.read(reader),
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
-
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.ConfigurationEvent.Deleted,
-            ): Unit = try {
-                ParameterId.write(writer, instance.parameterId)
+                ParameterChanged.write(writer, instance.parameterChanged)
             } catch (ex: Exception) {
                 throw wrapException(ex)
             }
@@ -125,16 +61,12 @@ public sealed class ConfigurationEvent : ModelEnum {
                 reader.readUByte()
         ) {
             0 -> Changed.read(reader)
-            1 -> Created.read(reader)
-            2 -> Deleted.read(reader)
             else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
 
         override fun write(writer: ScaleCodecWriter, instance: ConfigurationEvent) {
             writer.directWrite(instance.discriminant())
             when (val discriminant = instance.discriminant()) {
                 0 -> Changed.write(writer, instance as Changed)
-                1 -> Created.write(writer, instance as Created)
-                2 -> Deleted.write(writer, instance as Deleted)
                 else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
         }
     }

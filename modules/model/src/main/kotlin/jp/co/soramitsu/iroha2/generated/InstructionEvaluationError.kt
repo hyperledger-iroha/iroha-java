@@ -25,39 +25,6 @@ public sealed class InstructionEvaluationError : ModelEnum {
     public abstract fun discriminant(): Int
 
     /**
-     * 'Expression' variant
-     */
-    public data class Expression(
-        public val evaluationError: EvaluationError,
-    ) : InstructionEvaluationError() {
-        override fun discriminant(): Int = DISCRIMINANT
-
-        public companion object :
-            ScaleReader<jp.co.soramitsu.iroha2.generated.InstructionEvaluationError.Expression>,
-            ScaleWriter<jp.co.soramitsu.iroha2.generated.InstructionEvaluationError.Expression> {
-            public const val DISCRIMINANT: Int = 0
-
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.InstructionEvaluationError.Expression = try {
-                Expression(
-                    EvaluationError.read(reader),
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
-
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.InstructionEvaluationError.Expression,
-            ): Unit =
-                try {
-                    EvaluationError.write(writer, instance.evaluationError)
-                } catch (ex: Exception) {
-                    throw wrapException(ex)
-                }
-        }
-    }
-
-    /**
      * 'Unsupported' variant
      */
     public data class Unsupported(
@@ -68,7 +35,7 @@ public sealed class InstructionEvaluationError : ModelEnum {
         public companion object :
             ScaleReader<jp.co.soramitsu.iroha2.generated.InstructionEvaluationError.Unsupported>,
             ScaleWriter<jp.co.soramitsu.iroha2.generated.InstructionEvaluationError.Unsupported> {
-            public const val DISCRIMINANT: Int = 1
+            public const val DISCRIMINANT: Int = 0
 
             override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.InstructionEvaluationError.Unsupported = try {
                 Unsupported(
@@ -101,7 +68,7 @@ public sealed class InstructionEvaluationError : ModelEnum {
         public companion object :
             ScaleReader<jp.co.soramitsu.iroha2.generated.InstructionEvaluationError.PermissionParameter>,
             ScaleWriter<jp.co.soramitsu.iroha2.generated.InstructionEvaluationError.PermissionParameter> {
-            public const val DISCRIMINANT: Int = 2
+            public const val DISCRIMINANT: Int = 1
 
             override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.InstructionEvaluationError.PermissionParameter = try {
                 PermissionParameter(
@@ -133,7 +100,7 @@ public sealed class InstructionEvaluationError : ModelEnum {
         public companion object :
             ScaleReader<jp.co.soramitsu.iroha2.generated.InstructionEvaluationError.Type>,
             ScaleWriter<jp.co.soramitsu.iroha2.generated.InstructionEvaluationError.Type> {
-            public const val DISCRIMINANT: Int = 3
+            public const val DISCRIMINANT: Int = 2
 
             override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.InstructionEvaluationError.Type = try {
                 Type(
@@ -161,19 +128,17 @@ public sealed class InstructionEvaluationError : ModelEnum {
             val discriminant =
                 reader.readUByte()
         ) {
-            0 -> Expression.read(reader)
-            1 -> Unsupported.read(reader)
-            2 -> PermissionParameter.read(reader)
-            3 -> Type.read(reader)
+            0 -> Unsupported.read(reader)
+            1 -> PermissionParameter.read(reader)
+            2 -> Type.read(reader)
             else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
 
         override fun write(writer: ScaleCodecWriter, instance: InstructionEvaluationError) {
             writer.directWrite(instance.discriminant())
             when (val discriminant = instance.discriminant()) {
-                0 -> Expression.write(writer, instance as Expression)
-                1 -> Unsupported.write(writer, instance as Unsupported)
-                2 -> PermissionParameter.write(writer, instance as PermissionParameter)
-                3 -> Type.write(writer, instance as Type)
+                0 -> Unsupported.write(writer, instance as Unsupported)
+                1 -> PermissionParameter.write(writer, instance as PermissionParameter)
+                2 -> Type.write(writer, instance as Type)
                 else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
         }
     }

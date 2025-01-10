@@ -18,13 +18,13 @@ import kotlin.Unit
  */
 public data class AtIndex(
     public val index: Long,
-    public val predicate: ValuePredicate,
+    public val predicate: QueryOutputPredicate,
 ) {
     public companion object : ScaleReader<AtIndex>, ScaleWriter<AtIndex> {
         override fun read(reader: ScaleCodecReader): AtIndex = try {
             AtIndex(
                 reader.readUint32(),
-                ValuePredicate.read(reader),
+                QueryOutputPredicate.read(reader),
             )
         } catch (ex: Exception) {
             throw wrapException(ex)
@@ -32,7 +32,7 @@ public data class AtIndex(
 
         override fun write(writer: ScaleCodecWriter, instance: AtIndex): Unit = try {
             writer.writeUint32(instance.index)
-            ValuePredicate.write(writer, instance.predicate)
+            QueryOutputPredicate.write(writer, instance.predicate)
         } catch (ex: Exception) {
             throw wrapException(ex)
         }

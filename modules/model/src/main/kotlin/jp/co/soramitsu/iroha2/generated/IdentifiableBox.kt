@@ -126,7 +126,7 @@ public sealed class IdentifiableBox : ModelEnum {
      * 'NewRole' variant
      */
     public data class NewRole(
-        public val newRole: jp.co.soramitsu.iroha2.generated.NewRole,
+        public val role: jp.co.soramitsu.iroha2.generated.Role,
     ) : IdentifiableBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
@@ -137,7 +137,7 @@ public sealed class IdentifiableBox : ModelEnum {
 
             override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.IdentifiableBox.NewRole = try {
                 NewRole(
-                    jp.co.soramitsu.iroha2.generated.NewRole.read(reader),
+                    jp.co.soramitsu.iroha2.generated.Role.read(reader),
                 )
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -147,7 +147,7 @@ public sealed class IdentifiableBox : ModelEnum {
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.IdentifiableBox.NewRole,
             ): Unit = try {
-                jp.co.soramitsu.iroha2.generated.NewRole.write(writer, instance.newRole)
+                jp.co.soramitsu.iroha2.generated.Role.write(writer, instance.role)
             } catch (ex: Exception) {
                 throw wrapException(ex)
             }
@@ -318,7 +318,7 @@ public sealed class IdentifiableBox : ModelEnum {
      * 'Trigger' variant
      */
     public data class Trigger(
-        public val triggerOfTriggeringFilterBox: TriggerOfTriggeringFilterBox,
+        public val trigger: jp.co.soramitsu.iroha2.generated.Trigger,
     ) : IdentifiableBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
@@ -329,7 +329,7 @@ public sealed class IdentifiableBox : ModelEnum {
 
             override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.IdentifiableBox.Trigger = try {
                 Trigger(
-                    TriggerOfTriggeringFilterBox.read(reader),
+                    jp.co.soramitsu.iroha2.generated.Trigger.read(reader),
                 )
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -339,7 +339,7 @@ public sealed class IdentifiableBox : ModelEnum {
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.IdentifiableBox.Trigger,
             ): Unit = try {
-                TriggerOfTriggeringFilterBox.write(writer, instance.triggerOfTriggeringFilterBox)
+                jp.co.soramitsu.iroha2.generated.Trigger.write(writer, instance.trigger)
             } catch (ex: Exception) {
                 throw wrapException(ex)
             }
@@ -379,21 +379,21 @@ public sealed class IdentifiableBox : ModelEnum {
     }
 
     /**
-     * 'Parameter' variant
+     * 'CustomParameter' variant
      */
-    public data class Parameter(
-        public val parameter: jp.co.soramitsu.iroha2.generated.Parameter,
+    public data class CustomParameter(
+        public val customParameter: jp.co.soramitsu.iroha2.generated.CustomParameter,
     ) : IdentifiableBox() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
-            ScaleReader<jp.co.soramitsu.iroha2.generated.IdentifiableBox.Parameter>,
-            ScaleWriter<jp.co.soramitsu.iroha2.generated.IdentifiableBox.Parameter> {
+            ScaleReader<jp.co.soramitsu.iroha2.generated.IdentifiableBox.CustomParameter>,
+            ScaleWriter<jp.co.soramitsu.iroha2.generated.IdentifiableBox.CustomParameter> {
             public const val DISCRIMINANT: Int = 11
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.IdentifiableBox.Parameter = try {
-                Parameter(
-                    jp.co.soramitsu.iroha2.generated.Parameter.read(reader),
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.IdentifiableBox.CustomParameter = try {
+                CustomParameter(
+                    jp.co.soramitsu.iroha2.generated.CustomParameter.read(reader),
                 )
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -401,9 +401,9 @@ public sealed class IdentifiableBox : ModelEnum {
 
             override fun write(
                 writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.IdentifiableBox.Parameter,
+                instance: jp.co.soramitsu.iroha2.generated.IdentifiableBox.CustomParameter,
             ): Unit = try {
-                jp.co.soramitsu.iroha2.generated.Parameter.write(writer, instance.parameter)
+                jp.co.soramitsu.iroha2.generated.CustomParameter.write(writer, instance.customParameter)
             } catch (ex: Exception) {
                 throw wrapException(ex)
             }
@@ -426,7 +426,7 @@ public sealed class IdentifiableBox : ModelEnum {
             8 -> Asset.read(reader)
             9 -> Trigger.read(reader)
             10 -> Role.read(reader)
-            11 -> Parameter.read(reader)
+            11 -> CustomParameter.read(reader)
             else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
 
         override fun write(writer: ScaleCodecWriter, instance: IdentifiableBox) {
@@ -443,7 +443,7 @@ public sealed class IdentifiableBox : ModelEnum {
                 8 -> Asset.write(writer, instance as Asset)
                 9 -> Trigger.write(writer, instance as Trigger)
                 10 -> Role.write(writer, instance as Role)
-                11 -> Parameter.write(writer, instance as Parameter)
+                11 -> CustomParameter.write(writer, instance as CustomParameter)
                 else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
         }
     }

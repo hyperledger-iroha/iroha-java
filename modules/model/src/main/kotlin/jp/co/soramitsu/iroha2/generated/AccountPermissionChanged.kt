@@ -16,8 +16,8 @@ import kotlin.Unit
  * Generated from 'AccountPermissionChanged' regular structure
  */
 public data class AccountPermissionChanged(
-    public val accountId: AccountId,
-    public val permissionId: Name,
+    public val account: AccountId,
+    public val permission: Permission,
 ) {
     public companion object :
         ScaleReader<AccountPermissionChanged>,
@@ -25,15 +25,15 @@ public data class AccountPermissionChanged(
         override fun read(reader: ScaleCodecReader): AccountPermissionChanged = try {
             AccountPermissionChanged(
                 AccountId.read(reader),
-                Name.read(reader),
+                Permission.read(reader),
             )
         } catch (ex: Exception) {
             throw wrapException(ex)
         }
 
         override fun write(writer: ScaleCodecWriter, instance: AccountPermissionChanged): Unit = try {
-            AccountId.write(writer, instance.accountId)
-            Name.write(writer, instance.permissionId)
+            AccountId.write(writer, instance.account)
+            Permission.write(writer, instance.permission)
         } catch (ex: Exception) {
             throw wrapException(ex)
         }

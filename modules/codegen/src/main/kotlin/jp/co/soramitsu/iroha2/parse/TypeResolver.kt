@@ -16,6 +16,7 @@ import jp.co.soramitsu.iroha2.type.I8Type
 import jp.co.soramitsu.iroha2.type.IntType
 import jp.co.soramitsu.iroha2.type.IterableType
 import jp.co.soramitsu.iroha2.type.MapType
+import jp.co.soramitsu.iroha2.type.NullType
 import jp.co.soramitsu.iroha2.type.OptionType
 import jp.co.soramitsu.iroha2.type.SetType
 import jp.co.soramitsu.iroha2.type.StringType
@@ -39,6 +40,7 @@ class TypeResolver(private val schemaParser: SchemaParser) {
     private val resolvers = listOf<Resolver<*>>(
         BooleanResolver,
         SortedMapResolver,
+        BitMapResolver,
         OptionResolver,
         VectorResolver,
         SortedVectorResolver,
@@ -97,6 +99,25 @@ object BooleanResolver : Resolver<BooleanType> {
 /**
  * Resolver for [MapType]
  */
+object BitMapResolver : Resolver<UIntType> {
+
+    const val NAME = "Bitmap"
+
+    override fun resolve(name: String, typeValue: Any?, schemaParser: SchemaParser): UIntType? {
+        when (typeValue) {
+            is Map<*, *> -> if (typeValue.keys.first() != NAME) return null
+            else -> return null
+        }
+
+        val type = (typeValue[NAME] as Map<String, *>)["repr"].toString()
+
+        return UIntResolver.resolve(type, typeValue, schemaParser)
+    }
+}
+
+/**
+ * Resolver for [MapType]
+ */
 object SortedMapResolver : Resolver<MapType> {
 
     const val NAME = "SortedMap"
@@ -124,10 +145,19 @@ object SortedMapResolver : Resolver<MapType> {
  */
 abstract class WrapperResolver<T : Type>(open val wrapperName: String) : Resolver<T> {
     override fun resolve(name: String, typeValue: Any?, schemaParser: SchemaParser): T? {
-        if (!name.startsWith("$wrapperName<")) return null
-        val innerTypeName = name.removeSurrounding("$wrapperName<", ">")
-        val innerType = schemaParser.createAndGetNest(innerTypeName)
-        return createWrapper(name, innerType)
+        return when {
+            name.startsWith("$wrapperName<") -> {
+                val innerTypeName = name.removeSurrounding("$wrapperName<", ">")
+                val innerType = schemaParser.createAndGetNest(innerTypeName)
+                createWrapper(name, innerType)
+            }
+            name.startsWith("${wrapperName}Of") -> {
+                val innerTypeName = name.replace("${wrapperName}Of", "")
+                val innerType = schemaParser.createAndGetNest(innerTypeName)
+                createWrapper(name, innerType)
+            }
+            else -> null
+        }
     }
 
     /**
@@ -422,7 +452,7 @@ data class TypeNest(val name: String, var value: Type?) {
 
     private var resolutionInProgress: Boolean = false
 
-    fun requireValue() = value ?: throw IllegalArgumentException("Type is not resolved: $name")
+    fun requireValue() = value ?: NullType
 
     fun notResolvedTypes(): Set<String> {
         if (resolutionInProgress) {

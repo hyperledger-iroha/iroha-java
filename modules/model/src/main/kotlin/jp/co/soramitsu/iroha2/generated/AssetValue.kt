@@ -9,9 +9,7 @@ import jp.co.soramitsu.iroha2.codec.ScaleCodecWriter
 import jp.co.soramitsu.iroha2.codec.ScaleReader
 import jp.co.soramitsu.iroha2.codec.ScaleWriter
 import jp.co.soramitsu.iroha2.wrapException
-import java.math.BigInteger
 import kotlin.Int
-import kotlin.Long
 import kotlin.Unit
 
 /**
@@ -26,21 +24,21 @@ public sealed class AssetValue : ModelEnum {
     public abstract fun discriminant(): Int
 
     /**
-     * 'Quantity' variant
+     * 'Numeric' variant
      */
-    public data class Quantity(
-        public val u32: Long,
+    public data class Numeric(
+        public val numeric: jp.co.soramitsu.iroha2.generated.Numeric,
     ) : AssetValue() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
-            ScaleReader<jp.co.soramitsu.iroha2.generated.AssetValue.Quantity>,
-            ScaleWriter<jp.co.soramitsu.iroha2.generated.AssetValue.Quantity> {
+            ScaleReader<jp.co.soramitsu.iroha2.generated.AssetValue.Numeric>,
+            ScaleWriter<jp.co.soramitsu.iroha2.generated.AssetValue.Numeric> {
             public const val DISCRIMINANT: Int = 0
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.AssetValue.Quantity = try {
-                Quantity(
-                    reader.readUint32(),
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.AssetValue.Numeric = try {
+                Numeric(
+                    jp.co.soramitsu.iroha2.generated.Numeric.read(reader),
                 )
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -48,73 +46,9 @@ public sealed class AssetValue : ModelEnum {
 
             override fun write(
                 writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.AssetValue.Quantity,
+                instance: jp.co.soramitsu.iroha2.generated.AssetValue.Numeric,
             ): Unit = try {
-                writer.writeUint32(instance.u32)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
-        }
-    }
-
-    /**
-     * 'BigQuantity' variant
-     */
-    public data class BigQuantity(
-        public val u128: BigInteger,
-    ) : AssetValue() {
-        override fun discriminant(): Int = DISCRIMINANT
-
-        public companion object :
-            ScaleReader<jp.co.soramitsu.iroha2.generated.AssetValue.BigQuantity>,
-            ScaleWriter<jp.co.soramitsu.iroha2.generated.AssetValue.BigQuantity> {
-            public const val DISCRIMINANT: Int = 1
-
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.AssetValue.BigQuantity = try {
-                BigQuantity(
-                    reader.readUint128(),
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
-
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.AssetValue.BigQuantity,
-            ): Unit = try {
-                writer.writeUint128(instance.u128)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
-        }
-    }
-
-    /**
-     * 'Fixed' variant
-     */
-    public data class Fixed(
-        public val fixed: jp.co.soramitsu.iroha2.generated.Fixed,
-    ) : AssetValue() {
-        override fun discriminant(): Int = DISCRIMINANT
-
-        public companion object :
-            ScaleReader<jp.co.soramitsu.iroha2.generated.AssetValue.Fixed>,
-            ScaleWriter<jp.co.soramitsu.iroha2.generated.AssetValue.Fixed> {
-            public const val DISCRIMINANT: Int = 2
-
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.AssetValue.Fixed = try {
-                Fixed(
-                    jp.co.soramitsu.iroha2.generated.Fixed.read(reader),
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
-
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.AssetValue.Fixed,
-            ): Unit = try {
-                jp.co.soramitsu.iroha2.generated.Fixed.write(writer, instance.fixed)
+                jp.co.soramitsu.iroha2.generated.Numeric.write(writer, instance.numeric)
             } catch (ex: Exception) {
                 throw wrapException(ex)
             }
@@ -132,7 +66,7 @@ public sealed class AssetValue : ModelEnum {
         public companion object :
             ScaleReader<jp.co.soramitsu.iroha2.generated.AssetValue.Store>,
             ScaleWriter<jp.co.soramitsu.iroha2.generated.AssetValue.Store> {
-            public const val DISCRIMINANT: Int = 3
+            public const val DISCRIMINANT: Int = 1
 
             override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.AssetValue.Store = try {
                 Store(
@@ -158,19 +92,15 @@ public sealed class AssetValue : ModelEnum {
             val discriminant =
                 reader.readUByte()
         ) {
-            0 -> Quantity.read(reader)
-            1 -> BigQuantity.read(reader)
-            2 -> Fixed.read(reader)
-            3 -> Store.read(reader)
+            0 -> Numeric.read(reader)
+            1 -> Store.read(reader)
             else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
 
         override fun write(writer: ScaleCodecWriter, instance: AssetValue) {
             writer.directWrite(instance.discriminant())
             when (val discriminant = instance.discriminant()) {
-                0 -> Quantity.write(writer, instance as Quantity)
-                1 -> BigQuantity.write(writer, instance as BigQuantity)
-                2 -> Fixed.write(writer, instance as Fixed)
-                3 -> Store.write(writer, instance as Store)
+                0 -> Numeric.write(writer, instance as Numeric)
+                1 -> Store.write(writer, instance as Store)
                 else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
         }
     }

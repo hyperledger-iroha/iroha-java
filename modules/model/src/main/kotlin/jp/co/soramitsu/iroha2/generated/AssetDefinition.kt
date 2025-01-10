@@ -17,7 +17,7 @@ import kotlin.Unit
  */
 public data class AssetDefinition(
     public val id: AssetDefinitionId,
-    public val valueType: AssetValueType,
+    public val type: AssetType,
     public val mintable: Mintable,
     public val logo: IpfsPath? = null,
     public val metadata: Metadata,
@@ -27,7 +27,7 @@ public data class AssetDefinition(
         override fun read(reader: ScaleCodecReader): AssetDefinition = try {
             AssetDefinition(
                 AssetDefinitionId.read(reader),
-                AssetValueType.read(reader),
+                AssetType.read(reader),
                 Mintable.read(reader),
                 reader.readNullable(IpfsPath) as IpfsPath?,
                 Metadata.read(reader),
@@ -39,7 +39,7 @@ public data class AssetDefinition(
 
         override fun write(writer: ScaleCodecWriter, instance: AssetDefinition): Unit = try {
             AssetDefinitionId.write(writer, instance.id)
-            AssetValueType.write(writer, instance.valueType)
+            AssetType.write(writer, instance.type)
             Mintable.write(writer, instance.mintable)
             writer.writeNullable(IpfsPath, instance.logo)
             Metadata.write(writer, instance.metadata)

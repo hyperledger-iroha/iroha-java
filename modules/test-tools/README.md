@@ -5,7 +5,7 @@ You must provide one of Iroha client classes:
 - `Iroha2Client`
 - `AdminIroha2Client`
 - `Iroha2AsyncClient`
-- `AdminIroha2AsyncClient` 
+- `AdminIroha2AsyncClient`
 - `*AsyncClient` (for usage from Java)
 
 You can override `txTimeout` parameter as well.
@@ -52,9 +52,8 @@ class Test : IrohaTest<AdminIroha2Client>() {
     @Test
     @WithIrohaManual(
         apiUrls = ["http://localhost:8080", "http://localhost:8081", "http://localhost:8082", "http://localhost:8083"],
-        telemetryUrls = ["http://localhost:8180", "http://localhost:8181", "http://localhost:8182", "http://localhost:8183"],
         peerUrls = ["http://localhost:1337", "http://localhost:1338", "http://localhost:1339", "http://localhost:1340"],
-        account = "alice@wonderland",
+        account = "ed0120CE7FA46C9DCE7EA4B125E2E36BDB63EA33073E7590AC92816AE1E861B7048B03@wonderland",
         publicKey = "7233bfc89dcbd68c19fde6ce6158225298ec1131b6a130d1aeb454c1ab5183c0",
         privateKey = "9ac47abf59b356e0bd7dcbbbb4dec080e302156a48ca907e47cb6aea1d32719e",
     )
@@ -63,7 +62,7 @@ class Test : IrohaTest<AdminIroha2Client>() {
 
     @Test
     @WithIrohaManual(
-        account = "alice@wonderland",
+        account = "ed0120CE7FA46C9DCE7EA4B125E2E36BDB63EA33073E7590AC92816AE1E861B7048B03@wonderland",
         publicKey = "7233bfc89dcbd68c19fde6ce6158225298ec1131b6a130d1aeb454c1ab5183c0",
         privateKey = "9ac47abf59b356e0bd7dcbbbb4dec080e302156a48ca907e47cb6aea1d32719e",
         dockerComposeFile = "../../docker-compose/docker-compose.yaml",
@@ -84,7 +83,7 @@ In a single peer test, [IrohaRunnerExtension](./src/main/kotlin/jp/co/soramitsu/
 ```java
 @org.junit.jupiter.api.extension.ExtendWith(IrohaRunnerExtension::class)
 class SinglePeerTest {
-    
+
     @Test
     @WithIroha
     public someTest() {

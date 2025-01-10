@@ -4,8 +4,6 @@ import jp.co.soramitsu.iroha2.model.IrohaUrls
 import java.net.URL
 
 open class WithoutBalancingStrategy(private val urls: List<IrohaUrls>) : BalancingStrategy {
-    override fun getTelemetryUrl(): URL = urls.first().telemetryUrl
-
     override fun getApiUrl(): URL = urls.first().apiUrl
 
     override fun getPeerUrl(): URL = urls.first().peerUrl

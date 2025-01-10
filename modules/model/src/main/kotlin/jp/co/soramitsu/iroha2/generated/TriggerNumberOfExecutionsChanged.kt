@@ -17,7 +17,7 @@ import kotlin.Unit
  * Generated from 'TriggerNumberOfExecutionsChanged' regular structure
  */
 public data class TriggerNumberOfExecutionsChanged(
-    public val triggerId: TriggerId,
+    public val trigger: TriggerId,
     public val `by`: Long,
 ) {
     public companion object :
@@ -34,7 +34,7 @@ public data class TriggerNumberOfExecutionsChanged(
 
         override fun write(writer: ScaleCodecWriter, instance: TriggerNumberOfExecutionsChanged): Unit =
             try {
-                TriggerId.write(writer, instance.triggerId)
+                TriggerId.write(writer, instance.trigger)
                 writer.writeUint32(instance.`by`)
             } catch (ex: Exception) {
                 throw wrapException(ex)

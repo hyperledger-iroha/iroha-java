@@ -24,21 +24,21 @@ public sealed class TypeError : ModelEnum {
     public abstract fun discriminant(): Int
 
     /**
-     * 'AssetValueType' variant
+     * 'AssetType' variant
      */
-    public data class AssetValueType(
-        public val mismatchOfAssetValueType: MismatchOfAssetValueType,
+    public data class AssetType(
+        public val mismatch: Mismatch<jp.co.soramitsu.iroha2.generated.AssetType>,
     ) : TypeError() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
-            ScaleReader<jp.co.soramitsu.iroha2.generated.TypeError.AssetValueType>,
-            ScaleWriter<jp.co.soramitsu.iroha2.generated.TypeError.AssetValueType> {
+            ScaleReader<jp.co.soramitsu.iroha2.generated.TypeError.AssetType>,
+            ScaleWriter<jp.co.soramitsu.iroha2.generated.TypeError.AssetType> {
             public const val DISCRIMINANT: Int = 0
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.TypeError.AssetValueType = try {
-                AssetValueType(
-                    MismatchOfAssetValueType.read(reader),
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.TypeError.AssetType = try {
+                AssetType(
+                    Mismatch.read(reader) as Mismatch<jp.co.soramitsu.iroha2.generated.AssetType>,
                 )
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -46,9 +46,9 @@ public sealed class TypeError : ModelEnum {
 
             override fun write(
                 writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.TypeError.AssetValueType,
+                instance: jp.co.soramitsu.iroha2.generated.TypeError.AssetType,
             ): Unit = try {
-                MismatchOfAssetValueType.write(writer, instance.mismatchOfAssetValueType)
+                Mismatch.write(writer, instance.mismatch)
             } catch (ex: Exception) {
                 throw wrapException(ex)
             }
@@ -56,21 +56,21 @@ public sealed class TypeError : ModelEnum {
     }
 
     /**
-     * 'ParameterValueType' variant
+     * 'NumericAssetTypeExpected' variant
      */
-    public data class ParameterValueType(
-        public val mismatchOfValue: MismatchOfValue,
+    public data class NumericAssetTypeExpected(
+        public val assetType: jp.co.soramitsu.iroha2.generated.AssetType,
     ) : TypeError() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
-            ScaleReader<jp.co.soramitsu.iroha2.generated.TypeError.ParameterValueType>,
-            ScaleWriter<jp.co.soramitsu.iroha2.generated.TypeError.ParameterValueType> {
+            ScaleReader<jp.co.soramitsu.iroha2.generated.TypeError.NumericAssetTypeExpected>,
+            ScaleWriter<jp.co.soramitsu.iroha2.generated.TypeError.NumericAssetTypeExpected> {
             public const val DISCRIMINANT: Int = 1
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.TypeError.ParameterValueType = try {
-                ParameterValueType(
-                    MismatchOfValue.read(reader),
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.TypeError.NumericAssetTypeExpected = try {
+                NumericAssetTypeExpected(
+                    jp.co.soramitsu.iroha2.generated.AssetType.read(reader),
                 )
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -78,41 +78,9 @@ public sealed class TypeError : ModelEnum {
 
             override fun write(
                 writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.TypeError.ParameterValueType,
+                instance: jp.co.soramitsu.iroha2.generated.TypeError.NumericAssetTypeExpected,
             ): Unit = try {
-                MismatchOfValue.write(writer, instance.mismatchOfValue)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
-        }
-    }
-
-    /**
-     * 'AssetDefinitionId' variant
-     */
-    public data class AssetDefinitionId(
-        public val mismatchOfAssetDefinitionId: MismatchOfAssetDefinitionId,
-    ) : TypeError() {
-        override fun discriminant(): Int = DISCRIMINANT
-
-        public companion object :
-            ScaleReader<jp.co.soramitsu.iroha2.generated.TypeError.AssetDefinitionId>,
-            ScaleWriter<jp.co.soramitsu.iroha2.generated.TypeError.AssetDefinitionId> {
-            public const val DISCRIMINANT: Int = 2
-
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.TypeError.AssetDefinitionId = try {
-                AssetDefinitionId(
-                    MismatchOfAssetDefinitionId.read(reader),
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
-
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.TypeError.AssetDefinitionId,
-            ): Unit = try {
-                MismatchOfAssetDefinitionId.write(writer, instance.mismatchOfAssetDefinitionId)
+                jp.co.soramitsu.iroha2.generated.AssetType.write(writer, instance.assetType)
             } catch (ex: Exception) {
                 throw wrapException(ex)
             }
@@ -124,17 +92,15 @@ public sealed class TypeError : ModelEnum {
             val discriminant =
                 reader.readUByte()
         ) {
-            0 -> AssetValueType.read(reader)
-            1 -> ParameterValueType.read(reader)
-            2 -> AssetDefinitionId.read(reader)
+            0 -> AssetType.read(reader)
+            1 -> NumericAssetTypeExpected.read(reader)
             else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
 
         override fun write(writer: ScaleCodecWriter, instance: TypeError) {
             writer.directWrite(instance.discriminant())
             when (val discriminant = instance.discriminant()) {
-                0 -> AssetValueType.write(writer, instance as AssetValueType)
-                1 -> ParameterValueType.write(writer, instance as ParameterValueType)
-                2 -> AssetDefinitionId.write(writer, instance as AssetDefinitionId)
+                0 -> AssetType.write(writer, instance as AssetType)
+                1 -> NumericAssetTypeExpected.write(writer, instance as NumericAssetTypeExpected)
                 else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
         }
     }

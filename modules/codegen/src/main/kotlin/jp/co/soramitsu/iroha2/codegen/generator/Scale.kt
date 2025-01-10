@@ -154,7 +154,7 @@ private fun CompositeType.scaleReadImpl(): CodeBlock {
 
 private fun OptionType.scaleReadImpl(): CodeBlock {
     return when (this.innerType.requireValue()) {
-        is U32Type, U16Type, StringType -> CodeBlock.of("reader.readNullable()")
+        is U64Type, U32Type, U16Type, StringType -> CodeBlock.of("reader.readNullable()")
         else -> resolveKotlinType(this).let { type ->
             CodeBlock.of(
                 "reader.readNullable(%1T) as %2T",
@@ -212,7 +212,7 @@ private fun FixedPointType.scaleWriteImpl(propName: CodeBlock): CodeBlock {
 
 private fun OptionType.scaleWriteImpl(propName: CodeBlock): CodeBlock {
     return when (this.innerType.requireValue()) {
-        is U32Type, U16Type, StringType -> CodeBlock.of(
+        is U64Type, U32Type, U16Type, StringType -> CodeBlock.of(
             "writer.writeNullable(%L)",
             propName,
         )

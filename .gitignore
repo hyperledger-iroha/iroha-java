@@ -4,5 +4,8 @@ build/
 */*/out
 
 # Rust
-**/target
+**/target/
 **/Cargo.lock
+**/storage/
+**/*.rs.bk
+**/rusty-tags.vi

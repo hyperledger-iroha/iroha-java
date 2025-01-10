@@ -16,19 +16,19 @@ import kotlin.Unit
  * Generated from 'EventMessage' regular structure
  */
 public data class EventMessage(
-    public val event: Event,
+    public val eventBox: EventBox,
 ) {
     public companion object : ScaleReader<EventMessage>, ScaleWriter<EventMessage> {
         override fun read(reader: ScaleCodecReader): EventMessage = try {
             EventMessage(
-                Event.read(reader),
+                EventBox.read(reader),
             )
         } catch (ex: Exception) {
             throw wrapException(ex)
         }
 
         override fun write(writer: ScaleCodecWriter, instance: EventMessage): Unit = try {
-            Event.write(writer, instance.event)
+            EventBox.write(writer, instance.eventBox)
         } catch (ex: Exception) {
             throw wrapException(ex)
         }

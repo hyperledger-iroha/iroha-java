@@ -16,7 +16,7 @@ import kotlin.Unit
  * Generated from 'AssetDefinitionOwnerChanged' regular structure
  */
 public data class AssetDefinitionOwnerChanged(
-    public val assetDefinitionId: AssetDefinitionId,
+    public val assetDefinition: AssetDefinitionId,
     public val newOwner: AccountId,
 ) {
     public companion object :
@@ -32,7 +32,7 @@ public data class AssetDefinitionOwnerChanged(
         }
 
         override fun write(writer: ScaleCodecWriter, instance: AssetDefinitionOwnerChanged): Unit = try {
-            AssetDefinitionId.write(writer, instance.assetDefinitionId)
+            AssetDefinitionId.write(writer, instance.assetDefinition)
             AccountId.write(writer, instance.newOwner)
         } catch (ex: Exception) {
             throw wrapException(ex)

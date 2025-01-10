@@ -12,12 +12,11 @@ import jp.co.soramitsu.iroha2.wrapException
 import kotlin.Any
 import kotlin.Int
 import kotlin.Unit
-import kotlin.collections.List
 
 /**
  * BatchedResponse
  *
- * Generated from 'BatchedResponse<Vec<SignedTransaction>>' enum
+ * Generated from 'BatchedResponse<QueryOutputBox>' enum
  */
 public sealed class BatchedResponse<T0> : ModelEnum {
     /**
@@ -29,8 +28,8 @@ public sealed class BatchedResponse<T0> : ModelEnum {
      * 'V1' variant
      */
     public data class V1(
-        public val batchedResponseV1: BatchedResponseV1<List<SignedTransaction>>,
-    ) : BatchedResponse<List<SignedTransaction>>() {
+        public val batchedResponseV1: BatchedResponseV1<QueryOutputBox>,
+    ) : BatchedResponse<QueryOutputBox>() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -40,7 +39,7 @@ public sealed class BatchedResponse<T0> : ModelEnum {
 
             override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.BatchedResponse.V1 = try {
                 V1(
-                    BatchedResponseV1.read(reader) as BatchedResponseV1<List<SignedTransaction>>,
+                    BatchedResponseV1.read(reader) as BatchedResponseV1<QueryOutputBox>,
                 )
             } catch (ex: Exception) {
                 throw wrapException(ex)

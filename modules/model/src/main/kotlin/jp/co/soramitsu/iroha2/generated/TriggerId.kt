@@ -16,13 +16,11 @@ import kotlin.Unit
  * Generated from 'TriggerId' regular structure
  */
 public data class TriggerId(
-    public val domainId: DomainId? = null,
     public val name: Name,
 ) {
     public companion object : ScaleReader<TriggerId>, ScaleWriter<TriggerId> {
         override fun read(reader: ScaleCodecReader): TriggerId = try {
             TriggerId(
-                reader.readNullable(DomainId) as DomainId?,
                 Name.read(reader),
             )
         } catch (ex: Exception) {
@@ -30,7 +28,6 @@ public data class TriggerId(
         }
 
         override fun write(writer: ScaleCodecWriter, instance: TriggerId): Unit = try {
-            writer.writeNullable(DomainId, instance.domainId)
             Name.write(writer, instance.name)
         } catch (ex: Exception) {
             throw wrapException(ex)

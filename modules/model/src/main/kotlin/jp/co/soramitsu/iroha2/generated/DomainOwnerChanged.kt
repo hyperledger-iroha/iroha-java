@@ -16,7 +16,7 @@ import kotlin.Unit
  * Generated from 'DomainOwnerChanged' regular structure
  */
 public data class DomainOwnerChanged(
-    public val domainId: DomainId,
+    public val domain: DomainId,
     public val newOwner: AccountId,
 ) {
     public companion object : ScaleReader<DomainOwnerChanged>, ScaleWriter<DomainOwnerChanged> {
@@ -30,7 +30,7 @@ public data class DomainOwnerChanged(
         }
 
         override fun write(writer: ScaleCodecWriter, instance: DomainOwnerChanged): Unit = try {
-            DomainId.write(writer, instance.domainId)
+            DomainId.write(writer, instance.domain)
             AccountId.write(writer, instance.newOwner)
         } catch (ex: Exception) {
             throw wrapException(ex)

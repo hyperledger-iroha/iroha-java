@@ -250,42 +250,6 @@ public sealed class MathError : ModelEnum {
     }
 
     /**
-     * 'BinaryOpIncompatibleNumericValueTypes' variant
-     */
-    public data class BinaryOpIncompatibleNumericValueTypes(
-        public val binaryOpIncompatibleNumericValueTypesError:
-        BinaryOpIncompatibleNumericValueTypesError,
-    ) : MathError() {
-        override fun discriminant(): Int = DISCRIMINANT
-
-        public companion object :
-            ScaleReader<jp.co.soramitsu.iroha2.generated.MathError.BinaryOpIncompatibleNumericValueTypes>,
-            ScaleWriter<jp.co.soramitsu.iroha2.generated.MathError.BinaryOpIncompatibleNumericValueTypes> {
-            public const val DISCRIMINANT: Int = 6
-
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.MathError.BinaryOpIncompatibleNumericValueTypes = try {
-                BinaryOpIncompatibleNumericValueTypes(
-                    BinaryOpIncompatibleNumericValueTypesError.read(reader),
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
-
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.MathError.BinaryOpIncompatibleNumericValueTypes,
-            ): Unit = try {
-                BinaryOpIncompatibleNumericValueTypesError.write(
-                    writer,
-                    instance.binaryOpIncompatibleNumericValueTypesError,
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
-        }
-    }
-
-    /**
      * 'FixedPointConversion' variant
      */
     public data class FixedPointConversion(
@@ -296,7 +260,7 @@ public sealed class MathError : ModelEnum {
         public companion object :
             ScaleReader<jp.co.soramitsu.iroha2.generated.MathError.FixedPointConversion>,
             ScaleWriter<jp.co.soramitsu.iroha2.generated.MathError.FixedPointConversion> {
-            public const val DISCRIMINANT: Int = 7
+            public const val DISCRIMINANT: Int = 6
 
             override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.MathError.FixedPointConversion = try {
                 FixedPointConversion(
@@ -328,8 +292,7 @@ public sealed class MathError : ModelEnum {
             3 -> NegativeValue.read(reader)
             4 -> DomainViolation.read(reader)
             5 -> Unknown.read(reader)
-            6 -> BinaryOpIncompatibleNumericValueTypes.read(reader)
-            7 -> FixedPointConversion.read(reader)
+            6 -> FixedPointConversion.read(reader)
             else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
 
         override fun write(writer: ScaleCodecWriter, instance: MathError) {
@@ -341,12 +304,7 @@ public sealed class MathError : ModelEnum {
                 3 -> NegativeValue.write(writer, instance as NegativeValue)
                 4 -> DomainViolation.write(writer, instance as DomainViolation)
                 5 -> Unknown.write(writer, instance as Unknown)
-                6 -> BinaryOpIncompatibleNumericValueTypes.write(
-                    writer,
-                    instance as
-                        BinaryOpIncompatibleNumericValueTypes,
-                )
-                7 -> FixedPointConversion.write(writer, instance as FixedPointConversion)
+                6 -> FixedPointConversion.write(writer, instance as FixedPointConversion)
                 else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
         }
     }

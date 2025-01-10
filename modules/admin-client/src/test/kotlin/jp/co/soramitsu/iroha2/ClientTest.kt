@@ -7,10 +7,16 @@ import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Timeout
 import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
 
 @Timeout(120)
 class ClientTest : IrohaTest<AdminIroha2Client>() {
+
+    @Test
+    @WithIroha
+    fun schema(): Unit = runBlocking {
+        val schema = client.schema()
+        assert(schema.isNotEmpty())
+    }
 
     @Test
     @WithIroha
@@ -37,31 +43,7 @@ class ClientTest : IrohaTest<AdminIroha2Client>() {
     @WithIroha
     fun getConfigValues(): Unit = runBlocking {
         val configs = client.getConfigs()
-        assert(configs.containsKey("GENESIS"))
-    }
-
-    @Test
-    @WithIroha
-    fun describeConfig(): Unit = runBlocking {
-        val docsConfig = client.describeConfig("genesis", "account_private_key")
-        assert(docsConfig.isNotEmpty())
-
-        // must throw ex if config's property name not provided
-        assertFailsWith<IrohaClientException> {
-            client.describeConfig()
-        }
-    }
-
-    @Test
-    @WithIroha(amount = PEER_AMOUNT)
-    fun `round-robin load balancing test`(): Unit = runBlocking {
-        val urls = mutableSetOf<String>()
-        repeat(PEER_AMOUNT * 2 + 1) {
-            val config = client.getConfigs()
-            urls.add(config["TORII"]!!.cast<Map<String, String>>()["API_URL"]!!)
-        }
-
-        assertEquals(PEER_AMOUNT, urls.size)
+        assert(configs.isNotEmpty())
     }
 
     companion object {

@@ -1,188 +1,190 @@
 {
-  "transactions" : [ [ {
-    "Register" : {
-      "NewDomain" : {
-        "id" : "wonderland",
-        "logo" : null,
-        "metadata" : {
-          "OhOXbyHMGo" : {
-            "String" : "OhOXbyHMGo"
-          }
-        }
-      }
-    }
-  }, {
-    "Register" : {
-      "NewAccount" : {
-        "id" : "alice@wonderland",
-        "signatories" : [ "ed01201dd28d2ed1e708998990982007dcf2e1582d73a62fcb40460152ff8114c217e2" ],
-        "metadata" : {
-          "xnPrkBHMaF" : {
-            "String" : "xnPrkBHMaF"
-          }
-        }
-      }
-    }
-  }, {
-    "Register" : {
-      "NewAccount" : {
-        "id" : "bob@wonderland",
-        "signatories" : [ "ed01206bd8c135e5f490b5f66b79b0e366af1b7560c251e5fffe37e7e5c5b9f5565dc4" ],
-        "metadata" : {
-          "kGwJtCQaew" : {
-            "String" : "kGwJtCQaew"
-          }
-        }
-      }
-    }
-  }, {
-    "Register" : {
-      "NewAccount" : {
-        "id" : "foo@wonderland",
-        "signatories" : [ "ed0120d52923932164a87280eda508d321e252b04e9fe5fc82a36adac8ccb5df257338" ],
-        "metadata" : {
-          "key" : {
-            "String" : "value"
-          }
-        }
-      }
-    }
-  }, {
-    "Register" : {
-      "NewAssetDefinition" : {
-        "id" : "xor#wonderland",
-        "value_type" : "Quantity",
-        "mintable" : "Infinitely",
-        "logo": null,
-        "metadata" : { }
-      }
-    }
-  }, {
-    "Register" : {
-      "NewAssetDefinition" : {
-        "id" : "test#wonderland",
-        "value_type" : "Store",
-        "mintable" : "Infinitely",
-        "logo": null,
-        "metadata" : { }
-      }
-    }
-  }, {
-    "Register" : {
-      "NewAssetDefinition" : {
-        "id" : "test2#wonderland",
-        "value_type" : "Store",
-        "mintable" : "Infinitely",
-        "logo": null,
-        "metadata" : { }
-      }
-    }
-  }, {
-    "Register" : {
-      "NewAssetDefinition" : {
-        "id" : "val#wonderland",
-        "value_type" : "Quantity",
-        "mintable" : "Infinitely",
-        "logo": null,
-        "metadata" : { }
-      }
-    }
-  }, {
-    "Register" : {
-      "NewAssetDefinition" : {
-        "id" : "foo#wonderland",
-        "value_type" : "Store",
-        "mintable" : "Infinitely",
-        "logo": null,
-        "metadata" : {
-          "key" : {
-            "String" : "sqhghUGohQkHtMWdynXQvcFhzSBCOzDBuXbeIRiZKgxPMLifiJ"
-          }
-        }
-      }
-    }
-  }, {
-    "Register" : {
-      "NewRole" : {
-        "id" : "USER_METADATA_ACCESS",
-        "permissions" : [ {
-          "definition_id" : "CanSetKeyValueInUserAsset",
-          "payload" : {
-            "account_id" : "alice@wonderland"
-          }
-        }, {
-          "definition_id" : "CanRemoveKeyValueInUserAsset",
-          "payload" : {
-            "account_id" : "alice@wonderland"
-          }
-        } ]
-      }
-    }
-  }, {
-    "Mint" : {
-      "object" : "100_u32",
-      "destination_id" : {
-        "AssetId" : "xor#wonderland#alice@wonderland"
-      }
-    }
-  }, {
-    "Grant" : {
-      "object": {
-        "PermissionToken" : {
-          "definition_id" : "CanBurnAssetWithDefinition",
-          "payload" : {
-            "asset_definition_id" : "xor#wonderland"
-          }
-        }
-      },
-      "destination_id" : {
-        "AccountId" : "alice@wonderland"
-      }
-    }
-  }, {
-    "SetKeyValue" : {
-      "AssetId" : "foo#wonderland#alice@wonderland",
-      "key" : {
-        "Name" : "key"
-      },
-      "value" : {
-        "String" : "sqhghUGohQkHtMWdynXQvcFhzSBCOzDBuXbeIRiZKgxPMLifiJ"
-      }
-    }
-  },
+  "chain": "00000000-0000-0000-0000-000000000000",
+  "executor": "./executor.wasm",
+  "parameters": [],
+  "instructions": [
     {
-      "SetKeyValue" : {
-        "AssetId" : "foo#wonderland#alice@wonderland",
-        "key" : {
-          "Name" : "key2"
-        },
-        "value" : {
-          "Numeric" : {
-            "U32" : 123
+      "Register": {
+        "Domain": {
+          "id": "wonderland",
+          "logo": null,
+          "metadata": {
+            "OhOXbyHMGo": "OhOXbyHMGo"
           }
         }
       }
-    },{
-      "Mint" : {
-        "object" : "100_u32",
-        "destination_id" : {
-          "AssetId" : "xor#wonderland#bob@wonderland"
+    },
+    {
+      "Register": {
+        "Account": {
+          "id": "ed0120CE7FA46C9DCE7EA4B125E2E36BDB63EA33073E7590AC92816AE1E861B7048B03@wonderland",
+          "metadata": {
+            "xnPrkBHMaF": "xnPrkBHMaF"
+          }
         }
       }
-    }, {
-      "Mint" : {
-        "object" : "1_u32",
-        "destination_id" : {
-          "AssetId" : "xor#wonderland#alice@wonderland"
+    },
+    {
+      "Register": {
+        "Account": {
+          "id": "ed012004FF5B81046DDCCF19E2E451C45DFB6F53759D4EB30FA2EFA807284D1CC33016@wonderland",
+          "metadata": {
+            "kGwJtCQaew": "kGwJtCQaew"
+          }
         }
       }
-    }, {
-      "Mint" : {
-        "object" : "1_u32",
-        "destination_id" : {
-          "AssetId" : "val#wonderland#alice@wonderland"
+    },
+    {
+      "Register": {
+        "Account": {
+          "id": "ed0120E9F632D3034BAB6BB26D92AC8FD93EF878D9C5E69E01B61B4C47101884EE2F99@wonderland",
+          "metadata": {
+            "key": "value"
+          }
         }
       }
-    } ] ],
-  "executor": "./executor.wasm"
+    },
+    {
+      "Register": {
+        "AssetDefinition": {
+          "id": "xor#wonderland",
+          "type": "Numeric",
+          "mintable": "Infinitely",
+          "logo": null,
+          "metadata": {}
+        }
+      }
+    },
+    {
+      "Register": {
+        "AssetDefinition": {
+          "id": "test#wonderland",
+          "type": "Store",
+          "mintable": "Infinitely",
+          "logo": null,
+          "metadata": {}
+        }
+      }
+    },
+    {
+      "Register": {
+        "AssetDefinition": {
+          "id": "test2#wonderland",
+          "type": "Store",
+          "mintable": "Infinitely",
+          "logo": null,
+          "metadata": {}
+        }
+      }
+    },
+    {
+      "Register": {
+        "AssetDefinition": {
+          "id": "val#wonderland",
+          "type": "Numeric",
+          "mintable": "Infinitely",
+          "logo": null,
+          "metadata": {}
+        }
+      }
+    },
+    {
+      "Register": {
+        "AssetDefinition": {
+          "id": "foo#wonderland",
+          "type": "Store",
+          "mintable": "Infinitely",
+          "logo": null,
+          "metadata": {
+            "key": "sqhghUGohQkHtMWdynXQvcFhzSBCOzDBuXbeIRiZKgxPMLifiJ"
+          }
+        }
+      }
+    },
+    {
+      "Register": {
+        "Role": {
+          "id": "USER_METADATA_ACCESS",
+          "permissions": [
+            {
+              "name": "CanSetKeyValueInUserAsset",
+              "payload": {
+                "account": "ed0120CE7FA46C9DCE7EA4B125E2E36BDB63EA33073E7590AC92816AE1E861B7048B03@wonderland"
+              }
+            },
+            {
+              "name": "CanRemoveKeyValueInUserAsset",
+              "payload": {
+                "account": "ed0120CE7FA46C9DCE7EA4B125E2E36BDB63EA33073E7590AC92816AE1E861B7048B03@wonderland"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "Mint": {
+        "Asset": {
+          "object": "100",
+          "destination": "xor#wonderland#ed0120CE7FA46C9DCE7EA4B125E2E36BDB63EA33073E7590AC92816AE1E861B7048B03@wonderland"
+        }
+      }
+    },
+    {
+      "Grant": {
+        "Permission": {
+          "object": {
+            "name": "CanBurnAssetWithDefinition",
+            "payload": {
+              "asset_definition": "xor#wonderland"
+            }
+          },
+          "destination": "ed0120CE7FA46C9DCE7EA4B125E2E36BDB63EA33073E7590AC92816AE1E861B7048B03@wonderland"
+        }
+      }
+    },
+    {
+      "SetKeyValue": {
+        "Asset": {
+          "object": "foo#wonderland#ed0120CE7FA46C9DCE7EA4B125E2E36BDB63EA33073E7590AC92816AE1E861B7048B03@wonderland",
+          "key": "key",
+          "value": "sqhghUGohQkHtMWdynXQvcFhzSBCOzDBuXbeIRiZKgxPMLifiJ"
+        }
+      }
+    },
+    {
+      "SetKeyValue": {
+        "Asset": {
+          "object": "foo#wonderland#ed0120CE7FA46C9DCE7EA4B125E2E36BDB63EA33073E7590AC92816AE1E861B7048B03@wonderland",
+          "key": "key2",
+          "value": "123"
+        }
+      }
+    },
+    {
+      "Mint": {
+        "Asset": {
+          "object": "100",
+          "destination": "xor#wonderland#ed012004FF5B81046DDCCF19E2E451C45DFB6F53759D4EB30FA2EFA807284D1CC33016@wonderland"
+        }
+      }
+    },
+    {
+      "Mint": {
+        "Asset": {
+          "object": "1",
+          "destination": "xor#wonderland#ed0120CE7FA46C9DCE7EA4B125E2E36BDB63EA33073E7590AC92816AE1E861B7048B03@wonderland"
+        }
+      }
+    },
+    {
+      "Mint": {
+        "Asset": {
+          "object": "1",
+          "destination": "val#wonderland#ed0120CE7FA46C9DCE7EA4B125E2E36BDB63EA33073E7590AC92816AE1E861B7048B03@wonderland"
+        }
+      }
+    }
+  ],
+  "topology": []
 }

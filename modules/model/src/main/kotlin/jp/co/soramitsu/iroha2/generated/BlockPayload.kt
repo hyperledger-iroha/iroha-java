@@ -18,17 +18,15 @@ import kotlin.collections.List
  */
 public data class BlockPayload(
     public val `header`: BlockHeader,
-    public val commitTopology: UniqueVec<PeerId>,
-    public val transactions: List<TransactionValue>,
-    public val eventRecommendations: List<Event>,
+    public val transactions: List<CommittedTransaction>,
+    public val eventRecommendations: List<EventBox>,
 ) {
     public companion object : ScaleReader<BlockPayload>, ScaleWriter<BlockPayload> {
         override fun read(reader: ScaleCodecReader): BlockPayload = try {
             BlockPayload(
                 BlockHeader.read(reader),
-                UniqueVec.read(reader) as UniqueVec<PeerId>,
-                reader.readVec(reader.readCompactInt()) { TransactionValue.read(reader) },
-                reader.readVec(reader.readCompactInt()) { Event.read(reader) },
+                reader.readVec(reader.readCompactInt()) { CommittedTransaction.read(reader) },
+                reader.readVec(reader.readCompactInt()) { EventBox.read(reader) },
             )
         } catch (ex: Exception) {
             throw wrapException(ex)
@@ -36,14 +34,13 @@ public data class BlockPayload(
 
         override fun write(writer: ScaleCodecWriter, instance: BlockPayload): Unit = try {
             BlockHeader.write(writer, instance.`header`)
-            UniqueVec.write(writer, instance.commitTopology)
             writer.writeCompact(instance.transactions.size)
             instance.transactions.forEach { value ->
-                TransactionValue.write(writer, value)
+                CommittedTransaction.write(writer, value)
             }
             writer.writeCompact(instance.eventRecommendations.size)
             instance.eventRecommendations.forEach { value ->
-                Event.write(writer, value)
+                EventBox.write(writer, value)
             }
         } catch (ex: Exception) {
             throw wrapException(ex)

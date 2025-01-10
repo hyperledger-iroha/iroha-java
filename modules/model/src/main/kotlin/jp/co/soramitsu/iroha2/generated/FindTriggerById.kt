@@ -16,19 +16,19 @@ import kotlin.Unit
  * Generated from 'FindTriggerById' regular structure
  */
 public data class FindTriggerById(
-    public val id: EvaluatesTo<TriggerId>,
+    public val id: TriggerId,
 ) {
     public companion object : ScaleReader<FindTriggerById>, ScaleWriter<FindTriggerById> {
         override fun read(reader: ScaleCodecReader): FindTriggerById = try {
             FindTriggerById(
-                EvaluatesTo.read(reader) as EvaluatesTo<TriggerId>,
+                TriggerId.read(reader),
             )
         } catch (ex: Exception) {
             throw wrapException(ex)
         }
 
         override fun write(writer: ScaleCodecWriter, instance: FindTriggerById): Unit = try {
-            EvaluatesTo.write(writer, instance.id)
+            TriggerId.write(writer, instance.id)
         } catch (ex: Exception) {
             throw wrapException(ex)
         }

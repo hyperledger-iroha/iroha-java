@@ -16,19 +16,19 @@ import kotlin.Unit
  * Generated from 'FindDomainById' regular structure
  */
 public data class FindDomainById(
-    public val id: EvaluatesTo<DomainId>,
+    public val id: DomainId,
 ) {
     public companion object : ScaleReader<FindDomainById>, ScaleWriter<FindDomainById> {
         override fun read(reader: ScaleCodecReader): FindDomainById = try {
             FindDomainById(
-                EvaluatesTo.read(reader) as EvaluatesTo<DomainId>,
+                DomainId.read(reader),
             )
         } catch (ex: Exception) {
             throw wrapException(ex)
         }
 
         override fun write(writer: ScaleCodecWriter, instance: FindDomainById): Unit = try {
-            EvaluatesTo.write(writer, instance.id)
+            DomainId.write(writer, instance.id)
         } catch (ex: Exception) {
             throw wrapException(ex)
         }

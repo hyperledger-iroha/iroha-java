@@ -1,90 +1,112 @@
-version: "3.8"
-
 services:
-  iroha:
-    image: hyperledger/iroha2:stable-2.0.0-pre-rc.20
+  irohad0:
+    image: hyperledger/iroha:2.0.0-pre-rc.22.2
+    platform: linux/amd64
     environment:
-      TORII_P2P_ADDR: iroha:1337
-      TORII_API_URL: iroha:8080
-      TORII_TELEMETRY_URL: iroha:8180
-      IROHA_PUBLIC_KEY: "ed01207233bfc89dcbd68c19fde6ce6158225298ec1131b6a130d1aeb454c1ab5183c0"
-      IROHA_PRIVATE_KEY: '{"digest_function": "ed25519", "payload": "9ac47abf59b356e0bd7dcbbbb4dec080e302156a48ca907e47cb6aea1d32719e7233bfc89dcbd68c19fde6ce6158225298ec1131b6a130d1aeb454c1ab5183c0"}'
-      SUMERAGI_TRUSTED_PEERS: '[{"address":"iroha:1337", "public_key": "ed01207233bfc89dcbd68c19fde6ce6158225298ec1131b6a130d1aeb454c1ab5183c0"}, {"address":"iroha1:1338", "public_key": "ed0120cc25624d62896d3a0bfd8940f928dc2abf27cc57cefeb442aa96d9081aae58a1"}, {"address": "iroha2:1339", "public_key": "ed0120faca9e8aa83225cb4d16d67f27dd4f93fc30ffa11adc1f5c88fd5495ecc91020"}, {"address": "iroha3:1340", "public_key": "ed01208e351a70b6a603ed285d666b8d689b680865913ba03ce29fb7d13a166c4e7f1f"}]'
-      IROHA_GENESIS_ACCOUNT_PUBLIC_KEY: 'ed01203f4e3e98571b55514edc5ccf7e53ca7509d89b2868e62921180a6f57c2f4e255'
-      IROHA_GENESIS_ACCOUNT_PRIVATE_KEY: '{ "digest_function": "ed25519", "payload": "038ae16b219da35aa036335ed0a43c28a2cc737150112c78a7b8034b9d99c9023f4e3e98571b55514edc5ccf7e53ca7509d89b2868e62921180a6f57c2f4e255" }'
-      WSV_WASM_RUNTIME_CONFIG: "{\"FUEL_LIMIT\":900000000000, \"MAX_MEMORY\": 524288000}"
+      CHAIN: 00000000-0000-0000-0000-000000000000
+      PUBLIC_KEY: ed0120A98BAFB0663CE08D75EBD506FEC38A84E576A7C9B0897693ED4B04FD9EF2D18D
+      PRIVATE_KEY: 802620A4DFC16789FBF9A588525E4AC7F791AC51B12AEE8919EACC03EB2FC31D32C692
+      P2P_ADDRESS: 0.0.0.0:1337
+      API_ADDRESS: 0.0.0.0:8080
+      TRUSTED_PEERS: '[{"address":"irohad2:1339","public_key":"ed01204EE2FCD53E1730AF142D1E23951198678295047F9314B4006B0CB61850B1DB10"},{"address":"irohad1:1338","public_key":"ed01209897952D14BDFAEA780087C38FF3EB800CB20B882748FC95A575ADB9CD2CB21D"},{"address":"irohad3:1340","public_key":"ed0120CACF3A84B8DC8710CE9D6B968EE95EC7EE4C93C85858F026F3B4417F569592CE"}]'
+      GENESIS_PUBLIC_KEY: ed01204164BF554923ECE1FD412D241036D863A6AE430476C898248B8237D77534CFC4
+      GENESIS_PRIVATE_KEY: 80262082B3BDE54AEBECA4146257DA0DE8D59D8E46D5FE34887DCD8072866792FCB3AD
+      GENESIS: /tmp/genesis.signed.scale
+      TOPOLOGY: '[{"address":"irohad2:1339","public_key":"ed01204EE2FCD53E1730AF142D1E23951198678295047F9314B4006B0CB61850B1DB10"},{"address":"irohad1:1338","public_key":"ed01209897952D14BDFAEA780087C38FF3EB800CB20B882748FC95A575ADB9CD2CB21D"},{"address":"irohad0:1337","public_key":"ed0120A98BAFB0663CE08D75EBD506FEC38A84E576A7C9B0897693ED4B04FD9EF2D18D"},{"address":"irohad3:1340","public_key":"ed0120CACF3A84B8DC8710CE9D6B968EE95EC7EE4C93C85858F026F3B4417F569592CE"}]'
     ports:
-      - "1337:1337"
-      - "8080:8080"
-      - "8180:8180"
+    - 1337:1337
+    - 8080:8080
     volumes:
-      - "../modules/test-tools/src/main/resources:/config"
-      - "../modules/test-tools/src/main/resources:/app/.cache/wasmtime"
+    - "../modules/test-tools/src/main/resources:/config"
     init: true
-    command: iroha --submit-genesis
-
-  iroha1:
-    image: hyperledger/iroha2:stable-2.0.0-pre-rc.20
+    healthcheck:
+      test: test $(curl -s http://127.0.0.1:8080/status/blocks) -gt 0
+      interval: 2s
+      timeout: 1s
+      retries: 30
+      start_period: 4s
+    command: |-
+      /bin/sh -c "
+          EXECUTOR_RELATIVE_PATH=$(jq -r '.executor' /config/genesis.json) && \\
+          EXECUTOR_ABSOLUTE_PATH=$(realpath \"/config/$$EXECUTOR_RELATIVE_PATH\") && \\
+          jq \\
+              --arg executor \"$$EXECUTOR_ABSOLUTE_PATH\" \\
+              --argjson topology \"$$TOPOLOGY\" \\
+              '.executor = $$executor | .topology = $$topology' /config/genesis.json \\
+              >/tmp/genesis.json && \\
+          kagami genesis sign /tmp/genesis.json \\
+              --public-key $$GENESIS_PUBLIC_KEY \\
+              --private-key $$GENESIS_PRIVATE_KEY \\
+              --out-file $$GENESIS \\
+          && \\
+          irohad
+      "
+  irohad1:
+    image: hyperledger/iroha:2.0.0-pre-rc.22.2
+    platform: linux/amd64
     environment:
-      TORII_P2P_ADDR: iroha1:1338
-      TORII_API_URL: iroha1:8081
-      TORII_TELEMETRY_URL: iroha1:8181
-      IROHA_PUBLIC_KEY: "ed0120cc25624d62896d3a0bfd8940f928dc2abf27cc57cefeb442aa96d9081aae58a1"
-      IROHA_PRIVATE_KEY: '{"digest_function": "ed25519", "payload": "3bac34cda9e3763fa069c1198312d1ec73b53023b8180c822ac355435edc4a24cc25624d62896d3a0bfd8940f928dc2abf27cc57cefeb442aa96d9081aae58a1"}'
-      SUMERAGI_TRUSTED_PEERS: '[{"address":"iroha:1337", "public_key": "ed01207233bfc89dcbd68c19fde6ce6158225298ec1131b6a130d1aeb454c1ab5183c0"}, {"address":"iroha1:1338", "public_key": "ed0120cc25624d62896d3a0bfd8940f928dc2abf27cc57cefeb442aa96d9081aae58a1"}, {"address": "iroha2:1339", "public_key": "ed0120faca9e8aa83225cb4d16d67f27dd4f93fc30ffa11adc1f5c88fd5495ecc91020"}, {"address": "iroha3:1340", "public_key": "ed01208e351a70b6a603ed285d666b8d689b680865913ba03ce29fb7d13a166c4e7f1f"}]'
-      IROHA_GENESIS_ACCOUNT_PUBLIC_KEY: 'ed01203f4e3e98571b55514edc5ccf7e53ca7509d89b2868e62921180a6f57c2f4e255'
-      IROHA_GENESIS_ACCOUNT_PRIVATE_KEY: '{ "digest_function": "ed25519", "payload": "038ae16b219da35aa036335ed0a43c28a2cc737150112c78a7b8034b9d99c9023f4e3e98571b55514edc5ccf7e53ca7509d89b2868e62921180a6f57c2f4e255" }'
-      WSV_WASM_RUNTIME_CONFIG: "{\"FUEL_LIMIT\":900000000000, \"MAX_MEMORY\": 524288000}"
+      CHAIN: 00000000-0000-0000-0000-000000000000
+      PUBLIC_KEY: ed01209897952D14BDFAEA780087C38FF3EB800CB20B882748FC95A575ADB9CD2CB21D
+      PRIVATE_KEY: 8026203ECA64ADC23DC106C9D703233375EA6AC345AD7299FF3AD45F355DE6CD1B5510
+      P2P_ADDRESS: 0.0.0.0:1338
+      API_ADDRESS: 0.0.0.0:8081
+      GENESIS_PUBLIC_KEY: ed01204164BF554923ECE1FD412D241036D863A6AE430476C898248B8237D77534CFC4
+      TRUSTED_PEERS: '[{"address":"irohad2:1339","public_key":"ed01204EE2FCD53E1730AF142D1E23951198678295047F9314B4006B0CB61850B1DB10"},{"address":"irohad0:1337","public_key":"ed0120A98BAFB0663CE08D75EBD506FEC38A84E576A7C9B0897693ED4B04FD9EF2D18D"},{"address":"irohad3:1340","public_key":"ed0120CACF3A84B8DC8710CE9D6B968EE95EC7EE4C93C85858F026F3B4417F569592CE"}]'
     ports:
-      - "1338:1338"
-      - "8081:8081"
-      - "8181:8181"
+    - 1338:1338
+    - 8081:8081
     volumes:
-      - "../modules/test-tools/src/main/resources:/config"
-      - "../modules/test-tools/src/main/resources:/app/.cache/wasmtime"
+    - "../modules/test-tools/src/main/resources:/config"
     init: true
-    command: iroha
-
-  iroha2:
-    image: hyperledger/iroha2:stable-2.0.0-pre-rc.20
+    healthcheck:
+      test: test $(curl -s http://127.0.0.1:8081/status/blocks) -gt 0
+      interval: 2s
+      timeout: 1s
+      retries: 30
+      start_period: 4s
+  irohad2:
+    image: hyperledger/iroha:2.0.0-pre-rc.22.2
+    platform: linux/amd64
     environment:
-      TORII_P2P_ADDR: iroha2:1339
-      TORII_API_URL: iroha2:8082
-      TORII_TELEMETRY_URL: iroha2:8182
-      IROHA_PUBLIC_KEY: "ed0120faca9e8aa83225cb4d16d67f27dd4f93fc30ffa11adc1f5c88fd5495ecc91020"
-      IROHA_PRIVATE_KEY: '{"digest_function": "ed25519", "payload": "1261a436d36779223d7d6cf20e8b644510e488e6a50bafd77a7485264d27197dfaca9e8aa83225cb4d16d67f27dd4f93fc30ffa11adc1f5c88fd5495ecc91020"}'
-      SUMERAGI_TRUSTED_PEERS: '[{"address":"iroha:1337", "public_key": "ed01207233bfc89dcbd68c19fde6ce6158225298ec1131b6a130d1aeb454c1ab5183c0"}, {"address":"iroha1:1338", "public_key": "ed0120cc25624d62896d3a0bfd8940f928dc2abf27cc57cefeb442aa96d9081aae58a1"}, {"address": "iroha2:1339", "public_key": "ed0120faca9e8aa83225cb4d16d67f27dd4f93fc30ffa11adc1f5c88fd5495ecc91020"}, {"address": "iroha3:1340", "public_key": "ed01208e351a70b6a603ed285d666b8d689b680865913ba03ce29fb7d13a166c4e7f1f"}]'
-      IROHA_GENESIS_ACCOUNT_PUBLIC_KEY: 'ed01203f4e3e98571b55514edc5ccf7e53ca7509d89b2868e62921180a6f57c2f4e255'
-      IROHA_GENESIS_ACCOUNT_PRIVATE_KEY: '{ "digest_function": "ed25519", "payload": "038ae16b219da35aa036335ed0a43c28a2cc737150112c78a7b8034b9d99c9023f4e3e98571b55514edc5ccf7e53ca7509d89b2868e62921180a6f57c2f4e255" }'
-      WSV_WASM_RUNTIME_CONFIG: "{\"FUEL_LIMIT\":900000000000, \"MAX_MEMORY\": 524288000}"
+      CHAIN: 00000000-0000-0000-0000-000000000000
+      PUBLIC_KEY: ed01204EE2FCD53E1730AF142D1E23951198678295047F9314B4006B0CB61850B1DB10
+      PRIVATE_KEY: 8026207B1C78F733EDAFD6AF9BAC3A0D6C5A494557DD031609A4FDD9796EEF471D928C
+      P2P_ADDRESS: 0.0.0.0:1339
+      API_ADDRESS: 0.0.0.0:8082
+      GENESIS_PUBLIC_KEY: ed01204164BF554923ECE1FD412D241036D863A6AE430476C898248B8237D77534CFC4
+      TRUSTED_PEERS: '[{"address":"irohad1:1338","public_key":"ed01209897952D14BDFAEA780087C38FF3EB800CB20B882748FC95A575ADB9CD2CB21D"},{"address":"irohad0:1337","public_key":"ed0120A98BAFB0663CE08D75EBD506FEC38A84E576A7C9B0897693ED4B04FD9EF2D18D"},{"address":"irohad3:1340","public_key":"ed0120CACF3A84B8DC8710CE9D6B968EE95EC7EE4C93C85858F026F3B4417F569592CE"}]'
     ports:
-      - "1339:1339"
-      - "8082:8082"
-      - "8182:8182"
+    - 1339:1339
+    - 8082:8082
     volumes:
-      - "../modules/test-tools/src/main/resources:/config"
-      - "../modules/test-tools/src/main/resources:/app/.cache/wasmtime"
+    - "../modules/test-tools/src/main/resources:/config"
     init: true
-    command: iroha
-
-  iroha3:
-    image: hyperledger/iroha2:stable-2.0.0-pre-rc.20
+    healthcheck:
+      test: test $(curl -s http://127.0.0.1:8082/status/blocks) -gt 0
+      interval: 2s
+      timeout: 1s
+      retries: 30
+      start_period: 4s
+  irohad3:
+    image: hyperledger/iroha:2.0.0-pre-rc.22.2
+    platform: linux/amd64
     environment:
-      TORII_P2P_ADDR: iroha3:1340
-      TORII_API_URL: iroha3:8083
-      TORII_TELEMETRY_URL: iroha3:8183
-      IROHA_PUBLIC_KEY: "ed01208e351a70b6a603ed285d666b8d689b680865913ba03ce29fb7d13a166c4e7f1f"
-      IROHA_PRIVATE_KEY: '{"digest_function": "ed25519", "payload": "a70dab95c7482eb9f159111b65947e482108cfe67df877bd8d3b9441a781c7c98e351a70b6a603ed285d666b8d689b680865913ba03ce29fb7d13a166c4e7f1f"}'
-      SUMERAGI_TRUSTED_PEERS: '[{"address":"iroha:1337", "public_key": "ed01207233bfc89dcbd68c19fde6ce6158225298ec1131b6a130d1aeb454c1ab5183c0"}, {"address":"iroha1:1338", "public_key": "ed0120cc25624d62896d3a0bfd8940f928dc2abf27cc57cefeb442aa96d9081aae58a1"}, {"address": "iroha2:1339", "public_key": "ed0120faca9e8aa83225cb4d16d67f27dd4f93fc30ffa11adc1f5c88fd5495ecc91020"}, {"address": "iroha3:1340", "public_key": "ed01208e351a70b6a603ed285d666b8d689b680865913ba03ce29fb7d13a166c4e7f1f"}]'
-      IROHA_GENESIS_ACCOUNT_PUBLIC_KEY: 'ed01203f4e3e98571b55514edc5ccf7e53ca7509d89b2868e62921180a6f57c2f4e255'
-      IROHA_GENESIS_ACCOUNT_PRIVATE_KEY: '{ "digest_function": "ed25519", "payload": "038ae16b219da35aa036335ed0a43c28a2cc737150112c78a7b8034b9d99c9023f4e3e98571b55514edc5ccf7e53ca7509d89b2868e62921180a6f57c2f4e255" }'
-      WSV_WASM_RUNTIME_CONFIG: "{\"FUEL_LIMIT\":900000000000, \"MAX_MEMORY\": 524288000}"
+      CHAIN: 00000000-0000-0000-0000-000000000000
+      PUBLIC_KEY: ed0120CACF3A84B8DC8710CE9D6B968EE95EC7EE4C93C85858F026F3B4417F569592CE
+      PRIVATE_KEY: 8026206C7FF4CA09D395C7B7332C654099406E929C6238942E3CE85155CC1A5E2CF519
+      P2P_ADDRESS: 0.0.0.0:1340
+      API_ADDRESS: 0.0.0.0:8083
+      GENESIS_PUBLIC_KEY: ed01204164BF554923ECE1FD412D241036D863A6AE430476C898248B8237D77534CFC4
+      TRUSTED_PEERS: '[{"address":"irohad2:1339","public_key":"ed01204EE2FCD53E1730AF142D1E23951198678295047F9314B4006B0CB61850B1DB10"},{"address":"irohad1:1338","public_key":"ed01209897952D14BDFAEA780087C38FF3EB800CB20B882748FC95A575ADB9CD2CB21D"},{"address":"irohad0:1337","public_key":"ed0120A98BAFB0663CE08D75EBD506FEC38A84E576A7C9B0897693ED4B04FD9EF2D18D"}]'
     ports:
-      - "1340:1340"
-      - "8083:8083"
-      - "8183:8183"
+    - 1340:1340
+    - 8083:8083
     volumes:
-      - "../modules/test-tools/src/main/resources:/config"
-      - "../modules/test-tools/src/main/resources:/app/.cache/wasmtime"
+    - "../modules/test-tools/src/main/resources:/config"
     init: true
-    command: iroha
+    healthcheck:
+      test: test $(curl -s http://127.0.0.1:8083/status/blocks) -gt 0
+      interval: 2s
+      timeout: 1s
+      retries: 30
+      start_period: 4s

@@ -3,16 +3,17 @@ name: Iroha2-java main branch workflow
 on:
   push:
     branches: [ iroha2-dev, iroha2-main ]
+  workflow_dispatch:
+
 jobs:
   build:
-    runs-on: ubuntu-latest
-
+    runs-on: [self-hosted, Linux, iroha2]
     steps:
-      - uses: actions/checkout@v3
-      - name: Set up JDK 16
+      - uses: actions/checkout@v4
+      - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
-          java-version: '16'
+          java-version: '17'
           distribution: 'liberica'
       - name: Cache Gradle packages
         uses: actions/cache@v3
@@ -23,8 +24,26 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
-      - name: Build with Gradle
-        run: ./gradlew build
+      - name: Build with Gradle & Sonarqube analysis
+        run: |
+          ./gradlew build
+          ./gradlew jacocoTestReport
+          ./gradlew sonar -Dsonar.token=${{ secrets.SONAR_TOKEN }}
+      - name: DefectDojo
+        if: always()
+        uses: C4tWithShell/defectdojo-action@1.0.4
+        with:
+          token: ${{ secrets.DEFECTOJO_TOKEN }}
+          defectdojo_url: ${{ secrets.DEFECTOJO_URL }}
+          product_type: iroha2
+          engagement: ${{ github.ref_name }}
+          tools: "SonarQube API Import,Github Vulnerability Scan"
+          sonar_projectKey: iroha2-java
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_repository: ${{ github.repository }}
+          product: ${{ github.repository }}
+          environment: Test
+          reports: '{"Github Vulnerability Scan": "github.json"}'
       - name: Cleanup Gradle Cache
         # Remove some files from the Gradle cache, so they aren't cached by GitHub Actions.
         # Restoring these files from a GitHub Actions cache might cause problems for future builds.

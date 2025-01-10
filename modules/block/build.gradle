@@ -7,3 +7,7 @@ dependencies {
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit5:$kotlinVer"
     testImplementation "org.jetbrains.kotlin:kotlin-test:$kotlinVer"
 }
+
+jacocoTestReport {
+    mustRunAfter(":admin-client:jacocoTestReport")
+}

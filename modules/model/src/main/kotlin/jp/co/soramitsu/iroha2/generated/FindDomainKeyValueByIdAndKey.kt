@@ -16,24 +16,24 @@ import kotlin.Unit
  * Generated from 'FindDomainKeyValueByIdAndKey' regular structure
  */
 public data class FindDomainKeyValueByIdAndKey(
-    public val id: EvaluatesTo<DomainId>,
-    public val key: EvaluatesTo<Name>,
+    public val id: DomainId,
+    public val key: Name,
 ) {
     public companion object :
         ScaleReader<FindDomainKeyValueByIdAndKey>,
         ScaleWriter<FindDomainKeyValueByIdAndKey> {
         override fun read(reader: ScaleCodecReader): FindDomainKeyValueByIdAndKey = try {
             FindDomainKeyValueByIdAndKey(
-                EvaluatesTo.read(reader) as EvaluatesTo<DomainId>,
-                EvaluatesTo.read(reader) as EvaluatesTo<Name>,
+                DomainId.read(reader),
+                Name.read(reader),
             )
         } catch (ex: Exception) {
             throw wrapException(ex)
         }
 
         override fun write(writer: ScaleCodecWriter, instance: FindDomainKeyValueByIdAndKey): Unit = try {
-            EvaluatesTo.write(writer, instance.id)
-            EvaluatesTo.write(writer, instance.key)
+            DomainId.write(writer, instance.id)
+            Name.write(writer, instance.key)
         } catch (ex: Exception) {
             throw wrapException(ex)
         }

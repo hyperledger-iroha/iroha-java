@@ -15,17 +15,17 @@ import kotlin.collections.List
 /**
  * NonTrivial
  *
- * Generated from 'NonTrivial<GenericPredicateBox<ValuePredicate>>' regular structure
+ * Generated from 'NonTrivial<GenericPredicateBox<QueryOutputPredicate>>' regular structure
  */
 public data class NonTrivial<T0>(
-    public val vecOfValuePredicate: List<GenericPredicateBox<ValuePredicate>>,
+    public val vecOfQueryOutputPredicate: List<GenericPredicateBox<QueryOutputPredicate>>,
 ) {
     public companion object : ScaleReader<NonTrivial<out Any>>, ScaleWriter<NonTrivial<out Any>> {
         override fun read(reader: ScaleCodecReader): NonTrivial<out Any> = try {
             NonTrivial(
                 reader.readVec(reader.readCompactInt()) {
                     GenericPredicateBox.read(reader) as
-                        GenericPredicateBox<ValuePredicate>
+                        GenericPredicateBox<QueryOutputPredicate>
                 },
             )
         } catch (ex: Exception) {
@@ -33,8 +33,8 @@ public data class NonTrivial<T0>(
         }
 
         override fun write(writer: ScaleCodecWriter, instance: NonTrivial<out Any>): Unit = try {
-            writer.writeCompact(instance.vecOfValuePredicate.size)
-            instance.vecOfValuePredicate.forEach { value ->
+            writer.writeCompact(instance.vecOfQueryOutputPredicate.size)
+            instance.vecOfQueryOutputPredicate.forEach { value ->
                 GenericPredicateBox.write(writer, value)
             }
         } catch (ex: Exception) {

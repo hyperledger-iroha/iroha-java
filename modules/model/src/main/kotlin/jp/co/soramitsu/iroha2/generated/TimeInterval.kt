@@ -8,6 +8,7 @@ import jp.co.soramitsu.iroha2.codec.ScaleCodecWriter
 import jp.co.soramitsu.iroha2.codec.ScaleReader
 import jp.co.soramitsu.iroha2.codec.ScaleWriter
 import jp.co.soramitsu.iroha2.wrapException
+import java.math.BigInteger
 import kotlin.Unit
 
 /**
@@ -16,22 +17,22 @@ import kotlin.Unit
  * Generated from 'TimeInterval' regular structure
  */
 public data class TimeInterval(
-    public val since: Duration,
-    public val length: Duration,
+    public val sinceMs: BigInteger,
+    public val lengthMs: BigInteger,
 ) {
     public companion object : ScaleReader<TimeInterval>, ScaleWriter<TimeInterval> {
         override fun read(reader: ScaleCodecReader): TimeInterval = try {
             TimeInterval(
-                Duration.read(reader),
-                Duration.read(reader),
+                reader.readUint64(),
+                reader.readUint64(),
             )
         } catch (ex: Exception) {
             throw wrapException(ex)
         }
 
         override fun write(writer: ScaleCodecWriter, instance: TimeInterval): Unit = try {
-            Duration.write(writer, instance.since)
-            Duration.write(writer, instance.length)
+            writer.writeUint64(instance.sinceMs)
+            writer.writeUint64(instance.lengthMs)
         } catch (ex: Exception) {
             throw wrapException(ex)
         }

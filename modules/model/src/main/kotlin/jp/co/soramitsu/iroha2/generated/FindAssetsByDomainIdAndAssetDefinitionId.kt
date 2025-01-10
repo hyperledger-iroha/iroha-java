@@ -16,16 +16,16 @@ import kotlin.Unit
  * Generated from 'FindAssetsByDomainIdAndAssetDefinitionId' regular structure
  */
 public data class FindAssetsByDomainIdAndAssetDefinitionId(
-    public val domainId: EvaluatesTo<DomainId>,
-    public val assetDefinitionId: EvaluatesTo<AssetDefinitionId>,
+    public val domain: DomainId,
+    public val assetDefinition: AssetDefinitionId,
 ) {
     public companion object :
         ScaleReader<FindAssetsByDomainIdAndAssetDefinitionId>,
         ScaleWriter<FindAssetsByDomainIdAndAssetDefinitionId> {
         override fun read(reader: ScaleCodecReader): FindAssetsByDomainIdAndAssetDefinitionId = try {
             FindAssetsByDomainIdAndAssetDefinitionId(
-                EvaluatesTo.read(reader) as EvaluatesTo<DomainId>,
-                EvaluatesTo.read(reader) as EvaluatesTo<AssetDefinitionId>,
+                DomainId.read(reader),
+                AssetDefinitionId.read(reader),
             )
         } catch (ex: Exception) {
             throw wrapException(ex)
@@ -35,8 +35,8 @@ public data class FindAssetsByDomainIdAndAssetDefinitionId(
             writer: ScaleCodecWriter,
             instance: FindAssetsByDomainIdAndAssetDefinitionId,
         ): Unit = try {
-            EvaluatesTo.write(writer, instance.domainId)
-            EvaluatesTo.write(writer, instance.assetDefinitionId)
+            DomainId.write(writer, instance.domain)
+            AssetDefinitionId.write(writer, instance.assetDefinition)
         } catch (ex: Exception) {
             throw wrapException(ex)
         }

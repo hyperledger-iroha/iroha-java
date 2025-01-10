@@ -1,6 +1,7 @@
 package jp.co.soramitsu.iroha2.client.blockstream
 
 import io.ktor.client.plugins.websocket.webSocket
+import io.ktor.http.HttpMethod
 import io.ktor.websocket.close
 import io.ktor.websocket.readBytes
 import jp.co.soramitsu.iroha2.IrohaSdkException
@@ -105,11 +106,11 @@ open class BlockStreamSubscription private constructor(
                 BigInteger.valueOf(context.from),
             ),
         )
-
         context.client.webSocket(
             host = context.apiUrl.host,
             port = context.apiUrl.port,
             path = Iroha2Client.WS_ENDPOINT_BLOCK_STREAM,
+            method = HttpMethod.Get,
         ) {
             try {
                 logger.debug("WebSocket opened")
@@ -124,26 +125,23 @@ open class BlockStreamSubscription private constructor(
                         logger.debug("Executing {} action", id)
                         val result = storage.onBlock(block)
                         logger.debug("{} action result: {}", id, result)
+
                         val channel = storage.channel.value
                         when (channel.isClosedForSend) {
-                            true -> logger.warn(
-                                "Block stream channel#{} is already closed, not sending the action result",
-                                id,
-                            )
-
+                            true -> logger.warn("Block stream channel#{} is already closed, not sending the action result", id)
                             false -> channel.send(result)
                         }
                         if (storage.cancelIf?.let { it(block) } == true) {
                             // idempotent
                             channel.close()
                             idsToRemove.add(id)
-                            logger.debug("Block stream channel#{} is closed and scheduled for removal", id)
+                            logger.info("Block stream channel#{} is closed and scheduled for removal", id)
                         }
                     }
                     if (idsToRemove.isNotEmpty()) {
                         idsToRemove.forEach {
                             source.remove(it)
-                            logger.debug("Block stream channel#{} is removed", it)
+                            logger.info("Block stream channel#{} is removed", it)
                         }
                         idsToRemove.clear()
                     }

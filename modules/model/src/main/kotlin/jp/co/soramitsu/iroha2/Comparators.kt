@@ -3,8 +3,9 @@ package jp.co.soramitsu.iroha2
 import jp.co.soramitsu.iroha2.generated.AccountId
 import jp.co.soramitsu.iroha2.generated.AssetDefinitionId
 import jp.co.soramitsu.iroha2.generated.AssetId
+import jp.co.soramitsu.iroha2.generated.CustomParameterId
 import jp.co.soramitsu.iroha2.generated.Name
-import jp.co.soramitsu.iroha2.generated.PermissionToken
+import jp.co.soramitsu.iroha2.generated.Permission
 import jp.co.soramitsu.iroha2.generated.PublicKey
 import jp.co.soramitsu.iroha2.generated.RoleId
 import jp.co.soramitsu.iroha2.generated.SignatureOf
@@ -26,15 +27,16 @@ fun Name.Companion.comparator() = compareBy<Name> { it.string }
  * Compare account IDs
  */
 @JvmName("AccountIdComparator")
-fun AccountId.Companion.comparator() = compareBy<AccountId> { it.name.string }
-    .thenBy { it.domainId.name.string }
+fun AccountId.Companion.comparator() = compareBy<AccountId> { it.domain.name.string }.thenComparator { o1, o2 ->
+    PublicKey.comparator().compare(o1.signatory, o2.signatory)
+}
 
 /**
  * Compare asset definition IDs
  */
 @JvmName("AssetDefinitionIdComparator")
 fun AssetDefinitionId.Companion.comparator() = compareBy<AssetDefinitionId> { it.name.string }
-    .thenBy { it.domainId.name.string }
+    .thenBy { it.domain.name.string }
 
 /**
  * Compare asset IDs
@@ -42,11 +44,11 @@ fun AssetDefinitionId.Companion.comparator() = compareBy<AssetDefinitionId> { it
 @JvmName("AssetIdComparator")
 fun AssetId.Companion.comparator() = Comparator<AssetId> { o1, o2 ->
     AssetDefinitionId.comparator().compare(
-        o1.definitionId,
-        o2.definitionId,
+        o1.definition,
+        o2.definition,
     )
 }.thenComparator { o1, o2 ->
-    AccountId.comparator().compare(o1.accountId, o2.accountId)
+    AccountId.comparator().compare(o1.account, o2.account)
 }
 
 /**
@@ -68,11 +70,6 @@ fun PublicKey.Companion.comparator() = Comparator<PublicKey> { o1, o2 ->
  */
 @JvmName("SignatureOfComparator")
 fun SignatureOf.Companion.comparator() = Comparator<SignatureOf<*>> { o1, o2 ->
-    PublicKey.comparator().compare(
-        o1.signature.publicKey,
-        o2.signature.publicKey,
-    )
-}.thenComparator { o1, o2 ->
     ByteArray::class.comparator().compare(
         o1.signature.payload,
         o2.signature.payload,
@@ -80,13 +77,21 @@ fun SignatureOf.Companion.comparator() = Comparator<SignatureOf<*>> { o1, o2 ->
 }
 
 /**
- * Compare permission tokens
+ * Compare permissions
  */
-@JvmName("PermissionTokenComparator")
-fun PermissionToken.Companion.comparator() = compareBy<PermissionToken> {
-    it.definitionId.string
+@JvmName("PermissionComparator")
+fun Permission.Companion.comparator() = compareBy<Permission> {
+    it.name
 }.thenComparator { o1, o2 ->
-    o1.payload.string.compareTo(o2.payload.string)
+    o1.payload?.compareTo(o2.payload ?: "") ?: 0
+}
+
+/**
+ * Compare custom parameter ID
+ */
+@JvmName("CustomParameterIdComparator")
+fun CustomParameterId.Companion.comparator() = compareBy<CustomParameterId> {
+    it.name.string
 }
 
 private fun KClass<ByteArray>.comparator() = Comparator<ByteArray> { o1, o2 ->

@@ -1,230 +1,224 @@
 {
-  "transactions" : [ [ {
-    "Register" : {
-      "NewDomain" : {
-        "id" : "wonderland",
-        "logo" : null,
-        "metadata" : { }
+  "chain": "00000000-0000-0000-0000-000000000000",
+  "executor": "./executor.wasm",
+  "parameters": [],
+  "instructions": [
+    {
+      "Register": {
+        "Domain": {
+          "id": "wonderland",
+          "logo": null,
+          "metadata": {}
+        }
       }
-    }
-  }, {
-    "Register" : {
-      "NewDomain" : {
-        "id" : "dnalrednow",
-        "logo" : null,
-        "metadata" : { }
+    },
+    {
+      "Register": {
+        "Domain": {
+          "id": "dnalrednow",
+          "logo": null,
+          "metadata": {}
+        }
       }
-    }
-  }, {
-    "Register" : {
-      "NewDomain" : {
-        "id" : "test",
-        "logo" : null,
-        "metadata" : { }
+    },
+    {
+      "Register": {
+        "Domain": {
+          "id": "test",
+          "logo": null,
+          "metadata": {}
+        }
       }
-    }
-  }, {
-    "Register" : {
-      "NewDomain" : {
-        "id" : "admin",
-        "logo" : null,
-        "metadata" : { }
+    },
+    {
+      "Register": {
+        "Domain": {
+          "id": "admin",
+          "logo": null,
+          "metadata": {}
+        }
       }
-    }
-  }, {
-    "Register" : {
-      "NewAccount" : {
-        "id" : "alice@wonderland",
-        "signatories" : [ "ed01200851a1fa7e3f04a657299263e119975be4ab0d33631ec6ad4bd5b5e77594310e" ],
-        "metadata" : { }
+    },
+    {
+      "Register": {
+        "Account": {
+          "id": "ed0120CE7FA46C9DCE7EA4B125E2E36BDB63EA33073E7590AC92816AE1E861B7048B03@wonderland",
+          "metadata": {}
+        }
       }
-    }
-  }, {
-    "Register" : {
-      "NewAccount" : {
-        "id" : "admin@wonderland",
-        "signatories" : [ "ed01203161f2c70db3252505b90c0cce012c4cf4cb098da2a3b1475319ca5b3a1263f5" ],
-        "metadata" : { }
+    },
+    {
+      "Register": {
+        "Account": {
+          "id": "ed012004FF5B81046DDCCF19E2E451C45DFB6F53759D4EB30FA2EFA807284D1CC33016@wonderland",
+          "metadata": {}
+        }
       }
-    }
-  }, {
-    "Register" : {
-      "NewAccount" : {
-        "id" : "admin@dnalrednow",
-        "signatories" : [ "ed0120d24280aadc7167e002b263620fe936e4103e13d59a02286190a6af6a45c7c2f7" ],
-        "metadata" : { }
+    },
+    {
+      "Register": {
+        "Account": {
+          "id": "ed0120E9F632D3034BAB6BB26D92AC8FD93EF878D9C5E69E01B61B4C47101884EE2F99@dnalrednow",
+          "metadata": {}
+        }
       }
-    }
-  }, {
-    "Register" : {
-      "NewAccount" : {
-        "id" : "admin2@wonderland",
-        "signatories" : [ "ed01202611be069b48f6313d86a4e5c99deedaccc3046b4cb294849e11dadb27a701ca" ],
-        "metadata" : { }
+    },
+    {
+      "Register": {
+        "Account": {
+          "id": "ed01204164BF554923ECE1FD412D241036D863A6AE430476C898248B8237D77534CFC4@wonderland",
+          "metadata": {}
+        }
       }
-    }
-  }, {
-    "Register" : {
-      "NewAccount" : {
-        "id" : "bob@admin",
-        "signatories" : [ "ed01207f7137560b2c1fefa36834f609953f8ad78903a7f21d3c84a69949991885ba1c" ],
-        "metadata" : {
-          "authentication" : {
-            "String" : "9321c6560bdbe28df7808e4d03b0ef625c4e8f8e9935907763477ac601421066"
+    },
+    {
+      "Register": {
+        "Account": {
+          "id": "ed012004FF5B81046DDCCF19E2E451C45DFB6F53759D4EB30FA2EFA807284D1CC33016@admin",
+          "metadata": {
+            "authentication": "9321c6560bdbe28df7808e4d03b0ef625c4e8f8e9935907763477ac601421066"
           }
         }
       }
-    }
-  }, {
-    "Register" : {
-      "NewAssetDefinition" : {
-        "id" : "test_asset#admin",
-        "value_type" : "Store",
-        "mintable" : "Once",
-        "logo": null,
-        "metadata" : { }
-      }
-    }
-  }, {
-    "Register" : {
-      "NewAssetDefinition" : {
-        "id" : "wonderland_asset#admin",
-        "value_type" : "Store",
-        "mintable" : "Once",
-        "logo": null,
-        "metadata" : { }
-      }
-    }
-  }, {
-    "Register" : {
-      "NewAssetDefinition" : {
-        "id" : "123#test",
-        "value_type" : "Store",
-        "mintable" : "Infinitely",
-        "logo": null,
-        "metadata" : { }
-      }
-    }
-  }, {
-    "Register" : {
-      "Asset" : {
-        "id" : "wonderland_asset#admin#bob@admin",
-        "value" : {
-          "Store" : { }
+    },
+    {
+      "Register": {
+        "AssetDefinition": {
+          "id": "test_asset#admin",
+          "type": "Store",
+          "mintable": "Once",
+          "logo": null,
+          "metadata": {}
         }
       }
-    }
-  }, {
-    "Register" : {
-      "Asset" : {
-        "id" : "test_asset#admin#bob@admin",
-        "value" : {
-          "Store" : { }
+    },
+    {
+      "Register": {
+        "AssetDefinition": {
+          "id": "wonderland_asset#admin",
+          "type": "Store",
+          "mintable": "Once",
+          "logo": null,
+          "metadata": {}
         }
       }
-    }
-  }, {
-    "SetKeyValue" : {
-      "AssetId" : "123#test#alice@wonderland",
-      "key" : {
-        "Name" : "id"
-      },
-      "value" : {
-        "String" : "123"
-      }
-    }
-  }, {
-    "SetKeyValue" : {
-      "AssetId" : "123#test#alice@wonderland",
-      "key" : {
-        "Name" : "wt"
-      },
-      "value" : {
-        "Numeric" : {
-          "U32" : 123
+    },
+    {
+      "Register": {
+        "AssetDefinition": {
+          "id": "123#test",
+          "type": "Store",
+          "mintable": "Infinitely",
+          "logo": null,
+          "metadata": {}
         }
       }
-    }
-  }, {
-    "SetKeyValue" : {
-      "AssetId" : "123#test#alice@wonderland",
-      "key" : {
-        "Name" : "fg"
-      },
-      "value" : {
-        "String" : "test"
-      }
-    }
-  }, {
-    "SetKeyValue" : {
-      "AssetId" : "123#test#alice@wonderland",
-      "key" : {
-        "Name" : "ij"
-      },
-      "value" : {
-        "String" : "test"
-      }
-    }
-  }, {
-    "SetKeyValue" : {
-      "AssetId" : "123#test#alice@wonderland",
-      "key" : {
-        "Name" : "gh"
-      },
-      "value" : {
-        "Numeric" : {
-          "U32" : 123
-        }
-      }
-    }
-  }, {
-    "SetKeyValue" : {
-      "AssetId" : "123#test#alice@wonderland",
-      "key" : {
-        "Name" : "ef"
-      },
-      "value" : {
-        "Numeric" : {
-          "U32" : 1234
-        }
-      }
-    }
-  }, {
-    "SetKeyValue" : {
-      "AssetId" : "123#test#alice@wonderland",
-      "key" : {
-        "Name" : "cd"
-      },
-      "value" : {
-        "Numeric" : {
-          "U128" : 123
-        }
-      }
-    }
-  }, {
-    "SetKeyValue" : {
-      "AssetId" : "123#test#alice@wonderland",
-      "key" : {
-        "Name" : "ab"
-      },
-      "value" : {
-        "Bool" : false
-      }
-    }
-  }, {
-    "Grant" : {
-      "object":  {
-        "PermissionToken" : {
-          "definition_id" : "CanSetKeyValueInUserAssets",
-          "payload" : {
-            "asset_id" : "123#test#alice@wonderland"
+    },
+    {
+      "Register": {
+        "Asset": {
+          "id": "wonderland_asset#admin#ed012004FF5B81046DDCCF19E2E451C45DFB6F53759D4EB30FA2EFA807284D1CC33016@admin",
+          "value": {
+            "Store": {}
           }
         }
-      },
-      "destination_id" : {
-        "AccountId" : "bob@admin"
+      }
+    },
+    {
+      "Register": {
+        "Asset": {
+          "id": "test_asset#admin#ed012004FF5B81046DDCCF19E2E451C45DFB6F53759D4EB30FA2EFA807284D1CC33016@admin",
+          "value": {
+            "Store": {}
+          }
+        }
+      }
+    },
+    {
+      "SetKeyValue": {
+        "Asset": {
+          "object": "123#test#ed0120CE7FA46C9DCE7EA4B125E2E36BDB63EA33073E7590AC92816AE1E861B7048B03@wonderland",
+          "key": "id",
+          "value": "123"
+        }
+      }
+    },
+    {
+      "SetKeyValue": {
+        "Asset": {
+          "object": "123#test#ed0120CE7FA46C9DCE7EA4B125E2E36BDB63EA33073E7590AC92816AE1E861B7048B03@wonderland",
+          "key": "wt",
+          "value": "123"
+        }
+      }
+    },
+    {
+      "SetKeyValue": {
+        "Asset": {
+          "object": "123#test#ed0120CE7FA46C9DCE7EA4B125E2E36BDB63EA33073E7590AC92816AE1E861B7048B03@wonderland",
+          "key": "fg",
+          "value": "test"
+        }
+      }
+    },
+    {
+      "SetKeyValue": {
+        "Asset": {
+          "object": "123#test#ed0120CE7FA46C9DCE7EA4B125E2E36BDB63EA33073E7590AC92816AE1E861B7048B03@wonderland",
+          "key": "ij",
+          "value": "test"
+        }
+      }
+    },
+    {
+      "SetKeyValue": {
+        "Asset": {
+          "object": "123#test#ed0120CE7FA46C9DCE7EA4B125E2E36BDB63EA33073E7590AC92816AE1E861B7048B03@wonderland",
+          "key": "ef",
+          "value": "1234"
+        }
+      }
+    },
+    {
+      "SetKeyValue": {
+        "Asset": {
+          "object": "123#test#ed0120CE7FA46C9DCE7EA4B125E2E36BDB63EA33073E7590AC92816AE1E861B7048B03@wonderland",
+          "key": "ef",
+          "value": "1234"
+        }
+      }
+    },
+    {
+      "SetKeyValue": {
+        "Asset": {
+          "object": "123#test#ed0120CE7FA46C9DCE7EA4B125E2E36BDB63EA33073E7590AC92816AE1E861B7048B03@wonderland",
+          "key": "cd",
+          "value": "123"
+        }
+      }
+    },
+    {
+      "SetKeyValue": {
+        "Asset": {
+          "object": "123#test#ed0120CE7FA46C9DCE7EA4B125E2E36BDB63EA33073E7590AC92816AE1E861B7048B03@wonderland",
+          "key": "ab",
+          "value": "false"
+        }
+      }
+    },
+    {
+      "Grant": {
+        "Permission": {
+          "object": {
+            "name": "CanSetKeyValueInUserAssets",
+            "payload": {
+              "asset": "123#test#ed0120CE7FA46C9DCE7EA4B125E2E36BDB63EA33073E7590AC92816AE1E861B7048B03@wonderland"
+            }
+          },
+          "destination": "ed012004FF5B81046DDCCF19E2E451C45DFB6F53759D4EB30FA2EFA807284D1CC33016@admin"
+        }
       }
     }
-  } ] ],
-  "executor": "./executor.wasm"
+  ],
+  "topology": []
 }

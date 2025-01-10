@@ -14,6 +14,11 @@ sealed class Type(open val name: String) {
 /**
  * Boolean type
  */
+object NullType : Type("null")
+
+/**
+ * Boolean type
+ */
 object BooleanType : Type("bool")
 
 /**

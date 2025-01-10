@@ -16,16 +16,16 @@ import kotlin.Unit
  * Generated from 'FindTriggerKeyValueByIdAndKey' regular structure
  */
 public data class FindTriggerKeyValueByIdAndKey(
-    public val id: EvaluatesTo<TriggerId>,
-    public val key: EvaluatesTo<Name>,
+    public val id: TriggerId,
+    public val key: Name,
 ) {
     public companion object :
         ScaleReader<FindTriggerKeyValueByIdAndKey>,
         ScaleWriter<FindTriggerKeyValueByIdAndKey> {
         override fun read(reader: ScaleCodecReader): FindTriggerKeyValueByIdAndKey = try {
             FindTriggerKeyValueByIdAndKey(
-                EvaluatesTo.read(reader) as EvaluatesTo<TriggerId>,
-                EvaluatesTo.read(reader) as EvaluatesTo<Name>,
+                TriggerId.read(reader),
+                Name.read(reader),
             )
         } catch (ex: Exception) {
             throw wrapException(ex)
@@ -33,8 +33,8 @@ public data class FindTriggerKeyValueByIdAndKey(
 
         override fun write(writer: ScaleCodecWriter, instance: FindTriggerKeyValueByIdAndKey): Unit =
             try {
-                EvaluatesTo.write(writer, instance.id)
-                EvaluatesTo.write(writer, instance.key)
+                TriggerId.write(writer, instance.id)
+                Name.write(writer, instance.key)
             } catch (ex: Exception) {
                 throw wrapException(ex)
             }

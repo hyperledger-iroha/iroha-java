@@ -16,7 +16,7 @@ import kotlin.Unit
 /**
  * GenericPredicateBox
  *
- * Generated from 'GenericPredicateBox<ValuePredicate>' enum
+ * Generated from 'GenericPredicateBox<QueryOutputPredicate>' enum
  */
 public sealed class GenericPredicateBox<T0> : ModelEnum {
     /**
@@ -28,8 +28,8 @@ public sealed class GenericPredicateBox<T0> : ModelEnum {
      * 'And' variant
      */
     public data class And(
-        public val nonTrivial: NonTrivial<GenericPredicateBox<ValuePredicate>>,
-    ) : GenericPredicateBox<ValuePredicate>() {
+        public val nonTrivial: NonTrivial<GenericPredicateBox<QueryOutputPredicate>>,
+    ) : GenericPredicateBox<QueryOutputPredicate>() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -39,7 +39,7 @@ public sealed class GenericPredicateBox<T0> : ModelEnum {
 
             override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.GenericPredicateBox.And = try {
                 And(
-                    NonTrivial.read(reader) as NonTrivial<GenericPredicateBox<ValuePredicate>>,
+                    NonTrivial.read(reader) as NonTrivial<GenericPredicateBox<QueryOutputPredicate>>,
                 )
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -60,8 +60,8 @@ public sealed class GenericPredicateBox<T0> : ModelEnum {
      * 'Or' variant
      */
     public data class Or(
-        public val nonTrivial: NonTrivial<GenericPredicateBox<ValuePredicate>>,
-    ) : GenericPredicateBox<ValuePredicate>() {
+        public val nonTrivial: NonTrivial<GenericPredicateBox<QueryOutputPredicate>>,
+    ) : GenericPredicateBox<QueryOutputPredicate>() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -71,7 +71,7 @@ public sealed class GenericPredicateBox<T0> : ModelEnum {
 
             override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.GenericPredicateBox.Or = try {
                 Or(
-                    NonTrivial.read(reader) as NonTrivial<GenericPredicateBox<ValuePredicate>>,
+                    NonTrivial.read(reader) as NonTrivial<GenericPredicateBox<QueryOutputPredicate>>,
                 )
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -92,8 +92,8 @@ public sealed class GenericPredicateBox<T0> : ModelEnum {
      * 'Not' variant
      */
     public data class Not(
-        public val genericPredicateBox: GenericPredicateBox<ValuePredicate>,
-    ) : GenericPredicateBox<ValuePredicate>() {
+        public val genericPredicateBox: GenericPredicateBox<QueryOutputPredicate>,
+    ) : GenericPredicateBox<QueryOutputPredicate>() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -103,7 +103,7 @@ public sealed class GenericPredicateBox<T0> : ModelEnum {
 
             override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.GenericPredicateBox.Not = try {
                 Not(
-                    GenericPredicateBox.read(reader) as GenericPredicateBox<ValuePredicate>,
+                    GenericPredicateBox.read(reader) as GenericPredicateBox<QueryOutputPredicate>,
                 )
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -124,8 +124,8 @@ public sealed class GenericPredicateBox<T0> : ModelEnum {
      * 'Raw' variant
      */
     public data class Raw(
-        public val valuePredicate: ValuePredicate,
-    ) : GenericPredicateBox<ValuePredicate>() {
+        public val queryOutputPredicate: QueryOutputPredicate,
+    ) : GenericPredicateBox<QueryOutputPredicate>() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
@@ -135,7 +135,7 @@ public sealed class GenericPredicateBox<T0> : ModelEnum {
 
             override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.GenericPredicateBox.Raw = try {
                 Raw(
-                    ValuePredicate.read(reader),
+                    QueryOutputPredicate.read(reader),
                 )
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -145,7 +145,7 @@ public sealed class GenericPredicateBox<T0> : ModelEnum {
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.GenericPredicateBox.Raw,
             ): Unit = try {
-                ValuePredicate.write(writer, instance.valuePredicate)
+                QueryOutputPredicate.write(writer, instance.queryOutputPredicate)
             } catch (ex: Exception) {
                 throw wrapException(ex)
             }

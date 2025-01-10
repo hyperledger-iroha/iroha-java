@@ -16,21 +16,21 @@ import kotlin.Unit
  * Generated from 'FindAssetDefinitionById' regular structure
  */
 public data class FindAssetDefinitionById(
-    public val id: EvaluatesTo<AssetDefinitionId>,
+    public val id: AssetDefinitionId,
 ) {
     public companion object :
         ScaleReader<FindAssetDefinitionById>,
         ScaleWriter<FindAssetDefinitionById> {
         override fun read(reader: ScaleCodecReader): FindAssetDefinitionById = try {
             FindAssetDefinitionById(
-                EvaluatesTo.read(reader) as EvaluatesTo<AssetDefinitionId>,
+                AssetDefinitionId.read(reader),
             )
         } catch (ex: Exception) {
             throw wrapException(ex)
         }
 
         override fun write(writer: ScaleCodecWriter, instance: FindAssetDefinitionById): Unit = try {
-            EvaluatesTo.write(writer, instance.id)
+            AssetDefinitionId.write(writer, instance.id)
         } catch (ex: Exception) {
             throw wrapException(ex)
         }

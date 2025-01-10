@@ -28,7 +28,7 @@ public sealed class Executable : ModelEnum {
      * 'Instructions' variant
      */
     public data class Instructions(
-        public val vec: List<InstructionExpr>,
+        public val vec: List<InstructionBox>,
     ) : Executable() {
         override fun discriminant(): Int = DISCRIMINANT
 
@@ -39,7 +39,7 @@ public sealed class Executable : ModelEnum {
 
             override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.Executable.Instructions = try {
                 Instructions(
-                    reader.readVec(reader.readCompactInt()) { InstructionExpr.read(reader) },
+                    reader.readVec(reader.readCompactInt()) { InstructionBox.read(reader) },
                 )
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -51,7 +51,7 @@ public sealed class Executable : ModelEnum {
             ): Unit = try {
                 writer.writeCompact(instance.vec.size)
                 instance.vec.forEach { value ->
-                    InstructionExpr.write(writer, value)
+                    InstructionBox.write(writer, value)
                 }
             } catch (ex: Exception) {
                 throw wrapException(ex)

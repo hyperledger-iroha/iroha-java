@@ -8,6 +8,7 @@ import jp.co.soramitsu.iroha2.codec.ScaleCodecWriter
 import jp.co.soramitsu.iroha2.codec.ScaleReader
 import jp.co.soramitsu.iroha2.codec.ScaleWriter
 import jp.co.soramitsu.iroha2.wrapException
+import kotlin.String
 import kotlin.Unit
 
 /**
@@ -16,9 +17,9 @@ import kotlin.Unit
  * Generated from 'MetadataChangedOfAssetId' regular structure
  */
 public data class MetadataChangedOfAssetId(
-    public val targetId: AssetId,
+    public val target: AssetId,
     public val key: Name,
-    public val `value`: Value,
+    public val `value`: String,
 ) {
     public companion object :
         ScaleReader<MetadataChangedOfAssetId>,
@@ -27,16 +28,16 @@ public data class MetadataChangedOfAssetId(
             MetadataChangedOfAssetId(
                 AssetId.read(reader),
                 Name.read(reader),
-                Value.read(reader),
+                reader.readString(),
             )
         } catch (ex: Exception) {
             throw wrapException(ex)
         }
 
         override fun write(writer: ScaleCodecWriter, instance: MetadataChangedOfAssetId): Unit = try {
-            AssetId.write(writer, instance.targetId)
+            AssetId.write(writer, instance.target)
             Name.write(writer, instance.key)
-            Value.write(writer, instance.`value`)
+            writer.writeAsList(instance.`value`.toByteArray(Charsets.UTF_8))
         } catch (ex: Exception) {
             throw wrapException(ex)
         }

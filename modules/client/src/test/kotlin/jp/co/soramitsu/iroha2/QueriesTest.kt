@@ -10,32 +10,29 @@ import jp.co.soramitsu.iroha2.annotations.SdkTestId
 import jp.co.soramitsu.iroha2.client.Iroha2Client
 import jp.co.soramitsu.iroha2.generated.AccountId
 import jp.co.soramitsu.iroha2.generated.AssetId
-import jp.co.soramitsu.iroha2.generated.AssetValueType
-import jp.co.soramitsu.iroha2.generated.Container
-import jp.co.soramitsu.iroha2.generated.GenericPredicateBox
-import jp.co.soramitsu.iroha2.generated.InstructionExpr
+import jp.co.soramitsu.iroha2.generated.AssetType
+import jp.co.soramitsu.iroha2.generated.DomainId
+import jp.co.soramitsu.iroha2.generated.InstructionBox
 import jp.co.soramitsu.iroha2.generated.Metadata
 import jp.co.soramitsu.iroha2.generated.Name
+import jp.co.soramitsu.iroha2.generated.RegisterBox
 import jp.co.soramitsu.iroha2.generated.SignedTransaction
 import jp.co.soramitsu.iroha2.generated.StringPredicate
-import jp.co.soramitsu.iroha2.generated.TransactionValue
-import jp.co.soramitsu.iroha2.generated.Value
-import jp.co.soramitsu.iroha2.generated.ValueOfKey
-import jp.co.soramitsu.iroha2.generated.ValuePredicate
 import jp.co.soramitsu.iroha2.query.QueryBuilder
 import jp.co.soramitsu.iroha2.testengine.ALICE_ACCOUNT_ID
-import jp.co.soramitsu.iroha2.testengine.ALICE_ACCOUNT_NAME
 import jp.co.soramitsu.iroha2.testengine.ALICE_KEYPAIR
+import jp.co.soramitsu.iroha2.testengine.ALICE_PUBLIC_KEY
 import jp.co.soramitsu.iroha2.testengine.AliceCanMintXor
-import jp.co.soramitsu.iroha2.testengine.AliceHas100XorAndPermissionToBurn
+import jp.co.soramitsu.iroha2.testengine.AliceHas100XorAndPermissionToMintAndBurn
 import jp.co.soramitsu.iroha2.testengine.AliceHasRoleWithAccessToBobsMetadata
 import jp.co.soramitsu.iroha2.testengine.AliceWithTestAssets
 import jp.co.soramitsu.iroha2.testengine.BOB_ACCOUNT_ID
-import jp.co.soramitsu.iroha2.testengine.BOB_ACCOUNT_NAME
+import jp.co.soramitsu.iroha2.testengine.BOB_PUBLIC_KEY
 import jp.co.soramitsu.iroha2.testengine.DEFAULT_ASSET_DEFINITION_ID
 import jp.co.soramitsu.iroha2.testengine.DEFAULT_ASSET_ID
 import jp.co.soramitsu.iroha2.testengine.DEFAULT_DOMAIN_ID
 import jp.co.soramitsu.iroha2.testengine.DefaultGenesis
+import jp.co.soramitsu.iroha2.testengine.IROHA_CONFIG_DELIMITER
 import jp.co.soramitsu.iroha2.testengine.IrohaTest
 import jp.co.soramitsu.iroha2.testengine.NewAccountWithMetadata
 import jp.co.soramitsu.iroha2.testengine.NewDomain
@@ -44,6 +41,7 @@ import jp.co.soramitsu.iroha2.testengine.StoreAssetWithMetadata
 import jp.co.soramitsu.iroha2.testengine.VAL_DEFINITION_ID
 import jp.co.soramitsu.iroha2.testengine.WithExecutableTrigger
 import jp.co.soramitsu.iroha2.testengine.WithIroha
+import jp.co.soramitsu.iroha2.testengine.WithManyDomains
 import jp.co.soramitsu.iroha2.testengine.XOR_DEFINITION_ID
 import jp.co.soramitsu.iroha2.testengine.XorAndValAssets
 import jp.co.soramitsu.iroha2.transaction.QueryFilters
@@ -52,6 +50,8 @@ import kotlinx.coroutines.time.withTimeout
 import org.apache.commons.lang3.RandomStringUtils
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
+import java.math.BigInteger
+import java.security.KeyPair
 import java.time.Instant
 import kotlin.test.assertContains
 import kotlin.test.assertContentEquals
@@ -64,7 +64,7 @@ import kotlin.test.assertTrue
 class QueriesTest : IrohaTest<Iroha2Client>() {
 
     @Test
-    @WithIroha([NewAccountWithMetadata::class])
+    @WithIroha([NewAccountWithMetadata::class], configs = ["LOG_LEVEL${IROHA_CONFIG_DELIMITER}TRACE"])
     @Feature("Accounts")
     @Query("FindAllAccounts")
     @Story("Account queries all accounts")
@@ -76,8 +76,8 @@ class QueriesTest : IrohaTest<Iroha2Client>() {
             .let { query ->
                 client.sendQuery(query)
             }.also { accounts ->
-                assert(accounts.any { it.id.name == ALICE_ACCOUNT_NAME })
-                assert(accounts.any { it.id.name == NewAccountWithMetadata.ACCOUNT_NAME })
+                assert(accounts.any { it.id.signatory == ALICE_PUBLIC_KEY })
+                assert(accounts.any { it.id.signatory == NewAccountWithMetadata.ACCOUNT_ID.signatory })
             }
     }
 
@@ -89,8 +89,8 @@ class QueriesTest : IrohaTest<Iroha2Client>() {
     @SdkTestId("find_all_accounts_with_filter")
     fun `find all accounts with filter`(): Unit = runBlocking {
         val filter = QueryFilters.or(
-            StringPredicate.Is("alice@wonderland"),
-            StringPredicate.Is("bob@wonderland"),
+            StringPredicate.Is("ed0120CE7FA46C9DCE7EA4B125E2E36BDB63EA33073E7590AC92816AE1E861B7048B03@wonderland"),
+            StringPredicate.Is("ed012004FF5B81046DDCCF19E2E451C45DFB6F53759D4EB30FA2EFA807284D1CC33016@wonderland"),
         )
         QueryBuilder.findAllAccounts(filter)
             .account(ALICE_ACCOUNT_ID)
@@ -99,43 +99,8 @@ class QueriesTest : IrohaTest<Iroha2Client>() {
                 client.sendQuery(query)
             }.also { accounts ->
                 assert(accounts.size == 2)
-                assert(accounts.any { it.id.name == ALICE_ACCOUNT_NAME })
-                assert(accounts.any { it.id.name == BOB_ACCOUNT_NAME })
-            }
-    }
-
-    @Test
-    @WithIroha([DefaultGenesis::class])
-    @Feature("Accounts")
-    @Query("FindAccountsByName")
-    @Story("Account queries accounts by name")
-    @SdkTestId("find_accounts_by_name")
-    fun `find accounts by name`(): Unit = runBlocking {
-        QueryBuilder.findAccountsByName(ALICE_ACCOUNT_NAME)
-            .account(ALICE_ACCOUNT_ID)
-            .buildSigned(ALICE_KEYPAIR)
-            .let { query ->
-                client.sendQuery(query)
-            }.also { accounts ->
-                assert(accounts.all { it.id.name == ALICE_ACCOUNT_NAME })
-            }
-    }
-
-    @Test
-    @WithIroha([DefaultGenesis::class])
-    @Feature("Accounts")
-    @Query("FindAccountsByNameWithFilter")
-    @Story("Account queries accounts by name with a filter")
-    @SdkTestId("find_accounts_by_name_with_filter")
-    fun `find accounts by name with filter`(): Unit = runBlocking {
-        val filter = QueryFilters.startsWith("alice")
-        QueryBuilder.findAccountsByName(ALICE_ACCOUNT_NAME, filter)
-            .account(ALICE_ACCOUNT_ID)
-            .buildSigned(ALICE_KEYPAIR)
-            .let { query ->
-                client.sendQuery(query)
-            }.also { accounts ->
-                assert(accounts.all { it.id.name == ALICE_ACCOUNT_NAME })
+                assert(accounts.any { it.id.signatory == ALICE_PUBLIC_KEY })
+                assert(accounts.any { it.id.signatory == BOB_PUBLIC_KEY })
             }
     }
 
@@ -172,26 +137,8 @@ class QueriesTest : IrohaTest<Iroha2Client>() {
             .let { query ->
                 client.sendQuery(query)
             }.also { accounts ->
-                assert(accounts.all { it.id.domainId == DEFAULT_DOMAIN_ID })
+                assert(accounts.all { it.id.domain == DEFAULT_DOMAIN_ID })
             }
-    }
-
-    @Test
-    @WithIroha([XorAndValAssets::class])
-    @Feature("Accounts")
-    @Query("FindAccountsWithAsset")
-    @Story("Account queries accounts with a specific asset")
-    @SdkTestId("find_accounts_with_asset")
-    fun `find accounts with asset`(): Unit = runBlocking {
-        QueryBuilder.findAccountsWithAsset(XOR_DEFINITION_ID)
-            .account(ALICE_ACCOUNT_ID)
-            .buildSigned(ALICE_KEYPAIR)
-            .let { query -> client.sendQuery(query) }
-            .let { accounts ->
-                accounts.all { account ->
-                    account.assets.any { it.key.definitionId == XOR_DEFINITION_ID }
-                }
-            }.also { assert(it) }
     }
 
     @Test
@@ -202,13 +149,13 @@ class QueriesTest : IrohaTest<Iroha2Client>() {
     @SdkTestId("find_total_asset_quantity_by_AssetDefinitionId")
     fun `find total asset quantity by AssetDefinitionId`(): Unit = runBlocking {
         val quantity = 10
-        client.tx { mintAsset(AssetId(XOR_DEFINITION_ID, BOB_ACCOUNT_ID), quantity) }
+        client.tx { mintAsset(AssetId(definition = XOR_DEFINITION_ID, account = BOB_ACCOUNT_ID), quantity) }
 
         QueryBuilder.findTotalAssetQuantityByAssetDefinitionId(XOR_DEFINITION_ID)
             .account(ALICE_ACCOUNT_ID)
             .buildSigned(ALICE_KEYPAIR)
             .let { query -> client.sendQuery(query) }
-            .also { assertEquals(quantity + XorAndValAssets.XOR_QUANTITY, it.toInt()) }
+            .also { assertEquals(quantity + XorAndValAssets.XOR_QUANTITY, it.asInt()) }
     }
 
     @Test
@@ -224,8 +171,8 @@ class QueriesTest : IrohaTest<Iroha2Client>() {
             .let { query ->
                 client.sendQuery(query)
             }.also { assets ->
-                assert(assets.any { it.id.definitionId == XOR_DEFINITION_ID })
-                assert(assets.any { it.id.definitionId == VAL_DEFINITION_ID })
+                assert(assets.any { it.id.definition == XOR_DEFINITION_ID })
+                assert(assets.any { it.id.definition == VAL_DEFINITION_ID })
             }
     }
 
@@ -242,7 +189,7 @@ class QueriesTest : IrohaTest<Iroha2Client>() {
             .let { query ->
                 client.sendQuery(query)
             }.also { assets ->
-                assert(assets.all { it.id.definitionId.name == XOR_DEFINITION_ID.name })
+                assert(assets.all { it.id.definition.name == XOR_DEFINITION_ID.name })
             }
     }
 
@@ -259,9 +206,9 @@ class QueriesTest : IrohaTest<Iroha2Client>() {
             .let { query ->
                 client.sendQuery(query)
             }.also { assets ->
-                assert(assets.all { it.id.accountId == ALICE_ACCOUNT_ID })
-                assert(assets.any { it.id.definitionId == XOR_DEFINITION_ID })
-                assert(assets.any { it.id.definitionId == VAL_DEFINITION_ID })
+                assert(assets.all { it.id.account == ALICE_ACCOUNT_ID })
+                assert(assets.any { it.id.definition == XOR_DEFINITION_ID })
+                assert(assets.any { it.id.definition == VAL_DEFINITION_ID })
             }
     }
 
@@ -281,8 +228,8 @@ class QueriesTest : IrohaTest<Iroha2Client>() {
             .let { query ->
                 client.sendQuery(query)
             }.also { assets ->
-                assert(assets.all { it.id.definitionId == XOR_DEFINITION_ID })
-                assert(assets.all { it.id.accountId.domainId == DEFAULT_DOMAIN_ID })
+                assert(assets.all { it.id.definition == XOR_DEFINITION_ID })
+                assert(assets.all { it.id.account.domain == DEFAULT_DOMAIN_ID })
             }
     }
 
@@ -293,14 +240,14 @@ class QueriesTest : IrohaTest<Iroha2Client>() {
     @Story("Account queries asset quantity by asset ID")
     @SdkTestId("find_asset_quantity_by_ID")
     fun `find asset quantity by id`(): Unit = runBlocking {
-        val assetId = AssetId(XOR_DEFINITION_ID, ALICE_ACCOUNT_ID)
+        val assetId = AssetId(definition = XOR_DEFINITION_ID, account = ALICE_ACCOUNT_ID)
         QueryBuilder.findAssetQuantityById(assetId)
             .account(ALICE_ACCOUNT_ID)
             .buildSigned(ALICE_KEYPAIR)
             .let { query ->
                 client.sendQuery(query)
             }.also { quantity ->
-                assert(quantity == XorAndValAssets.XOR_QUANTITY.toLong())
+                assert(quantity.asInt() == XorAndValAssets.XOR_QUANTITY)
             }
     }
 
@@ -340,7 +287,7 @@ class QueriesTest : IrohaTest<Iroha2Client>() {
             .let { query ->
                 client.sendQuery(query)
             }.also {
-                assert(it == StoreAssetWithMetadata.ASSET_VALUE)
+                assertEquals(it, StoreAssetWithMetadata.ASSET_VALUE)
             }
     }
 
@@ -352,21 +299,7 @@ class QueriesTest : IrohaTest<Iroha2Client>() {
     @SdkTestId("find_asset_by_metadata_filters")
     @Disabled // https://github.com/hyperledger/iroha/issues/2697
     fun `find asset by metadata filters`(): Unit = runBlocking {
-        val filter = GenericPredicateBox.Raw(
-            ValuePredicate.Container(
-                Container.ValueOfKey(
-                    ValueOfKey(
-                        StoreAssetWithMetadata.ASSET_KEY,
-                        ValuePredicate.Identifiable(
-                            StringPredicate.Is(
-                                StoreAssetWithMetadata.ASSET_VALUE.string,
-                            ),
-                        ),
-                    ),
-                ),
-            ),
-        )
-        QueryBuilder.findAllAssets(filter)
+        QueryBuilder.findAllAssets()
             .account(ALICE_ACCOUNT_ID)
             .buildSigned(ALICE_KEYPAIR)
             .let { query ->
@@ -377,7 +310,7 @@ class QueriesTest : IrohaTest<Iroha2Client>() {
     }
 
     @Test
-    @WithIroha([AliceHas100XorAndPermissionToBurn::class])
+    @WithIroha([AliceHas100XorAndPermissionToMintAndBurn::class])
     @Feature("Assets")
     @Query("FindAssetDefinitionById")
     @Story("Account queries asset definition by ID")
@@ -472,7 +405,7 @@ class QueriesTest : IrohaTest<Iroha2Client>() {
     fun `find transactions by account id`(): Unit = runBlocking {
         client.sendTransaction {
             account(ALICE_ACCOUNT_ID)
-            registerAssetDefinition(DEFAULT_ASSET_DEFINITION_ID, AssetValueType.Quantity())
+            registerAssetDefinition(DEFAULT_ASSET_DEFINITION_ID, AssetType.numeric())
             buildSigned(ALICE_KEYPAIR)
         }
 
@@ -483,12 +416,9 @@ class QueriesTest : IrohaTest<Iroha2Client>() {
                 client.sendQuery(query)
             }.let { txValues ->
                 txValues.all { value ->
-                    value.cast<TransactionValue>()
-                        .value
-                        .cast<SignedTransaction.V1>()
-                        .signedTransactionV1
-                        .payload
-                        .authority == ALICE_ACCOUNT_ID
+                    value.transaction.value
+                        .cast<SignedTransaction.V1>().signedTransactionV1
+                        .payload.authority == ALICE_ACCOUNT_ID
                 }
             }.also {
                 assert(it)
@@ -496,22 +426,20 @@ class QueriesTest : IrohaTest<Iroha2Client>() {
     }
 
     @Test
-    @WithIroha([AliceHas100XorAndPermissionToBurn::class])
+    @WithIroha([AliceHas100XorAndPermissionToMintAndBurn::class])
     @Feature("PermissionTokens")
     @Query("FindPermissionTokensByAccountId")
     @Story("PermissionToken queries permission tokens by account id")
     @SdkTestId("find_permission_tokens_by_account_id")
     fun `find permission tokens by account id`(): Unit = runBlocking {
-        QueryBuilder.findPermissionTokensByAccountId(ALICE_ACCOUNT_ID)
+        QueryBuilder.findPermissionsByAccountId(ALICE_ACCOUNT_ID)
             .account(ALICE_ACCOUNT_ID)
             .buildSigned(ALICE_KEYPAIR)
             .let { query ->
                 client.sendQuery(query)
             }
             .let { tokens ->
-                tokens.any {
-                    "{\"asset_definition_id\":\"xor#wonderland\"}" == it.payload.string
-                }
+                tokens.any { "{\"asset_definition\":\"xor#wonderland\"}" == it.payload }
             }.also {
                 assert(it)
             }
@@ -526,7 +454,7 @@ class QueriesTest : IrohaTest<Iroha2Client>() {
     fun `find transaction by hash`(): Unit = runBlocking {
         client.sendTransaction {
             account(ALICE_ACCOUNT_ID)
-            registerAssetDefinition(DEFAULT_ASSET_DEFINITION_ID, AssetValueType.Quantity())
+            registerAssetDefinition(DEFAULT_ASSET_DEFINITION_ID, AssetType.numeric())
             buildSigned(ALICE_KEYPAIR)
         }.let { d ->
             withTimeout(txTimeout) { d.await() }
@@ -544,10 +472,10 @@ class QueriesTest : IrohaTest<Iroha2Client>() {
             .buildSigned(ALICE_KEYPAIR)
             .let { query -> client.sendQuery(query) }
         assertEquals(
-            DEFAULT_ASSET_DEFINITION_ID,
+            DEFAULT_ASSET_DEFINITION_ID.domain,
             txByHash.transaction.value
-                .extractInstruction<InstructionExpr.Register>()
-                .registerExpr.`object`.extractNewAssetDefinition().id,
+                .extractInstruction<InstructionBox.Register>()
+                .registerBox.cast<RegisterBox.Domain>().registerOfDomain.`object`.id,
         )
         txByHash.transaction.value
             .let { SignedTransaction.encode(it).hash() }
@@ -593,12 +521,11 @@ class QueriesTest : IrohaTest<Iroha2Client>() {
     @Story("Trigger queries triggers by domain ID")
     @SdkTestId("find_triggers_by_domain_id")
     fun `find triggers by domain ID`(): Unit = runBlocking {
-        val domainId = WithExecutableTrigger.TRIGGER_ID.domainId!!
-        QueryBuilder.findTriggersByDomainId(domainId)
+        QueryBuilder.findTriggersByAuthorityDomainId(ALICE_ACCOUNT_ID.domain)
             .account(ALICE_ACCOUNT_ID)
             .buildSigned(ALICE_KEYPAIR)
             .let { client.sendQuery(it) }
-            .also { triggers -> assert(triggers.all { it.id.domainId == domainId }) }
+            .also { triggers -> assert(triggers.all { it.id == WithExecutableTrigger.TRIGGER_ID }) }
     }
 
     @Test
@@ -626,109 +553,121 @@ class QueriesTest : IrohaTest<Iroha2Client>() {
     @Story("Account queries all accounts with pagination and sorting by metadata key")
     @SdkTestId("pagination_plus_sorting_by_metadata_key")
     fun `pagination plus sorting by metadata key`(): Unit = runBlocking {
-        val keyU32 = RandomStringUtils.randomAlphabetic(5).asName()
-        val keyU128 = RandomStringUtils.randomAlphabetic(5).asName()
+        val key1 = RandomStringUtils.randomAlphabetic(5).asName()
+        val key2 = RandomStringUtils.randomAlphabetic(5).asName()
 
-        createAccount("new_000", mapOf(keyU32 to 1.asValue(), keyU128 to 1L.asValue()))
-        createAccount("new_111", mapOf(keyU32 to 0.asValue(), keyU128 to 0L.asValue()))
-        createAccount("new_222", mapOf(keyU32 to 2.asValue(), keyU128 to 2L.asValue()))
+        createAccount(metadata = mapOf(key1 to "1", key2 to "1"))
+        createAccount(metadata = mapOf(key1 to "0", key2 to "0"))
+        createAccount(metadata = mapOf(key1 to "2", key2 to "2"))
 
-        listOf(keyU32, keyU128).forEach { key ->
-            QueryBuilder.findAllAccounts(QueryFilters.startsWith("new_"))
+        listOf(key1, key2).forEach { key ->
+            QueryBuilder.findAllAccounts()
                 .account(ALICE_ACCOUNT_ID)
+                .sorting(key.string)
                 .buildSigned(ALICE_KEYPAIR)
-                .let { query -> client.sendQuery(query, sorting = key.string) }
+                .let { query -> client.sendQuery(query) }
                 .let { accounts ->
-                    assertEquals(if (key == keyU32) 0.asValue() else 0L.asValue(), accounts[0].metadata.map[key])
-                    assertEquals(if (key == keyU32) 1.asValue() else 1L.asValue(), accounts[1].metadata.map[key])
-                    assertEquals(if (key == keyU32) 2.asValue() else 2L.asValue(), accounts[2].metadata.map[key])
+                    assertEquals("0", accounts[0].metadata.sortedMapOfName[key])
+                    assertEquals("1", accounts[1].metadata.sortedMapOfName[key])
+                    assertEquals("2", accounts[2].metadata.sortedMapOfName[key])
                 }
         }
     }
 
     @Test
-    @WithIroha([DefaultGenesis::class])
+    @WithIroha([NewDomainWithMetadata::class])
     @Feature("Accounts")
     @Query("FindAllAccountsWithPagination")
     @Story("Account queries all accounts with pagination after inserting some new accounts")
     @SdkTestId("pagination_works_correct_after_inserting_some_new_accounts")
     fun `pagination works correct after inserting some new accounts`(): Unit = runBlocking {
         val key = "ts".asName()
+        val limit = 3L
 
-        val metadata0 = Instant.now().toEpochMilli().asValue()
-        createAccount("new_000", mapOf(key to metadata0))
-        val metadata1 = Instant.now().toEpochMilli().asValue()
-        createAccount("new_111", mapOf(key to metadata1))
-        val metadata2 = Instant.now().toEpochMilli().asValue()
-        createAccount("new_222", mapOf(key to metadata2))
-        val metadata3 = Instant.now().toEpochMilli().asValue()
-        createAccount("new_333", mapOf(key to metadata3))
-        val metadata4 = Instant.now().toEpochMilli().asValue()
-        createAccount("new_444", mapOf(key to metadata4))
+        val metadata0 = Instant.now().toEpochMilli().toString()
+        createAccount(domainId = NewDomainWithMetadata.DOMAIN_ID, metadata = mapOf(key to metadata0))
+        val metadata1 = Instant.now().toEpochMilli().toString()
+        createAccount(domainId = NewDomainWithMetadata.DOMAIN_ID, metadata = mapOf(key to metadata1))
+        val metadata2 = Instant.now().toEpochMilli().toString()
+        createAccount(domainId = NewDomainWithMetadata.DOMAIN_ID, metadata = mapOf(key to metadata2))
+        val metadata3 = Instant.now().toEpochMilli().toString()
+        createAccount(domainId = NewDomainWithMetadata.DOMAIN_ID, metadata = mapOf(key to metadata3))
+        val metadata4 = Instant.now().toEpochMilli().toString()
+        createAccount(domainId = NewDomainWithMetadata.DOMAIN_ID, metadata = mapOf(key to metadata4))
 
-        QueryBuilder.findAllAccounts(QueryFilters.startsWith("new_"))
+        QueryBuilder.findAccountsByDomainId(NewDomainWithMetadata.DOMAIN_ID)
             .account(ALICE_ACCOUNT_ID)
+            .pagination(limit = limit)
+            .sorting(key)
             .buildSigned(ALICE_KEYPAIR)
-            .let { query -> client.sendQuery(query, limit = 3, sorting = key.string) }
+            .let { query -> client.sendQuery(query) }
             .let { accounts ->
-                assertEquals(3, accounts.size)
-                assertEquals(metadata2, accounts[2].metadata.map[key])
+                assertEquals(limit, accounts.size.toLong())
+                assertEquals(metadata2, accounts[2].metadata.sortedMapOfName[key])
             }
-
-        QueryBuilder.findAllAccounts(QueryFilters.startsWith("new_"))
+        QueryBuilder.findAccountsByDomainId(NewDomainWithMetadata.DOMAIN_ID)
             .account(ALICE_ACCOUNT_ID)
+            .pagination(start = limit.toBigInteger(), limit = limit)
+            .sorting(key)
             .buildSigned(ALICE_KEYPAIR)
-            .let { query -> client.sendQuery(query, 3, 3) }
+            .let { query -> client.sendQuery(query) }
             .let { accounts ->
                 assertEquals(2, accounts.size)
-                assertEquals(metadata4, accounts[1].metadata.map[key])
+                assertEquals(metadata4, accounts[1].metadata.sortedMapOfName[key])
             }
 
-        val metadata5 = Instant.now().toEpochMilli().asValue()
-        createAccount("new_555", mapOf(key to metadata5))
-        val metadata6 = Instant.now().toEpochMilli().asValue()
-        createAccount("new_666", mapOf(key to metadata6))
-        val metadata7 = Instant.now().toEpochMilli().asValue()
-        createAccount("new_777", mapOf(key to metadata7))
-        val metadata8 = Instant.now().toEpochMilli().asValue()
-        createAccount("new_888", mapOf(key to metadata8))
+        val metadata5 = Instant.now().toEpochMilli().toString()
+        createAccount(domainId = NewDomainWithMetadata.DOMAIN_ID, metadata = mapOf(key to metadata5))
+        val metadata6 = Instant.now().toEpochMilli().toString()
+        createAccount(domainId = NewDomainWithMetadata.DOMAIN_ID, metadata = mapOf(key to metadata6))
+        val metadata7 = Instant.now().toEpochMilli().toString()
+        createAccount(domainId = NewDomainWithMetadata.DOMAIN_ID, metadata = mapOf(key to metadata7))
+        val metadata8 = Instant.now().toEpochMilli().toString()
+        createAccount(domainId = NewDomainWithMetadata.DOMAIN_ID, metadata = mapOf(key to metadata8))
 
-        QueryBuilder.findAllAccounts(QueryFilters.startsWith("new_"))
+        QueryBuilder.findAccountsByDomainId(NewDomainWithMetadata.DOMAIN_ID)
             .account(ALICE_ACCOUNT_ID)
+            .pagination(start = BigInteger.valueOf(2).multiply(limit.toBigInteger()), limit = limit)
+            .sorting(key)
             .buildSigned(ALICE_KEYPAIR)
-            .let { query -> client.sendQuery(query, 6, 3) }
+            .let { query -> client.sendQuery(query) }
             .let { accounts ->
                 assertEquals(3, accounts.size)
-                assertEquals(metadata6, accounts[0].metadata.map[key])
-                assertEquals(metadata8, accounts[2].metadata.map[key])
+                assertEquals(metadata6, accounts[0].metadata.sortedMapOfName[key])
+                assertEquals(metadata8, accounts[2].metadata.sortedMapOfName[key])
             }
+        print(metadata5)
+        print(metadata7)
     }
 
     @Test
-    @WithIroha([AliceHas100XorAndPermissionToBurn::class])
+    @WithIroha([AliceHas100XorAndPermissionToMintAndBurn::class])
     @Feature("Accounts")
     @Query("FindAllAccountsWithPagination")
     @Story("Account queries all accounts with pagination")
     @SdkTestId("find_all_account_with_pagination")
     fun `find all account with pagination`(): Unit = runBlocking {
+        val limit = 5L
+        val start = 3L
         var accounts = QueryBuilder.findAllAccounts()
             .account(ALICE_ACCOUNT_ID)
+            .pagination(limit = 5)
             .buildSigned(ALICE_KEYPAIR)
-            .let { query -> client.sendQuery(query, limit = 5) }
+            .let { query -> client.sendQuery(query) }
         assertEquals(3, accounts.size)
 
-        createAccount("foo")
-        createAccount("bar")
+        repeat(2) { createAccount() }
 
         accounts = QueryBuilder.findAllAccounts()
             .account(ALICE_ACCOUNT_ID)
+            .pagination(start = BigInteger.valueOf(start), limit = limit)
             .buildSigned(ALICE_KEYPAIR)
-            .let { query -> client.sendQuery(query, 3, 5) }
-        assertEquals(2, accounts.size)
+            .let { query -> client.sendQuery(query) }
+        assertEquals(limit - start, accounts.size.toLong())
     }
 
     @Test
-    @WithIroha([AliceHas100XorAndPermissionToBurn::class])
+    @WithIroha([AliceHas100XorAndPermissionToMintAndBurn::class])
     @Feature("Transactions")
     @Query("FindAllTransactions")
     @Story("Account queries all transactions")
@@ -748,12 +687,12 @@ class QueriesTest : IrohaTest<Iroha2Client>() {
             .buildSigned(ALICE_KEYPAIR)
             .let { client.sendQuery(it) }
             .also { txs ->
-                assertTrue(txs.size == 7) // 5 + 2 genesis txs
+                assertTrue(txs.size == 9) // 5 + 4 genesis txs
             }
     }
 
     @Test
-    @WithIroha([AliceHas100XorAndPermissionToBurn::class])
+    @WithIroha([AliceHas100XorAndPermissionToMintAndBurn::class])
     @Feature("Blocks")
     @Query("FindAllBlocks")
     @Story("Account queries all blocks")
@@ -776,7 +715,7 @@ class QueriesTest : IrohaTest<Iroha2Client>() {
     }
 
     @Test
-    @WithIroha([AliceHas100XorAndPermissionToBurn::class])
+    @WithIroha([AliceHas100XorAndPermissionToMintAndBurn::class])
     @Feature("Blocks")
     @Query("FindAllBlockHeaders")
     @Story("Account queries all block headers")
@@ -810,10 +749,7 @@ class QueriesTest : IrohaTest<Iroha2Client>() {
             .buildSigned(ALICE_KEYPAIR)
             .let { query -> client.sendQuery(query) }
             .also { ids ->
-                assertContains(
-                    ids,
-                    AliceHasRoleWithAccessToBobsMetadata.ROLE_ID,
-                )
+                assertContains(ids, AliceHasRoleWithAccessToBobsMetadata.ROLE_ID)
             }
     }
 
@@ -860,15 +796,11 @@ class QueriesTest : IrohaTest<Iroha2Client>() {
     @SdkTestId("find_role_by_role_ID")
     fun `find role by ID`(): Unit = runBlocking {
         val roleId = AliceHasRoleWithAccessToBobsMetadata.ROLE_ID
-        try {
-            QueryBuilder.findRoleByRoleId(roleId)
-                .account(ALICE_ACCOUNT_ID)
-                .buildSigned(ALICE_KEYPAIR)
-                .let { query -> client.sendQuery(query) }
-                .also { role -> assertEquals(role.id, roleId) }
-        } catch (e: Exception) {
-            println(e)
-        }
+        QueryBuilder.findRoleByRoleId(roleId)
+            .account(ALICE_ACCOUNT_ID)
+            .buildSigned(ALICE_KEYPAIR)
+            .let { query -> client.sendQuery(query) }
+            .also { role -> assertEquals(role.id, roleId) }
     }
 
     @Test
@@ -880,7 +812,7 @@ class QueriesTest : IrohaTest<Iroha2Client>() {
     fun `find asset definitions with or filter`(): Unit = runBlocking {
         val definitionId = AliceWithTestAssets.TEST_ASSET_DEFINITION_ID
         val filter = QueryFilters.or(
-            StringPredicate.Is("${definitionId.name.string}#${definitionId.domainId.name.string}"),
+            StringPredicate.Is("${definitionId.name.string}#${definitionId.domain.name.string}"),
         )
         QueryBuilder.findAllAssetsDefinitions(filter)
             .account(ALICE_ACCOUNT_ID)
@@ -893,31 +825,28 @@ class QueriesTest : IrohaTest<Iroha2Client>() {
             }
     }
 
-    @Test
-    @WithIroha([DefaultGenesis::class])
-    @Feature("Permissions")
-    @Query("FindPermissionTokenSchema")
-    @Story("Transaction queries all permission token ids")
-    @SdkTestId("find_all_permission_token_ids")
-    fun `find all permission token ids`(): Unit = runBlocking {
-        val permissionTokenSchema = QueryBuilder.findPermissionTokenIdsSchema()
+    @WithIroha([WithManyDomains::class])
+    @Feature("Domains")
+    @Query("FindAllDomains")
+    @Story("Account queries all domains using cursor pagination")
+    @SdkTestId("querying_multiple_domains_with_cursor_test")
+    fun `find multiple domains with cursor test`(): Unit = runBlocking {
+        val domains = QueryBuilder.findAllDomains()
             .account(ALICE_ACCOUNT_ID)
             .buildSigned(ALICE_KEYPAIR)
             .let { query -> client.sendQuery(query) }
-        assertEquals(permissionTokenSchema.tokenIds.size, Permissions.values().size)
-
-        val expectedPermissions = Permissions.values().map { it.type }.toList()
-        assertTrue(permissionTokenSchema.tokenIds.containsAll(expectedPermissions))
+        assertEquals(WithManyDomains.DOMAINS_COUNT + 2, domains.size)
     }
 
     private suspend fun createAccount(
-        name: String,
-        metadata: Map<Name, Value> = mapOf(),
+        domainId: DomainId = DEFAULT_DOMAIN_ID,
+        keyPair: KeyPair = generateKeyPair(),
+        metadata: Map<Name, String> = mapOf(),
     ) {
-        val newAccountId = AccountId(DEFAULT_DOMAIN_ID, name.asName())
+        val newAccountId = AccountId(domainId, keyPair.public.toIrohaPublicKey())
         client.sendTransaction {
             accountId = ALICE_ACCOUNT_ID
-            registerAccount(newAccountId, listOf(), Metadata(metadata))
+            registerAccount(newAccountId, Metadata(metadata))
             buildSigned(ALICE_KEYPAIR)
         }.also { d ->
             withTimeout(txTimeout) { d.await() }

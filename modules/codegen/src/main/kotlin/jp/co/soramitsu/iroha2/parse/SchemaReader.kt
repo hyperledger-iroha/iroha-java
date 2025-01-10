@@ -52,6 +52,9 @@ class SchemaReader {
                 return source to source.replace("<", "Of")
                     .replace(", ", "And")
                     .replace(">", "")
+            } else if (this.contains("Option<Option")) {
+                val source = "${values[1]}<${values[2]}>"
+                return source to values.last()
             }
         }
         return null
@@ -63,7 +66,6 @@ class SchemaReader {
             ArrayResolver.NAME,
             VectorResolver.NAME,
             SortedVectorResolver.NAME,
-            "EvaluatesTo",
             "Option",
             "SignatureOf",
             "HashOf",

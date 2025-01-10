@@ -252,70 +252,6 @@ public sealed class InstructionExecutionError : ModelEnum {
     }
 
     /**
-     * 'Metadata' variant
-     */
-    public data class Metadata(
-        public val metadataError: MetadataError,
-    ) : InstructionExecutionError() {
-        override fun discriminant(): Int = DISCRIMINANT
-
-        public companion object :
-            ScaleReader<jp.co.soramitsu.iroha2.generated.InstructionExecutionError.Metadata>,
-            ScaleWriter<jp.co.soramitsu.iroha2.generated.InstructionExecutionError.Metadata> {
-            public const val DISCRIMINANT: Int = 7
-
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.InstructionExecutionError.Metadata = try {
-                Metadata(
-                    MetadataError.read(reader),
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
-
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.InstructionExecutionError.Metadata,
-            ): Unit = try {
-                MetadataError.write(writer, instance.metadataError)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
-        }
-    }
-
-    /**
-     * 'Fail' variant
-     */
-    public data class Fail(
-        public val string: String,
-    ) : InstructionExecutionError() {
-        override fun discriminant(): Int = DISCRIMINANT
-
-        public companion object :
-            ScaleReader<jp.co.soramitsu.iroha2.generated.InstructionExecutionError.Fail>,
-            ScaleWriter<jp.co.soramitsu.iroha2.generated.InstructionExecutionError.Fail> {
-            public const val DISCRIMINANT: Int = 8
-
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.InstructionExecutionError.Fail = try {
-                Fail(
-                    reader.readString(),
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
-
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.InstructionExecutionError.Fail,
-            ): Unit = try {
-                writer.writeAsList(instance.string.toByteArray(Charsets.UTF_8))
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
-        }
-    }
-
-    /**
      * 'InvalidParameter' variant
      */
     public data class InvalidParameter(
@@ -326,7 +262,7 @@ public sealed class InstructionExecutionError : ModelEnum {
         public companion object :
             ScaleReader<jp.co.soramitsu.iroha2.generated.InstructionExecutionError.InvalidParameter>,
             ScaleWriter<jp.co.soramitsu.iroha2.generated.InstructionExecutionError.InvalidParameter> {
-            public const val DISCRIMINANT: Int = 9
+            public const val DISCRIMINANT: Int = 7
 
             override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.InstructionExecutionError.InvalidParameter = try {
                 InvalidParameter(
@@ -358,7 +294,7 @@ public sealed class InstructionExecutionError : ModelEnum {
         public companion object :
             ScaleReader<jp.co.soramitsu.iroha2.generated.InstructionExecutionError.InvariantViolation>,
             ScaleWriter<jp.co.soramitsu.iroha2.generated.InstructionExecutionError.InvariantViolation> {
-            public const val DISCRIMINANT: Int = 10
+            public const val DISCRIMINANT: Int = 8
 
             override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.InstructionExecutionError.InvariantViolation = try {
                 InvariantViolation(
@@ -393,10 +329,8 @@ public sealed class InstructionExecutionError : ModelEnum {
             4 -> Repetition.read(reader)
             5 -> Mintability.read(reader)
             6 -> Math.read(reader)
-            7 -> Metadata.read(reader)
-            8 -> Fail.read(reader)
-            9 -> InvalidParameter.read(reader)
-            10 -> InvariantViolation.read(reader)
+            7 -> InvalidParameter.read(reader)
+            8 -> InvariantViolation.read(reader)
             else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
 
         override fun write(writer: ScaleCodecWriter, instance: InstructionExecutionError) {
@@ -409,10 +343,8 @@ public sealed class InstructionExecutionError : ModelEnum {
                 4 -> Repetition.write(writer, instance as Repetition)
                 5 -> Mintability.write(writer, instance as Mintability)
                 6 -> Math.write(writer, instance as Math)
-                7 -> Metadata.write(writer, instance as Metadata)
-                8 -> Fail.write(writer, instance as Fail)
-                9 -> InvalidParameter.write(writer, instance as InvalidParameter)
-                10 -> InvariantViolation.write(writer, instance as InvariantViolation)
+                7 -> InvalidParameter.write(writer, instance as InvalidParameter)
+                8 -> InvariantViolation.write(writer, instance as InvariantViolation)
                 else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
         }
     }

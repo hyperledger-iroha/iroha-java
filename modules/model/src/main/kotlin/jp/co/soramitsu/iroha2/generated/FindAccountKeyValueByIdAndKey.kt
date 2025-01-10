@@ -16,16 +16,16 @@ import kotlin.Unit
  * Generated from 'FindAccountKeyValueByIdAndKey' regular structure
  */
 public data class FindAccountKeyValueByIdAndKey(
-    public val id: EvaluatesTo<AccountId>,
-    public val key: EvaluatesTo<Name>,
+    public val id: AccountId,
+    public val key: Name,
 ) {
     public companion object :
         ScaleReader<FindAccountKeyValueByIdAndKey>,
         ScaleWriter<FindAccountKeyValueByIdAndKey> {
         override fun read(reader: ScaleCodecReader): FindAccountKeyValueByIdAndKey = try {
             FindAccountKeyValueByIdAndKey(
-                EvaluatesTo.read(reader) as EvaluatesTo<AccountId>,
-                EvaluatesTo.read(reader) as EvaluatesTo<Name>,
+                AccountId.read(reader),
+                Name.read(reader),
             )
         } catch (ex: Exception) {
             throw wrapException(ex)
@@ -33,8 +33,8 @@ public data class FindAccountKeyValueByIdAndKey(
 
         override fun write(writer: ScaleCodecWriter, instance: FindAccountKeyValueByIdAndKey): Unit =
             try {
-                EvaluatesTo.write(writer, instance.id)
-                EvaluatesTo.write(writer, instance.key)
+                AccountId.write(writer, instance.id)
+                Name.write(writer, instance.key)
             } catch (ex: Exception) {
                 throw wrapException(ex)
             }

@@ -24,70 +24,6 @@ public sealed class DomainEvent : ModelEnum {
     public abstract fun discriminant(): Int
 
     /**
-     * 'Account' variant
-     */
-    public data class Account(
-        public val accountEvent: AccountEvent,
-    ) : DomainEvent() {
-        override fun discriminant(): Int = DISCRIMINANT
-
-        public companion object :
-            ScaleReader<jp.co.soramitsu.iroha2.generated.DomainEvent.Account>,
-            ScaleWriter<jp.co.soramitsu.iroha2.generated.DomainEvent.Account> {
-            public const val DISCRIMINANT: Int = 0
-
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.DomainEvent.Account = try {
-                Account(
-                    AccountEvent.read(reader),
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
-
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.DomainEvent.Account,
-            ): Unit = try {
-                AccountEvent.write(writer, instance.accountEvent)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
-        }
-    }
-
-    /**
-     * 'AssetDefinition' variant
-     */
-    public data class AssetDefinition(
-        public val assetDefinitionEvent: AssetDefinitionEvent,
-    ) : DomainEvent() {
-        override fun discriminant(): Int = DISCRIMINANT
-
-        public companion object :
-            ScaleReader<jp.co.soramitsu.iroha2.generated.DomainEvent.AssetDefinition>,
-            ScaleWriter<jp.co.soramitsu.iroha2.generated.DomainEvent.AssetDefinition> {
-            public const val DISCRIMINANT: Int = 1
-
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.DomainEvent.AssetDefinition = try {
-                AssetDefinition(
-                    AssetDefinitionEvent.read(reader),
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
-
-            override fun write(
-                writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.DomainEvent.AssetDefinition,
-            ): Unit = try {
-                AssetDefinitionEvent.write(writer, instance.assetDefinitionEvent)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
-        }
-    }
-
-    /**
      * 'Created' variant
      */
     public data class Created(
@@ -98,7 +34,7 @@ public sealed class DomainEvent : ModelEnum {
         public companion object :
             ScaleReader<jp.co.soramitsu.iroha2.generated.DomainEvent.Created>,
             ScaleWriter<jp.co.soramitsu.iroha2.generated.DomainEvent.Created> {
-            public const val DISCRIMINANT: Int = 2
+            public const val DISCRIMINANT: Int = 0
 
             override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.DomainEvent.Created = try {
                 Created(
@@ -130,7 +66,7 @@ public sealed class DomainEvent : ModelEnum {
         public companion object :
             ScaleReader<jp.co.soramitsu.iroha2.generated.DomainEvent.Deleted>,
             ScaleWriter<jp.co.soramitsu.iroha2.generated.DomainEvent.Deleted> {
-            public const val DISCRIMINANT: Int = 3
+            public const val DISCRIMINANT: Int = 1
 
             override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.DomainEvent.Deleted = try {
                 Deleted(
@@ -145,6 +81,70 @@ public sealed class DomainEvent : ModelEnum {
                 instance: jp.co.soramitsu.iroha2.generated.DomainEvent.Deleted,
             ): Unit = try {
                 DomainId.write(writer, instance.domainId)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
+        }
+    }
+
+    /**
+     * 'AssetDefinition' variant
+     */
+    public data class AssetDefinition(
+        public val assetDefinitionEvent: AssetDefinitionEvent,
+    ) : DomainEvent() {
+        override fun discriminant(): Int = DISCRIMINANT
+
+        public companion object :
+            ScaleReader<jp.co.soramitsu.iroha2.generated.DomainEvent.AssetDefinition>,
+            ScaleWriter<jp.co.soramitsu.iroha2.generated.DomainEvent.AssetDefinition> {
+            public const val DISCRIMINANT: Int = 2
+
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.DomainEvent.AssetDefinition = try {
+                AssetDefinition(
+                    AssetDefinitionEvent.read(reader),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
+
+            override fun write(
+                writer: ScaleCodecWriter,
+                instance: jp.co.soramitsu.iroha2.generated.DomainEvent.AssetDefinition,
+            ): Unit = try {
+                AssetDefinitionEvent.write(writer, instance.assetDefinitionEvent)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
+        }
+    }
+
+    /**
+     * 'Account' variant
+     */
+    public data class Account(
+        public val accountEvent: AccountEvent,
+    ) : DomainEvent() {
+        override fun discriminant(): Int = DISCRIMINANT
+
+        public companion object :
+            ScaleReader<jp.co.soramitsu.iroha2.generated.DomainEvent.Account>,
+            ScaleWriter<jp.co.soramitsu.iroha2.generated.DomainEvent.Account> {
+            public const val DISCRIMINANT: Int = 3
+
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.DomainEvent.Account = try {
+                Account(
+                    AccountEvent.read(reader),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
+
+            override fun write(
+                writer: ScaleCodecWriter,
+                instance: jp.co.soramitsu.iroha2.generated.DomainEvent.Account,
+            ): Unit = try {
+                AccountEvent.write(writer, instance.accountEvent)
             } catch (ex: Exception) {
                 throw wrapException(ex)
             }
@@ -252,10 +252,10 @@ public sealed class DomainEvent : ModelEnum {
             val discriminant =
                 reader.readUByte()
         ) {
-            0 -> Account.read(reader)
-            1 -> AssetDefinition.read(reader)
-            2 -> Created.read(reader)
-            3 -> Deleted.read(reader)
+            0 -> Created.read(reader)
+            1 -> Deleted.read(reader)
+            2 -> AssetDefinition.read(reader)
+            3 -> Account.read(reader)
             4 -> MetadataInserted.read(reader)
             5 -> MetadataRemoved.read(reader)
             6 -> OwnerChanged.read(reader)
@@ -264,10 +264,10 @@ public sealed class DomainEvent : ModelEnum {
         override fun write(writer: ScaleCodecWriter, instance: DomainEvent) {
             writer.directWrite(instance.discriminant())
             when (val discriminant = instance.discriminant()) {
-                0 -> Account.write(writer, instance as Account)
-                1 -> AssetDefinition.write(writer, instance as AssetDefinition)
-                2 -> Created.write(writer, instance as Created)
-                3 -> Deleted.write(writer, instance as Deleted)
+                0 -> Created.write(writer, instance as Created)
+                1 -> Deleted.write(writer, instance as Deleted)
+                2 -> AssetDefinition.write(writer, instance as AssetDefinition)
+                3 -> Account.write(writer, instance as Account)
                 4 -> MetadataInserted.write(writer, instance as MetadataInserted)
                 5 -> MetadataRemoved.write(writer, instance as MetadataRemoved)
                 6 -> OwnerChanged.write(writer, instance as OwnerChanged)

@@ -3,16 +3,18 @@ name: Iroha2-java pull requests workflow
 on:
   pull_request:
     branches: [ iroha2-dev, iroha2-main ]
+
 jobs:
   build:
-    runs-on: ubuntu-latest
-
+    runs-on: [self-hosted, Linux, iroha2]
+    env:
+      IROHA_IMAGE_TAG: "2.0.0-pre-rc.22.2" # Place "dev" to run on the last iroha
     steps:
       - uses: actions/checkout@v3
-      - name: Set up JDK 16
+      - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
-          java-version: '16'
+          java-version: '17'
           distribution: 'liberica'
       - name: Cache Gradle packages
         uses: actions/cache@v3

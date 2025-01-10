@@ -16,24 +16,24 @@ import kotlin.Unit
  * Generated from 'ExecuteTriggerEventFilter' regular structure
  */
 public data class ExecuteTriggerEventFilter(
-    public val triggerId: TriggerId,
-    public val authority: AccountId,
+    public val triggerId: TriggerId? = null,
+    public val authority: AccountId? = null,
 ) {
     public companion object :
         ScaleReader<ExecuteTriggerEventFilter>,
         ScaleWriter<ExecuteTriggerEventFilter> {
         override fun read(reader: ScaleCodecReader): ExecuteTriggerEventFilter = try {
             ExecuteTriggerEventFilter(
-                TriggerId.read(reader),
-                AccountId.read(reader),
+                reader.readNullable(TriggerId) as TriggerId?,
+                reader.readNullable(AccountId) as AccountId?,
             )
         } catch (ex: Exception) {
             throw wrapException(ex)
         }
 
         override fun write(writer: ScaleCodecWriter, instance: ExecuteTriggerEventFilter): Unit = try {
-            TriggerId.write(writer, instance.triggerId)
-            AccountId.write(writer, instance.authority)
+            writer.writeNullable(TriggerId, instance.triggerId)
+            writer.writeNullable(AccountId, instance.authority)
         } catch (ex: Exception) {
             throw wrapException(ex)
         }

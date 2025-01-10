@@ -27,11 +27,11 @@ public sealed class InvalidParameterError : ModelEnum {
     public abstract fun discriminant(): Int
 
     override fun equals(other: Any?): Boolean = when (this) {
-        is NameLength -> NameLength.equals(this, other)
+        is TimeTriggerInThePast -> TimeTriggerInThePast.equals(this, other)
         else -> super.equals(other) }
 
     override fun hashCode(): Int = when (this) {
-        is NameLength -> NameLength.hashCode()
+        is TimeTriggerInThePast -> TimeTriggerInThePast.hashCode()
         else -> super.hashCode() }
 
     /**
@@ -67,39 +67,39 @@ public sealed class InvalidParameterError : ModelEnum {
     }
 
     /**
-     * 'NameLength' variant
+     * 'TimeTriggerInThePast' variant
      */
-    public class NameLength : InvalidParameterError() {
+    public class TimeTriggerInThePast : InvalidParameterError() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
-            ScaleReader<jp.co.soramitsu.iroha2.generated.InvalidParameterError.NameLength>,
-            ScaleWriter<jp.co.soramitsu.iroha2.generated.InvalidParameterError.NameLength> {
+            ScaleReader<jp.co.soramitsu.iroha2.generated.InvalidParameterError.TimeTriggerInThePast>,
+            ScaleWriter<jp.co.soramitsu.iroha2.generated.InvalidParameterError.TimeTriggerInThePast> {
             public const val DISCRIMINANT: Int = 1
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.InvalidParameterError.NameLength = try {
-                NameLength()
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.InvalidParameterError.TimeTriggerInThePast = try {
+                TimeTriggerInThePast()
             } catch (ex: Exception) {
                 throw wrapException(ex)
             }
 
             override fun write(
                 writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.InvalidParameterError.NameLength,
+                instance: jp.co.soramitsu.iroha2.generated.InvalidParameterError.TimeTriggerInThePast,
             ): Unit = try {
             } catch (ex: Exception) {
                 throw wrapException(ex)
             }
 
             public fun equals(
-                o1: jp.co.soramitsu.iroha2.generated.InvalidParameterError.NameLength,
+                o1: jp.co.soramitsu.iroha2.generated.InvalidParameterError.TimeTriggerInThePast,
                 o2: Any?,
             ): Boolean = when (o2) {
                 null -> false
                 else -> o2::class == o1::class
             }
 
-            override fun hashCode(): Int = ".InvalidParameterError.NameLength".hashCode()
+            override fun hashCode(): Int = ".InvalidParameterError.TimeTriggerInThePast".hashCode()
         }
     }
 
@@ -109,14 +109,14 @@ public sealed class InvalidParameterError : ModelEnum {
                 reader.readUByte()
         ) {
             0 -> Wasm.read(reader)
-            1 -> NameLength.read(reader)
+            1 -> TimeTriggerInThePast.read(reader)
             else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
 
         override fun write(writer: ScaleCodecWriter, instance: InvalidParameterError) {
             writer.directWrite(instance.discriminant())
             when (val discriminant = instance.discriminant()) {
                 0 -> Wasm.write(writer, instance as Wasm)
-                1 -> NameLength.write(writer, instance as NameLength)
+                1 -> TimeTriggerInThePast.write(writer, instance as TimeTriggerInThePast)
                 else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
         }
     }

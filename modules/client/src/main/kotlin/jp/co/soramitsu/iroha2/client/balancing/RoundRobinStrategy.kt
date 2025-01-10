@@ -10,8 +10,6 @@ open class RoundRobinStrategy(private val urls: List<IrohaUrls>) : BalancingStra
 
     private var lastRequestedPeerIdx: Int? = null
 
-    override fun getTelemetryUrl(): URL = getUrls().telemetryUrl
-
     override fun getApiUrl(): URL = getUrls().apiUrl
 
     override fun getPeerUrl(): URL = getUrls().peerUrl

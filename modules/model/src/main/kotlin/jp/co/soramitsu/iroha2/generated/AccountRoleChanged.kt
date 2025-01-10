@@ -16,8 +16,8 @@ import kotlin.Unit
  * Generated from 'AccountRoleChanged' regular structure
  */
 public data class AccountRoleChanged(
-    public val accountId: AccountId,
-    public val roleId: RoleId,
+    public val account: AccountId,
+    public val role: RoleId,
 ) {
     public companion object : ScaleReader<AccountRoleChanged>, ScaleWriter<AccountRoleChanged> {
         override fun read(reader: ScaleCodecReader): AccountRoleChanged = try {
@@ -30,8 +30,8 @@ public data class AccountRoleChanged(
         }
 
         override fun write(writer: ScaleCodecWriter, instance: AccountRoleChanged): Unit = try {
-            AccountId.write(writer, instance.accountId)
-            RoleId.write(writer, instance.roleId)
+            AccountId.write(writer, instance.account)
+            RoleId.write(writer, instance.role)
         } catch (ex: Exception) {
             throw wrapException(ex)
         }
