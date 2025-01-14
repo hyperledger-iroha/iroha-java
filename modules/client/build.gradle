@@ -7,7 +7,7 @@ dependencies {
 
     implementation('com.google.code.gson:gson:2.8.9')
 
-    implementation("com.github.docker-java:docker-java:3.3.0")
+    implementation("com.github.docker-java:docker-java:3.4.1")
 
     // kotlin support
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVer"
