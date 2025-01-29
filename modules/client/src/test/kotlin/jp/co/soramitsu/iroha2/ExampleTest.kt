@@ -26,7 +26,7 @@ class ExampleTest {
             this.genesis = DefaultGenesis()
         }.also { it.start() }
 
-        val client = Iroha2Client(listOf(container.getApiUrl()), container.config.chain, ALICE_ACCOUNT_ID, ALICE_KEYPAIR, log = true)
+        val client = Iroha2Client(listOf(container.getApiUrl()), container.config.chain, ALICE_ACCOUNT_ID, ALICE_KEYPAIR)
 
         val newAssetDefinitionId = "new_asset_definition#wonderland".asAssetDefinitionId()
         client.submit(Register.assetDefinition(newAssetDefinitionId, AssetType.Store())).also { d ->

@@ -15,6 +15,8 @@ plugins {
     id 'org.jmailen.kotlinter' version "$kotlinLinterVer"
     id 'maven-publish'
     id 'com.github.johnrengelman.shadow' version '8.1.1'
+    id 'org.sonarqube' version "5.1.0.4882"
+    id 'jacoco'
 }
 
 allprojects {
@@ -30,6 +32,7 @@ subprojects {
     apply plugin: 'org.jetbrains.kotlin.jvm'
     apply plugin: 'org.jmailen.kotlinter'
     apply plugin: 'com.github.johnrengelman.shadow'
+    apply plugin: 'jacoco'
 
     publishing {
         publications {
@@ -52,10 +55,6 @@ subprojects {
 
     group = 'jp.co.soramitsu.iroha2-java'
     version = 'git rev-parse --short HEAD'.execute().text.trim()
-
-    test {
-        useJUnitPlatform()
-    }
 
     java {
         toolchain {
@@ -96,6 +95,36 @@ subprojects {
     // uncomment to produce shadowJar build by default
     // it is disabled by default to publish original version by CI, not a fat jar
     tasks.shadowJar.enabled = false
+
+    test {
+        useJUnitPlatform()
+    }
+
+    jacocoTestReport {
+        reports {
+            xml.required = true
+        }
+    }
+
+    plugins.withType(JacocoPlugin) {
+        tasks["test"].finalizedBy 'jacocoTestReport'
+    }
+
+    sonar {
+        properties {
+            property "sonar.projectKey", "iroha-java"
+            property "sonar.host.url", "https://sonar.katana.soramitsu.co.jp"
+            property "sonar.java.coveragePlugin", "jacoco"
+            property "sonar.projectName", "${project.group}:${rootProject.name}.${project.name}"
+            property "sonar.sources", "${project.projectDir}/src/main/kotlin"
+            // exclude projects with no tests
+            if (project.name != "codegen" && project.name != "model" && project.name != "tutorial") {
+                property "sonar.tests", "${project.projectDir}/src/test"
+            }
+            property "sonar.java.test.binaries", "${project.projectDir}/build/test-results/test/binary"
+            property "sonar.junit.reportPaths", "${project.projectDir}/build/test-results/test/"
+        }
+    }
 }
 
 task allShadowJars {

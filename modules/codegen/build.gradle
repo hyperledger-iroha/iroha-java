@@ -15,3 +15,9 @@ task generate(type: JavaExec) {
     args "schemaFileName=schema.json"
     finalizedBy ':model:formatKotlin'
 }
+
+jacocoTestReport {
+    mustRunAfter(":admin-client:jacocoTestReport")
+    mustRunAfter(":block:jacocoTestReport")
+    mustRunAfter(":client:jacocoTestReport")
+}

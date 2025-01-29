@@ -161,10 +161,13 @@ open class IrohaContainer : GenericContainer<IrohaContainer> {
     private fun String.readStatusBlocks() = JSON_SERDE.readTree(this).get("blocks")?.doubleValue()
 
     companion object {
-        private fun IrohaConfig.getFullImageName() = when (this.imageTag.contains("sha256")) {
-            true -> "${this.imageName}@${this.imageTag}"
-            false -> "${this.imageName}:${this.imageTag}"
-        }.let { DockerImageName.parse(it) }
+        private fun IrohaConfig.getFullImageName(): DockerImageName {
+            val imageTag = System.getenv("IROHA_IMAGE_TAG") ?: DEFAULT_IMAGE_TAG
+            return when (imageTag.contains("sha256")) {
+                true -> "${this.imageName}@$imageTag"
+                false -> "${this.imageName}:$imageTag"
+            }.let { DockerImageName.parse(it) }
+        }
 
         const val NETWORK_ALIAS = "iroha"
         const val DEFAULT_IMAGE_TAG = "dev"

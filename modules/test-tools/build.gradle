@@ -4,6 +4,7 @@ dependencies {
 
     implementation "org.testcontainers:testcontainers:$testContainersVer"
 
+    implementation "io.ktor:ktor-client-logging:$ktorVer"
     implementation "org.jetbrains.kotlin:kotlin-test:$kotlinVer"
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlinVer"
     implementation "org.jetbrains.kotlin:kotlin-test-junit5:$kotlinVer"
@@ -16,4 +17,12 @@ dependencies {
     implementation "com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonKotlinVer"
 
     testImplementation "org.jetbrains.kotlin:kotlin-test:$kotlinVer"
+}
+
+jacocoTestReport {
+    mustRunAfter(":admin-client:jacocoTestReport")
+    mustRunAfter(":block:jacocoTestReport")
+    mustRunAfter(":client:jacocoTestReport")
+    mustRunAfter(":codegen:jacocoTestReport")
+    mustRunAfter(":model:jacocoTestReport")
 }

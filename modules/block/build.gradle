@@ -8,3 +8,7 @@ dependencies {
 
     testImplementation "com.google.crypto.tink:tink:$googleTinkVer"
 }
+
+jacocoTestReport {
+    mustRunAfter(":admin-client:jacocoTestReport")
+}

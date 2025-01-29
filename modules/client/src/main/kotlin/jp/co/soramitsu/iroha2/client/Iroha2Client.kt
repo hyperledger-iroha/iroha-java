@@ -15,6 +15,7 @@ import io.ktor.client.plugins.auth.Auth
 import io.ktor.client.plugins.auth.providers.BasicAuthCredentials
 import io.ktor.client.plugins.auth.providers.basic
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.plugins.websocket.WebSockets
 import io.ktor.client.plugins.websocket.webSocket
@@ -89,7 +90,7 @@ open class Iroha2Client(
     open val authority: AccountId,
     open val keyPair: KeyPair,
     open val credentials: String? = null,
-    open val log: Boolean = true,
+    open val httpLogLevel: LogLevel = LogLevel.NONE,
     open val eventReadTimeoutInMills: Long = 250,
     open val eventReadMaxAttempts: Int = 10,
     override val coroutineContext: CoroutineContext = Dispatchers.IO + SupervisorJob(),
@@ -114,8 +115,8 @@ open class Iroha2Client(
     open val client by lazy {
         HttpClient(CIO) {
             expectSuccess = true
-            if (log) {
-                install(Logging)
+            install(Logging) {
+                level = httpLogLevel
             }
             install(WebSockets)
             install(ContentNegotiation) {

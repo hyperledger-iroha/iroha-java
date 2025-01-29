@@ -6,3 +6,10 @@ dependencies {
     implementation "org.bouncycastle:bcprov-jdk15on:$bouncyCastleVer"
     api "net.i2p.crypto:eddsa:$i2pCryptoEddsa"
 }
+
+jacocoTestReport {
+    mustRunAfter(":admin-client:jacocoTestReport")
+    mustRunAfter(":block:jacocoTestReport")
+    mustRunAfter(":client:jacocoTestReport")
+    mustRunAfter(":codegen:jacocoTestReport")
+}

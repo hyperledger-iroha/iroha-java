@@ -1,6 +1,7 @@
 package jp.co.soramitsu.iroha2
 
 import io.ktor.client.call.body
+import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.request.get
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
@@ -23,9 +24,9 @@ open class AdminIroha2Client(
     override val authority: AccountId,
     override val keyPair: KeyPair,
     credentials: String? = null,
-    log: Boolean = false,
+    httpLogLevel: LogLevel = LogLevel.NONE,
     private val balancingHealthCheck: Boolean = true,
-) : Iroha2Client(apiURL, chain, authority, keyPair, credentials, log) {
+) : Iroha2Client(apiURL, chain, authority, keyPair, credentials, httpLogLevel) {
 
     /**
      * Send metrics request

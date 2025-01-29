@@ -20,7 +20,7 @@ fun main(): Unit = runBlocking {
         "CE7FA46C9DCE7EA4B125E2E36BDB63EA33073E7590AC92816AE1E861B7048B03",
         "CCF31D85E3B32A4BEA59987CE0C78E3B8E2DB93881468AB2435FE45D5C9DCD53",
     )
-    val client = AdminIroha2Client(listOf(URI(apiUrl).toURL()), chainId, admin, adminKeyPair, log = true)
+    val client = AdminIroha2Client(listOf(URI(apiUrl).toURL()), chainId, admin, adminKeyPair)
     val query = Query(client, admin, adminKeyPair)
     query.findAllDomains()
         .also { println("ALL DOMAINS: ${it.map { d -> d.id.asString() }}") }

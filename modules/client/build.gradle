@@ -22,3 +22,8 @@ dependencies {
     testImplementation("io.qameta.allure:allure-testng:2.29.0")
     testImplementation "org.testcontainers:testcontainers:$testContainersVer"
 }
+
+jacocoTestReport {
+    mustRunAfter(":admin-client:jacocoTestReport")
+    mustRunAfter(":block:jacocoTestReport")
+}

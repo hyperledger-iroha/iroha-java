@@ -17,8 +17,11 @@ on:
       ALLURE_USERNAME:
         description: "ALLURE_USERNAME service parameter. Leave blank"
         required: false
+  repository_dispatch:
+    types: [allure-upload-trigger]
 
 env:
+  IROHA_IMAGE_TAG: "dev"
   ALLURE_RESULTS: "${{ github.workspace }}/modules/client/build/allure-results"
   ALLURE_JOB_RUN_ID: ${{ github.event.inputs.ALLURE_JOB_RUN_ID }}
 

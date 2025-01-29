@@ -109,7 +109,6 @@ class IrohaRunnerExtension :
                 defaultChainId,
                 ALICE_ACCOUNT_ID,
                 ALICE_KEYPAIR,
-                log = true,
             ).also { utilizedResources.add(it) }
         }
 
@@ -120,7 +119,6 @@ class IrohaRunnerExtension :
                 defaultChainId,
                 ALICE_ACCOUNT_ID,
                 ALICE_KEYPAIR,
-                log = true,
             ).also { utilizedResources.add(it) }
         }
 
@@ -131,7 +129,6 @@ class IrohaRunnerExtension :
                 defaultChainId,
                 ALICE_ACCOUNT_ID,
                 ALICE_KEYPAIR,
-                log = true,
             ).also { utilizedResources.add(it) }
         }
 
