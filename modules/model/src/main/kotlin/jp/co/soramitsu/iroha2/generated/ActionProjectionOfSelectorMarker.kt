@@ -15,11 +15,11 @@ import kotlin.Int
 import kotlin.Unit
 
 /**
- * MetadataProjectionOfSelectorMarker
+ * ActionProjectionOfSelectorMarker
  *
- * Generated from 'MetadataProjectionOfSelectorMarker' enum
+ * Generated from 'ActionProjectionOfSelectorMarker' enum
  */
-public sealed class MetadataProjectionOfSelectorMarker : ModelEnum {
+public sealed class ActionProjectionOfSelectorMarker : ModelEnum {
     /**
      * @return Discriminator of variant in enum
      */
@@ -38,15 +38,15 @@ public sealed class MetadataProjectionOfSelectorMarker : ModelEnum {
     /**
      * 'Atom' variant
      */
-    public class Atom : MetadataProjectionOfSelectorMarker() {
+    public class Atom : ActionProjectionOfSelectorMarker() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
-            ScaleReader<jp.co.soramitsu.iroha2.generated.MetadataProjectionOfSelectorMarker.Atom>,
-            ScaleWriter<jp.co.soramitsu.iroha2.generated.MetadataProjectionOfSelectorMarker.Atom> {
+            ScaleReader<jp.co.soramitsu.iroha2.generated.ActionProjectionOfSelectorMarker.Atom>,
+            ScaleWriter<jp.co.soramitsu.iroha2.generated.ActionProjectionOfSelectorMarker.Atom> {
             public const val DISCRIMINANT: Int = 0
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.MetadataProjectionOfSelectorMarker.Atom = try {
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.ActionProjectionOfSelectorMarker.Atom = try {
                 Atom()
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -54,36 +54,36 @@ public sealed class MetadataProjectionOfSelectorMarker : ModelEnum {
 
             override fun write(
                 writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.MetadataProjectionOfSelectorMarker.Atom,
+                instance: jp.co.soramitsu.iroha2.generated.ActionProjectionOfSelectorMarker.Atom,
             ): Unit = try {
             } catch (ex: Exception) {
                 throw wrapException(ex)
             }
 
-            public fun equals(o1: jp.co.soramitsu.iroha2.generated.MetadataProjectionOfSelectorMarker.Atom, o2: Any?): Boolean = when (o2) {
+            public fun equals(o1: jp.co.soramitsu.iroha2.generated.ActionProjectionOfSelectorMarker.Atom, o2: Any?): Boolean = when (o2) {
                 null -> false
                 else -> o2::class == o1::class
             }
 
-            override fun hashCode(): Int = ".MetadataProjectionOfSelectorMarker.Atom".hashCode()
+            override fun hashCode(): Int = ".ActionProjectionOfSelectorMarker.Atom".hashCode()
         }
     }
 
     /**
-     * 'Key' variant
+     * 'Metadata' variant
      */
-    public data class Key(public val metadataKeyProjectionOfSelectorMarker: MetadataKeyProjectionOfSelectorMarker) :
-        MetadataProjectionOfSelectorMarker() {
+    public data class Metadata(public val metadataProjectionOfSelectorMarker: MetadataProjectionOfSelectorMarker) :
+        ActionProjectionOfSelectorMarker() {
         override fun discriminant(): Int = DISCRIMINANT
 
         public companion object :
-            ScaleReader<jp.co.soramitsu.iroha2.generated.MetadataProjectionOfSelectorMarker.Key>,
-            ScaleWriter<jp.co.soramitsu.iroha2.generated.MetadataProjectionOfSelectorMarker.Key> {
+            ScaleReader<jp.co.soramitsu.iroha2.generated.ActionProjectionOfSelectorMarker.Metadata>,
+            ScaleWriter<jp.co.soramitsu.iroha2.generated.ActionProjectionOfSelectorMarker.Metadata> {
             public const val DISCRIMINANT: Int = 1
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.MetadataProjectionOfSelectorMarker.Key = try {
-                Key(
-                    MetadataKeyProjectionOfSelectorMarker.read(reader),
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.ActionProjectionOfSelectorMarker.Metadata = try {
+                Metadata(
+                    MetadataProjectionOfSelectorMarker.read(reader),
                 )
             } catch (ex: Exception) {
                 throw wrapException(ex)
@@ -91,9 +91,9 @@ public sealed class MetadataProjectionOfSelectorMarker : ModelEnum {
 
             override fun write(
                 writer: ScaleCodecWriter,
-                instance: jp.co.soramitsu.iroha2.generated.MetadataProjectionOfSelectorMarker.Key,
+                instance: jp.co.soramitsu.iroha2.generated.ActionProjectionOfSelectorMarker.Metadata,
             ): Unit = try {
-                MetadataKeyProjectionOfSelectorMarker.write(writer, instance.metadataKeyProjectionOfSelectorMarker)
+                MetadataProjectionOfSelectorMarker.write(writer, instance.metadataProjectionOfSelectorMarker)
             } catch (ex: Exception) {
                 throw wrapException(ex)
             }
@@ -101,19 +101,19 @@ public sealed class MetadataProjectionOfSelectorMarker : ModelEnum {
     }
 
     public companion object :
-        ScaleReader<MetadataProjectionOfSelectorMarker>,
-        ScaleWriter<MetadataProjectionOfSelectorMarker> {
-        override fun read(reader: ScaleCodecReader): MetadataProjectionOfSelectorMarker = when (val discriminant = reader.readUByte()) {
+        ScaleReader<ActionProjectionOfSelectorMarker>,
+        ScaleWriter<ActionProjectionOfSelectorMarker> {
+        override fun read(reader: ScaleCodecReader): ActionProjectionOfSelectorMarker = when (val discriminant = reader.readUByte()) {
             0 -> Atom.read(reader)
-            1 -> Key.read(reader)
+            1 -> Metadata.read(reader)
             else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
         }
 
-        override fun write(writer: ScaleCodecWriter, instance: MetadataProjectionOfSelectorMarker) {
+        override fun write(writer: ScaleCodecWriter, instance: ActionProjectionOfSelectorMarker) {
             writer.directWrite(instance.discriminant())
             when (val discriminant = instance.discriminant()) {
                 0 -> Atom.write(writer, instance as Atom)
-                1 -> Key.write(writer, instance as Key)
+                1 -> Metadata.write(writer, instance as Metadata)
                 else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
             }
         }

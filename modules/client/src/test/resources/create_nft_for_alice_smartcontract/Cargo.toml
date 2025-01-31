@@ -28,7 +28,7 @@ opt-level = "z"     # Optimize for size vs speed with "s"/"z"(removes vectorizat
 codegen-units = 1   # Further reduces binary size but increases compilation time
 
 [dependencies]
-iroha_trigger = { git = "https://github.com/hyperledger/iroha/", branch = "2.0.0-rc.1", features = ["debug"] }
+iroha_trigger = { git = "https://github.com/hyperledger/iroha/", tag = "v2.0.0-rc.1.0", features = ["debug"] }
 
 dlmalloc = { version = "0.2.6", features = ["global"] }
 panic-halt = "0.2.0"

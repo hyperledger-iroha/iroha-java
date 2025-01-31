@@ -8,6 +8,7 @@ import jp.co.soramitsu.iroha2.codec.ScaleCodecReader
 import jp.co.soramitsu.iroha2.codec.ScaleCodecWriter
 import jp.co.soramitsu.iroha2.codec.ScaleReader
 import jp.co.soramitsu.iroha2.codec.ScaleWriter
+import jp.co.soramitsu.iroha2.generated.InstructionBox
 import jp.co.soramitsu.iroha2.transaction.Instruction
 import jp.co.soramitsu.iroha2.wrapException
 import kotlin.Unit
@@ -19,6 +20,7 @@ import kotlin.Unit
  */
 public data class SetParameter(public val parameter: Parameter) : Instruction {
     override fun asInstructionBox(): InstructionBox = asInstructionBoxExt()
+
     public companion object : ScaleReader<SetParameter>, ScaleWriter<SetParameter> {
         override fun read(reader: ScaleCodecReader): SetParameter = try {
             SetParameter(

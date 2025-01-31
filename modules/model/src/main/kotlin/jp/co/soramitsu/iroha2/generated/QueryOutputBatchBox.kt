@@ -118,6 +118,67 @@ public sealed class QueryOutputBatchBox : ModelEnum {
     }
 
     /**
+     * 'Json' variant
+     */
+    public data class Json(public val vec: List<jp.co.soramitsu.iroha2.generated.Json>) : QueryOutputBatchBox() {
+        override fun discriminant(): Int = DISCRIMINANT
+
+        public companion object :
+            ScaleReader<jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.Json>,
+            ScaleWriter<jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.Json> {
+            public const val DISCRIMINANT: Int = 3
+
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.Json = try {
+                Json(
+                    reader.readVec(reader.readCompactInt()) { jp.co.soramitsu.iroha2.generated.Json.read(reader) },
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
+
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.Json): Unit = try {
+                writer.writeCompact(instance.vec.size)
+                instance.vec.forEach { value ->
+                    jp.co.soramitsu.iroha2.generated.Json.write(writer, value)
+                }
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
+        }
+    }
+
+    /**
+     * 'Numeric' variant
+     */
+    public data class Numeric(public val vec: List<jp.co.soramitsu.iroha2.generated.Numeric>) : QueryOutputBatchBox() {
+        override fun discriminant(): Int = DISCRIMINANT
+
+        public companion object :
+            ScaleReader<jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.Numeric>,
+            ScaleWriter<jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.Numeric> {
+            public const val DISCRIMINANT: Int = 4
+
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.Numeric = try {
+                Numeric(
+                    reader.readVec(reader.readCompactInt()) { jp.co.soramitsu.iroha2.generated.Numeric.read(reader) },
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
+
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.Numeric): Unit =
+                try {
+                    writer.writeCompact(instance.vec.size)
+                    instance.vec.forEach { value ->
+                        jp.co.soramitsu.iroha2.generated.Numeric.write(writer, value)
+                    }
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
+        }
+    }
+
+    /**
      * 'Name' variant
      */
     public data class Name(public val vec: List<jp.co.soramitsu.iroha2.generated.Name>) : QueryOutputBatchBox() {
@@ -126,7 +187,7 @@ public sealed class QueryOutputBatchBox : ModelEnum {
         public companion object :
             ScaleReader<jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.Name>,
             ScaleWriter<jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.Name> {
-            public const val DISCRIMINANT: Int = 3
+            public const val DISCRIMINANT: Int = 5
 
             override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.Name = try {
                 Name(
@@ -156,7 +217,7 @@ public sealed class QueryOutputBatchBox : ModelEnum {
         public companion object :
             ScaleReader<jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.DomainId>,
             ScaleWriter<jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.DomainId> {
-            public const val DISCRIMINANT: Int = 4
+            public const val DISCRIMINANT: Int = 6
 
             override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.DomainId = try {
                 DomainId(
@@ -187,7 +248,7 @@ public sealed class QueryOutputBatchBox : ModelEnum {
         public companion object :
             ScaleReader<jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.Domain>,
             ScaleWriter<jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.Domain> {
-            public const val DISCRIMINANT: Int = 5
+            public const val DISCRIMINANT: Int = 7
 
             override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.Domain = try {
                 Domain(
@@ -218,7 +279,7 @@ public sealed class QueryOutputBatchBox : ModelEnum {
         public companion object :
             ScaleReader<jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.AccountId>,
             ScaleWriter<jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.AccountId> {
-            public const val DISCRIMINANT: Int = 6
+            public const val DISCRIMINANT: Int = 8
 
             override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.AccountId = try {
                 AccountId(
@@ -249,7 +310,7 @@ public sealed class QueryOutputBatchBox : ModelEnum {
         public companion object :
             ScaleReader<jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.Account>,
             ScaleWriter<jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.Account> {
-            public const val DISCRIMINANT: Int = 7
+            public const val DISCRIMINANT: Int = 9
 
             override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.Account = try {
                 Account(
@@ -280,7 +341,7 @@ public sealed class QueryOutputBatchBox : ModelEnum {
         public companion object :
             ScaleReader<jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.AssetId>,
             ScaleWriter<jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.AssetId> {
-            public const val DISCRIMINANT: Int = 8
+            public const val DISCRIMINANT: Int = 10
 
             override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.AssetId = try {
                 AssetId(
@@ -311,7 +372,7 @@ public sealed class QueryOutputBatchBox : ModelEnum {
         public companion object :
             ScaleReader<jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.Asset>,
             ScaleWriter<jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.Asset> {
-            public const val DISCRIMINANT: Int = 9
+            public const val DISCRIMINANT: Int = 11
 
             override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.Asset = try {
                 Asset(
@@ -341,7 +402,7 @@ public sealed class QueryOutputBatchBox : ModelEnum {
         public companion object :
             ScaleReader<jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.AssetValue>,
             ScaleWriter<jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.AssetValue> {
-            public const val DISCRIMINANT: Int = 10
+            public const val DISCRIMINANT: Int = 12
 
             override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.AssetValue = try {
                 AssetValue(
@@ -372,7 +433,7 @@ public sealed class QueryOutputBatchBox : ModelEnum {
         public companion object :
             ScaleReader<jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.AssetDefinitionId>,
             ScaleWriter<jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.AssetDefinitionId> {
-            public const val DISCRIMINANT: Int = 11
+            public const val DISCRIMINANT: Int = 13
 
             override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.AssetDefinitionId = try {
                 AssetDefinitionId(
@@ -405,7 +466,7 @@ public sealed class QueryOutputBatchBox : ModelEnum {
         public companion object :
             ScaleReader<jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.AssetDefinition>,
             ScaleWriter<jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.AssetDefinition> {
-            public const val DISCRIMINANT: Int = 12
+            public const val DISCRIMINANT: Int = 14
 
             override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.AssetDefinition = try {
                 AssetDefinition(
@@ -438,7 +499,7 @@ public sealed class QueryOutputBatchBox : ModelEnum {
         public companion object :
             ScaleReader<jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.Role>,
             ScaleWriter<jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.Role> {
-            public const val DISCRIMINANT: Int = 13
+            public const val DISCRIMINANT: Int = 15
 
             override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.Role = try {
                 Role(
@@ -468,7 +529,7 @@ public sealed class QueryOutputBatchBox : ModelEnum {
         public companion object :
             ScaleReader<jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.Parameter>,
             ScaleWriter<jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.Parameter> {
-            public const val DISCRIMINANT: Int = 14
+            public const val DISCRIMINANT: Int = 16
 
             override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.Parameter = try {
                 Parameter(
@@ -499,7 +560,7 @@ public sealed class QueryOutputBatchBox : ModelEnum {
         public companion object :
             ScaleReader<jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.Permission>,
             ScaleWriter<jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.Permission> {
-            public const val DISCRIMINANT: Int = 15
+            public const val DISCRIMINANT: Int = 17
 
             override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.Permission = try {
                 Permission(
@@ -531,7 +592,7 @@ public sealed class QueryOutputBatchBox : ModelEnum {
         public companion object :
             ScaleReader<jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.CommittedTransaction>,
             ScaleWriter<jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.CommittedTransaction> {
-            public const val DISCRIMINANT: Int = 16
+            public const val DISCRIMINANT: Int = 18
 
             override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.CommittedTransaction = try {
                 CommittedTransaction(
@@ -564,7 +625,7 @@ public sealed class QueryOutputBatchBox : ModelEnum {
         public companion object :
             ScaleReader<jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.SignedTransaction>,
             ScaleWriter<jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.SignedTransaction> {
-            public const val DISCRIMINANT: Int = 17
+            public const val DISCRIMINANT: Int = 19
 
             override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.SignedTransaction = try {
                 SignedTransaction(
@@ -598,7 +659,7 @@ public sealed class QueryOutputBatchBox : ModelEnum {
         public companion object :
             ScaleReader<jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.TransactionHash>,
             ScaleWriter<jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.TransactionHash> {
-            public const val DISCRIMINANT: Int = 18
+            public const val DISCRIMINANT: Int = 20
 
             override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.TransactionHash = try {
                 TransactionHash(
@@ -634,7 +695,7 @@ public sealed class QueryOutputBatchBox : ModelEnum {
         public companion object :
             ScaleReader<jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.TransactionRejectionReason>,
             ScaleWriter<jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.TransactionRejectionReason> {
-            public const val DISCRIMINANT: Int = 19
+            public const val DISCRIMINANT: Int = 21
 
             override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.TransactionRejectionReason =
                 try {
@@ -672,7 +733,7 @@ public sealed class QueryOutputBatchBox : ModelEnum {
         public companion object :
             ScaleReader<jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.Peer>,
             ScaleWriter<jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.Peer> {
-            public const val DISCRIMINANT: Int = 20
+            public const val DISCRIMINANT: Int = 22
 
             override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.Peer = try {
                 Peer(
@@ -702,7 +763,7 @@ public sealed class QueryOutputBatchBox : ModelEnum {
         public companion object :
             ScaleReader<jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.RoleId>,
             ScaleWriter<jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.RoleId> {
-            public const val DISCRIMINANT: Int = 21
+            public const val DISCRIMINANT: Int = 23
 
             override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.RoleId = try {
                 RoleId(
@@ -733,7 +794,7 @@ public sealed class QueryOutputBatchBox : ModelEnum {
         public companion object :
             ScaleReader<jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.TriggerId>,
             ScaleWriter<jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.TriggerId> {
-            public const val DISCRIMINANT: Int = 22
+            public const val DISCRIMINANT: Int = 24
 
             override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.TriggerId = try {
                 TriggerId(
@@ -764,7 +825,7 @@ public sealed class QueryOutputBatchBox : ModelEnum {
         public companion object :
             ScaleReader<jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.Trigger>,
             ScaleWriter<jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.Trigger> {
-            public const val DISCRIMINANT: Int = 23
+            public const val DISCRIMINANT: Int = 25
 
             override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.Trigger = try {
                 Trigger(
@@ -787,6 +848,37 @@ public sealed class QueryOutputBatchBox : ModelEnum {
     }
 
     /**
+     * 'Action' variant
+     */
+    public data class Action(public val vec: List<jp.co.soramitsu.iroha2.generated.Action>) : QueryOutputBatchBox() {
+        override fun discriminant(): Int = DISCRIMINANT
+
+        public companion object :
+            ScaleReader<jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.Action>,
+            ScaleWriter<jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.Action> {
+            public const val DISCRIMINANT: Int = 26
+
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.Action = try {
+                Action(
+                    reader.readVec(reader.readCompactInt()) { jp.co.soramitsu.iroha2.generated.Action.read(reader) },
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
+
+            override fun write(writer: ScaleCodecWriter, instance: jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.Action): Unit =
+                try {
+                    writer.writeCompact(instance.vec.size)
+                    instance.vec.forEach { value ->
+                        jp.co.soramitsu.iroha2.generated.Action.write(writer, value)
+                    }
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
+        }
+    }
+
+    /**
      * 'Block' variant
      */
     public data class Block(public val vec: List<SignedBlock>) : QueryOutputBatchBox() {
@@ -795,7 +887,7 @@ public sealed class QueryOutputBatchBox : ModelEnum {
         public companion object :
             ScaleReader<jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.Block>,
             ScaleWriter<jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.Block> {
-            public const val DISCRIMINANT: Int = 24
+            public const val DISCRIMINANT: Int = 27
 
             override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.Block = try {
                 Block(
@@ -825,7 +917,7 @@ public sealed class QueryOutputBatchBox : ModelEnum {
         public companion object :
             ScaleReader<jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.BlockHeader>,
             ScaleWriter<jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.BlockHeader> {
-            public const val DISCRIMINANT: Int = 25
+            public const val DISCRIMINANT: Int = 28
 
             override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.BlockHeader = try {
                 BlockHeader(
@@ -856,7 +948,7 @@ public sealed class QueryOutputBatchBox : ModelEnum {
         public companion object :
             ScaleReader<jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.BlockHeaderHash>,
             ScaleWriter<jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.BlockHeaderHash> {
-            public const val DISCRIMINANT: Int = 26
+            public const val DISCRIMINANT: Int = 29
 
             override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox.BlockHeaderHash = try {
                 BlockHeaderHash(
@@ -885,30 +977,33 @@ public sealed class QueryOutputBatchBox : ModelEnum {
             0 -> PublicKey.read(reader)
             1 -> String.read(reader)
             2 -> Metadata.read(reader)
-            3 -> Name.read(reader)
-            4 -> DomainId.read(reader)
-            5 -> Domain.read(reader)
-            6 -> AccountId.read(reader)
-            7 -> Account.read(reader)
-            8 -> AssetId.read(reader)
-            9 -> Asset.read(reader)
-            10 -> AssetValue.read(reader)
-            11 -> AssetDefinitionId.read(reader)
-            12 -> AssetDefinition.read(reader)
-            13 -> Role.read(reader)
-            14 -> Parameter.read(reader)
-            15 -> Permission.read(reader)
-            16 -> CommittedTransaction.read(reader)
-            17 -> SignedTransaction.read(reader)
-            18 -> TransactionHash.read(reader)
-            19 -> TransactionRejectionReason.read(reader)
-            20 -> Peer.read(reader)
-            21 -> RoleId.read(reader)
-            22 -> TriggerId.read(reader)
-            23 -> Trigger.read(reader)
-            24 -> Block.read(reader)
-            25 -> BlockHeader.read(reader)
-            26 -> BlockHeaderHash.read(reader)
+            3 -> Json.read(reader)
+            4 -> Numeric.read(reader)
+            5 -> Name.read(reader)
+            6 -> DomainId.read(reader)
+            7 -> Domain.read(reader)
+            8 -> AccountId.read(reader)
+            9 -> Account.read(reader)
+            10 -> AssetId.read(reader)
+            11 -> Asset.read(reader)
+            12 -> AssetValue.read(reader)
+            13 -> AssetDefinitionId.read(reader)
+            14 -> AssetDefinition.read(reader)
+            15 -> Role.read(reader)
+            16 -> Parameter.read(reader)
+            17 -> Permission.read(reader)
+            18 -> CommittedTransaction.read(reader)
+            19 -> SignedTransaction.read(reader)
+            20 -> TransactionHash.read(reader)
+            21 -> TransactionRejectionReason.read(reader)
+            22 -> Peer.read(reader)
+            23 -> RoleId.read(reader)
+            24 -> TriggerId.read(reader)
+            25 -> Trigger.read(reader)
+            26 -> Action.read(reader)
+            27 -> Block.read(reader)
+            28 -> BlockHeader.read(reader)
+            29 -> BlockHeaderHash.read(reader)
             else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
         }
 
@@ -918,30 +1013,33 @@ public sealed class QueryOutputBatchBox : ModelEnum {
                 0 -> PublicKey.write(writer, instance as PublicKey)
                 1 -> String.write(writer, instance as String)
                 2 -> Metadata.write(writer, instance as Metadata)
-                3 -> Name.write(writer, instance as Name)
-                4 -> DomainId.write(writer, instance as DomainId)
-                5 -> Domain.write(writer, instance as Domain)
-                6 -> AccountId.write(writer, instance as AccountId)
-                7 -> Account.write(writer, instance as Account)
-                8 -> AssetId.write(writer, instance as AssetId)
-                9 -> Asset.write(writer, instance as Asset)
-                10 -> AssetValue.write(writer, instance as AssetValue)
-                11 -> AssetDefinitionId.write(writer, instance as AssetDefinitionId)
-                12 -> AssetDefinition.write(writer, instance as AssetDefinition)
-                13 -> Role.write(writer, instance as Role)
-                14 -> Parameter.write(writer, instance as Parameter)
-                15 -> Permission.write(writer, instance as Permission)
-                16 -> CommittedTransaction.write(writer, instance as CommittedTransaction)
-                17 -> SignedTransaction.write(writer, instance as SignedTransaction)
-                18 -> TransactionHash.write(writer, instance as TransactionHash)
-                19 -> TransactionRejectionReason.write(writer, instance as TransactionRejectionReason)
-                20 -> Peer.write(writer, instance as Peer)
-                21 -> RoleId.write(writer, instance as RoleId)
-                22 -> TriggerId.write(writer, instance as TriggerId)
-                23 -> Trigger.write(writer, instance as Trigger)
-                24 -> Block.write(writer, instance as Block)
-                25 -> BlockHeader.write(writer, instance as BlockHeader)
-                26 -> BlockHeaderHash.write(writer, instance as BlockHeaderHash)
+                3 -> Json.write(writer, instance as Json)
+                4 -> Numeric.write(writer, instance as Numeric)
+                5 -> Name.write(writer, instance as Name)
+                6 -> DomainId.write(writer, instance as DomainId)
+                7 -> Domain.write(writer, instance as Domain)
+                8 -> AccountId.write(writer, instance as AccountId)
+                9 -> Account.write(writer, instance as Account)
+                10 -> AssetId.write(writer, instance as AssetId)
+                11 -> Asset.write(writer, instance as Asset)
+                12 -> AssetValue.write(writer, instance as AssetValue)
+                13 -> AssetDefinitionId.write(writer, instance as AssetDefinitionId)
+                14 -> AssetDefinition.write(writer, instance as AssetDefinition)
+                15 -> Role.write(writer, instance as Role)
+                16 -> Parameter.write(writer, instance as Parameter)
+                17 -> Permission.write(writer, instance as Permission)
+                18 -> CommittedTransaction.write(writer, instance as CommittedTransaction)
+                19 -> SignedTransaction.write(writer, instance as SignedTransaction)
+                20 -> TransactionHash.write(writer, instance as TransactionHash)
+                21 -> TransactionRejectionReason.write(writer, instance as TransactionRejectionReason)
+                22 -> Peer.write(writer, instance as Peer)
+                23 -> RoleId.write(writer, instance as RoleId)
+                24 -> TriggerId.write(writer, instance as TriggerId)
+                25 -> Trigger.write(writer, instance as Trigger)
+                26 -> Action.write(writer, instance as Action)
+                27 -> Block.write(writer, instance as Block)
+                28 -> BlockHeader.write(writer, instance as BlockHeader)
+                29 -> BlockHeaderHash.write(writer, instance as BlockHeaderHash)
                 else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
             }
         }

@@ -1,6 +1,6 @@
 services:
   irohad0:
-    image: hyperledger/iroha:dev
+    image: hyperledger/iroha:2.0.0-rc.1.0
     platform: linux/amd64
     environment:
       CHAIN: 00000000-0000-0000-0000-000000000000
@@ -46,7 +46,7 @@ services:
           exec irohad
       "
   irohad1:
-    image: hyperledger/iroha:dev
+    image: hyperledger/iroha:2.0.0-rc.1.0
     platform: linux/amd64
     environment:
       CHAIN: 00000000-0000-0000-0000-000000000000
@@ -70,7 +70,7 @@ services:
       retries: 30
       start_period: 4s
   irohad2:
-    image: hyperledger/iroha:dev
+    image: hyperledger/iroha:2.0.0-rc.1.0
     platform: linux/amd64
     environment:
       CHAIN: 00000000-0000-0000-0000-000000000000
@@ -94,7 +94,7 @@ services:
       retries: 30
       start_period: 4s
   irohad3:
-    image: hyperledger/iroha:dev
+    image: hyperledger/iroha:2.0.0-rc.1.0
     platform: linux/amd64
     environment:
       CHAIN: 00000000-0000-0000-0000-000000000000

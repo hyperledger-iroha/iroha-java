@@ -53,11 +53,43 @@ public sealed class MetadataProjectionOfPredicateMarker : ModelEnum {
         }
     }
 
+    /**
+     * 'Key' variant
+     */
+    public data class Key(public val metadataKeyProjectionOfPredicateMarker: MetadataKeyProjectionOfPredicateMarker) :
+        MetadataProjectionOfPredicateMarker() {
+        override fun discriminant(): Int = DISCRIMINANT
+
+        public companion object :
+            ScaleReader<jp.co.soramitsu.iroha2.generated.MetadataProjectionOfPredicateMarker.Key>,
+            ScaleWriter<jp.co.soramitsu.iroha2.generated.MetadataProjectionOfPredicateMarker.Key> {
+            public const val DISCRIMINANT: Int = 1
+
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.MetadataProjectionOfPredicateMarker.Key = try {
+                Key(
+                    MetadataKeyProjectionOfPredicateMarker.read(reader),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
+
+            override fun write(
+                writer: ScaleCodecWriter,
+                instance: jp.co.soramitsu.iroha2.generated.MetadataProjectionOfPredicateMarker.Key,
+            ): Unit = try {
+                MetadataKeyProjectionOfPredicateMarker.write(writer, instance.metadataKeyProjectionOfPredicateMarker)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
+        }
+    }
+
     public companion object :
         ScaleReader<MetadataProjectionOfPredicateMarker>,
         ScaleWriter<MetadataProjectionOfPredicateMarker> {
         override fun read(reader: ScaleCodecReader): MetadataProjectionOfPredicateMarker = when (val discriminant = reader.readUByte()) {
             0 -> Atom.read(reader)
+            1 -> Key.read(reader)
             else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
         }
 
@@ -65,6 +97,7 @@ public sealed class MetadataProjectionOfPredicateMarker : ModelEnum {
             writer.directWrite(instance.discriminant())
             when (val discriminant = instance.discriminant()) {
                 0 -> Atom.write(writer, instance as Atom)
+                1 -> Key.write(writer, instance as Key)
                 else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
             }
         }
