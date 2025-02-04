@@ -36,38 +36,43 @@ public sealed class SignedTransaction : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.SignedTransaction.V1> {
             public const val DISCRIMINANT: Int = 1
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.SignedTransaction.V1 = try {
-                V1(
-                    SignedTransactionV1.read(reader),
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.SignedTransaction.V1 =
+                try {
+                    V1(
+                        SignedTransactionV1.read(reader),
+                    )
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.SignedTransaction.V1,
-            ): Unit = try {
-                SignedTransactionV1.write(writer, instance.signedTransactionV1)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            ): Unit =
+                try {
+                    SignedTransactionV1.write(writer, instance.signedTransactionV1)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
     public companion object : ScaleReader<SignedTransaction>, ScaleWriter<SignedTransaction> {
-        override fun read(reader: ScaleCodecReader): SignedTransaction = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
-            1 -> V1.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+        override fun read(reader: ScaleCodecReader): SignedTransaction =
+            when (val discriminant = reader.readUByte()) {
+                1 -> V1.read(reader)
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: SignedTransaction) {
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: SignedTransaction,
+        ) {
             writer.directWrite(instance.discriminant())
             when (val discriminant = instance.discriminant()) {
                 1 -> V1.write(writer, instance as V1)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

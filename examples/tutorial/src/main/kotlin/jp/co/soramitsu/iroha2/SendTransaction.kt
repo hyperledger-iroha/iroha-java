@@ -1,52 +1,36 @@
 package jp.co.soramitsu.iroha2
 
-import jp.co.soramitsu.iroha2.generated.AccountId
 import jp.co.soramitsu.iroha2.generated.AssetId
 import jp.co.soramitsu.iroha2.generated.AssetType
 import jp.co.soramitsu.iroha2.generated.AssetValue
+import jp.co.soramitsu.iroha2.generated.Json
 import jp.co.soramitsu.iroha2.generated.Metadata
 import jp.co.soramitsu.iroha2.generated.Mintable
 import jp.co.soramitsu.iroha2.generated.Name
+import jp.co.soramitsu.iroha2.transaction.Burn
+import jp.co.soramitsu.iroha2.transaction.Register
+import jp.co.soramitsu.iroha2.transaction.Transfer
 import kotlinx.coroutines.withTimeout
-import java.security.KeyPair
-import java.util.UUID
+import java.math.BigDecimal
 
 class SendTransaction(
     private val client: AdminIroha2Client,
-    private val admin: AccountId,
-    private val keyPair: KeyPair,
-    private val chainUuid: UUID,
     private val timeout: Long = 10000,
 ) {
-
     suspend fun registerDomain(
         id: String,
-        metadata: Map<Name, String> = mapOf(),
-        admin: AccountId = this.admin,
-        keyPair: KeyPair = this.keyPair,
+        metadata: Map<Name, Json> = mapOf(),
     ) {
-        client.sendTransaction {
-            account(admin)
-            chainId(chainUuid)
-            registerDomain(id.asDomainId(), metadata)
-            buildSigned(keyPair)
-        }.also {
+        client.submit(Register.domain(id.asDomainId(), metadata)).also {
             withTimeout(timeout) { it.await() }
         }
     }
 
     suspend fun registerAccount(
         id: String,
-        metadata: Map<Name, String> = mapOf(),
-        admin: AccountId = this.admin,
-        keyPair: KeyPair = this.keyPair,
+        metadata: Map<Name, Json> = mapOf(),
     ) {
-        client.sendTransaction {
-            account(admin)
-            chainId(chainUuid)
-            registerAccount(id.asAccountId(), Metadata(metadata))
-            buildSigned(keyPair)
-        }.also {
+        client.submit(Register.account(id.asAccountId(), Metadata(metadata))).also {
             withTimeout(timeout) { it.await() }
         }
     }
@@ -54,17 +38,10 @@ class SendTransaction(
     suspend fun registerAssetDefinition(
         id: String,
         type: AssetType = AssetType.Store(),
-        metadata: Map<Name, String> = mapOf(),
+        metadata: Map<Name, Json> = mapOf(),
         mintable: Mintable = Mintable.Infinitely(),
-        admin: AccountId = this.admin,
-        keyPair: KeyPair = this.keyPair,
     ) {
-        client.sendTransaction {
-            account(admin)
-            chainId(chainUuid)
-            registerAssetDefinition(id.asAssetDefinitionId(), type, Metadata(metadata), mintable)
-            buildSigned(keyPair)
-        }.also {
+        client.submit(Register.assetDefinition(id.asAssetDefinitionId(), type, mintable, metadata = Metadata(metadata))).also {
             withTimeout(timeout) { it.await() }
         }
     }
@@ -72,48 +49,27 @@ class SendTransaction(
     suspend fun registerAsset(
         id: AssetId,
         value: AssetValue,
-        admin: AccountId = this.admin,
-        keyPair: KeyPair = this.keyPair,
     ) {
-        client.sendTransaction {
-            account(admin)
-            chainId(chainUuid)
-            registerAsset(id, value)
-            buildSigned(keyPair)
-        }.also {
+        client.submit(Register.asset(id, value)).also {
             withTimeout(timeout) { it.await() }
         }
     }
 
     suspend fun transferAsset(
         from: AssetId,
-        value: Int,
+        value: BigDecimal,
         to: String,
-        admin: AccountId = this.admin,
-        keyPair: KeyPair = this.keyPair,
     ) {
-        client.sendTransaction {
-            account(admin)
-            chainId(chainUuid)
-            transferAsset(from, value, to.asAccountId())
-            buildSigned(keyPair)
-        }.also {
+        client.submit(Transfer.asset(from, value, to.asAccountId())).also {
             withTimeout(timeout) { it.await() }
         }
     }
 
     suspend fun burnAssets(
         assetId: AssetId,
-        value: Int,
-        admin: AccountId = this.admin,
-        keyPair: KeyPair = this.keyPair,
+        value: BigDecimal,
     ) {
-        client.sendTransaction {
-            account(admin)
-            chainId(chainUuid)
-            burnAsset(assetId, value)
-            buildSigned(keyPair)
-        }.also {
+        client.submit(Burn.asset(assetId, value)).also {
             withTimeout(timeout) { it.await() }
         }
     }

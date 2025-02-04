@@ -19,18 +19,23 @@ public data class TriggerId(
     public val name: Name,
 ) {
     public companion object : ScaleReader<TriggerId>, ScaleWriter<TriggerId> {
-        override fun read(reader: ScaleCodecReader): TriggerId = try {
-            TriggerId(
-                Name.read(reader),
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): TriggerId =
+            try {
+                TriggerId(
+                    Name.read(reader),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: TriggerId): Unit = try {
-            Name.write(writer, instance.name)
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: TriggerId,
+        ): Unit =
+            try {
+                Name.write(writer, instance.name)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

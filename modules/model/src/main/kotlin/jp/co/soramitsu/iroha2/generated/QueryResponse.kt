@@ -36,22 +36,24 @@ public sealed class QueryResponse : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.QueryResponse.Singular> {
             public const val DISCRIMINANT: Int = 0
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.QueryResponse.Singular = try {
-                Singular(
-                    SingularQueryOutputBox.read(reader),
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.QueryResponse.Singular =
+                try {
+                    Singular(
+                        SingularQueryOutputBox.read(reader),
+                    )
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.QueryResponse.Singular,
-            ): Unit = try {
-                SingularQueryOutputBox.write(writer, instance.singularQueryOutputBox)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            ): Unit =
+                try {
+                    SingularQueryOutputBox.write(writer, instance.singularQueryOutputBox)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
@@ -68,40 +70,45 @@ public sealed class QueryResponse : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.QueryResponse.Iterable> {
             public const val DISCRIMINANT: Int = 1
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.QueryResponse.Iterable = try {
-                Iterable(
-                    QueryOutput.read(reader),
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.QueryResponse.Iterable =
+                try {
+                    Iterable(
+                        QueryOutput.read(reader),
+                    )
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.QueryResponse.Iterable,
-            ): Unit = try {
-                QueryOutput.write(writer, instance.queryOutput)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            ): Unit =
+                try {
+                    QueryOutput.write(writer, instance.queryOutput)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
     public companion object : ScaleReader<QueryResponse>, ScaleWriter<QueryResponse> {
-        override fun read(reader: ScaleCodecReader): QueryResponse = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
-            0 -> Singular.read(reader)
-            1 -> Iterable.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+        override fun read(reader: ScaleCodecReader): QueryResponse =
+            when (val discriminant = reader.readUByte()) {
+                0 -> Singular.read(reader)
+                1 -> Iterable.read(reader)
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: QueryResponse) {
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: QueryResponse,
+        ) {
             writer.directWrite(instance.discriminant())
             when (val discriminant = instance.discriminant()) {
                 0 -> Singular.write(writer, instance as Singular)
                 1 -> Iterable.write(writer, instance as Iterable)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

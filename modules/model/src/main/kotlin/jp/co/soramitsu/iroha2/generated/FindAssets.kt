@@ -16,25 +16,34 @@ import kotlin.Unit
 /**
  * FindAssets
  *
- * Generated from 'FindAssets' regular structure
+ * Generated from 'FindAssets' tuple structure
  */
 public class FindAssets {
     public companion object : ScaleReader<FindAssets>, ScaleWriter<FindAssets> {
-        override fun read(reader: ScaleCodecReader): FindAssets = try {
-            FindAssets()
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): FindAssets =
+            try {
+                FindAssets()
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: FindAssets): Unit = try {
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: FindAssets,
+        ): Unit =
+            try {
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        public fun equals(o1: FindAssets, o2: Any?): Boolean = when (o2) {
-            null -> false
-            else -> o2::class == o1::class
-        }
+        public fun equals(
+            o1: FindAssets,
+            o2: Any?,
+        ): Boolean =
+            when (o2) {
+                null -> false
+                else -> o2::class == o1::class
+            }
 
         override fun hashCode(): Int = ".FindAssets".hashCode()
     }

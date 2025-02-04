@@ -22,22 +22,27 @@ public data class SumeragiParameters(
     public val maxClockDriftMs: BigInteger,
 ) {
     public companion object : ScaleReader<SumeragiParameters>, ScaleWriter<SumeragiParameters> {
-        override fun read(reader: ScaleCodecReader): SumeragiParameters = try {
-            SumeragiParameters(
-                reader.readUint64(),
-                reader.readUint64(),
-                reader.readUint64(),
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): SumeragiParameters =
+            try {
+                SumeragiParameters(
+                    reader.readUint64(),
+                    reader.readUint64(),
+                    reader.readUint64(),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: SumeragiParameters): Unit = try {
-            writer.writeUint64(instance.blockTimeMs)
-            writer.writeUint64(instance.commitTimeMs)
-            writer.writeUint64(instance.maxClockDriftMs)
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: SumeragiParameters,
+        ): Unit =
+            try {
+                writer.writeUint64(instance.blockTimeMs)
+                writer.writeUint64(instance.commitTimeMs)
+                writer.writeUint64(instance.maxClockDriftMs)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

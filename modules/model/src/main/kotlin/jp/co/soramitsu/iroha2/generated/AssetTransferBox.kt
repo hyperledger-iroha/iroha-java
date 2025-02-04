@@ -36,25 +36,24 @@ public sealed class AssetTransferBox : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.AssetTransferBox.Numeric> {
             public const val DISCRIMINANT: Int = 0
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.AssetTransferBox.Numeric = try {
-                Numeric(
-                    TransferOfAssetAndNumericAndAccount.read(reader),
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.AssetTransferBox.Numeric =
+                try {
+                    Numeric(
+                        TransferOfAssetAndNumericAndAccount.read(reader),
+                    )
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.AssetTransferBox.Numeric,
-            ): Unit = try {
-                TransferOfAssetAndNumericAndAccount.write(
-                    writer,
-                    instance.transferOfAssetAndNumericAndAccount,
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            ): Unit =
+                try {
+                    TransferOfAssetAndNumericAndAccount.write(writer, instance.transferOfAssetAndNumericAndAccount)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
@@ -71,43 +70,45 @@ public sealed class AssetTransferBox : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.AssetTransferBox.Store> {
             public const val DISCRIMINANT: Int = 1
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.AssetTransferBox.Store = try {
-                Store(
-                    TransferOfAssetAndMetadataAndAccount.read(reader),
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.AssetTransferBox.Store =
+                try {
+                    Store(
+                        TransferOfAssetAndMetadataAndAccount.read(reader),
+                    )
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.AssetTransferBox.Store,
-            ): Unit = try {
-                TransferOfAssetAndMetadataAndAccount.write(
-                    writer,
-                    instance.transferOfAssetAndMetadataAndAccount,
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            ): Unit =
+                try {
+                    TransferOfAssetAndMetadataAndAccount.write(writer, instance.transferOfAssetAndMetadataAndAccount)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
     public companion object : ScaleReader<AssetTransferBox>, ScaleWriter<AssetTransferBox> {
-        override fun read(reader: ScaleCodecReader): AssetTransferBox = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
-            0 -> Numeric.read(reader)
-            1 -> Store.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+        override fun read(reader: ScaleCodecReader): AssetTransferBox =
+            when (val discriminant = reader.readUByte()) {
+                0 -> Numeric.read(reader)
+                1 -> Store.read(reader)
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: AssetTransferBox) {
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: AssetTransferBox,
+        ) {
             writer.directWrite(instance.discriminant())
             when (val discriminant = instance.discriminant()) {
                 0 -> Numeric.write(writer, instance as Numeric)
                 1 -> Store.write(writer, instance as Store)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

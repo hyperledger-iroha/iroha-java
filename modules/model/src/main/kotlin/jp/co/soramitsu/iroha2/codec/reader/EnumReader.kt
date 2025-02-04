@@ -13,8 +13,11 @@ import jp.co.soramitsu.iroha2.codec.ScaleReader
  * @param <T> type of Enum
  * @see UnionReader
 </T> */
-class EnumReader<T : Enum<*>?>(values: Array<T>) : ScaleReader<T> {
+class EnumReader<T : Enum<*>?>(
+    values: Array<T>,
+) : ScaleReader<T> {
     private val values: Array<T>
+
     override fun read(reader: ScaleCodecReader): T {
         val id = reader.readUByte()
         for (t in values) {

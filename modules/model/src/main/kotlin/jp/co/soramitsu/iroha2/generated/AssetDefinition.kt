@@ -22,30 +22,38 @@ public data class AssetDefinition(
     public val logo: IpfsPath? = null,
     public val metadata: Metadata,
     public val ownedBy: AccountId,
+    public val totalQuantity: Numeric,
 ) {
     public companion object : ScaleReader<AssetDefinition>, ScaleWriter<AssetDefinition> {
-        override fun read(reader: ScaleCodecReader): AssetDefinition = try {
-            AssetDefinition(
-                AssetDefinitionId.read(reader),
-                AssetType.read(reader),
-                Mintable.read(reader),
-                reader.readNullable(IpfsPath) as IpfsPath?,
-                Metadata.read(reader),
-                AccountId.read(reader),
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): AssetDefinition =
+            try {
+                AssetDefinition(
+                    AssetDefinitionId.read(reader),
+                    AssetType.read(reader),
+                    Mintable.read(reader),
+                    reader.readNullable(IpfsPath) as IpfsPath?,
+                    Metadata.read(reader),
+                    AccountId.read(reader),
+                    Numeric.read(reader),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: AssetDefinition): Unit = try {
-            AssetDefinitionId.write(writer, instance.id)
-            AssetType.write(writer, instance.type)
-            Mintable.write(writer, instance.mintable)
-            writer.writeNullable(IpfsPath, instance.logo)
-            Metadata.write(writer, instance.metadata)
-            AccountId.write(writer, instance.ownedBy)
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: AssetDefinition,
+        ): Unit =
+            try {
+                AssetDefinitionId.write(writer, instance.id)
+                AssetType.write(writer, instance.type)
+                Mintable.write(writer, instance.mintable)
+                writer.writeNullable(IpfsPath, instance.logo)
+                Metadata.write(writer, instance.metadata)
+                AccountId.write(writer, instance.ownedBy)
+                Numeric.write(writer, instance.totalQuantity)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

@@ -20,18 +20,23 @@ public data class TransactionLimitError(
     public val reason: String,
 ) {
     public companion object : ScaleReader<TransactionLimitError>, ScaleWriter<TransactionLimitError> {
-        override fun read(reader: ScaleCodecReader): TransactionLimitError = try {
-            TransactionLimitError(
-                reader.readString(),
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): TransactionLimitError =
+            try {
+                TransactionLimitError(
+                    reader.readString(),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: TransactionLimitError): Unit = try {
-            writer.writeAsList(instance.reason.toByteArray(Charsets.UTF_8))
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: TransactionLimitError,
+        ): Unit =
+            try {
+                writer.writeAsList(instance.reason.toByteArray(Charsets.UTF_8))
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

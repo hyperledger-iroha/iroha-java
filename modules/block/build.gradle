@@ -1,11 +1,12 @@
 dependencies {
-    api project(":client")
+    implementation project(":model")
 
-    api "com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonKotlinVer"
-    api "com.google.crypto.tink:tink:$googleTinkVer"
+    implementation "com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonKotlinVer"
 
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit5:$kotlinVer"
     testImplementation "org.jetbrains.kotlin:kotlin-test:$kotlinVer"
+
+    testImplementation "com.google.crypto.tink:tink:$googleTinkVer"
 }
 
 jacocoTestReport {

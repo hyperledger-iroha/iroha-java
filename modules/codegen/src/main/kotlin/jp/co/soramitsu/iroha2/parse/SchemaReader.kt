@@ -7,7 +7,6 @@ import jp.co.soramitsu.iroha2.DEFINITION_SCHEMA_GENERIC_REGEX
 import kotlin.streams.toList
 
 class SchemaReader {
-
     private val repeated = mutableMapOf<String, Int>()
     private val toReplace = mutableMapOf<String, String>()
 
@@ -22,6 +21,7 @@ class SchemaReader {
         lines.forEach { line -> line.countRepeatedWithGenerics() }
         repeated.entries.removeIf { (it.key != "Trigger" && it.key != "Action") && it.value < 2 }
         toReplace.putAll(lines.mapNotNull { it.getReplacePairOrNull() }.toMap())
+        toReplace["null"] = "{\"Tuple\": []}"
 
         lines.forEach { line -> sb.appendLine(line.replace()) }
 
@@ -49,9 +49,11 @@ class SchemaReader {
             val mutable = immutable.map { this.contains(it) }.all { !it }
             if (mutable && repeated[values[1]] != null) {
                 val source = "${values[1]}<${values[2]}>"
-                return source to source.replace("<", "Of")
-                    .replace(", ", "And")
-                    .replace(">", "")
+                return source to
+                    source
+                        .replace("<", "Of")
+                        .replace(", ", "And")
+                        .replace(">", "")
             } else if (this.contains("Option<Option")) {
                 val source = "${values[1]}<${values[2]}>"
                 return source to values.last()
@@ -61,14 +63,15 @@ class SchemaReader {
     }
 
     companion object {
-        private val immutable = listOf(
-            SortedMapResolver.NAME,
-            ArrayResolver.NAME,
-            VectorResolver.NAME,
-            SortedVectorResolver.NAME,
-            "Option",
-            "SignatureOf",
-            "HashOf",
-        )
+        private val immutable =
+            listOf(
+                SortedMapResolver.NAME,
+                ArrayResolver.NAME,
+                VectorResolver.NAME,
+                SortedVectorResolver.NAME,
+                "Option",
+                "SignatureOf",
+                "HashOf",
+            )
     }
 }

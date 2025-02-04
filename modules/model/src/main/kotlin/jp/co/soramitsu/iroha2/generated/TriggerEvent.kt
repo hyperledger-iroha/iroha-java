@@ -36,22 +36,24 @@ public sealed class TriggerEvent : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.TriggerEvent.Created> {
             public const val DISCRIMINANT: Int = 0
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.TriggerEvent.Created = try {
-                Created(
-                    TriggerId.read(reader),
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.TriggerEvent.Created =
+                try {
+                    Created(
+                        TriggerId.read(reader),
+                    )
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.TriggerEvent.Created,
-            ): Unit = try {
-                TriggerId.write(writer, instance.triggerId)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            ): Unit =
+                try {
+                    TriggerId.write(writer, instance.triggerId)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
@@ -68,22 +70,24 @@ public sealed class TriggerEvent : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.TriggerEvent.Deleted> {
             public const val DISCRIMINANT: Int = 1
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.TriggerEvent.Deleted = try {
-                Deleted(
-                    TriggerId.read(reader),
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.TriggerEvent.Deleted =
+                try {
+                    Deleted(
+                        TriggerId.read(reader),
+                    )
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.TriggerEvent.Deleted,
-            ): Unit = try {
-                TriggerId.write(writer, instance.triggerId)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            ): Unit =
+                try {
+                    TriggerId.write(writer, instance.triggerId)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
@@ -100,22 +104,24 @@ public sealed class TriggerEvent : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.TriggerEvent.Extended> {
             public const val DISCRIMINANT: Int = 2
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.TriggerEvent.Extended = try {
-                Extended(
-                    TriggerNumberOfExecutionsChanged.read(reader),
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.TriggerEvent.Extended =
+                try {
+                    Extended(
+                        TriggerNumberOfExecutionsChanged.read(reader),
+                    )
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.TriggerEvent.Extended,
-            ): Unit = try {
-                TriggerNumberOfExecutionsChanged.write(writer, instance.triggerNumberOfExecutionsChanged)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            ): Unit =
+                try {
+                    TriggerNumberOfExecutionsChanged.write(writer, instance.triggerNumberOfExecutionsChanged)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
@@ -132,22 +138,24 @@ public sealed class TriggerEvent : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.TriggerEvent.Shortened> {
             public const val DISCRIMINANT: Int = 3
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.TriggerEvent.Shortened = try {
-                Shortened(
-                    TriggerNumberOfExecutionsChanged.read(reader),
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.TriggerEvent.Shortened =
+                try {
+                    Shortened(
+                        TriggerNumberOfExecutionsChanged.read(reader),
+                    )
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.TriggerEvent.Shortened,
-            ): Unit = try {
-                TriggerNumberOfExecutionsChanged.write(writer, instance.triggerNumberOfExecutionsChanged)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            ): Unit =
+                try {
+                    TriggerNumberOfExecutionsChanged.write(writer, instance.triggerNumberOfExecutionsChanged)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
@@ -164,22 +172,24 @@ public sealed class TriggerEvent : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.TriggerEvent.MetadataInserted> {
             public const val DISCRIMINANT: Int = 4
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.TriggerEvent.MetadataInserted = try {
-                MetadataInserted(
-                    MetadataChangedOfTriggerId.read(reader),
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.TriggerEvent.MetadataInserted =
+                try {
+                    MetadataInserted(
+                        MetadataChangedOfTriggerId.read(reader),
+                    )
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.TriggerEvent.MetadataInserted,
-            ): Unit = try {
-                MetadataChangedOfTriggerId.write(writer, instance.metadataChangedOfTriggerId)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            ): Unit =
+                try {
+                    MetadataChangedOfTriggerId.write(writer, instance.metadataChangedOfTriggerId)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
@@ -196,39 +206,43 @@ public sealed class TriggerEvent : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.TriggerEvent.MetadataRemoved> {
             public const val DISCRIMINANT: Int = 5
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.TriggerEvent.MetadataRemoved = try {
-                MetadataRemoved(
-                    MetadataChangedOfTriggerId.read(reader),
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.TriggerEvent.MetadataRemoved =
+                try {
+                    MetadataRemoved(
+                        MetadataChangedOfTriggerId.read(reader),
+                    )
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.TriggerEvent.MetadataRemoved,
-            ): Unit = try {
-                MetadataChangedOfTriggerId.write(writer, instance.metadataChangedOfTriggerId)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            ): Unit =
+                try {
+                    MetadataChangedOfTriggerId.write(writer, instance.metadataChangedOfTriggerId)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
     public companion object : ScaleReader<TriggerEvent>, ScaleWriter<TriggerEvent> {
-        override fun read(reader: ScaleCodecReader): TriggerEvent = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
-            0 -> Created.read(reader)
-            1 -> Deleted.read(reader)
-            2 -> Extended.read(reader)
-            3 -> Shortened.read(reader)
-            4 -> MetadataInserted.read(reader)
-            5 -> MetadataRemoved.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+        override fun read(reader: ScaleCodecReader): TriggerEvent =
+            when (val discriminant = reader.readUByte()) {
+                0 -> Created.read(reader)
+                1 -> Deleted.read(reader)
+                2 -> Extended.read(reader)
+                3 -> Shortened.read(reader)
+                4 -> MetadataInserted.read(reader)
+                5 -> MetadataRemoved.read(reader)
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: TriggerEvent) {
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: TriggerEvent,
+        ) {
             writer.directWrite(instance.discriminant())
             when (val discriminant = instance.discriminant()) {
                 0 -> Created.write(writer, instance as Created)
@@ -237,7 +251,8 @@ public sealed class TriggerEvent : ModelEnum {
                 3 -> Shortened.write(writer, instance as Shortened)
                 4 -> MetadataInserted.write(writer, instance as MetadataInserted)
                 5 -> MetadataRemoved.write(writer, instance as MetadataRemoved)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

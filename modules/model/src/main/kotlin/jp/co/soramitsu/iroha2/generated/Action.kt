@@ -23,26 +23,31 @@ public data class Action(
     public val metadata: Metadata,
 ) {
     public companion object : ScaleReader<Action>, ScaleWriter<Action> {
-        override fun read(reader: ScaleCodecReader): Action = try {
-            Action(
-                Executable.read(reader),
-                Repeats.read(reader),
-                AccountId.read(reader),
-                EventFilterBox.read(reader),
-                Metadata.read(reader),
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): Action =
+            try {
+                Action(
+                    Executable.read(reader),
+                    Repeats.read(reader),
+                    AccountId.read(reader),
+                    EventFilterBox.read(reader),
+                    Metadata.read(reader),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: Action): Unit = try {
-            Executable.write(writer, instance.executable)
-            Repeats.write(writer, instance.repeats)
-            AccountId.write(writer, instance.authority)
-            EventFilterBox.write(writer, instance.filter)
-            Metadata.write(writer, instance.metadata)
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: Action,
+        ): Unit =
+            try {
+                Executable.write(writer, instance.executable)
+                Repeats.write(writer, instance.repeats)
+                AccountId.write(writer, instance.authority)
+                EventFilterBox.write(writer, instance.filter)
+                Metadata.write(writer, instance.metadata)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

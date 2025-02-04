@@ -20,18 +20,23 @@ public data class NonZeroOfu64(
     public val u64: BigInteger,
 ) {
     public companion object : ScaleReader<NonZeroOfu64>, ScaleWriter<NonZeroOfu64> {
-        override fun read(reader: ScaleCodecReader): NonZeroOfu64 = try {
-            NonZeroOfu64(
-                reader.readUint64(),
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): NonZeroOfu64 =
+            try {
+                NonZeroOfu64(
+                    reader.readUint64(),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: NonZeroOfu64): Unit = try {
-            writer.writeUint64(instance.u64)
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: NonZeroOfu64,
+        ): Unit =
+            try {
+                writer.writeUint64(instance.u64)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

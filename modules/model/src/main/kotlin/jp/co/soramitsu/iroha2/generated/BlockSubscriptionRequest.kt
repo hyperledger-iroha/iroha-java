@@ -21,18 +21,23 @@ public data class BlockSubscriptionRequest(
     public companion object :
         ScaleReader<BlockSubscriptionRequest>,
         ScaleWriter<BlockSubscriptionRequest> {
-        override fun read(reader: ScaleCodecReader): BlockSubscriptionRequest = try {
-            BlockSubscriptionRequest(
-                NonZeroOfu64.read(reader),
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): BlockSubscriptionRequest =
+            try {
+                BlockSubscriptionRequest(
+                    NonZeroOfu64.read(reader),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: BlockSubscriptionRequest): Unit = try {
-            NonZeroOfu64.write(writer, instance.nonZeroOfu64)
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: BlockSubscriptionRequest,
+        ): Unit =
+            try {
+                NonZeroOfu64.write(writer, instance.nonZeroOfu64)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

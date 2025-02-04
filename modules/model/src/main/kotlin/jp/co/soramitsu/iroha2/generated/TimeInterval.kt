@@ -21,20 +21,25 @@ public data class TimeInterval(
     public val lengthMs: BigInteger,
 ) {
     public companion object : ScaleReader<TimeInterval>, ScaleWriter<TimeInterval> {
-        override fun read(reader: ScaleCodecReader): TimeInterval = try {
-            TimeInterval(
-                reader.readUint64(),
-                reader.readUint64(),
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): TimeInterval =
+            try {
+                TimeInterval(
+                    reader.readUint64(),
+                    reader.readUint64(),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: TimeInterval): Unit = try {
-            writer.writeUint64(instance.sinceMs)
-            writer.writeUint64(instance.lengthMs)
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: TimeInterval,
+        ): Unit =
+            try {
+                writer.writeUint64(instance.sinceMs)
+                writer.writeUint64(instance.lengthMs)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

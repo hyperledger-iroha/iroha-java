@@ -3,6 +3,7 @@
 //
 package jp.co.soramitsu.iroha2.generated
 
+import jp.co.soramitsu.iroha2.ModelPermission
 import jp.co.soramitsu.iroha2.codec.ScaleCodecReader
 import jp.co.soramitsu.iroha2.codec.ScaleCodecWriter
 import jp.co.soramitsu.iroha2.codec.ScaleReader
@@ -17,20 +18,25 @@ import kotlin.Unit
  */
 public data class CanUnregisterAccount(
     public val account: AccountId,
-) {
+) : ModelPermission {
     public companion object : ScaleReader<CanUnregisterAccount>, ScaleWriter<CanUnregisterAccount> {
-        override fun read(reader: ScaleCodecReader): CanUnregisterAccount = try {
-            CanUnregisterAccount(
-                AccountId.read(reader),
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): CanUnregisterAccount =
+            try {
+                CanUnregisterAccount(
+                    AccountId.read(reader),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: CanUnregisterAccount): Unit = try {
-            AccountId.write(writer, instance.account)
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: CanUnregisterAccount,
+        ): Unit =
+            try {
+                AccountId.write(writer, instance.account)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

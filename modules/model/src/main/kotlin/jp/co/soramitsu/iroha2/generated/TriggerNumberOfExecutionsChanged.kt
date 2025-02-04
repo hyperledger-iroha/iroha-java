@@ -23,16 +23,20 @@ public data class TriggerNumberOfExecutionsChanged(
     public companion object :
         ScaleReader<TriggerNumberOfExecutionsChanged>,
         ScaleWriter<TriggerNumberOfExecutionsChanged> {
-        override fun read(reader: ScaleCodecReader): TriggerNumberOfExecutionsChanged = try {
-            TriggerNumberOfExecutionsChanged(
-                TriggerId.read(reader),
-                reader.readUint32(),
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): TriggerNumberOfExecutionsChanged =
+            try {
+                TriggerNumberOfExecutionsChanged(
+                    TriggerId.read(reader),
+                    reader.readUint32(),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: TriggerNumberOfExecutionsChanged): Unit =
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: TriggerNumberOfExecutionsChanged,
+        ): Unit =
             try {
                 TriggerId.write(writer, instance.trigger)
                 writer.writeUint32(instance.`by`)

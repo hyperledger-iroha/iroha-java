@@ -22,25 +22,31 @@ public data class Role(
     public val permissions: List<Permission>,
 ) {
     public companion object : ScaleReader<Role>, ScaleWriter<Role> {
-        override fun read(reader: ScaleCodecReader): Role = try {
-            Role(
-                RoleId.read(reader),
-                reader.readVec(reader.readCompactInt()) { Permission.read(reader) },
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
-
-        override fun write(writer: ScaleCodecWriter, instance: Role): Unit = try {
-            RoleId.write(writer, instance.id)
-            writer.writeCompact(instance.permissions.size)
-            instance.permissions.sortedWith(
-                Permission.comparator(),
-            ).forEach { value ->
-                Permission.write(writer, value)
+        override fun read(reader: ScaleCodecReader): Role =
+            try {
+                Role(
+                    RoleId.read(reader),
+                    reader.readVec(reader.readCompactInt()) { Permission.read(reader) },
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
             }
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: Role,
+        ): Unit =
+            try {
+                RoleId.write(writer, instance.id)
+                writer.writeCompact(instance.permissions.size)
+                instance.permissions
+                    .sortedWith(
+                        Permission.comparator(),
+                    ).forEach { value ->
+                        Permission.write(writer, value)
+                    }
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

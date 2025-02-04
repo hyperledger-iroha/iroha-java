@@ -24,20 +24,25 @@ public data class Numeric(
     public val scale: Long,
 ) {
     public companion object : ScaleReader<Numeric>, ScaleWriter<Numeric> {
-        override fun read(reader: ScaleCodecReader): Numeric = try {
-            Numeric(
-                reader.read(CompactBigIntReader()),
-                reader.readCompactInt().toLong(),
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): Numeric =
+            try {
+                Numeric(
+                    reader.read(CompactBigIntReader()),
+                    reader.readCompactInt().toLong(),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: Numeric): Unit = try {
-            writer.write(CompactULongWriter(), instance.mantissa.toLong())
-            writer.write(CompactULongWriter(), instance.scale.toLong())
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: Numeric,
+        ): Unit =
+            try {
+                writer.write(CompactULongWriter(), instance.mantissa.toLong())
+                writer.write(CompactULongWriter(), instance.scale.toLong())
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }
