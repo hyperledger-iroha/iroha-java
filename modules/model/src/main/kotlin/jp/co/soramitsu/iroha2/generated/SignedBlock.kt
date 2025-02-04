@@ -48,27 +48,31 @@ public sealed class SignedBlock : ModelEnum {
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.SignedBlock.V1,
-            ): Unit = try {
-                SignedBlockV1.write(writer, instance.signedBlockV1)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            ): Unit =
+                try {
+                    SignedBlockV1.write(writer, instance.signedBlockV1)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
     public companion object : ScaleReader<SignedBlock>, ScaleWriter<SignedBlock> {
-        override fun read(reader: ScaleCodecReader): SignedBlock = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
-            1 -> V1.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+        override fun read(reader: ScaleCodecReader): SignedBlock =
+            when (val discriminant = reader.readUByte()) {
+                1 -> V1.read(reader)
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: SignedBlock) {
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: SignedBlock,
+        ) {
             writer.directWrite(instance.discriminant())
             when (val discriminant = instance.discriminant()) {
                 1 -> V1.write(writer, instance as V1)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

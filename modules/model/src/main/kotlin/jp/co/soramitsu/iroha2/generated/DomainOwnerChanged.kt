@@ -20,20 +20,25 @@ public data class DomainOwnerChanged(
     public val newOwner: AccountId,
 ) {
     public companion object : ScaleReader<DomainOwnerChanged>, ScaleWriter<DomainOwnerChanged> {
-        override fun read(reader: ScaleCodecReader): DomainOwnerChanged = try {
-            DomainOwnerChanged(
-                DomainId.read(reader),
-                AccountId.read(reader),
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): DomainOwnerChanged =
+            try {
+                DomainOwnerChanged(
+                    DomainId.read(reader),
+                    AccountId.read(reader),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: DomainOwnerChanged): Unit = try {
-            DomainId.write(writer, instance.domain)
-            AccountId.write(writer, instance.newOwner)
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: DomainOwnerChanged,
+        ): Unit =
+            try {
+                DomainId.write(writer, instance.domain)
+                AccountId.write(writer, instance.newOwner)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

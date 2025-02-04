@@ -20,8 +20,9 @@ import java.math.BigInteger
 /**
  * SCALE codec writer
  */
-class ScaleCodecWriter(private val out: OutputStream) : Closeable {
-
+class ScaleCodecWriter(
+    private val out: OutputStream,
+) : Closeable {
     fun writeByteArray(value: ByteArray) {
         out.write(value, 0, value.size)
     }
@@ -58,7 +59,11 @@ class ScaleCodecWriter(private val out: OutputStream) : Closeable {
      * Write the bytes into output stream as-is directly with the given [offset].
      * The input is supposed to be already encoded.
      */
-    fun directWrite(bytes: ByteArray, offset: Int, length: Int) {
+    fun directWrite(
+        bytes: ByteArray,
+        offset: Int,
+        length: Int,
+    ) {
         out.write(bytes, offset, length)
     }
 
@@ -70,7 +75,10 @@ class ScaleCodecWriter(private val out: OutputStream) : Closeable {
         out.close()
     }
 
-    fun <T> write(writer: ScaleWriter<T>, value: T) {
+    fun <T> write(
+        writer: ScaleWriter<T>,
+        value: T,
+    ) {
         writer.write(this, value)
     }
 
@@ -84,16 +92,20 @@ class ScaleCodecWriter(private val out: OutputStream) : Closeable {
         }
     }
 
-    fun <T> writeNullable(writer: ScaleWriter<T>, value: T?) {
+    fun <T> writeNullable(
+        writer: ScaleWriter<T>,
+        value: T?,
+    ) {
         when (writer) {
             is BoolWriter, is BoolNullableWriter -> BOOL_NULLABLE.write(this, value as Boolean?)
-            else -> when (value) {
-                null -> BOOL.write(this, false)
-                else -> {
-                    BOOL.write(this, true)
-                    writer.write(this, value)
+            else ->
+                when (value) {
+                    null -> BOOL.write(this, false)
+                    else -> {
+                        BOOL.write(this, true)
+                        writer.write(this, value)
+                    }
                 }
-            }
         }
     }
 

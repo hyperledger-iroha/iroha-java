@@ -19,18 +19,23 @@ public data class DomainId(
     public val name: Name,
 ) {
     public companion object : ScaleReader<DomainId>, ScaleWriter<DomainId> {
-        override fun read(reader: ScaleCodecReader): DomainId = try {
-            DomainId(
-                Name.read(reader),
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): DomainId =
+            try {
+                DomainId(
+                    Name.read(reader),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: DomainId): Unit = try {
-            Name.write(writer, instance.name)
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: DomainId,
+        ): Unit =
+            try {
+                Name.write(writer, instance.name)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

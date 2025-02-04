@@ -9,4 +9,6 @@ import java.lang.annotation.Inherited
 @Target(AnnotationTarget.FUNCTION)
 @LabelAnnotation(name = "query")
 @Repeatable
-annotation class Query(val value: String)
+annotation class Query(
+    val value: String,
+)

@@ -22,20 +22,25 @@ public data class SmartContractParameters(
     public companion object :
         ScaleReader<SmartContractParameters>,
         ScaleWriter<SmartContractParameters> {
-        override fun read(reader: ScaleCodecReader): SmartContractParameters = try {
-            SmartContractParameters(
-                NonZeroOfu64.read(reader),
-                NonZeroOfu64.read(reader),
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): SmartContractParameters =
+            try {
+                SmartContractParameters(
+                    NonZeroOfu64.read(reader),
+                    NonZeroOfu64.read(reader),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: SmartContractParameters): Unit = try {
-            NonZeroOfu64.write(writer, instance.fuel)
-            NonZeroOfu64.write(writer, instance.memory)
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: SmartContractParameters,
+        ): Unit =
+            try {
+                NonZeroOfu64.write(writer, instance.fuel)
+                NonZeroOfu64.write(writer, instance.memory)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

@@ -19,18 +19,23 @@ public data class TimeEventFilter(
     public val executionTime: ExecutionTime,
 ) {
     public companion object : ScaleReader<TimeEventFilter>, ScaleWriter<TimeEventFilter> {
-        override fun read(reader: ScaleCodecReader): TimeEventFilter = try {
-            TimeEventFilter(
-                ExecutionTime.read(reader),
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): TimeEventFilter =
+            try {
+                TimeEventFilter(
+                    ExecutionTime.read(reader),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: TimeEventFilter): Unit = try {
-            ExecutionTime.write(writer, instance.executionTime)
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: TimeEventFilter,
+        ): Unit =
+            try {
+                ExecutionTime.write(writer, instance.executionTime)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

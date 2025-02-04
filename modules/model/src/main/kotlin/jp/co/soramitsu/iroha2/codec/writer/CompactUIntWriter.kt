@@ -9,7 +9,10 @@ import jp.co.soramitsu.iroha2.codec.ScaleWriter
  * [Compact mode][CompactMode] SCALE writer for unsigned Integers
  */
 class CompactUIntWriter : ScaleWriter<Int> {
-    override fun write(writer: ScaleCodecWriter, instance: Int) {
+    override fun write(
+        writer: ScaleCodecWriter,
+        instance: Int,
+    ) {
         val mode = forNumber(instance)
         var compact: Int
         var bytes: Int
@@ -19,11 +22,12 @@ class CompactUIntWriter : ScaleWriter<Int> {
             bytes = 4
         } else {
             compact = (instance shl 2) + mode.value
-            bytes = when (mode) {
-                CompactMode.SINGLE -> 1
-                CompactMode.TWO -> 2
-                else -> 4
-            }
+            bytes =
+                when (mode) {
+                    CompactMode.SINGLE -> 1
+                    CompactMode.TWO -> 2
+                    else -> 4
+                }
         }
         while (bytes > 0) {
             writer.directWrite(compact and 0xff)

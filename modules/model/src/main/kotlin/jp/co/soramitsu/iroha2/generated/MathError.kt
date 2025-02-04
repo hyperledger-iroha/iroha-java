@@ -26,23 +26,27 @@ public sealed class MathError : ModelEnum {
      */
     public abstract fun discriminant(): Int
 
-    override fun equals(other: Any?): Boolean = when (this) {
-        is Overflow -> Overflow.equals(this, other)
-        is NotEnoughQuantity -> NotEnoughQuantity.equals(this, other)
-        is DivideByZero -> DivideByZero.equals(this, other)
-        is NegativeValue -> NegativeValue.equals(this, other)
-        is DomainViolation -> DomainViolation.equals(this, other)
-        is Unknown -> Unknown.equals(this, other)
-        else -> super.equals(other) }
+    override fun equals(other: Any?): Boolean =
+        when (this) {
+            is Overflow -> Overflow.equals(this, other)
+            is NotEnoughQuantity -> NotEnoughQuantity.equals(this, other)
+            is DivideByZero -> DivideByZero.equals(this, other)
+            is NegativeValue -> NegativeValue.equals(this, other)
+            is DomainViolation -> DomainViolation.equals(this, other)
+            is Unknown -> Unknown.equals(this, other)
+            else -> super.equals(other)
+        }
 
-    override fun hashCode(): Int = when (this) {
-        is Overflow -> Overflow.hashCode()
-        is NotEnoughQuantity -> NotEnoughQuantity.hashCode()
-        is DivideByZero -> DivideByZero.hashCode()
-        is NegativeValue -> NegativeValue.hashCode()
-        is DomainViolation -> DomainViolation.hashCode()
-        is Unknown -> Unknown.hashCode()
-        else -> super.hashCode() }
+    override fun hashCode(): Int =
+        when (this) {
+            is Overflow -> Overflow.hashCode()
+            is NotEnoughQuantity -> NotEnoughQuantity.hashCode()
+            is DivideByZero -> DivideByZero.hashCode()
+            is NegativeValue -> NegativeValue.hashCode()
+            is DomainViolation -> DomainViolation.hashCode()
+            is Unknown -> Unknown.hashCode()
+            else -> super.hashCode()
+        }
 
     /**
      * 'Overflow' variant
@@ -55,24 +59,30 @@ public sealed class MathError : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.MathError.Overflow> {
             public const val DISCRIMINANT: Int = 0
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.MathError.Overflow = try {
-                Overflow()
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.MathError.Overflow =
+                try {
+                    Overflow()
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.MathError.Overflow,
-            ): Unit = try {
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            ): Unit =
+                try {
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
-            public fun equals(o1: jp.co.soramitsu.iroha2.generated.MathError.Overflow, o2: Any?): Boolean = when (o2) {
-                null -> false
-                else -> o2::class == o1::class
-            }
+            public fun equals(
+                o1: jp.co.soramitsu.iroha2.generated.MathError.Overflow,
+                o2: Any?,
+            ): Boolean =
+                when (o2) {
+                    null -> false
+                    else -> o2::class == o1::class
+                }
 
             override fun hashCode(): Int = ".MathError.Overflow".hashCode()
         }
@@ -89,24 +99,30 @@ public sealed class MathError : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.MathError.NotEnoughQuantity> {
             public const val DISCRIMINANT: Int = 1
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.MathError.NotEnoughQuantity = try {
-                NotEnoughQuantity()
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.MathError.NotEnoughQuantity =
+                try {
+                    NotEnoughQuantity()
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.MathError.NotEnoughQuantity,
-            ): Unit = try {
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            ): Unit =
+                try {
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
-            public fun equals(o1: jp.co.soramitsu.iroha2.generated.MathError.NotEnoughQuantity, o2: Any?): Boolean = when (o2) {
-                null -> false
-                else -> o2::class == o1::class
-            }
+            public fun equals(
+                o1: jp.co.soramitsu.iroha2.generated.MathError.NotEnoughQuantity,
+                o2: Any?,
+            ): Boolean =
+                when (o2) {
+                    null -> false
+                    else -> o2::class == o1::class
+                }
 
             override fun hashCode(): Int = ".MathError.NotEnoughQuantity".hashCode()
         }
@@ -123,24 +139,30 @@ public sealed class MathError : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.MathError.DivideByZero> {
             public const val DISCRIMINANT: Int = 2
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.MathError.DivideByZero = try {
-                DivideByZero()
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.MathError.DivideByZero =
+                try {
+                    DivideByZero()
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.MathError.DivideByZero,
-            ): Unit = try {
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            ): Unit =
+                try {
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
-            public fun equals(o1: jp.co.soramitsu.iroha2.generated.MathError.DivideByZero, o2: Any?): Boolean = when (o2) {
-                null -> false
-                else -> o2::class == o1::class
-            }
+            public fun equals(
+                o1: jp.co.soramitsu.iroha2.generated.MathError.DivideByZero,
+                o2: Any?,
+            ): Boolean =
+                when (o2) {
+                    null -> false
+                    else -> o2::class == o1::class
+                }
 
             override fun hashCode(): Int = ".MathError.DivideByZero".hashCode()
         }
@@ -157,24 +179,30 @@ public sealed class MathError : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.MathError.NegativeValue> {
             public const val DISCRIMINANT: Int = 3
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.MathError.NegativeValue = try {
-                NegativeValue()
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.MathError.NegativeValue =
+                try {
+                    NegativeValue()
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.MathError.NegativeValue,
-            ): Unit = try {
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            ): Unit =
+                try {
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
-            public fun equals(o1: jp.co.soramitsu.iroha2.generated.MathError.NegativeValue, o2: Any?): Boolean = when (o2) {
-                null -> false
-                else -> o2::class == o1::class
-            }
+            public fun equals(
+                o1: jp.co.soramitsu.iroha2.generated.MathError.NegativeValue,
+                o2: Any?,
+            ): Boolean =
+                when (o2) {
+                    null -> false
+                    else -> o2::class == o1::class
+                }
 
             override fun hashCode(): Int = ".MathError.NegativeValue".hashCode()
         }
@@ -191,24 +219,30 @@ public sealed class MathError : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.MathError.DomainViolation> {
             public const val DISCRIMINANT: Int = 4
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.MathError.DomainViolation = try {
-                DomainViolation()
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.MathError.DomainViolation =
+                try {
+                    DomainViolation()
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.MathError.DomainViolation,
-            ): Unit = try {
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            ): Unit =
+                try {
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
-            public fun equals(o1: jp.co.soramitsu.iroha2.generated.MathError.DomainViolation, o2: Any?): Boolean = when (o2) {
-                null -> false
-                else -> o2::class == o1::class
-            }
+            public fun equals(
+                o1: jp.co.soramitsu.iroha2.generated.MathError.DomainViolation,
+                o2: Any?,
+            ): Boolean =
+                when (o2) {
+                    null -> false
+                    else -> o2::class == o1::class
+                }
 
             override fun hashCode(): Int = ".MathError.DomainViolation".hashCode()
         }
@@ -225,21 +259,26 @@ public sealed class MathError : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.MathError.Unknown> {
             public const val DISCRIMINANT: Int = 5
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.MathError.Unknown = try {
-                Unknown()
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.MathError.Unknown =
+                try {
+                    Unknown()
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.MathError.Unknown,
-            ): Unit = try {
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            ): Unit =
+                try {
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
-            public fun equals(o1: jp.co.soramitsu.iroha2.generated.MathError.Unknown, o2: Any?): Boolean =
+            public fun equals(
+                o1: jp.co.soramitsu.iroha2.generated.MathError.Unknown,
+                o2: Any?,
+            ): Boolean =
                 when (o2) {
                     null -> false
                     else -> o2::class == o1::class
@@ -262,40 +301,44 @@ public sealed class MathError : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.MathError.FixedPointConversion> {
             public const val DISCRIMINANT: Int = 6
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.MathError.FixedPointConversion = try {
-                FixedPointConversion(
-                    reader.readString(),
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.MathError.FixedPointConversion =
+                try {
+                    FixedPointConversion(
+                        reader.readString(),
+                    )
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.MathError.FixedPointConversion,
-            ): Unit = try {
-                writer.writeAsList(instance.string.toByteArray(Charsets.UTF_8))
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            ): Unit =
+                try {
+                    writer.writeAsList(instance.string.toByteArray(Charsets.UTF_8))
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
     public companion object : ScaleReader<MathError>, ScaleWriter<MathError> {
-        override fun read(reader: ScaleCodecReader): MathError = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
-            0 -> Overflow.read(reader)
-            1 -> NotEnoughQuantity.read(reader)
-            2 -> DivideByZero.read(reader)
-            3 -> NegativeValue.read(reader)
-            4 -> DomainViolation.read(reader)
-            5 -> Unknown.read(reader)
-            6 -> FixedPointConversion.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+        override fun read(reader: ScaleCodecReader): MathError =
+            when (val discriminant = reader.readUByte()) {
+                0 -> Overflow.read(reader)
+                1 -> NotEnoughQuantity.read(reader)
+                2 -> DivideByZero.read(reader)
+                3 -> NegativeValue.read(reader)
+                4 -> DomainViolation.read(reader)
+                5 -> Unknown.read(reader)
+                6 -> FixedPointConversion.read(reader)
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: MathError) {
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: MathError,
+        ) {
             writer.directWrite(instance.discriminant())
             when (val discriminant = instance.discriminant()) {
                 0 -> Overflow.write(writer, instance as Overflow)
@@ -305,7 +348,8 @@ public sealed class MathError : ModelEnum {
                 4 -> DomainViolation.write(writer, instance as DomainViolation)
                 5 -> Unknown.write(writer, instance as Unknown)
                 6 -> FixedPointConversion.write(writer, instance as FixedPointConversion)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

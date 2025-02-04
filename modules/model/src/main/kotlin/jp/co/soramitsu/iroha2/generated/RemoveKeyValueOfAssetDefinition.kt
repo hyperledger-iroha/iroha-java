@@ -3,10 +3,13 @@
 //
 package jp.co.soramitsu.iroha2.generated
 
+import jp.co.soramitsu.iroha2.asInstructionBoxExt
 import jp.co.soramitsu.iroha2.codec.ScaleCodecReader
 import jp.co.soramitsu.iroha2.codec.ScaleCodecWriter
 import jp.co.soramitsu.iroha2.codec.ScaleReader
 import jp.co.soramitsu.iroha2.codec.ScaleWriter
+import jp.co.soramitsu.iroha2.generated.InstructionBox
+import jp.co.soramitsu.iroha2.transaction.Instruction
 import jp.co.soramitsu.iroha2.wrapException
 import kotlin.Unit
 
@@ -18,20 +21,26 @@ import kotlin.Unit
 public data class RemoveKeyValueOfAssetDefinition(
     public val `object`: AssetDefinitionId,
     public val key: Name,
-) {
+) : Instruction {
+    override fun asInstructionBox(): InstructionBox = asInstructionBoxExt()
+
     public companion object :
         ScaleReader<RemoveKeyValueOfAssetDefinition>,
         ScaleWriter<RemoveKeyValueOfAssetDefinition> {
-        override fun read(reader: ScaleCodecReader): RemoveKeyValueOfAssetDefinition = try {
-            RemoveKeyValueOfAssetDefinition(
-                AssetDefinitionId.read(reader),
-                Name.read(reader),
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): RemoveKeyValueOfAssetDefinition =
+            try {
+                RemoveKeyValueOfAssetDefinition(
+                    AssetDefinitionId.read(reader),
+                    Name.read(reader),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: RemoveKeyValueOfAssetDefinition): Unit =
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: RemoveKeyValueOfAssetDefinition,
+        ): Unit =
             try {
                 AssetDefinitionId.write(writer, instance.`object`)
                 Name.write(writer, instance.key)

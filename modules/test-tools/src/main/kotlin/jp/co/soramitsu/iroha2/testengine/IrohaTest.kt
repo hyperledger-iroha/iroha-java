@@ -2,8 +2,9 @@ package jp.co.soramitsu.iroha2.testengine
 
 import jp.co.soramitsu.iroha2.client.Iroha2Client
 import jp.co.soramitsu.iroha2.generated.AccountId
+import jp.co.soramitsu.iroha2.transaction.Instruction
 import jp.co.soramitsu.iroha2.transaction.TransactionBuilder
-import kotlinx.coroutines.time.withTimeout
+import kotlinx.coroutines.Deferred
 import org.junit.jupiter.api.Timeout
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.api.parallel.Execution
@@ -29,15 +30,9 @@ abstract class IrohaTest<T : Iroha2Client>(
     lateinit var account: AccountId
     lateinit var keyPair: KeyPair
 
-    suspend fun Iroha2Client.tx(
-        account: AccountId? = null,
-        keyPair: KeyPair? = null,
-        builder: TransactionBuilder.() -> Unit = {},
-    ) = this.sendTransaction {
-        account(account ?: this@IrohaTest.account)
-        builder(this)
-        buildSigned(keyPair ?: this@IrohaTest.keyPair)
-    }.also { d ->
-        withTimeout(txTimeout) { d.await() }
-    }
+    suspend fun Iroha2Client.submitAs(
+        account: AccountId,
+        keyPair: KeyPair,
+        vararg instructions: Instruction,
+    ): Deferred<ByteArray> = submit(TransactionBuilder(chain).addInstructions(*instructions).signAs(account, keyPair))
 }

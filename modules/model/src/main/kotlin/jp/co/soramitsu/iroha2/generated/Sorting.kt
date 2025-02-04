@@ -19,18 +19,23 @@ public data class Sorting(
     public val sortByMetadataKey: Name? = null,
 ) {
     public companion object : ScaleReader<Sorting>, ScaleWriter<Sorting> {
-        override fun read(reader: ScaleCodecReader): Sorting = try {
-            Sorting(
-                reader.readNullable(Name) as Name?,
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): Sorting =
+            try {
+                Sorting(
+                    reader.readNullable(Name) as Name?,
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: Sorting): Unit = try {
-            writer.writeNullable(Name, instance.sortByMetadataKey)
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: Sorting,
+        ): Unit =
+            try {
+                writer.writeNullable(Name, instance.sortByMetadataKey)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

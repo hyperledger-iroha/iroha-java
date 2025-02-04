@@ -16,24 +16,32 @@ import kotlin.Unit
  * Generated from 'CommittedTransaction' regular structure
  */
 public data class CommittedTransaction(
+    public val blockHash: HashOf<BlockHeader>,
     public val `value`: SignedTransaction,
     public val error: TransactionRejectionReason? = null,
 ) {
     public companion object : ScaleReader<CommittedTransaction>, ScaleWriter<CommittedTransaction> {
-        override fun read(reader: ScaleCodecReader): CommittedTransaction = try {
-            CommittedTransaction(
-                SignedTransaction.read(reader),
-                reader.readNullable(TransactionRejectionReason) as TransactionRejectionReason?,
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): CommittedTransaction =
+            try {
+                CommittedTransaction(
+                    HashOf.read(reader) as HashOf<BlockHeader>,
+                    SignedTransaction.read(reader),
+                    reader.readNullable(TransactionRejectionReason) as TransactionRejectionReason?,
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: CommittedTransaction): Unit = try {
-            SignedTransaction.write(writer, instance.`value`)
-            writer.writeNullable(TransactionRejectionReason, instance.error)
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: CommittedTransaction,
+        ): Unit =
+            try {
+                HashOf.write(writer, instance.blockHash)
+                SignedTransaction.write(writer, instance.`value`)
+                writer.writeNullable(TransactionRejectionReason, instance.error)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

@@ -19,18 +19,23 @@ public data class BlockParameters(
     public val maxTransactions: NonZeroOfu64,
 ) {
     public companion object : ScaleReader<BlockParameters>, ScaleWriter<BlockParameters> {
-        override fun read(reader: ScaleCodecReader): BlockParameters = try {
-            BlockParameters(
-                NonZeroOfu64.read(reader),
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): BlockParameters =
+            try {
+                BlockParameters(
+                    NonZeroOfu64.read(reader),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: BlockParameters): Unit = try {
-            NonZeroOfu64.write(writer, instance.maxTransactions)
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: BlockParameters,
+        ): Unit =
+            try {
+                NonZeroOfu64.write(writer, instance.maxTransactions)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

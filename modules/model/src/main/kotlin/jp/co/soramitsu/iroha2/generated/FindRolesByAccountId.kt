@@ -19,18 +19,23 @@ public data class FindRolesByAccountId(
     public val id: AccountId,
 ) {
     public companion object : ScaleReader<FindRolesByAccountId>, ScaleWriter<FindRolesByAccountId> {
-        override fun read(reader: ScaleCodecReader): FindRolesByAccountId = try {
-            FindRolesByAccountId(
-                AccountId.read(reader),
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): FindRolesByAccountId =
+            try {
+                FindRolesByAccountId(
+                    AccountId.read(reader),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: FindRolesByAccountId): Unit = try {
-            AccountId.write(writer, instance.id)
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: FindRolesByAccountId,
+        ): Unit =
+            try {
+                AccountId.write(writer, instance.id)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }
