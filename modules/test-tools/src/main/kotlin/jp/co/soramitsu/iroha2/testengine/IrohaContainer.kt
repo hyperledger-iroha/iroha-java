@@ -11,6 +11,7 @@ import org.testcontainers.utility.DockerImageName
 import org.testcontainers.utility.MountableFile
 import org.testcontainers.utility.MountableFile.forHostPath
 import java.io.IOException
+import java.net.URI
 import java.net.URL
 import java.nio.file.Files
 import java.time.Duration
@@ -26,55 +27,82 @@ import kotlin.io.path.readBytes
  */
 
 open class IrohaContainer : GenericContainer<IrohaContainer> {
-
     constructor(config: IrohaConfig.() -> Unit = {}) : this(IrohaConfig().apply(config))
 
     constructor(config: IrohaConfig) : super(config.getFullImageName()) {
-        val publicKey = config.keyPair.public.bytes().toHex()
-        val privateKey = config.keyPair.private.bytes().toHex()
-        val containerName = when (config.submitGenesis) {
-            true -> "MAIN_${config.alias}_${randomUUID().toString().split("-").last()}"
-            false -> config.alias
-        }
+        val publicKey =
+            config.keyPair.public
+                .bytes()
+                .toHex()
+        val privateKey =
+            config.keyPair.private
+                .bytes()
+                .toHex()
+        val containerName =
+            when (config.submitGenesis) {
+                true -> "MAIN_${config.alias}_${randomUUID().toString().split("-").last()}"
+                false -> config.alias
+            }
 
-        val genesisPublicKey = config.genesisKeyPair.public.bytes().toHex()
-        val genesisPrivateKey = config.genesisKeyPair.private.bytes().toHex()
+        val genesisPublicKey =
+            config.genesisKeyPair.public
+                .bytes()
+                .toHex()
+        val genesisPrivateKey =
+            config.genesisKeyPair.private
+                .bytes()
+                .toHex()
+
+        val topology =
+            config.trustedPeers.map {
+                it.id.publicKey.payload
+                    .toHex(true)
+            }
 
         this.p2pPort = config.ports[IrohaConfig.P2P_PORT_IDX]
         this.apiPort = config.ports[IrohaConfig.API_PORT_IDX]
 
         this.config = config
 
-        this.withNetwork(config.networkToJoin)
-            .withEnv("CHAIN", "00000000-0000-0000-0000-000000000000")
-            .withEnv("TRUSTED_PEERS", JSON_SERDE.writeValueAsString(config.trustedPeers))
-            .withEnv("PUBLIC_KEY", "ed0120$publicKey")
+        this
+            .withNetwork(config.networkToJoin)
+            .withEnv("CHAIN", config.chain.toString())
+            .withEnv(
+                "TRUSTED_PEERS",
+                "[" +
+                    config.trustedPeers.joinToString(",") {
+                        JSON_SERDE
+                            .writeValueAsString(
+                                it.id.publicKey,
+                            ).trimEnd('"') + "@" +
+                            JSON_SERDE.writeValueAsString(it.address).trimStart(
+                                '"',
+                            )
+                    } + "]",
+            ).withEnv("PUBLIC_KEY", "ed0120$publicKey")
             .withEnv("PRIVATE_KEY", "802620$privateKey")
             .withEnv("GENESIS_PUBLIC_KEY", "ed0120$genesisPublicKey")
+            .withEnv("P2P_PUBLIC_ADDRESS", "${config.alias}:$p2pPort")
             .withEnv("P2P_ADDRESS", "${config.alias}:$p2pPort")
             .withEnv("API_ADDRESS", "${config.alias}:$apiPort")
-            .withEnv("TORII_FETCH_SIZE", config.fetchSize.toString())
             .withCreateContainerCmdModifier { cmd -> cmd.withName(containerName) }
             .also { container ->
                 if (config.submitGenesis) {
                     container.withEnv("GENESIS_PRIVATE_KEY", "802620$genesisPrivateKey")
                     container.withEnv("GENESIS", "/tmp/genesis.signed.scale")
-                    container.withEnv("TOPOLOGY", JSON_SERDE.writeValueAsString(config.trustedPeers))
+                    container.withEnv("TOPOLOGY", JSON_SERDE.writeValueAsString(topology))
                 }
-            }
-            .also { container -> config.envs.forEach { (k, v) -> container.withEnv(k, v) } }
+            }.also { container -> config.envs.forEach { (k, v) -> container.withEnv(k, v) } }
             .withExposedPorts(p2pPort, apiPort)
             .withNetworkAliases(config.alias)
             .withLogConsumer(config.logConsumer)
             .withCopyToContainer(
                 forHostPath(configDirLocation),
                 "/$DEFAULT_CONFIG_DIR",
-            )
-            .withCopyToContainer(
+            ).withCopyToContainer(
                 forHostPath(configDirLocation),
                 "/app/.cache/wasmtime",
-            )
-            .also {
+            ).also {
                 config.genesis?.writeToFile(genesisFileLocation)
                 config.genesisPath?.also { path -> Files.copy(Path(path).toAbsolutePath(), genesisFileLocation) }
 
@@ -87,8 +115,7 @@ open class IrohaContainer : GenericContainer<IrohaContainer> {
                         executorFileLocation.toFile().writeBytes(content)
                     }
                 }
-            }
-            .also { container ->
+            }.also { container ->
                 if (config.submitGenesis) {
                     container.withCopyFileToContainer(
                         MountableFile.forClasspathResource("start.sh"),
@@ -96,8 +123,7 @@ open class IrohaContainer : GenericContainer<IrohaContainer> {
                     )
                     container.withCommand("sh", "$configDirLocation/start.sh")
                 }
-            }
-            .withImagePullPolicy(config.pullPolicy)
+            }.withImagePullPolicy(config.pullPolicy)
             .also { container ->
                 if (config.waitStrategy) {
                     container.waitingFor(
@@ -124,9 +150,9 @@ open class IrohaContainer : GenericContainer<IrohaContainer> {
     private val executorFileLocation = Path("$configDirLocation/$DEFAULT_EXECUTOR_FILE_NAME")
 
     override fun start() {
-        logger().debug("Starting Iroha container")
+        logger().info("Starting Iroha container")
         super.start()
-        logger().debug("Iroha container started")
+        logger().info("Iroha container started")
     }
 
     override fun stop() {
@@ -145,9 +171,7 @@ open class IrohaContainer : GenericContainer<IrohaContainer> {
         logger().debug("Iroha container stopped")
     }
 
-    fun getP2pUrl(): URL = URL("http", host, this.getMappedPort(p2pPort), "")
-
-    fun getApiUrl(): URL = URL("http", host, this.getMappedPort(apiPort), "")
+    fun getApiUrl(): URL = URI("http://$host:${getMappedPort(apiPort)}").toURL()
 
     private fun String.readStatusBlocks() = JSON_SERDE.readTree(this).get("blocks")?.doubleValue()
 
@@ -161,7 +185,7 @@ open class IrohaContainer : GenericContainer<IrohaContainer> {
         }
 
         const val NETWORK_ALIAS = "iroha"
-        const val DEFAULT_IMAGE_TAG = "2.0.0-pre-rc.22.2"
+        const val DEFAULT_IMAGE_TAG = "dev"
         const val DEFAULT_IMAGE_NAME = "hyperledger/iroha"
         const val DEFAULT_EXECUTOR_FILE_NAME = "executor.wasm"
         const val DEFAULT_GENESIS_FILE_NAME = "genesis.json"

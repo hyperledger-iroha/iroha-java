@@ -39,7 +39,9 @@ class Int64Reader : ScaleReader<Long> {
 /**
  * SCALE codec reader for Java Big Integers encoded as integer SCALE values.
  */
-class IntReader(private val bit: Int) : ScaleReader<BigInteger> {
+class IntReader(
+    private val bit: Int,
+) : ScaleReader<BigInteger> {
     override fun read(reader: ScaleCodecReader): BigInteger {
         val capacity = bit / 8
         val buf = ByteBuffer.allocate(capacity).order(ByteOrder.LITTLE_ENDIAN)
@@ -48,7 +50,11 @@ class IntReader(private val bit: Int) : ScaleReader<BigInteger> {
     }
 }
 
-private fun putBytes(buf: ByteBuffer, capacity: Int, rdr: ScaleCodecReader) {
+private fun putBytes(
+    buf: ByteBuffer,
+    capacity: Int,
+    rdr: ScaleCodecReader,
+) {
     for (i in 1..capacity) {
         buf.put(rdr.readByte())
     }

@@ -22,20 +22,25 @@ public data class AssetDefinitionTotalQuantityChanged(
     public companion object :
         ScaleReader<AssetDefinitionTotalQuantityChanged>,
         ScaleWriter<AssetDefinitionTotalQuantityChanged> {
-        override fun read(reader: ScaleCodecReader): AssetDefinitionTotalQuantityChanged = try {
-            AssetDefinitionTotalQuantityChanged(
-                AssetDefinitionId.read(reader),
-                Numeric.read(reader),
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): AssetDefinitionTotalQuantityChanged =
+            try {
+                AssetDefinitionTotalQuantityChanged(
+                    AssetDefinitionId.read(reader),
+                    Numeric.read(reader),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: AssetDefinitionTotalQuantityChanged): Unit = try {
-            AssetDefinitionId.write(writer, instance.assetDefinition)
-            Numeric.write(writer, instance.totalAmount)
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: AssetDefinitionTotalQuantityChanged,
+        ): Unit =
+            try {
+                AssetDefinitionId.write(writer, instance.assetDefinition)
+                Numeric.write(writer, instance.totalAmount)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

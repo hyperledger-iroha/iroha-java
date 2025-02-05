@@ -5,7 +5,7 @@ import jp.co.soramitsu.iroha2.fromHex
 import jp.co.soramitsu.iroha2.generateKeyPair
 import jp.co.soramitsu.iroha2.hash
 import jp.co.soramitsu.iroha2.keyPairFromHex
-import jp.co.soramitsu.iroha2.sign
+import jp.co.soramitsu.iroha2.signAs
 import jp.co.soramitsu.iroha2.toHex
 import jp.co.soramitsu.iroha2.verify
 import kotlinx.coroutines.CoroutineScope
@@ -19,21 +19,22 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class CryptoTest {
-
     @Test
     fun `generating key pairs is thread safe`() {
         val iterations = 1000
-        val futureResults = generateSequence {
-            CoroutineScope(Dispatchers.Default)
-                .async { generateKeyPair() }
-        }.take(iterations).toSet()
+        val futureResults =
+            generateSequence {
+                CoroutineScope(Dispatchers.Default)
+                    .async { generateKeyPair() }
+            }.take(iterations).toSet()
 
-        class ByteArrayWrapper(private val byteArray: ByteArray) {
+        class ByteArrayWrapper(
+            private val byteArray: ByteArray,
+        ) {
             override fun equals(other: Any?): Boolean {
                 if (this === other) return true
                 if (other !is ByteArrayWrapper) return false
-                if (!byteArray.contentEquals(other.byteArray)) return false
-                return true
+                return byteArray.contentEquals(other.byteArray)
             }
 
             override fun hashCode() = byteArray.contentHashCode()
@@ -42,9 +43,11 @@ class CryptoTest {
         runBlocking {
             assertEquals(
                 iterations,
-                futureResults.map { it.await().private.bytes() }
+                futureResults
+                    .map { it.await().private.bytes() }
                     .map { ByteArrayWrapper(it) }
-                    .toSet().size,
+                    .toSet()
+                    .size,
             )
         }
     }
@@ -53,7 +56,7 @@ class CryptoTest {
     fun `signature created and verified`() {
         val keyPair = generateKeyPair()
         val message = "Test message to sign.".toByteArray()
-        val signature = keyPair.private.sign(message)
+        val signature = keyPair.private.signAs(message)
 
         assertTrue { keyPair.public.verify(signature, message) }
     }
@@ -72,7 +75,7 @@ class CryptoTest {
         val privKey = keyPair.private.bytes().toHex()
 
         val message = "foo".toByteArray()
-        val signature = keyPair.private.sign(message)
+        val signature = keyPair.private.signAs(message)
 
         val restoredKeyPair = keyPairFromHex(pubKey, privKey)
         assertEquals(keyPair.private, restoredKeyPair.private)

@@ -7,12 +7,14 @@ import jp.co.soramitsu.iroha2.parse.TypeNest
  *
  * The [type names][name] are resolved with a [TypeResolver].
  */
-sealed class Type(open val name: String) {
+sealed class Type(
+    open val name: String,
+) {
     open fun notResolvedTypes(): Set<String> = setOf()
 }
 
 /**
- * Boolean type
+ * Unit struct type
  */
 object NullType : Type("null")
 

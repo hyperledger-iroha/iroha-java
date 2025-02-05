@@ -22,20 +22,25 @@ public data class TriggerCompletedEventFilter(
     public companion object :
         ScaleReader<TriggerCompletedEventFilter>,
         ScaleWriter<TriggerCompletedEventFilter> {
-        override fun read(reader: ScaleCodecReader): TriggerCompletedEventFilter = try {
-            TriggerCompletedEventFilter(
-                reader.readNullable(TriggerId) as TriggerId?,
-                reader.readNullable(TriggerCompletedOutcomeType) as TriggerCompletedOutcomeType?,
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): TriggerCompletedEventFilter =
+            try {
+                TriggerCompletedEventFilter(
+                    reader.readNullable(TriggerId) as TriggerId?,
+                    reader.readNullable(TriggerCompletedOutcomeType) as TriggerCompletedOutcomeType?,
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: TriggerCompletedEventFilter): Unit = try {
-            writer.writeNullable(TriggerId, instance.triggerId)
-            writer.writeNullable(TriggerCompletedOutcomeType, instance.outcomeType)
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: TriggerCompletedEventFilter,
+        ): Unit =
+            try {
+                writer.writeNullable(TriggerId, instance.triggerId)
+                writer.writeNullable(TriggerCompletedOutcomeType, instance.outcomeType)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

@@ -20,18 +20,23 @@ public data class WasmExecutionFail(
     public val reason: String,
 ) {
     public companion object : ScaleReader<WasmExecutionFail>, ScaleWriter<WasmExecutionFail> {
-        override fun read(reader: ScaleCodecReader): WasmExecutionFail = try {
-            WasmExecutionFail(
-                reader.readString(),
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): WasmExecutionFail =
+            try {
+                WasmExecutionFail(
+                    reader.readString(),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: WasmExecutionFail): Unit = try {
-            writer.writeAsList(instance.reason.toByteArray(Charsets.UTF_8))
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: WasmExecutionFail,
+        ): Unit =
+            try {
+                writer.writeAsList(instance.reason.toByteArray(Charsets.UTF_8))
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

@@ -36,22 +36,24 @@ public sealed class SocketAddr : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.SocketAddr.Ipv4> {
             public const val DISCRIMINANT: Int = 0
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.SocketAddr.Ipv4 = try {
-                Ipv4(
-                    SocketAddrV4.read(reader),
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.SocketAddr.Ipv4 =
+                try {
+                    Ipv4(
+                        SocketAddrV4.read(reader),
+                    )
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.SocketAddr.Ipv4,
-            ): Unit = try {
-                SocketAddrV4.write(writer, instance.socketAddrV4)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            ): Unit =
+                try {
+                    SocketAddrV4.write(writer, instance.socketAddrV4)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
@@ -68,22 +70,24 @@ public sealed class SocketAddr : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.SocketAddr.Ipv6> {
             public const val DISCRIMINANT: Int = 1
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.SocketAddr.Ipv6 = try {
-                Ipv6(
-                    SocketAddrV6.read(reader),
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.SocketAddr.Ipv6 =
+                try {
+                    Ipv6(
+                        SocketAddrV6.read(reader),
+                    )
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.SocketAddr.Ipv6,
-            ): Unit = try {
-                SocketAddrV6.write(writer, instance.socketAddrV6)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            ): Unit =
+                try {
+                    SocketAddrV6.write(writer, instance.socketAddrV6)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
@@ -100,42 +104,47 @@ public sealed class SocketAddr : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.SocketAddr.Host> {
             public const val DISCRIMINANT: Int = 2
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.SocketAddr.Host = try {
-                Host(
-                    SocketAddrHost.read(reader),
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.SocketAddr.Host =
+                try {
+                    Host(
+                        SocketAddrHost.read(reader),
+                    )
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.SocketAddr.Host,
-            ): Unit = try {
-                SocketAddrHost.write(writer, instance.socketAddrHost)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            ): Unit =
+                try {
+                    SocketAddrHost.write(writer, instance.socketAddrHost)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
     public companion object : ScaleReader<SocketAddr>, ScaleWriter<SocketAddr> {
-        override fun read(reader: ScaleCodecReader): SocketAddr = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
-            0 -> Ipv4.read(reader)
-            1 -> Ipv6.read(reader)
-            2 -> Host.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+        override fun read(reader: ScaleCodecReader): SocketAddr =
+            when (val discriminant = reader.readUByte()) {
+                0 -> Ipv4.read(reader)
+                1 -> Ipv6.read(reader)
+                2 -> Host.read(reader)
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: SocketAddr) {
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: SocketAddr,
+        ) {
             writer.directWrite(instance.discriminant())
             when (val discriminant = instance.discriminant()) {
                 0 -> Ipv4.write(writer, instance as Ipv4)
                 1 -> Ipv6.write(writer, instance as Ipv6)
                 2 -> Host.write(writer, instance as Host)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

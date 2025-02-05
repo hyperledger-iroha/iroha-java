@@ -21,20 +21,25 @@ public data class Mismatch<T0>(
     public val `actual`: AssetType,
 ) {
     public companion object : ScaleReader<Mismatch<out Any>>, ScaleWriter<Mismatch<out Any>> {
-        override fun read(reader: ScaleCodecReader): Mismatch<out Any> = try {
-            Mismatch(
-                AssetType.read(reader),
-                AssetType.read(reader),
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): Mismatch<out Any> =
+            try {
+                Mismatch(
+                    AssetType.read(reader),
+                    AssetType.read(reader),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: Mismatch<out Any>): Unit = try {
-            AssetType.write(writer, instance.expected)
-            AssetType.write(writer, instance.`actual`)
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: Mismatch<out Any>,
+        ): Unit =
+            try {
+                AssetType.write(writer, instance.expected)
+                AssetType.write(writer, instance.`actual`)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

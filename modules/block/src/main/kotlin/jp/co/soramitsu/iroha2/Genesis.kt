@@ -6,7 +6,7 @@ import jp.co.soramitsu.iroha2.generated.Metadata
 import jp.co.soramitsu.iroha2.generated.NewAccount
 import jp.co.soramitsu.iroha2.generated.NewAssetDefinition
 import jp.co.soramitsu.iroha2.generated.NewDomain
-import jp.co.soramitsu.iroha2.generated.Parameter
+import jp.co.soramitsu.iroha2.generated.Parameters
 import jp.co.soramitsu.iroha2.generated.RawGenesisTransaction
 import jp.co.soramitsu.iroha2.generated.RegisterBox
 import jp.co.soramitsu.iroha2.generated.RegisterOfAccount
@@ -19,49 +19,60 @@ import java.nio.file.StandardOpenOption
 /**
  * Genesis block is used to initialise a blockchain
  */
-open class Genesis(open val transaction: RawGenesisTransaction) {
+open class Genesis(
+    open val transaction: RawGenesisTransaction,
+) {
     /**
      * Write genesis to file
      */
-    fun writeToFile(path: Path): Path = Files.write(
-        path,
-        asJson().toByteArray(Charsets.UTF_8),
-        StandardOpenOption.TRUNCATE_EXISTING,
-        StandardOpenOption.CREATE,
-    )
+    fun writeToFile(path: Path): Path =
+        Files.write(
+            path,
+            asJson().toByteArray(Charsets.UTF_8),
+            StandardOpenOption.TRUNCATE_EXISTING,
+            StandardOpenOption.CREATE,
+        )
 
     /**
      * Represent genesis as JSON
      */
-    fun asJson(): String = JSON_SERDE.writeValueAsString(this.transaction)
+    fun asJson(): String =
+        JSON_SERDE.writeValueAsString(this.transaction).also { genesis ->
+            println("GENESIS: $genesis")
+        }
 
     companion object {
-
-        const val EXECUTOR_FILE_NAME = "executor.wasm"
+        const val EXECUTOR_FILE_NAME = "./executor.wasm"
 
         /**
          * List of genesis blocks to single block with unique instructions
          */
         fun List<Genesis>.toSingle(): Genesis {
             val uniqueIsi: MutableSet<InstructionBox> = mutableSetOf()
-            val uniqueParams: MutableSet<Parameter> = mutableSetOf()
+            val uniqueParams: MutableSet<Parameters> = mutableSetOf()
 
             this.forEach { genesis ->
                 uniqueIsi.addAll(genesis.transaction.instructions)
-                uniqueParams.addAll(genesis.transaction.parameters)
+                genesis.transaction.parameters?.also { uniqueParams.add(it) }
             }
             return Genesis(
                 RawGenesisTransaction(
                     ChainId("00000000-0000-0000-0000-000000000000"),
                     EXECUTOR_FILE_NAME,
-                    uniqueParams.toList(),
-                    uniqueIsi.mergeMetadata().toList(),
+                    uniqueParams.merge(),
+                    uniqueIsi.merge().toList(),
+                    "libs",
+                    emptyList(),
                     emptyList(),
                 ),
             )
         }
 
-        private fun MutableSet<InstructionBox>.mergeMetadata(): List<InstructionBox> {
+        private fun MutableSet<Parameters>.merge(): Parameters? {
+            return this.firstOrNull() // TODO
+        }
+
+        private fun MutableSet<InstructionBox>.merge(): List<InstructionBox> {
             // entity id to its metadata
             val metadataMap = mutableMapOf<Any, Metadata>()
 
@@ -79,48 +90,54 @@ open class Genesis(open val transaction: RawGenesisTransaction) {
             return this.sorted()
         }
 
-        private fun MutableSet<InstructionBox>.sorted() = this.sortedWith(
-            compareByDescending { instruction ->
-                when (instruction) {
-                    is InstructionBox.Register -> when (instruction.cast<InstructionBox.Register>().registerBox) {
-                        is RegisterBox.Domain -> 5
-                        is RegisterBox.Account -> 4
-                        is RegisterBox.AssetDefinition -> 3
-                        is RegisterBox.Role -> 2
-                        else -> 1
+        private fun MutableSet<InstructionBox>.sorted() =
+            this.sortedWith(
+                compareByDescending { instruction ->
+                    when (instruction) {
+                        is InstructionBox.Register ->
+                            when (instruction.cast<InstructionBox.Register>().registerBox) {
+                                is RegisterBox.Domain -> 5
+                                is RegisterBox.Account -> 4
+                                is RegisterBox.AssetDefinition -> 3
+                                is RegisterBox.Role -> 2
+                                else -> 1
+                            }
+
+                        else -> -1
                     }
-
-                    else -> -1
-                }
-            },
-        )
-
-        private fun RegisterBox.addMetadata(metadata: Metadata) = when (this) {
-            is RegisterBox.Account -> RegisterBox.Account(
-                RegisterOfAccount(
-                    NewAccount(this.registerOfAccount.`object`.id, metadata),
-                ),
+                },
             )
 
-            is RegisterBox.Domain -> RegisterBox.Domain(
-                RegisterOfDomain(
-                    NewDomain(this.registerOfDomain.`object`.id, this.registerOfDomain.`object`.logo, metadata),
-                ),
-            )
+        private fun RegisterBox.addMetadata(metadata: Metadata) =
+            when (this) {
+                is RegisterBox.Account ->
+                    RegisterBox.Account(
+                        RegisterOfAccount(
+                            NewAccount(this.registerOfAccount.`object`.id, metadata),
+                        ),
+                    )
 
-            is RegisterBox.AssetDefinition -> RegisterBox.AssetDefinition(
-                RegisterOfAssetDefinition(
-                    NewAssetDefinition(
-                        this.registerOfAssetDefinition.`object`.id,
-                        this.registerOfAssetDefinition.`object`.type,
-                        this.registerOfAssetDefinition.`object`.mintable,
-                        metadata = metadata,
-                    ),
-                ),
-            )
+                is RegisterBox.Domain ->
+                    RegisterBox.Domain(
+                        RegisterOfDomain(
+                            NewDomain(this.registerOfDomain.`object`.id, this.registerOfDomain.`object`.logo, metadata),
+                        ),
+                    )
 
-            else -> throw IrohaSdkException("Unexpected type ${this::class}")
-        }
+                is RegisterBox.AssetDefinition ->
+                    RegisterBox.AssetDefinition(
+                        RegisterOfAssetDefinition(
+                            NewAssetDefinition(
+                                this.registerOfAssetDefinition.`object`.id,
+                                this.registerOfAssetDefinition.`object`.type,
+                                this.registerOfAssetDefinition.`object`.mintable,
+                                metadata = metadata,
+                            ),
+                        ),
+                    )
+
+                else -> throw IrohaSdkException("Unexpected type ${this::class}")
+            }
 
         private fun MutableMap<Any, Metadata>.putMergedMetadata(idBox: RegisterBox) {
             fun MutableMap<Any, Metadata>.putOrMerge(
@@ -141,10 +158,11 @@ open class Genesis(open val transaction: RawGenesisTransaction) {
             when (idBox) {
                 is RegisterBox.Account -> this.putOrMerge(idBox.registerOfAccount.`object`.id, idBox.registerOfAccount.`object`.metadata)
                 is RegisterBox.Domain -> this.putOrMerge(idBox.registerOfDomain.`object`.id, idBox.registerOfDomain.`object`.metadata)
-                is RegisterBox.AssetDefinition -> this.putOrMerge(
-                    idBox.registerOfAssetDefinition.`object`.id,
-                    idBox.registerOfAssetDefinition.`object`.metadata,
-                )
+                is RegisterBox.AssetDefinition ->
+                    this.putOrMerge(
+                        idBox.registerOfAssetDefinition.`object`.id,
+                        idBox.registerOfAssetDefinition.`object`.metadata,
+                    )
 
                 else -> {}
             }
@@ -161,9 +179,15 @@ open class Genesis(open val transaction: RawGenesisTransaction) {
                     instruction.cast<InstructionBox.Register>().registerBox
                 }.onSuccess { idBox ->
                     when (idBox) {
-                        is RegisterBox.Account -> idBox.registerOfAccount.`object`.id.let { id -> id to metadata[id]!! }
-                        is RegisterBox.Domain -> idBox.registerOfDomain.`object`.id.let { id -> id to metadata[id]!! }
-                        is RegisterBox.AssetDefinition -> idBox.registerOfAssetDefinition.`object`.id.let { id -> id to metadata[id]!! }
+                        is RegisterBox.Account ->
+                            idBox.registerOfAccount.`object`.id
+                                .let { id -> id to metadata[id]!! }
+                        is RegisterBox.Domain ->
+                            idBox.registerOfDomain.`object`.id
+                                .let { id -> id to metadata[id]!! }
+                        is RegisterBox.AssetDefinition ->
+                            idBox.registerOfAssetDefinition.`object`.id
+                                .let { id -> id to metadata[id]!! }
                         else -> null
                     }?.takeIf { it.second.sortedMapOfName.isNotEmpty() }?.let {
                         isiToReplace.merge(it, mutableListOf(instruction.cast())) { old, new ->

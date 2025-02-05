@@ -20,18 +20,23 @@ public data class IpfsPath(
     public val string: String,
 ) {
     public companion object : ScaleReader<IpfsPath>, ScaleWriter<IpfsPath> {
-        override fun read(reader: ScaleCodecReader): IpfsPath = try {
-            IpfsPath(
-                reader.readString(),
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): IpfsPath =
+            try {
+                IpfsPath(
+                    reader.readString(),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: IpfsPath): Unit = try {
-            writer.writeAsList(instance.string.toByteArray(Charsets.UTF_8))
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: IpfsPath,
+        ): Unit =
+            try {
+                writer.writeAsList(instance.string.toByteArray(Charsets.UTF_8))
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

@@ -26,13 +26,17 @@ public sealed class InvalidParameterError : ModelEnum {
      */
     public abstract fun discriminant(): Int
 
-    override fun equals(other: Any?): Boolean = when (this) {
-        is TimeTriggerInThePast -> TimeTriggerInThePast.equals(this, other)
-        else -> super.equals(other) }
+    override fun equals(other: Any?): Boolean =
+        when (this) {
+            is TimeTriggerInThePast -> TimeTriggerInThePast.equals(this, other)
+            else -> super.equals(other)
+        }
 
-    override fun hashCode(): Int = when (this) {
-        is TimeTriggerInThePast -> TimeTriggerInThePast.hashCode()
-        else -> super.hashCode() }
+    override fun hashCode(): Int =
+        when (this) {
+            is TimeTriggerInThePast -> TimeTriggerInThePast.hashCode()
+            else -> super.hashCode()
+        }
 
     /**
      * 'Wasm' variant
@@ -47,22 +51,24 @@ public sealed class InvalidParameterError : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.InvalidParameterError.Wasm> {
             public const val DISCRIMINANT: Int = 0
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.InvalidParameterError.Wasm = try {
-                Wasm(
-                    reader.readString(),
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.InvalidParameterError.Wasm =
+                try {
+                    Wasm(
+                        reader.readString(),
+                    )
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.InvalidParameterError.Wasm,
-            ): Unit = try {
-                writer.writeAsList(instance.string.toByteArray(Charsets.UTF_8))
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            ): Unit =
+                try {
+                    writer.writeAsList(instance.string.toByteArray(Charsets.UTF_8))
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
@@ -77,47 +83,53 @@ public sealed class InvalidParameterError : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.InvalidParameterError.TimeTriggerInThePast> {
             public const val DISCRIMINANT: Int = 1
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.InvalidParameterError.TimeTriggerInThePast = try {
-                TimeTriggerInThePast()
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.InvalidParameterError.TimeTriggerInThePast =
+                try {
+                    TimeTriggerInThePast()
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.InvalidParameterError.TimeTriggerInThePast,
-            ): Unit = try {
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            ): Unit =
+                try {
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             public fun equals(
                 o1: jp.co.soramitsu.iroha2.generated.InvalidParameterError.TimeTriggerInThePast,
                 o2: Any?,
-            ): Boolean = when (o2) {
-                null -> false
-                else -> o2::class == o1::class
-            }
+            ): Boolean =
+                when (o2) {
+                    null -> false
+                    else -> o2::class == o1::class
+                }
 
             override fun hashCode(): Int = ".InvalidParameterError.TimeTriggerInThePast".hashCode()
         }
     }
 
     public companion object : ScaleReader<InvalidParameterError>, ScaleWriter<InvalidParameterError> {
-        override fun read(reader: ScaleCodecReader): InvalidParameterError = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
-            0 -> Wasm.read(reader)
-            1 -> TimeTriggerInThePast.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+        override fun read(reader: ScaleCodecReader): InvalidParameterError =
+            when (val discriminant = reader.readUByte()) {
+                0 -> Wasm.read(reader)
+                1 -> TimeTriggerInThePast.read(reader)
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: InvalidParameterError) {
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: InvalidParameterError,
+        ) {
             writer.directWrite(instance.discriminant())
             when (val discriminant = instance.discriminant()) {
                 0 -> Wasm.write(writer, instance as Wasm)
                 1 -> TimeTriggerInThePast.write(writer, instance as TimeTriggerInThePast)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

@@ -9,4 +9,6 @@ import java.lang.annotation.Inherited
 @Target(AnnotationTarget.FUNCTION, AnnotationTarget.CLASS)
 @LabelAnnotation(name = "permission")
 @Repeatable
-annotation class Permission(val value: String)
+annotation class Permission(
+    val value: String,
+)

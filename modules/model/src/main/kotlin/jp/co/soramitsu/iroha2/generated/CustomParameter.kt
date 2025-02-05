@@ -8,7 +8,6 @@ import jp.co.soramitsu.iroha2.codec.ScaleCodecWriter
 import jp.co.soramitsu.iroha2.codec.ScaleReader
 import jp.co.soramitsu.iroha2.codec.ScaleWriter
 import jp.co.soramitsu.iroha2.wrapException
-import kotlin.String
 import kotlin.Unit
 
 /**
@@ -18,23 +17,28 @@ import kotlin.Unit
  */
 public data class CustomParameter(
     public val id: CustomParameterId,
-    public val payload: String,
+    public val payload: Json,
 ) {
     public companion object : ScaleReader<CustomParameter>, ScaleWriter<CustomParameter> {
-        override fun read(reader: ScaleCodecReader): CustomParameter = try {
-            CustomParameter(
-                CustomParameterId.read(reader),
-                reader.readString(),
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): CustomParameter =
+            try {
+                CustomParameter(
+                    CustomParameterId.read(reader),
+                    Json.read(reader),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: CustomParameter): Unit = try {
-            CustomParameterId.write(writer, instance.id)
-            writer.writeAsList(instance.payload.toByteArray(Charsets.UTF_8))
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: CustomParameter,
+        ): Unit =
+            try {
+                CustomParameterId.write(writer, instance.id)
+                Json.write(writer, instance.payload)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

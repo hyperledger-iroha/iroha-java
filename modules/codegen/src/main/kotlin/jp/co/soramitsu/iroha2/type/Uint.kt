@@ -3,7 +3,9 @@ package jp.co.soramitsu.iroha2.type
 /**
  * Unigned integer types
  */
-abstract class UIntType(name: String) : Type(name)
+abstract class UIntType(
+    name: String,
+) : Type(name)
 
 /**
  * 8-bit unsigned integers

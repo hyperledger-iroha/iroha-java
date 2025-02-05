@@ -21,20 +21,25 @@ public data class DomainEventFilter(
     public val eventSet: Long,
 ) {
     public companion object : ScaleReader<DomainEventFilter>, ScaleWriter<DomainEventFilter> {
-        override fun read(reader: ScaleCodecReader): DomainEventFilter = try {
-            DomainEventFilter(
-                reader.readNullable(DomainId) as DomainId?,
-                reader.readUint32(),
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): DomainEventFilter =
+            try {
+                DomainEventFilter(
+                    reader.readNullable(DomainId) as DomainId?,
+                    reader.readUint32(),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: DomainEventFilter): Unit = try {
-            writer.writeNullable(DomainId, instance.idMatcher)
-            writer.writeUint32(instance.eventSet)
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: DomainEventFilter,
+        ): Unit =
+            try {
+                writer.writeNullable(DomainId, instance.idMatcher)
+                writer.writeUint32(instance.eventSet)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

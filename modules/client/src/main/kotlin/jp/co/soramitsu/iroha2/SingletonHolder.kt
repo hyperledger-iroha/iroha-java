@@ -1,7 +1,8 @@
 package jp.co.soramitsu.iroha2
 
-open class SingletonHolder<out T : Any, in A>(private val creator: (A) -> T) {
-
+open class SingletonHolder<out T : Any, in A>(
+    private val creator: (A) -> T,
+) {
     @Volatile
     private var instance: T? = null
 

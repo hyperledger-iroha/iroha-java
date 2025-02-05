@@ -1,318 +1,265 @@
 package jp.co.soramitsu.iroha2.query
 
 import jp.co.soramitsu.iroha2.generated.AccountId
+import jp.co.soramitsu.iroha2.generated.AccountProjectionOfSelectorMarker
 import jp.co.soramitsu.iroha2.generated.AssetDefinitionId
-import jp.co.soramitsu.iroha2.generated.AssetId
-import jp.co.soramitsu.iroha2.generated.DomainId
-import jp.co.soramitsu.iroha2.generated.FindAccountById
-import jp.co.soramitsu.iroha2.generated.FindAccountKeyValueByIdAndKey
-import jp.co.soramitsu.iroha2.generated.FindAccountsByDomainId
+import jp.co.soramitsu.iroha2.generated.AssetDefinitionProjectionOfSelectorMarker
+import jp.co.soramitsu.iroha2.generated.AssetProjectionOfSelectorMarker
+import jp.co.soramitsu.iroha2.generated.CommittedTransactionProjectionOfSelectorMarker
+import jp.co.soramitsu.iroha2.generated.CompoundPredicateOfAccount
+import jp.co.soramitsu.iroha2.generated.CompoundPredicateOfAsset
+import jp.co.soramitsu.iroha2.generated.CompoundPredicateOfAssetDefinition
+import jp.co.soramitsu.iroha2.generated.CompoundPredicateOfCommittedTransaction
+import jp.co.soramitsu.iroha2.generated.CompoundPredicateOfDomain
+import jp.co.soramitsu.iroha2.generated.CompoundPredicateOfPeerId
+import jp.co.soramitsu.iroha2.generated.CompoundPredicateOfPermission
+import jp.co.soramitsu.iroha2.generated.CompoundPredicateOfRole
+import jp.co.soramitsu.iroha2.generated.CompoundPredicateOfRoleId
+import jp.co.soramitsu.iroha2.generated.CompoundPredicateOfSignedBlock
+import jp.co.soramitsu.iroha2.generated.CompoundPredicateOfTrigger
+import jp.co.soramitsu.iroha2.generated.CompoundPredicateOfTriggerId
+import jp.co.soramitsu.iroha2.generated.DomainProjectionOfSelectorMarker
+import jp.co.soramitsu.iroha2.generated.FindAccounts
 import jp.co.soramitsu.iroha2.generated.FindAccountsWithAsset
-import jp.co.soramitsu.iroha2.generated.FindAllAccounts
-import jp.co.soramitsu.iroha2.generated.FindAllActiveTriggerIds
-import jp.co.soramitsu.iroha2.generated.FindAllAssets
-import jp.co.soramitsu.iroha2.generated.FindAllAssetsDefinitions
-import jp.co.soramitsu.iroha2.generated.FindAllBlockHeaders
-import jp.co.soramitsu.iroha2.generated.FindAllBlocks
-import jp.co.soramitsu.iroha2.generated.FindAllDomains
-import jp.co.soramitsu.iroha2.generated.FindAllParameters
-import jp.co.soramitsu.iroha2.generated.FindAllPeers
-import jp.co.soramitsu.iroha2.generated.FindAllRoleIds
-import jp.co.soramitsu.iroha2.generated.FindAllRoles
-import jp.co.soramitsu.iroha2.generated.FindAllTransactions
-import jp.co.soramitsu.iroha2.generated.FindAssetById
-import jp.co.soramitsu.iroha2.generated.FindAssetDefinitionById
-import jp.co.soramitsu.iroha2.generated.FindAssetDefinitionKeyValueByIdAndKey
-import jp.co.soramitsu.iroha2.generated.FindAssetKeyValueByIdAndKey
-import jp.co.soramitsu.iroha2.generated.FindAssetQuantityById
-import jp.co.soramitsu.iroha2.generated.FindAssetsByAccountId
-import jp.co.soramitsu.iroha2.generated.FindAssetsByAssetDefinitionId
-import jp.co.soramitsu.iroha2.generated.FindAssetsByDomainId
-import jp.co.soramitsu.iroha2.generated.FindAssetsByDomainIdAndAssetDefinitionId
-import jp.co.soramitsu.iroha2.generated.FindAssetsByName
-import jp.co.soramitsu.iroha2.generated.FindBlockHeaderByHash
-import jp.co.soramitsu.iroha2.generated.FindDomainById
-import jp.co.soramitsu.iroha2.generated.FindDomainKeyValueByIdAndKey
+import jp.co.soramitsu.iroha2.generated.FindActiveTriggerIds
+import jp.co.soramitsu.iroha2.generated.FindAssets
+import jp.co.soramitsu.iroha2.generated.FindAssetsDefinitions
+import jp.co.soramitsu.iroha2.generated.FindBlocks
+import jp.co.soramitsu.iroha2.generated.FindDomains
 import jp.co.soramitsu.iroha2.generated.FindExecutorDataModel
+import jp.co.soramitsu.iroha2.generated.FindParameters
+import jp.co.soramitsu.iroha2.generated.FindPeers
 import jp.co.soramitsu.iroha2.generated.FindPermissionsByAccountId
-import jp.co.soramitsu.iroha2.generated.FindRoleByRoleId
+import jp.co.soramitsu.iroha2.generated.FindRoles
 import jp.co.soramitsu.iroha2.generated.FindRolesByAccountId
-import jp.co.soramitsu.iroha2.generated.FindTotalAssetQuantityByAssetDefinitionId
-import jp.co.soramitsu.iroha2.generated.FindTransactionByHash
-import jp.co.soramitsu.iroha2.generated.FindTransactionsByAccountId
-import jp.co.soramitsu.iroha2.generated.FindTriggerById
-import jp.co.soramitsu.iroha2.generated.FindTriggerKeyValueByIdAndKey
-import jp.co.soramitsu.iroha2.generated.FindTriggersByAuthorityDomainId
-import jp.co.soramitsu.iroha2.generated.FindTriggersByAuthorityId
-import jp.co.soramitsu.iroha2.generated.Hash
-import jp.co.soramitsu.iroha2.generated.HashOf
-import jp.co.soramitsu.iroha2.generated.Name
+import jp.co.soramitsu.iroha2.generated.FindTransactions
+import jp.co.soramitsu.iroha2.generated.FindTriggers
+import jp.co.soramitsu.iroha2.generated.PeerIdProjectionOfSelectorMarker
+import jp.co.soramitsu.iroha2.generated.PermissionProjectionOfSelectorMarker
 import jp.co.soramitsu.iroha2.generated.QueryBox
-import jp.co.soramitsu.iroha2.generated.RoleId
-import jp.co.soramitsu.iroha2.generated.SignedTransaction
-import jp.co.soramitsu.iroha2.generated.TriggerId
+import jp.co.soramitsu.iroha2.generated.QueryWithFilterOfFindAccounts
+import jp.co.soramitsu.iroha2.generated.QueryWithFilterOfFindAccountsWithAsset
+import jp.co.soramitsu.iroha2.generated.QueryWithFilterOfFindActiveTriggerIds
+import jp.co.soramitsu.iroha2.generated.QueryWithFilterOfFindAssets
+import jp.co.soramitsu.iroha2.generated.QueryWithFilterOfFindAssetsDefinitions
+import jp.co.soramitsu.iroha2.generated.QueryWithFilterOfFindBlocks
+import jp.co.soramitsu.iroha2.generated.QueryWithFilterOfFindDomains
+import jp.co.soramitsu.iroha2.generated.QueryWithFilterOfFindPeers
+import jp.co.soramitsu.iroha2.generated.QueryWithFilterOfFindPermissionsByAccountId
+import jp.co.soramitsu.iroha2.generated.QueryWithFilterOfFindRoles
+import jp.co.soramitsu.iroha2.generated.QueryWithFilterOfFindRolesByAccountId
+import jp.co.soramitsu.iroha2.generated.QueryWithFilterOfFindTransactions
+import jp.co.soramitsu.iroha2.generated.QueryWithFilterOfFindTriggers
+import jp.co.soramitsu.iroha2.generated.RoleIdProjectionOfSelectorMarker
+import jp.co.soramitsu.iroha2.generated.RoleProjectionOfSelectorMarker
+import jp.co.soramitsu.iroha2.generated.SelectorTupleOfAccount
+import jp.co.soramitsu.iroha2.generated.SelectorTupleOfAsset
+import jp.co.soramitsu.iroha2.generated.SelectorTupleOfAssetDefinition
+import jp.co.soramitsu.iroha2.generated.SelectorTupleOfCommittedTransaction
+import jp.co.soramitsu.iroha2.generated.SelectorTupleOfDomain
+import jp.co.soramitsu.iroha2.generated.SelectorTupleOfPeerId
+import jp.co.soramitsu.iroha2.generated.SelectorTupleOfPermission
+import jp.co.soramitsu.iroha2.generated.SelectorTupleOfRole
+import jp.co.soramitsu.iroha2.generated.SelectorTupleOfRoleId
+import jp.co.soramitsu.iroha2.generated.SelectorTupleOfSignedBlock
+import jp.co.soramitsu.iroha2.generated.SelectorTupleOfTrigger
+import jp.co.soramitsu.iroha2.generated.SelectorTupleOfTriggerId
+import jp.co.soramitsu.iroha2.generated.SignedBlockProjectionOfSelectorMarker
+import jp.co.soramitsu.iroha2.generated.SingularQueryBox
+import jp.co.soramitsu.iroha2.generated.TriggerIdProjectionOfSelectorMarker
+import jp.co.soramitsu.iroha2.generated.TriggerProjectionOfSelectorMarker
 
 /**
  * Queries are sent to an Iroha peer and prompt a response with details from the current world state view.
  */
 object Queries {
+    /**
+     * Return all peers (peers are identified by their public key)
+     */
+    fun findPeers(predicate: CompoundPredicateOfPeerId? = null) =
+        QueryBox.FindPeers(
+            QueryWithFilterOfFindPeers(
+                FindPeers(),
+                predicate ?: CompoundPredicateOfPeerId.And(emptyList()),
+                SelectorTupleOfPeerId(
+                    listOf(
+                        PeerIdProjectionOfSelectorMarker.Atom(),
+                    ),
+                ),
+            ),
+        )
 
     /**
-     * Find all accounts registered globally in the blockchain
+     * Return all domains
      */
-    fun findAllAccounts() = QueryBox.FindAllAccounts(FindAllAccounts())
-
-    /**
-     * Return the full account information corresponding to the given [AccountId]
-     */
-    fun findAccountById(accountId: AccountId) = QueryBox.FindAccountById(FindAccountById(accountId))
-
-    /**
-     * Return the value keyed by the provided [Name] for the given [AccountId]
-     */
-    fun findAccountKeyValueByIdAndKey(accountId: AccountId, key: Name) = QueryBox.FindAccountKeyValueByIdAndKey(
-        FindAccountKeyValueByIdAndKey(accountId, key),
-    )
-
-    /**
-     * Return all the accounts that belong to a specific domain [DomainId]
-     */
-    fun findAccountsByDomainId(domainId: DomainId) = QueryBox.FindAccountsByDomainId(
-        FindAccountsByDomainId(domainId),
-    )
-
-    /**
-     * Return all the accounts that belong to a specific asset definition [AssetDefinitionId]
-     */
-    fun findAccountsWithAsset(definitionId: AssetDefinitionId) = QueryBox.FindAccountsWithAsset(
-        FindAccountsWithAsset(definitionId),
-    )
-
-    /**
-     * Return the values of all known assets
-     */
-    fun findAllAssets() = QueryBox.FindAllAssets(FindAllAssets())
-
-    /**
-     * Return the aggregated data about the [AssetId] usage across the network
-     */
-    fun findAssetById(assetId: AssetId) = QueryBox.FindAssetById(FindAssetById(assetId))
-
-    /**
-     * Return all the assets that are registered in the given domain [DomainId]
-     */
-    fun findAssetsByDomainId(domainId: DomainId) = QueryBox.FindAssetsByDomainId(
-        FindAssetsByDomainId(domainId),
-    )
-
-    /**
-     * Search the network for all assets that match the given [Name]
-     */
-    fun findAssetsByName(name: Name) = QueryBox.FindAssetsByName(FindAssetsByName(name))
-
-    /**
-     * Return all the assets that belong to a given [AccountId]
-     */
-    fun findAssetsByAccountId(accountId: AccountId) = QueryBox.FindAssetsByAccountId(
-        FindAssetsByAccountId(accountId),
-    )
-
-    /**
-     * Search for all the assets that have the given [AssetDefinitionId]
-     */
-    fun findAssetsByAssetDefinitionId(assetDefinition: AssetDefinitionId) = QueryBox.FindAssetsByAssetDefinitionId(
-        FindAssetsByAssetDefinitionId(assetDefinition),
-    )
-
-    /**
-     * Search the domain with the [DomainId] for assets that have the given [AssetDefinitionId]
-     */
-    fun findAssetsByDomainIdAndAssetDefinitionId(
-        domainId: DomainId,
-        assetDefinition: AssetDefinitionId,
-    ) = QueryBox.FindAssetsByDomainIdAndAssetDefinitionId(
-        FindAssetsByDomainIdAndAssetDefinitionId(
-            domainId,
-            assetDefinition,
-        ),
-    )
+    fun findDomains(predicate: CompoundPredicateOfDomain? = null) =
+        QueryBox.FindDomains(
+            QueryWithFilterOfFindDomains(
+                FindDomains(),
+                predicate ?: CompoundPredicateOfDomain.And(emptyList()),
+                SelectorTupleOfDomain(listOf(DomainProjectionOfSelectorMarker.Atom())),
+            ),
+        )
 
     /**
      * Return the values of all known asset definitions
      */
-    fun findAllAssetsDefinitions() = QueryBox.FindAllAssetsDefinitions(FindAllAssetsDefinitions())
+    fun findAssetsDefinitions(predicate: CompoundPredicateOfAssetDefinition? = null) =
+        QueryBox.FindAssetsDefinitions(
+            QueryWithFilterOfFindAssetsDefinitions(
+                FindAssetsDefinitions(),
+                predicate ?: CompoundPredicateOfAssetDefinition.And(emptyList()),
+                SelectorTupleOfAssetDefinition(listOf(AssetDefinitionProjectionOfSelectorMarker.Atom())),
+            ),
+        )
 
     /**
-     * Return the asset quantity for the given asset with [AssetId]
+     * Return all accounts
      */
-    fun findAssetQuantityById(assetId: AssetId) = QueryBox.FindAssetQuantityById(
-        FindAssetQuantityById(assetId),
-    )
+    fun findAccounts(predicate: CompoundPredicateOfAccount? = null) =
+        QueryBox.FindAccounts(
+            QueryWithFilterOfFindAccounts(
+                FindAccounts(),
+                predicate ?: CompoundPredicateOfAccount.And(emptyList()),
+                SelectorTupleOfAccount(listOf(AccountProjectionOfSelectorMarker.Atom())),
+            ),
+        )
 
     /**
-     * Return the asset quantity for the given asset with [AssetDefinitionId]
+     * Return all accounts that contain an asset of the given definition
      */
-    fun findTotalAssetQuantityByAssetDefinitionId(
+    fun findAccountsWithAsset(
         definitionId: AssetDefinitionId,
-    ) = QueryBox.FindTotalAssetQuantityByAssetDefinitionId(
-        FindTotalAssetQuantityByAssetDefinitionId(definitionId),
-    )
-
-    /**
-     * Return the value keyed by the given [Name] in the metadata of the asset corresponding to the given [AssetId]
-     */
-    fun findAssetKeyValueByIdAndKey(assetId: AssetId, key: Name) = QueryBox.FindAssetKeyValueByIdAndKey(
-        FindAssetKeyValueByIdAndKey(assetId, key),
-    )
-
-    /**
-     * Return the value keyed by the given [Name]
-     * in the metadata of the asset definition corresponding to the given [AssetDefinitionId]
-     */
-    fun findAssetDefinitionKeyValueByIdAndKey(
-        assetDefinition: AssetDefinitionId,
-        key: Name,
-    ) = QueryBox.FindAssetDefinitionKeyValueByIdAndKey(
-        FindAssetDefinitionKeyValueByIdAndKey(
-            assetDefinition,
-            key,
+        predicate: CompoundPredicateOfAccount? = null,
+    ) = QueryBox.FindAccountsWithAsset(
+        QueryWithFilterOfFindAccountsWithAsset(
+            FindAccountsWithAsset(definitionId),
+            predicate ?: CompoundPredicateOfAccount.And(emptyList()),
+            SelectorTupleOfAccount(listOf(AccountProjectionOfSelectorMarker.Atom())),
         ),
     )
 
     /**
-     * Return the asset definition corresponding to the given [AssetDefinitionId]
+     * Return the all assets
      */
-    fun findAssetDefinitionById(definitionId: AssetDefinitionId) = QueryBox.FindAssetDefinitionById(
-        FindAssetDefinitionById(definitionId),
-    )
-
-    /**
-     * Return all known registered domains
-     */
-    fun findAllDomains() = QueryBox.FindAllDomains(FindAllDomains())
-
-    /**
-     * Return the domain corresponding to the given [DomainId]
-     */
-    fun findDomainById(domainId: DomainId) = QueryBox.FindDomainById(FindDomainById(domainId))
-
-    /**
-     * Return all known peers identified by their key and accompanied by the address of their API endpoint
-     */
-    fun findAllPeers() = QueryBox.FindAllPeers(FindAllPeers())
-
-    /**
-     * Return the full set of transactions that an account with [AccountId] has submitted throughout the existence of the blockchain
-     */
-    fun findTransactionsByAccountId(accountId: AccountId) = QueryBox.FindTransactionsByAccountId(
-        FindTransactionsByAccountId(accountId),
-    )
+    fun findAssets(predicate: CompoundPredicateOfAsset? = null) =
+        QueryBox.FindAssets(
+            QueryWithFilterOfFindAssets(
+                FindAssets(),
+                predicate ?: CompoundPredicateOfAsset.And(emptyList()),
+                SelectorTupleOfAsset(listOf(AssetProjectionOfSelectorMarker.Atom())),
+            ),
+        )
 
     /**
      * Return all the permission tokens granted to the specified [AccountId]
      */
-    fun findPermissionsByAccountId(accountId: AccountId) = QueryBox.FindPermissionsByAccountId(
-        FindPermissionsByAccountId(accountId),
+    fun findPermissionsByAccountId(
+        accountId: AccountId,
+        predicate: CompoundPredicateOfPermission? = null,
+    ) = QueryBox.FindPermissionsByAccountId(
+        QueryWithFilterOfFindPermissionsByAccountId(
+            FindPermissionsByAccountId(accountId),
+            predicate ?: CompoundPredicateOfPermission.And(emptyList()),
+            SelectorTupleOfPermission(
+                listOf(
+                    PermissionProjectionOfSelectorMarker.Atom(),
+                ),
+            ),
+        ),
     )
 
     /**
-     * Return executor data model
+     * Return the full set of roles
      */
-    fun findExecutorDataModel() = QueryBox.FindExecutorDataModel(
-        FindExecutorDataModel(),
-    )
-
-    /**
-     * Return the transaction by [Hash]
-     */
-    fun findTransactionByHash(hash: Hash) = QueryBox.FindTransactionByHash(
-        FindTransactionByHash(HashOf<SignedTransaction>(hash)),
-    )
+    fun findRoles(predicate: CompoundPredicateOfRole? = null) =
+        QueryBox.FindRoles(
+            QueryWithFilterOfFindRoles(
+                FindRoles(),
+                predicate ?: CompoundPredicateOfRole.And(emptyList()),
+                SelectorTupleOfRole(listOf(RoleProjectionOfSelectorMarker.Atom())),
+            ),
+        )
 
     /**
      * Return all the role IDs that are attached to the given [AccountId]
      */
-    fun findRolesByAccountId(accountId: AccountId) = QueryBox.FindRolesByAccountId(
-        FindRolesByAccountId(accountId),
+    fun findRolesByAccountId(
+        accountId: AccountId,
+        predicate: CompoundPredicateOfRoleId? = null,
+    ) = QueryBox.FindRolesByAccountId(
+        QueryWithFilterOfFindRolesByAccountId(
+            FindRolesByAccountId(accountId),
+            predicate ?: CompoundPredicateOfRoleId.And(emptyList()),
+            SelectorTupleOfRoleId(listOf(RoleIdProjectionOfSelectorMarker.Atom())),
+        ),
     )
 
     /**
-     * Return all roles
+     * Return all currently triggers
      */
-    fun findAllRoles() = QueryBox.FindAllRoles(FindAllRoles())
+    fun findTriggers(predicate: CompoundPredicateOfTrigger? = null) =
+        QueryBox.FindTriggers(
+            QueryWithFilterOfFindTriggers(
+                FindTriggers(),
+                predicate ?: CompoundPredicateOfTrigger.And(emptyList()),
+                SelectorTupleOfTrigger(listOf(TriggerProjectionOfSelectorMarker.Atom())),
+            ),
+        )
 
     /**
-     * Return the role by [RoleId]
+     * Return all active trigger IDs
      */
-    fun findRoleByRoleId(roleId: RoleId) = QueryBox.FindRoleByRoleId(FindRoleByRoleId(roleId))
+    fun findActiveTriggerIds(predicate: CompoundPredicateOfTriggerId? = null) =
+        QueryBox.FindActiveTriggerIds(
+            QueryWithFilterOfFindActiveTriggerIds(
+                FindActiveTriggerIds(),
+                predicate ?: CompoundPredicateOfTriggerId.And(emptyList()),
+                SelectorTupleOfTriggerId(listOf(TriggerIdProjectionOfSelectorMarker.Atom())),
+            ),
+        )
 
     /**
-     * Return all role IDs
+     * Return the full set of transactions
      */
-    fun findAllRoleIds() = QueryBox.FindAllRoleIds(FindAllRoleIds())
-
-    /**
-     * Return the value keyed by the given [Name] in the domain corresponding to the given [DomainId]
-     */
-    fun findDomainKeyValueByIdAndKey(id: DomainId, key: Name) = QueryBox.FindDomainKeyValueByIdAndKey(
-        FindDomainKeyValueByIdAndKey(id, key),
-    )
-
-    /**
-     * Return the value corresponding to the given key [Name] in the metadata of the trigger with the given [TriggerId]
-     */
-    fun findTriggerKeyValueByIdAndKey(id: TriggerId, key: Name) = QueryBox.FindTriggerKeyValueByIdAndKey(
-        FindTriggerKeyValueByIdAndKey(id, key),
-    )
-
-    /**
-     * Return the trigger with the given [TriggerId]
-     */
-    fun findTriggerById(id: TriggerId) = QueryBox.FindTriggerById(FindTriggerById(id))
-
-    /**
-     * Return all currently active triggers, that have not expired at the time of the query
-     */
-    fun findAllActiveTriggerIds() = QueryBox.FindAllActiveTriggerIds(FindAllActiveTriggerIds())
-
-    /**
-     * Return a trigger with the given [AccountId]
-     */
-    fun findTriggersByAuthorityId(id: AccountId) = QueryBox.FindTriggersByAuthorityId(
-        FindTriggersByAuthorityId(id),
-    )
-
-    /**
-     * Return all currently triggers with the given [DomainId]
-     */
-    fun findTriggersByAuthorityDomainId(domainId: DomainId) = QueryBox.FindTriggersByAuthorityDomainId(
-        FindTriggersByAuthorityDomainId(domainId),
-    )
+    fun findTransactions(predicate: CompoundPredicateOfCommittedTransaction? = null) =
+        QueryBox.FindTransactions(
+            QueryWithFilterOfFindTransactions(
+                FindTransactions(),
+                predicate ?: CompoundPredicateOfCommittedTransaction.And(emptyList()),
+                SelectorTupleOfCommittedTransaction(
+                    listOf(
+                        CommittedTransactionProjectionOfSelectorMarker.Atom(),
+                    ),
+                ),
+            ),
+        )
 
     /**
      * Return all blocks
      */
-    fun findAllBlocks() = QueryBox.FindAllBlocks(FindAllBlocks())
+    fun findBlocks(predicate: CompoundPredicateOfSignedBlock? = null) =
+        QueryBox.FindBlocks(
+            QueryWithFilterOfFindBlocks(
+                FindBlocks(),
+                predicate ?: CompoundPredicateOfSignedBlock.And(emptyList()),
+                SelectorTupleOfSignedBlock(listOf(SignedBlockProjectionOfSelectorMarker.Atom())),
+            ),
+        )
 
     /**
-     * Return all block headers
+     * Return current executor data model
      */
-    fun findAllBlockHeaders() = QueryBox.FindAllBlockHeaders(FindAllBlockHeaders())
+    fun findExecutorDataModel() =
+        SingularQueryBox.FindExecutorDataModel(
+            FindExecutorDataModel(),
+        )
 
     /**
-     * Return the block header corresponding to the given [Hash]
+     * Return current parameter values (including custom)
      */
-    fun findBlockHeaderByHash(hash: Hash) = QueryBox.FindBlockHeaderByHash(
-        FindBlockHeaderByHash(HashOf(hash)),
-    )
-
-    /**
-     * Return all transactions
-     */
-    fun findAllTransactions() = QueryBox.FindAllTransactions(FindAllTransactions())
-
-    /**
-     * Return all parameters
-     */
-    fun findAllParameters() = QueryBox.FindAllParameters(FindAllParameters())
+    fun findParameters() =
+        SingularQueryBox.FindParameters(
+            FindParameters(),
+        )
 }

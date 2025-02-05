@@ -10,7 +10,10 @@ import java.math.BigInteger
  * [Compact mode][CompactMode] SCALE writer for Big Integers
  */
 class CompactBigIntWriter : ScaleWriter<BigInteger> {
-    override fun write(writer: ScaleCodecWriter, instance: BigInteger) {
+    override fun write(
+        writer: ScaleCodecWriter,
+        instance: BigInteger,
+    ) {
         val mode = forNumber(instance)
         val data = instance.toByteArray()
         var length = data.size

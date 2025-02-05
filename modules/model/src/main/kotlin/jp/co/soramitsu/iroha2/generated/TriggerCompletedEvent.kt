@@ -20,20 +20,25 @@ public data class TriggerCompletedEvent(
     public val outcome: TriggerCompletedOutcome,
 ) {
     public companion object : ScaleReader<TriggerCompletedEvent>, ScaleWriter<TriggerCompletedEvent> {
-        override fun read(reader: ScaleCodecReader): TriggerCompletedEvent = try {
-            TriggerCompletedEvent(
-                TriggerId.read(reader),
-                TriggerCompletedOutcome.read(reader),
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): TriggerCompletedEvent =
+            try {
+                TriggerCompletedEvent(
+                    TriggerId.read(reader),
+                    TriggerCompletedOutcome.read(reader),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: TriggerCompletedEvent): Unit = try {
-            TriggerId.write(writer, instance.triggerId)
-            TriggerCompletedOutcome.write(writer, instance.outcome)
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: TriggerCompletedEvent,
+        ): Unit =
+            try {
+                TriggerId.write(writer, instance.triggerId)
+                TriggerCompletedOutcome.write(writer, instance.outcome)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

@@ -36,22 +36,24 @@ public sealed class RoleEvent : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.RoleEvent.Created> {
             public const val DISCRIMINANT: Int = 0
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.RoleEvent.Created = try {
-                Created(
-                    Role.read(reader),
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.RoleEvent.Created =
+                try {
+                    Created(
+                        Role.read(reader),
+                    )
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.RoleEvent.Created,
-            ): Unit = try {
-                Role.write(writer, instance.role)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            ): Unit =
+                try {
+                    Role.write(writer, instance.role)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
@@ -68,22 +70,24 @@ public sealed class RoleEvent : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.RoleEvent.Deleted> {
             public const val DISCRIMINANT: Int = 1
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.RoleEvent.Deleted = try {
-                Deleted(
-                    RoleId.read(reader),
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.RoleEvent.Deleted =
+                try {
+                    Deleted(
+                        RoleId.read(reader),
+                    )
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.RoleEvent.Deleted,
-            ): Unit = try {
-                RoleId.write(writer, instance.roleId)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            ): Unit =
+                try {
+                    RoleId.write(writer, instance.roleId)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
@@ -100,22 +104,24 @@ public sealed class RoleEvent : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.RoleEvent.PermissionAdded> {
             public const val DISCRIMINANT: Int = 2
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.RoleEvent.PermissionAdded = try {
-                PermissionAdded(
-                    RolePermissionChanged.read(reader),
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.RoleEvent.PermissionAdded =
+                try {
+                    PermissionAdded(
+                        RolePermissionChanged.read(reader),
+                    )
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.RoleEvent.PermissionAdded,
-            ): Unit = try {
-                RolePermissionChanged.write(writer, instance.rolePermissionChanged)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            ): Unit =
+                try {
+                    RolePermissionChanged.write(writer, instance.rolePermissionChanged)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
@@ -132,44 +138,49 @@ public sealed class RoleEvent : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.RoleEvent.PermissionRemoved> {
             public const val DISCRIMINANT: Int = 3
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.RoleEvent.PermissionRemoved = try {
-                PermissionRemoved(
-                    RolePermissionChanged.read(reader),
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.RoleEvent.PermissionRemoved =
+                try {
+                    PermissionRemoved(
+                        RolePermissionChanged.read(reader),
+                    )
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.RoleEvent.PermissionRemoved,
-            ): Unit = try {
-                RolePermissionChanged.write(writer, instance.rolePermissionChanged)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            ): Unit =
+                try {
+                    RolePermissionChanged.write(writer, instance.rolePermissionChanged)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
     public companion object : ScaleReader<RoleEvent>, ScaleWriter<RoleEvent> {
-        override fun read(reader: ScaleCodecReader): RoleEvent = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
-            0 -> Created.read(reader)
-            1 -> Deleted.read(reader)
-            2 -> PermissionAdded.read(reader)
-            3 -> PermissionRemoved.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+        override fun read(reader: ScaleCodecReader): RoleEvent =
+            when (val discriminant = reader.readUByte()) {
+                0 -> Created.read(reader)
+                1 -> Deleted.read(reader)
+                2 -> PermissionAdded.read(reader)
+                3 -> PermissionRemoved.read(reader)
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: RoleEvent) {
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: RoleEvent,
+        ) {
             writer.directWrite(instance.discriminant())
             when (val discriminant = instance.discriminant()) {
                 0 -> Created.write(writer, instance as Created)
                 1 -> Deleted.write(writer, instance as Deleted)
                 2 -> PermissionAdded.write(writer, instance as PermissionAdded)
                 3 -> PermissionRemoved.write(writer, instance as PermissionRemoved)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

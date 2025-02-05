@@ -16,25 +16,34 @@ import kotlin.Unit
 /**
  * FindParameters
  *
- * Generated from 'FindParameters' regular structure
+ * Generated from 'FindParameters' tuple structure
  */
 public class FindParameters {
     public companion object : ScaleReader<FindParameters>, ScaleWriter<FindParameters> {
-        override fun read(reader: ScaleCodecReader): FindParameters = try {
-            FindParameters()
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): FindParameters =
+            try {
+                FindParameters()
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: FindParameters): Unit = try {
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: FindParameters,
+        ): Unit =
+            try {
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        public fun equals(o1: FindParameters, o2: Any?): Boolean = when (o2) {
-            null -> false
-            else -> o2::class == o1::class
-        }
+        public fun equals(
+            o1: FindParameters,
+            o2: Any?,
+        ): Boolean =
+            when (o2) {
+                null -> false
+                else -> o2::class == o1::class
+            }
 
         override fun hashCode(): Int = ".FindParameters".hashCode()
     }

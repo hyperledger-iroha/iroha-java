@@ -20,18 +20,23 @@ public data class Name(
     public val string: String,
 ) {
     public companion object : ScaleReader<Name>, ScaleWriter<Name> {
-        override fun read(reader: ScaleCodecReader): Name = try {
-            Name(
-                reader.readString(),
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): Name =
+            try {
+                Name(
+                    reader.readString(),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: Name): Unit = try {
-            writer.writeAsList(instance.string.toByteArray(Charsets.UTF_8))
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: Name,
+        ): Unit =
+            try {
+                writer.writeAsList(instance.string.toByteArray(Charsets.UTF_8))
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

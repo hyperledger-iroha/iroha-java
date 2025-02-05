@@ -22,20 +22,25 @@ public data class AssetDefinitionOwnerChanged(
     public companion object :
         ScaleReader<AssetDefinitionOwnerChanged>,
         ScaleWriter<AssetDefinitionOwnerChanged> {
-        override fun read(reader: ScaleCodecReader): AssetDefinitionOwnerChanged = try {
-            AssetDefinitionOwnerChanged(
-                AssetDefinitionId.read(reader),
-                AccountId.read(reader),
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): AssetDefinitionOwnerChanged =
+            try {
+                AssetDefinitionOwnerChanged(
+                    AssetDefinitionId.read(reader),
+                    AccountId.read(reader),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: AssetDefinitionOwnerChanged): Unit = try {
-            AssetDefinitionId.write(writer, instance.assetDefinition)
-            AccountId.write(writer, instance.newOwner)
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: AssetDefinitionOwnerChanged,
+        ): Unit =
+            try {
+                AssetDefinitionId.write(writer, instance.assetDefinition)
+                AccountId.write(writer, instance.newOwner)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

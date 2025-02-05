@@ -20,20 +20,25 @@ public data class ParameterChanged(
     public val newValue: Parameter,
 ) {
     public companion object : ScaleReader<ParameterChanged>, ScaleWriter<ParameterChanged> {
-        override fun read(reader: ScaleCodecReader): ParameterChanged = try {
-            ParameterChanged(
-                Parameter.read(reader),
-                Parameter.read(reader),
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): ParameterChanged =
+            try {
+                ParameterChanged(
+                    Parameter.read(reader),
+                    Parameter.read(reader),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: ParameterChanged): Unit = try {
-            Parameter.write(writer, instance.oldValue)
-            Parameter.write(writer, instance.newValue)
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: ParameterChanged,
+        ): Unit =
+            try {
+                Parameter.write(writer, instance.oldValue)
+                Parameter.write(writer, instance.newValue)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

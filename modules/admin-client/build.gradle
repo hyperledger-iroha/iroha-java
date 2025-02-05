@@ -2,10 +2,10 @@ dependencies {
     api project(":model")
     api project(":client")
 
-    //kotlin support
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVer"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVer"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:$coroutinesVer"
+    implementation "io.ktor:ktor-client-core:$ktorVer"
+    implementation "io.ktor:ktor-client-cio:$ktorVer"
+    implementation "io.ktor:ktor-client-logging:$ktorVer"
 
     testApi project(":test-tools")
+    testImplementation "org.jetbrains.kotlin:kotlin-test-junit5:$kotlinVer"
 }

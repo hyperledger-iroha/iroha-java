@@ -11,13 +11,18 @@ import jp.co.soramitsu.iroha2.codegen.blueprint.StructBlueprint
  * Generator for [StructBlueprint]
  */
 object StructGenerator : AbstractGenerator<StructBlueprint>() {
-
-    override fun implKDoc(blueprint: StructBlueprint, clazz: TypeSpec.Builder) {
+    override fun implKDoc(
+        blueprint: StructBlueprint,
+        clazz: TypeSpec.Builder,
+    ) {
         super.implKDoc(blueprint, clazz)
         clazz.addKdoc("\n\nGenerated from '${blueprint.source.name}' regular structure")
     }
 
-    override fun implFunctions(blueprint: StructBlueprint, clazz: TypeSpec.Builder) {
+    override fun implFunctions(
+        blueprint: StructBlueprint,
+        clazz: TypeSpec.Builder,
+    ) {
         super.implFunctions(blueprint, clazz)
 
         if (blueprint.properties.any { it.typeName.extractName() == ByteArray::class.qualifiedName }) {
@@ -25,8 +30,9 @@ object StructGenerator : AbstractGenerator<StructBlueprint>() {
         }
     }
 
-    private fun hashCodeFun(blueprint: StructBlueprint): FunSpec {
-        return FunSpec.builder("hashCode")
+    private fun hashCodeFun(blueprint: StructBlueprint): FunSpec =
+        FunSpec
+            .builder("hashCode")
             .addModifiers(KModifier.OVERRIDE)
             .returns(Int::class)
             .apply {
@@ -49,10 +55,10 @@ object StructGenerator : AbstractGenerator<StructBlueprint>() {
                     }
                 }
             }.build()
-    }
 
-    private fun equalsFun(blueprint: StructBlueprint): FunSpec {
-        return FunSpec.builder("equals")
+    private fun equalsFun(blueprint: StructBlueprint): FunSpec =
+        FunSpec
+            .builder("equals")
             .addModifiers(KModifier.OVERRIDE)
             .addParameter(ParameterSpec.builder("other", ANY_TYPE.copy(nullable = true)).build())
             .returns(Boolean::class)
@@ -67,5 +73,4 @@ object StructGenerator : AbstractGenerator<StructBlueprint>() {
                 }
                 addStatement("return true")
             }.build()
-    }
 }

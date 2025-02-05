@@ -20,23 +20,30 @@ public data class TransactionEventFilter(
     public val blockHeight: NonZeroOfu64? = null,
     public val status: TransactionStatus? = null,
 ) {
-    public companion object : ScaleReader<TransactionEventFilter>, ScaleWriter<TransactionEventFilter> {
-        override fun read(reader: ScaleCodecReader): TransactionEventFilter = try {
-            TransactionEventFilter(
-                reader.readNullable(HashOf) as HashOf<SignedTransaction>?,
-                reader.readNullable(NonZeroOfu64) as NonZeroOfu64?,
-                reader.readNullable(TransactionStatus) as TransactionStatus?,
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+    public companion object :
+        ScaleReader<TransactionEventFilter>,
+        ScaleWriter<TransactionEventFilter> {
+        override fun read(reader: ScaleCodecReader): TransactionEventFilter =
+            try {
+                TransactionEventFilter(
+                    reader.readNullable(HashOf) as HashOf<SignedTransaction>?,
+                    reader.readNullable(NonZeroOfu64) as NonZeroOfu64?,
+                    reader.readNullable(TransactionStatus) as TransactionStatus?,
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: TransactionEventFilter): Unit = try {
-            writer.writeNullable(HashOf, instance.hash)
-            writer.writeNullable(NonZeroOfu64, instance.blockHeight)
-            writer.writeNullable(TransactionStatus, instance.status)
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: TransactionEventFilter,
+        ): Unit =
+            try {
+                writer.writeNullable(HashOf, instance.hash)
+                writer.writeNullable(NonZeroOfu64, instance.blockHeight)
+                writer.writeNullable(TransactionStatus, instance.status)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

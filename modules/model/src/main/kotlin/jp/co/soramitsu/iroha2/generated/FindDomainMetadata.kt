@@ -20,20 +20,25 @@ public data class FindDomainMetadata(
     public val key: Name,
 ) {
     public companion object : ScaleReader<FindDomainMetadata>, ScaleWriter<FindDomainMetadata> {
-        override fun read(reader: ScaleCodecReader): FindDomainMetadata = try {
-            FindDomainMetadata(
-                DomainId.read(reader),
-                Name.read(reader),
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): FindDomainMetadata =
+            try {
+                FindDomainMetadata(
+                    DomainId.read(reader),
+                    Name.read(reader),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: FindDomainMetadata): Unit = try {
-            DomainId.write(writer, instance.id)
-            Name.write(writer, instance.key)
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: FindDomainMetadata,
+        ): Unit =
+            try {
+                DomainId.write(writer, instance.id)
+                Name.write(writer, instance.key)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

@@ -13,9 +13,8 @@ const val U32_MAX_VALUE = (1L shl 32) - 1
 /**
  * Wrap an [exception][ex] in `ScaleCodecException`
  */
-fun wrapException(ex: Exception): Exception {
-    return when (ex) {
+fun wrapException(ex: Exception): Exception =
+    when (ex) {
         is ScaleCodecException -> ex
         else -> ScaleCodecException(cause = ex)
     }
-}

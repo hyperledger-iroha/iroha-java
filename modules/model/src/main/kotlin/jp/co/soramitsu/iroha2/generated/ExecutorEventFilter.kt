@@ -20,18 +20,23 @@ public data class ExecutorEventFilter(
     public val eventSet: Long,
 ) {
     public companion object : ScaleReader<ExecutorEventFilter>, ScaleWriter<ExecutorEventFilter> {
-        override fun read(reader: ScaleCodecReader): ExecutorEventFilter = try {
-            ExecutorEventFilter(
-                reader.readUint32(),
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): ExecutorEventFilter =
+            try {
+                ExecutorEventFilter(
+                    reader.readUint32(),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: ExecutorEventFilter): Unit = try {
-            writer.writeUint32(instance.eventSet)
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: ExecutorEventFilter,
+        ): Unit =
+            try {
+                writer.writeUint32(instance.eventSet)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

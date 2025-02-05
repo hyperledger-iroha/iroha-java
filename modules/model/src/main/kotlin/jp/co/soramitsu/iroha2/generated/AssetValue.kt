@@ -36,22 +36,26 @@ public sealed class AssetValue : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.AssetValue.Numeric> {
             public const val DISCRIMINANT: Int = 0
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.AssetValue.Numeric = try {
-                Numeric(
-                    jp.co.soramitsu.iroha2.generated.Numeric.read(reader),
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.AssetValue.Numeric =
+                try {
+                    Numeric(
+                        jp.co.soramitsu.iroha2.generated.Numeric
+                            .read(reader),
+                    )
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.AssetValue.Numeric,
-            ): Unit = try {
-                jp.co.soramitsu.iroha2.generated.Numeric.write(writer, instance.numeric)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            ): Unit =
+                try {
+                    jp.co.soramitsu.iroha2.generated.Numeric
+                        .write(writer, instance.numeric)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
@@ -68,40 +72,45 @@ public sealed class AssetValue : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.AssetValue.Store> {
             public const val DISCRIMINANT: Int = 1
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.AssetValue.Store = try {
-                Store(
-                    Metadata.read(reader),
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.AssetValue.Store =
+                try {
+                    Store(
+                        Metadata.read(reader),
+                    )
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.AssetValue.Store,
-            ): Unit = try {
-                Metadata.write(writer, instance.metadata)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            ): Unit =
+                try {
+                    Metadata.write(writer, instance.metadata)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
     public companion object : ScaleReader<AssetValue>, ScaleWriter<AssetValue> {
-        override fun read(reader: ScaleCodecReader): AssetValue = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
-            0 -> Numeric.read(reader)
-            1 -> Store.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+        override fun read(reader: ScaleCodecReader): AssetValue =
+            when (val discriminant = reader.readUByte()) {
+                0 -> Numeric.read(reader)
+                1 -> Store.read(reader)
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: AssetValue) {
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: AssetValue,
+        ) {
             writer.directWrite(instance.discriminant())
             when (val discriminant = instance.discriminant()) {
                 0 -> Numeric.write(writer, instance as Numeric)
                 1 -> Store.write(writer, instance as Store)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }
