@@ -20,20 +20,25 @@ public data class Trigger(
     public val action: Action,
 ) {
     public companion object : ScaleReader<Trigger>, ScaleWriter<Trigger> {
-        override fun read(reader: ScaleCodecReader): Trigger = try {
-            Trigger(
-                TriggerId.read(reader),
-                Action.read(reader),
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): Trigger =
+            try {
+                Trigger(
+                    TriggerId.read(reader),
+                    Action.read(reader),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: Trigger): Unit = try {
-            TriggerId.write(writer, instance.id)
-            Action.write(writer, instance.action)
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: Trigger,
+        ): Unit =
+            try {
+                TriggerId.write(writer, instance.id)
+                Action.write(writer, instance.action)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

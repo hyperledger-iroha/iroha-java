@@ -22,20 +22,25 @@ public data class ExecuteTriggerEventFilter(
     public companion object :
         ScaleReader<ExecuteTriggerEventFilter>,
         ScaleWriter<ExecuteTriggerEventFilter> {
-        override fun read(reader: ScaleCodecReader): ExecuteTriggerEventFilter = try {
-            ExecuteTriggerEventFilter(
-                reader.readNullable(TriggerId) as TriggerId?,
-                reader.readNullable(AccountId) as AccountId?,
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): ExecuteTriggerEventFilter =
+            try {
+                ExecuteTriggerEventFilter(
+                    reader.readNullable(TriggerId) as TriggerId?,
+                    reader.readNullable(AccountId) as AccountId?,
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: ExecuteTriggerEventFilter): Unit = try {
-            writer.writeNullable(TriggerId, instance.triggerId)
-            writer.writeNullable(AccountId, instance.authority)
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: ExecuteTriggerEventFilter,
+        ): Unit =
+            try {
+                writer.writeNullable(TriggerId, instance.triggerId)
+                writer.writeNullable(AccountId, instance.authority)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

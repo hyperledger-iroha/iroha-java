@@ -8,7 +8,6 @@ import jp.co.soramitsu.iroha2.codec.ScaleCodecWriter
 import jp.co.soramitsu.iroha2.codec.ScaleReader
 import jp.co.soramitsu.iroha2.codec.ScaleWriter
 import jp.co.soramitsu.iroha2.wrapException
-import kotlin.String
 import kotlin.Unit
 
 /**
@@ -19,27 +18,32 @@ import kotlin.Unit
 public data class MetadataChangedOfAccountId(
     public val target: AccountId,
     public val key: Name,
-    public val `value`: String,
+    public val `value`: Json,
 ) {
     public companion object :
         ScaleReader<MetadataChangedOfAccountId>,
         ScaleWriter<MetadataChangedOfAccountId> {
-        override fun read(reader: ScaleCodecReader): MetadataChangedOfAccountId = try {
-            MetadataChangedOfAccountId(
-                AccountId.read(reader),
-                Name.read(reader),
-                reader.readString(),
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): MetadataChangedOfAccountId =
+            try {
+                MetadataChangedOfAccountId(
+                    AccountId.read(reader),
+                    Name.read(reader),
+                    Json.read(reader),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: MetadataChangedOfAccountId): Unit = try {
-            AccountId.write(writer, instance.target)
-            Name.write(writer, instance.key)
-            writer.writeAsList(instance.`value`.toByteArray(Charsets.UTF_8))
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: MetadataChangedOfAccountId,
+        ): Unit =
+            try {
+                AccountId.write(writer, instance.target)
+                Name.write(writer, instance.key)
+                Json.write(writer, instance.`value`)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

@@ -23,20 +23,25 @@ public data class AssetDefinitionEventFilter(
     public companion object :
         ScaleReader<AssetDefinitionEventFilter>,
         ScaleWriter<AssetDefinitionEventFilter> {
-        override fun read(reader: ScaleCodecReader): AssetDefinitionEventFilter = try {
-            AssetDefinitionEventFilter(
-                reader.readNullable(AssetDefinitionId) as AssetDefinitionId?,
-                reader.readUint32(),
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): AssetDefinitionEventFilter =
+            try {
+                AssetDefinitionEventFilter(
+                    reader.readNullable(AssetDefinitionId) as AssetDefinitionId?,
+                    reader.readUint32(),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: AssetDefinitionEventFilter): Unit = try {
-            writer.writeNullable(AssetDefinitionId, instance.idMatcher)
-            writer.writeUint32(instance.eventSet)
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: AssetDefinitionEventFilter,
+        ): Unit =
+            try {
+                writer.writeNullable(AssetDefinitionId, instance.idMatcher)
+                writer.writeUint32(instance.eventSet)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

@@ -23,20 +23,25 @@ public data class InstructionExecutionFail(
     public companion object :
         ScaleReader<InstructionExecutionFail>,
         ScaleWriter<InstructionExecutionFail> {
-        override fun read(reader: ScaleCodecReader): InstructionExecutionFail = try {
-            InstructionExecutionFail(
-                InstructionBox.read(reader),
-                reader.readString(),
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): InstructionExecutionFail =
+            try {
+                InstructionExecutionFail(
+                    InstructionBox.read(reader),
+                    reader.readString(),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: InstructionExecutionFail): Unit = try {
-            InstructionBox.write(writer, instance.instruction)
-            writer.writeAsList(instance.reason.toByteArray(Charsets.UTF_8))
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: InstructionExecutionFail,
+        ): Unit =
+            try {
+                InstructionBox.write(writer, instance.instruction)
+                writer.writeAsList(instance.reason.toByteArray(Charsets.UTF_8))
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

@@ -21,22 +21,27 @@ public data class QueryParams(
     public val fetchSize: FetchSize,
 ) {
     public companion object : ScaleReader<QueryParams>, ScaleWriter<QueryParams> {
-        override fun read(reader: ScaleCodecReader): QueryParams = try {
-            QueryParams(
-                Pagination.read(reader),
-                Sorting.read(reader),
-                FetchSize.read(reader),
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): QueryParams =
+            try {
+                QueryParams(
+                    Pagination.read(reader),
+                    Sorting.read(reader),
+                    FetchSize.read(reader),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: QueryParams): Unit = try {
-            Pagination.write(writer, instance.pagination)
-            Sorting.write(writer, instance.sorting)
-            FetchSize.write(writer, instance.fetchSize)
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: QueryParams,
+        ): Unit =
+            try {
+                Pagination.write(writer, instance.pagination)
+                Sorting.write(writer, instance.sorting)
+                FetchSize.write(writer, instance.fetchSize)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

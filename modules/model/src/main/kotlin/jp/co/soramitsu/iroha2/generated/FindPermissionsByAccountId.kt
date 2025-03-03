@@ -21,18 +21,23 @@ public data class FindPermissionsByAccountId(
     public companion object :
         ScaleReader<FindPermissionsByAccountId>,
         ScaleWriter<FindPermissionsByAccountId> {
-        override fun read(reader: ScaleCodecReader): FindPermissionsByAccountId = try {
-            FindPermissionsByAccountId(
-                AccountId.read(reader),
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): FindPermissionsByAccountId =
+            try {
+                FindPermissionsByAccountId(
+                    AccountId.read(reader),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: FindPermissionsByAccountId): Unit = try {
-            AccountId.write(writer, instance.id)
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: FindPermissionsByAccountId,
+        ): Unit =
+            try {
+                AccountId.write(writer, instance.id)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

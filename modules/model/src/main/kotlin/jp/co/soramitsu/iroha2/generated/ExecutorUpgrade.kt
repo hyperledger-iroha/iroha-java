@@ -19,18 +19,23 @@ public data class ExecutorUpgrade(
     public val newDataModel: ExecutorDataModel,
 ) {
     public companion object : ScaleReader<ExecutorUpgrade>, ScaleWriter<ExecutorUpgrade> {
-        override fun read(reader: ScaleCodecReader): ExecutorUpgrade = try {
-            ExecutorUpgrade(
-                ExecutorDataModel.read(reader),
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): ExecutorUpgrade =
+            try {
+                ExecutorUpgrade(
+                    ExecutorDataModel.read(reader),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: ExecutorUpgrade): Unit = try {
-            ExecutorDataModel.write(writer, instance.newDataModel)
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: ExecutorUpgrade,
+        ): Unit =
+            try {
+                ExecutorDataModel.write(writer, instance.newDataModel)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

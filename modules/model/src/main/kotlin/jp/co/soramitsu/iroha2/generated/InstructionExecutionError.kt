@@ -37,22 +37,24 @@ public sealed class InstructionExecutionError : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.InstructionExecutionError.Evaluate> {
             public const val DISCRIMINANT: Int = 0
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.InstructionExecutionError.Evaluate = try {
-                Evaluate(
-                    InstructionEvaluationError.read(reader),
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.InstructionExecutionError.Evaluate =
+                try {
+                    Evaluate(
+                        InstructionEvaluationError.read(reader),
+                    )
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.InstructionExecutionError.Evaluate,
-            ): Unit = try {
-                InstructionEvaluationError.write(writer, instance.instructionEvaluationError)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            ): Unit =
+                try {
+                    InstructionEvaluationError.write(writer, instance.instructionEvaluationError)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
@@ -69,22 +71,24 @@ public sealed class InstructionExecutionError : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.InstructionExecutionError.Query> {
             public const val DISCRIMINANT: Int = 1
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.InstructionExecutionError.Query = try {
-                Query(
-                    QueryExecutionFail.read(reader),
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.InstructionExecutionError.Query =
+                try {
+                    Query(
+                        QueryExecutionFail.read(reader),
+                    )
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.InstructionExecutionError.Query,
-            ): Unit = try {
-                QueryExecutionFail.write(writer, instance.queryExecutionFail)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            ): Unit =
+                try {
+                    QueryExecutionFail.write(writer, instance.queryExecutionFail)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
@@ -101,13 +105,14 @@ public sealed class InstructionExecutionError : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.InstructionExecutionError.Conversion> {
             public const val DISCRIMINANT: Int = 2
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.InstructionExecutionError.Conversion = try {
-                Conversion(
-                    reader.readString(),
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.InstructionExecutionError.Conversion =
+                try {
+                    Conversion(
+                        reader.readString(),
+                    )
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             override fun write(
                 writer: ScaleCodecWriter,
@@ -134,22 +139,24 @@ public sealed class InstructionExecutionError : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.InstructionExecutionError.Find> {
             public const val DISCRIMINANT: Int = 3
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.InstructionExecutionError.Find = try {
-                Find(
-                    FindError.read(reader),
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.InstructionExecutionError.Find =
+                try {
+                    Find(
+                        FindError.read(reader),
+                    )
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.InstructionExecutionError.Find,
-            ): Unit = try {
-                FindError.write(writer, instance.findError)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            ): Unit =
+                try {
+                    FindError.write(writer, instance.findError)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
@@ -166,13 +173,14 @@ public sealed class InstructionExecutionError : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.InstructionExecutionError.Repetition> {
             public const val DISCRIMINANT: Int = 4
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.InstructionExecutionError.Repetition = try {
-                Repetition(
-                    RepetitionError.read(reader),
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.InstructionExecutionError.Repetition =
+                try {
+                    Repetition(
+                        RepetitionError.read(reader),
+                    )
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             override fun write(
                 writer: ScaleCodecWriter,
@@ -199,13 +207,14 @@ public sealed class InstructionExecutionError : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.InstructionExecutionError.Mintability> {
             public const val DISCRIMINANT: Int = 5
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.InstructionExecutionError.Mintability = try {
-                Mintability(
-                    MintabilityError.read(reader),
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.InstructionExecutionError.Mintability =
+                try {
+                    Mintability(
+                        MintabilityError.read(reader),
+                    )
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             override fun write(
                 writer: ScaleCodecWriter,
@@ -232,22 +241,24 @@ public sealed class InstructionExecutionError : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.InstructionExecutionError.Math> {
             public const val DISCRIMINANT: Int = 6
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.InstructionExecutionError.Math = try {
-                Math(
-                    MathError.read(reader),
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.InstructionExecutionError.Math =
+                try {
+                    Math(
+                        MathError.read(reader),
+                    )
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.InstructionExecutionError.Math,
-            ): Unit = try {
-                MathError.write(writer, instance.mathError)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            ): Unit =
+                try {
+                    MathError.write(writer, instance.mathError)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
@@ -264,22 +275,24 @@ public sealed class InstructionExecutionError : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.InstructionExecutionError.InvalidParameter> {
             public const val DISCRIMINANT: Int = 7
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.InstructionExecutionError.InvalidParameter = try {
-                InvalidParameter(
-                    InvalidParameterError.read(reader),
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.InstructionExecutionError.InvalidParameter =
+                try {
+                    InvalidParameter(
+                        InvalidParameterError.read(reader),
+                    )
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.InstructionExecutionError.InvalidParameter,
-            ): Unit = try {
-                InvalidParameterError.write(writer, instance.invalidParameterError)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            ): Unit =
+                try {
+                    InvalidParameterError.write(writer, instance.invalidParameterError)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
@@ -296,44 +309,48 @@ public sealed class InstructionExecutionError : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.InstructionExecutionError.InvariantViolation> {
             public const val DISCRIMINANT: Int = 8
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.InstructionExecutionError.InvariantViolation = try {
-                InvariantViolation(
-                    reader.readString(),
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.InstructionExecutionError.InvariantViolation =
+                try {
+                    InvariantViolation(
+                        reader.readString(),
+                    )
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.InstructionExecutionError.InvariantViolation,
-            ): Unit = try {
-                writer.writeAsList(instance.string.toByteArray(Charsets.UTF_8))
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            ): Unit =
+                try {
+                    writer.writeAsList(instance.string.toByteArray(Charsets.UTF_8))
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
     public companion object :
         ScaleReader<InstructionExecutionError>,
         ScaleWriter<InstructionExecutionError> {
-        override fun read(reader: ScaleCodecReader): InstructionExecutionError = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
-            0 -> Evaluate.read(reader)
-            1 -> Query.read(reader)
-            2 -> Conversion.read(reader)
-            3 -> Find.read(reader)
-            4 -> Repetition.read(reader)
-            5 -> Mintability.read(reader)
-            6 -> Math.read(reader)
-            7 -> InvalidParameter.read(reader)
-            8 -> InvariantViolation.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+        override fun read(reader: ScaleCodecReader): InstructionExecutionError =
+            when (val discriminant = reader.readUByte()) {
+                0 -> Evaluate.read(reader)
+                1 -> Query.read(reader)
+                2 -> Conversion.read(reader)
+                3 -> Find.read(reader)
+                4 -> Repetition.read(reader)
+                5 -> Mintability.read(reader)
+                6 -> Math.read(reader)
+                7 -> InvalidParameter.read(reader)
+                8 -> InvariantViolation.read(reader)
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: InstructionExecutionError) {
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: InstructionExecutionError,
+        ) {
             writer.directWrite(instance.discriminant())
             when (val discriminant = instance.discriminant()) {
                 0 -> Evaluate.write(writer, instance as Evaluate)
@@ -345,7 +362,8 @@ public sealed class InstructionExecutionError : ModelEnum {
                 6 -> Math.write(writer, instance as Math)
                 7 -> InvalidParameter.write(writer, instance as InvalidParameter)
                 8 -> InvariantViolation.write(writer, instance as InvariantViolation)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

@@ -1,59 +1,35 @@
 {
   "chain": "00000000-0000-0000-0000-000000000000",
-  "executor": "./executor.wasm",
-  "parameters": [
-    {
-      "Sumeragi": {
-        "BlockTimeMs": 2000
-      }
+  "executor": "executor.wasm",
+  "parameters": {
+    "sumeragi": {
+      "block_time_ms": 2000,
+      "commit_time_ms": 4000,
+      "max_clock_drift_ms": 1000
     },
-    {
-      "Sumeragi": {
-        "CommitTimeMs": 4000
-      }
+    "block": {
+      "max_transactions": 512
     },
-    {
-      "Block": {
-        "MaxTransactions": 512
-      }
+    "transaction": {
+      "max_instructions": 4096,
+      "smart_contract_size": 4194304
     },
-    {
-      "Transaction": {
-        "MaxInstructions": 4096
-      }
+    "executor": {
+      "fuel": 55000000,
+      "memory": 55000000
     },
-    {
-      "Transaction": {
-        "SmartContractSize": 4194304
-      }
+    "smart_contract": {
+      "fuel": 55000000,
+      "memory": 55000000
     },
-    {
-      "Executor": {
-        "Fuel": 5500000000
-      }
-    },
-    {
-      "Executor": {
-        "Memory": 550000000
-      }
-    },
-    {
-      "SmartContract": {
-        "Fuel": 5500000000
-      }
-    },
-    {
-      "SmartContract": {
-        "Memory": 550000000
-      }
-    }
-  ],
+    "custom": {}
+  },
   "instructions": [
     {
       "Register": {
         "Domain": {
           "id": "wonderland",
-          "logo": null,
+          "logo":null,
           "metadata": {
             "key": "value"
           }
@@ -152,7 +128,7 @@
           "id": "rose#wonderland",
           "type": "Numeric",
           "mintable": "Infinitely",
-          "logo": null,
+          "logo":null,
           "metadata": {}
         }
       }
@@ -161,7 +137,7 @@
       "Register": {
         "Domain": {
           "id": "garden_of_live_flowers",
-          "logo": null,
+          "logo":null,
           "metadata": {}
         }
       }
@@ -180,7 +156,7 @@
           "id": "cabbage#garden_of_live_flowers",
           "type": "Numeric",
           "mintable": "Infinitely",
-          "logo": null,
+          "logo":null,
           "metadata": {}
         }
       }
@@ -236,18 +212,13 @@
           "id": "ALICE_METADATA_ACCESS",
           "permissions": [
             {
-              "name": "CanRemoveKeyValueInAccount",
-              "payload": {
-                "account": "ed0120CE7FA46C9DCE7EA4B125E2E36BDB63EA33073E7590AC92816AE1E861B7048B03@wonderland"
-              }
-            },
-            {
-              "name": "CanSetKeyValueInAccount",
+              "name": "CanModifyAccountMetadata",
               "payload": {
                 "account": "ed0120CE7FA46C9DCE7EA4B125E2E36BDB63EA33073E7590AC92816AE1E861B7048B03@wonderland"
               }
             }
-          ]
+          ],
+          "grant_to": "ed012004FF5B81046DDCCF19E2E451C45DFB6F53759D4EB30FA2EFA807284D1CC33016@wonderland"
         }
       }
     },
@@ -285,5 +256,7 @@
       }
     }
   ],
+  "wasm_dir": "libs",
+  "wasm_triggers": [],
   "topology": []
 }

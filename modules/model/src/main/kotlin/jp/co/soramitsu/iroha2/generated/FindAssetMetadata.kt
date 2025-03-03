@@ -20,20 +20,25 @@ public data class FindAssetMetadata(
     public val key: Name,
 ) {
     public companion object : ScaleReader<FindAssetMetadata>, ScaleWriter<FindAssetMetadata> {
-        override fun read(reader: ScaleCodecReader): FindAssetMetadata = try {
-            FindAssetMetadata(
-                AssetId.read(reader),
-                Name.read(reader),
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): FindAssetMetadata =
+            try {
+                FindAssetMetadata(
+                    AssetId.read(reader),
+                    Name.read(reader),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: FindAssetMetadata): Unit = try {
-            AssetId.write(writer, instance.id)
-            Name.write(writer, instance.key)
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: FindAssetMetadata,
+        ): Unit =
+            try {
+                AssetId.write(writer, instance.id)
+                Name.write(writer, instance.key)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

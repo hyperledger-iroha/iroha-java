@@ -22,24 +22,29 @@ public data class Domain(
     public val ownedBy: AccountId,
 ) {
     public companion object : ScaleReader<Domain>, ScaleWriter<Domain> {
-        override fun read(reader: ScaleCodecReader): Domain = try {
-            Domain(
-                DomainId.read(reader),
-                reader.readNullable(IpfsPath) as IpfsPath?,
-                Metadata.read(reader),
-                AccountId.read(reader),
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): Domain =
+            try {
+                Domain(
+                    DomainId.read(reader),
+                    reader.readNullable(IpfsPath) as IpfsPath?,
+                    Metadata.read(reader),
+                    AccountId.read(reader),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: Domain): Unit = try {
-            DomainId.write(writer, instance.id)
-            writer.writeNullable(IpfsPath, instance.logo)
-            Metadata.write(writer, instance.metadata)
-            AccountId.write(writer, instance.ownedBy)
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: Domain,
+        ): Unit =
+            try {
+                DomainId.write(writer, instance.id)
+                writer.writeNullable(IpfsPath, instance.logo)
+                Metadata.write(writer, instance.metadata)
+                AccountId.write(writer, instance.ownedBy)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

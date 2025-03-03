@@ -8,4 +8,6 @@ import java.lang.annotation.Inherited
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FUNCTION, AnnotationTarget.CLASS)
 @LabelAnnotation(name = "sdk")
-annotation class Sdk(val value: String)
+annotation class Sdk(
+    val value: String,
+)

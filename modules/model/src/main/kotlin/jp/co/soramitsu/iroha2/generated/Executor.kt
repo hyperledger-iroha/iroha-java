@@ -19,18 +19,23 @@ public data class Executor(
     public val wasm: WasmSmartContract,
 ) {
     public companion object : ScaleReader<Executor>, ScaleWriter<Executor> {
-        override fun read(reader: ScaleCodecReader): Executor = try {
-            Executor(
-                WasmSmartContract.read(reader),
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): Executor =
+            try {
+                Executor(
+                    WasmSmartContract.read(reader),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: Executor): Unit = try {
-            WasmSmartContract.write(writer, instance.wasm)
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: Executor,
+        ): Unit =
+            try {
+                WasmSmartContract.write(writer, instance.wasm)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

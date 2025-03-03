@@ -16,25 +16,34 @@ import kotlin.Unit
 /**
  * FindRoles
  *
- * Generated from 'FindRoles' regular structure
+ * Generated from 'FindRoles' tuple structure
  */
 public class FindRoles {
     public companion object : ScaleReader<FindRoles>, ScaleWriter<FindRoles> {
-        override fun read(reader: ScaleCodecReader): FindRoles = try {
-            FindRoles()
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): FindRoles =
+            try {
+                FindRoles()
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: FindRoles): Unit = try {
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: FindRoles,
+        ): Unit =
+            try {
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        public fun equals(o1: FindRoles, o2: Any?): Boolean = when (o2) {
-            null -> false
-            else -> o2::class == o1::class
-        }
+        public fun equals(
+            o1: FindRoles,
+            o2: Any?,
+        ): Boolean =
+            when (o2) {
+                null -> false
+                else -> o2::class == o1::class
+            }
 
         override fun hashCode(): Int = ".FindRoles".hashCode()
     }

@@ -7,16 +7,17 @@ import java.util.StringTokenizer
 /**
  * Blueprint for [StructType]
  */
-class StructBlueprint(type: StructType) : TypeBasedBlueprint<StructType>(type) {
-    override fun resolveProperties(type: StructType): List<Property> {
-        return type.mapping.map { (name, ty) ->
+class StructBlueprint(
+    type: StructType,
+) : TypeBasedBlueprint<StructType>(type) {
+    override fun resolveProperties(type: StructType): List<Property> =
+        type.mapping.map { (name, ty) ->
             Property(
                 convertToCamelCase(name),
                 resolveKotlinType(ty.requireValue()),
                 ty.requireValue(),
             )
         }
-    }
 
     /**
      * Create property name by converting from snake case to camel case

@@ -19,18 +19,23 @@ public data class RoleId(
     public val name: Name,
 ) {
     public companion object : ScaleReader<RoleId>, ScaleWriter<RoleId> {
-        override fun read(reader: ScaleCodecReader): RoleId = try {
-            RoleId(
-                Name.read(reader),
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): RoleId =
+            try {
+                RoleId(
+                    Name.read(reader),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: RoleId): Unit = try {
-            Name.write(writer, instance.name)
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: RoleId,
+        ): Unit =
+            try {
+                Name.write(writer, instance.name)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

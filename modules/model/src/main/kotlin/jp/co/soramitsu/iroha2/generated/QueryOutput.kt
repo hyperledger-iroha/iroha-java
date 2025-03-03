@@ -17,27 +17,32 @@ import kotlin.Unit
  * Generated from 'QueryOutput' regular structure
  */
 public data class QueryOutput(
-    public val batch: QueryOutputBatchBox,
+    public val batch: QueryOutputBatchBoxTuple,
     public val remainingItems: BigInteger,
     public val continueCursor: ForwardCursor? = null,
 ) {
     public companion object : ScaleReader<QueryOutput>, ScaleWriter<QueryOutput> {
-        override fun read(reader: ScaleCodecReader): QueryOutput = try {
-            QueryOutput(
-                QueryOutputBatchBox.read(reader),
-                reader.readUint64(),
-                reader.readNullable(ForwardCursor) as ForwardCursor?,
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): QueryOutput =
+            try {
+                QueryOutput(
+                    QueryOutputBatchBoxTuple.read(reader),
+                    reader.readUint64(),
+                    reader.readNullable(ForwardCursor) as ForwardCursor?,
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: QueryOutput): Unit = try {
-            QueryOutputBatchBox.write(writer, instance.batch)
-            writer.writeUint64(instance.remainingItems)
-            writer.writeNullable(ForwardCursor, instance.continueCursor)
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: QueryOutput,
+        ): Unit =
+            try {
+                QueryOutputBatchBoxTuple.write(writer, instance.batch)
+                writer.writeUint64(instance.remainingItems)
+                writer.writeNullable(ForwardCursor, instance.continueCursor)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

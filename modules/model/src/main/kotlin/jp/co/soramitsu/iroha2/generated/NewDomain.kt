@@ -21,22 +21,27 @@ public data class NewDomain(
     public val metadata: Metadata,
 ) {
     public companion object : ScaleReader<NewDomain>, ScaleWriter<NewDomain> {
-        override fun read(reader: ScaleCodecReader): NewDomain = try {
-            NewDomain(
-                DomainId.read(reader),
-                reader.readNullable(IpfsPath) as IpfsPath?,
-                Metadata.read(reader),
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): NewDomain =
+            try {
+                NewDomain(
+                    DomainId.read(reader),
+                    reader.readNullable(IpfsPath) as IpfsPath?,
+                    Metadata.read(reader),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: NewDomain): Unit = try {
-            DomainId.write(writer, instance.id)
-            writer.writeNullable(IpfsPath, instance.logo)
-            Metadata.write(writer, instance.metadata)
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: NewDomain,
+        ): Unit =
+            try {
+                DomainId.write(writer, instance.id)
+                writer.writeNullable(IpfsPath, instance.logo)
+                Metadata.write(writer, instance.metadata)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

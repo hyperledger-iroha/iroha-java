@@ -16,25 +16,34 @@ import kotlin.Unit
 /**
  * FindActiveTriggerIds
  *
- * Generated from 'FindActiveTriggerIds' regular structure
+ * Generated from 'FindActiveTriggerIds' tuple structure
  */
 public class FindActiveTriggerIds {
     public companion object : ScaleReader<FindActiveTriggerIds>, ScaleWriter<FindActiveTriggerIds> {
-        override fun read(reader: ScaleCodecReader): FindActiveTriggerIds = try {
-            FindActiveTriggerIds()
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): FindActiveTriggerIds =
+            try {
+                FindActiveTriggerIds()
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: FindActiveTriggerIds): Unit = try {
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: FindActiveTriggerIds,
+        ): Unit =
+            try {
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        public fun equals(o1: FindActiveTriggerIds, o2: Any?): Boolean = when (o2) {
-            null -> false
-            else -> o2::class == o1::class
-        }
+        public fun equals(
+            o1: FindActiveTriggerIds,
+            o2: Any?,
+        ): Boolean =
+            when (o2) {
+                null -> false
+                else -> o2::class == o1::class
+            }
 
         override fun hashCode(): Int = ".FindActiveTriggerIds".hashCode()
     }

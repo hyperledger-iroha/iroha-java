@@ -7,8 +7,9 @@ import jp.co.soramitsu.iroha2.codec.UnionValue
 /**
  * SCALE reader for [UnionValue]
  */
-class UnionReader<T>(private val mapping: List<ScaleReader<out T>>) : ScaleReader<UnionValue<T>> {
-
+class UnionReader<T>(
+    private val mapping: List<ScaleReader<out T>>,
+) : ScaleReader<UnionValue<T>> {
     constructor(vararg mapping: ScaleReader<out T>) : this(listOf<ScaleReader<out T>>(*mapping))
 
     override fun read(reader: ScaleCodecReader): UnionValue<T> {

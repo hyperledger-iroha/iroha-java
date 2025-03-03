@@ -6,7 +6,9 @@ import jp.co.soramitsu.iroha2.codec.ScaleReader
 /**
  * SCALE codec reader for a list of values encoded as <T>type</T>
  */
-class ListReader<T>(private val scaleReader: ScaleReader<T>) : ScaleReader<List<T>> {
+class ListReader<T>(
+    private val scaleReader: ScaleReader<T>,
+) : ScaleReader<List<T>> {
     override fun read(reader: ScaleCodecReader): List<T> {
         val size = reader.readCompactInt()
         val result: MutableList<T> = ArrayList(size)

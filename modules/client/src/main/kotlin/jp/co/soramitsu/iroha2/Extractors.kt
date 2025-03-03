@@ -3,20 +3,16 @@ package jp.co.soramitsu.iroha2
 import jp.co.soramitsu.iroha2.generated.Account
 import jp.co.soramitsu.iroha2.generated.Asset
 import jp.co.soramitsu.iroha2.generated.AssetDefinition
-import jp.co.soramitsu.iroha2.generated.BatchedResponse
 import jp.co.soramitsu.iroha2.generated.BlockHeader
+import jp.co.soramitsu.iroha2.generated.CommittedTransaction
 import jp.co.soramitsu.iroha2.generated.Domain
-import jp.co.soramitsu.iroha2.generated.ExecutorDataModel
-import jp.co.soramitsu.iroha2.generated.IdBox
-import jp.co.soramitsu.iroha2.generated.IdentifiableBox
-import jp.co.soramitsu.iroha2.generated.Numeric
-import jp.co.soramitsu.iroha2.generated.Peer
+import jp.co.soramitsu.iroha2.generated.PeerId
 import jp.co.soramitsu.iroha2.generated.Permission
-import jp.co.soramitsu.iroha2.generated.QueryOutputBox
+import jp.co.soramitsu.iroha2.generated.QueryOutputBatchBox
+import jp.co.soramitsu.iroha2.generated.QueryResponse
 import jp.co.soramitsu.iroha2.generated.Role
 import jp.co.soramitsu.iroha2.generated.RoleId
 import jp.co.soramitsu.iroha2.generated.SignedBlock
-import jp.co.soramitsu.iroha2.generated.TransactionQueryOutput
 import jp.co.soramitsu.iroha2.generated.Trigger
 import jp.co.soramitsu.iroha2.generated.TriggerId
 
@@ -24,301 +20,275 @@ import jp.co.soramitsu.iroha2.generated.TriggerId
  * Extractors are used by [QueryBuilder] to extract data from query results
  */
 interface ResultExtractor<T> {
-    fun extract(result: BatchedResponse<QueryOutputBox>): T
+    fun extract(result: QueryResponse): T
 }
 
 /**
- * @return the query result as it is
- */
-object AsIs : ResultExtractor<BatchedResponse<QueryOutputBox>> {
-    override fun extract(result: BatchedResponse<QueryOutputBox>): BatchedResponse<QueryOutputBox> = result
-}
-
-/**
- * Extract an asset from a query [result]
- */
-object AssetExtractor : ResultExtractor<Asset> {
-    override fun extract(result: BatchedResponse<QueryOutputBox>): Asset {
-        return extractIdentifiable(result.cast<BatchedResponse.V1>().batchedResponseV1.batch, IdentifiableBox.Asset::asset)
-    }
-}
-
-/**
- * Extract an asset definition from a query [result]
- */
-object AssetDefinitionExtractor : ResultExtractor<AssetDefinition> {
-    override fun extract(result: BatchedResponse<QueryOutputBox>): AssetDefinition {
-        return extractIdentifiable(result.cast<BatchedResponse.V1>().batchedResponseV1.batch, IdentifiableBox.AssetDefinition::assetDefinition)
-    }
-}
-
-/**
- * Extract an account from a query [result]
- */
-object AccountExtractor : ResultExtractor<Account> {
-    override fun extract(result: BatchedResponse<QueryOutputBox>): Account {
-        return extractIdentifiable(result.cast<BatchedResponse.V1>().batchedResponseV1.batch, IdentifiableBox.Account::account)
-    }
-}
-
-/**
- * Extract a list of accounts from a query [result]
+ * Extract a list of accounts from a [QueryResponse]
  */
 object AccountsExtractor : ResultExtractor<List<Account>> {
-    override fun extract(result: BatchedResponse<QueryOutputBox>): List<Account> {
-        return extractVec(result.cast<BatchedResponse.V1>().batchedResponseV1.batch) {
-            extractIdentifiable(it, IdentifiableBox.Account::account)
-        }
-    }
+    override fun extract(result: QueryResponse): List<Account> =
+        extract<Account>(
+            result
+                .cast<QueryResponse.Iterable>()
+                .queryOutput.batch.tuple
+                .takeIf { it.size == 1 }!!
+                .first(),
+        )
 }
 
 /**
- * Extract a numeric from a query
+ * Extract an account from a [QueryResponse]
  */
-object NumericExtractor : ResultExtractor<Numeric> {
-    override fun extract(result: BatchedResponse<QueryOutputBox>): Numeric {
-        return result.cast<BatchedResponse.V1>().batchedResponseV1.batch.cast<QueryOutputBox.Numeric>().numeric
-    }
+object AccountExtractor : ResultExtractor<Account> {
+    override fun extract(result: QueryResponse): Account = AccountsExtractor.extract(result).first()
 }
 
 /**
- * Extract a list of assets from a query [result]
+ * Extract an account from a [QueryResponse]
+ */
+object AccountOrNullExtractor : ResultExtractor<Account?> {
+    override fun extract(result: QueryResponse): Account? = AccountsExtractor.extract(result).firstOrNull()
+}
+
+/**
+ * Extract a list of assets from a [QueryResponse]
  */
 object AssetsExtractor : ResultExtractor<List<Asset>> {
-    override fun extract(result: BatchedResponse<QueryOutputBox>): List<Asset> {
-        return extractVec(result.cast<BatchedResponse.V1>().batchedResponseV1.batch) {
-            extractIdentifiable(it, IdentifiableBox.Asset::asset)
-        }
-    }
+    override fun extract(result: QueryResponse): List<Asset> =
+        extract(
+            result
+                .cast<QueryResponse.Iterable>()
+                .queryOutput.batch.tuple
+                .takeIf { it.size == 1 }!!
+                .first(),
+        )
 }
 
 /**
- * Extract a list of asset definitions from a query [result]
+ * Extract an asset from a [QueryResponse]
+ */
+object AssetExtractor : ResultExtractor<Asset> {
+    override fun extract(result: QueryResponse): Asset = AssetsExtractor.extract(result).first()
+}
+
+/**
+ * Extract an asset from a [QueryResponse]
+ */
+object AssetOrNullExtractor : ResultExtractor<Asset?> {
+    override fun extract(result: QueryResponse): Asset? = AssetsExtractor.extract(result).firstOrNull()
+}
+
+/**
+ * Extract a list of asset definitions from a [QueryResponse]
  */
 object AssetDefinitionsExtractor : ResultExtractor<List<AssetDefinition>> {
-    override fun extract(result: BatchedResponse<QueryOutputBox>): List<AssetDefinition> {
-        return extractVec(result.cast<BatchedResponse.V1>().batchedResponseV1.batch) {
-            extractIdentifiable(it, IdentifiableBox.AssetDefinition::assetDefinition)
-        }
-    }
+    override fun extract(result: QueryResponse): List<AssetDefinition> =
+        extract(
+            result
+                .cast<QueryResponse.Iterable>()
+                .queryOutput.batch.tuple
+                .takeIf { it.size == 1 }!!
+                .first(),
+        )
 }
 
 /**
- * Extract a domain from a query [result]
+ * Extract an asset definition from a [QueryResponse]
  */
-object DomainExtractor : ResultExtractor<Domain> {
-    override fun extract(result: BatchedResponse<QueryOutputBox>): Domain {
-        return extractIdentifiable(result.cast<BatchedResponse.V1>().batchedResponseV1.batch, IdentifiableBox.Domain::domain)
-    }
+object AssetDefinitionExtractor : ResultExtractor<AssetDefinition> {
+    override fun extract(result: QueryResponse): AssetDefinition = AssetDefinitionsExtractor.extract(result).first()
 }
 
 /**
- * Extract a list of domains from a query [result]
+ * Extract an asset definition from a [QueryResponse]
+ */
+object AssetDefinitionOrNullExtractor : ResultExtractor<AssetDefinition?> {
+    override fun extract(result: QueryResponse): AssetDefinition? = AssetDefinitionsExtractor.extract(result).firstOrNull()
+}
+
+/**
+ * Extract a list of domains from a [QueryResponse]
  */
 object DomainsExtractor : ResultExtractor<List<Domain>> {
-    override fun extract(result: BatchedResponse<QueryOutputBox>): List<Domain> {
-        return extractVec(result.cast<BatchedResponse.V1>().batchedResponseV1.batch) {
-            extractIdentifiable(it, IdentifiableBox.Domain::domain)
-        }
-    }
-}
-
-/**
- * Extract a lost of peers from a query [result]
- */
-object PeersExtractor : ResultExtractor<List<Peer>> {
-    override fun extract(result: BatchedResponse<QueryOutputBox>): List<Peer> {
-        return extractVec(result.cast<BatchedResponse.V1>().batchedResponseV1.batch) {
-            extractIdentifiable(it, IdentifiableBox.Peer::peer)
-        }
-    }
-}
-
-/**
- * Extract a trigger from a query [result]
- */
-object TriggerBoxExtractor : ResultExtractor<Trigger> {
-    override fun extract(result: BatchedResponse<QueryOutputBox>): Trigger {
-        return extractIdentifiable(
-            result.cast<BatchedResponse.V1>().batchedResponseV1.batch,
-            IdentifiableBox.Trigger::trigger,
+    override fun extract(result: QueryResponse): List<Domain> =
+        extract(
+            result
+                .cast<QueryResponse.Iterable>()
+                .queryOutput.batch.tuple
+                .takeIf { it.size == 1 }!!
+                .first(),
         )
-    }
 }
 
 /**
- * Extract a list of triggers from a query [result]
+ * Extract a domain from a [QueryResponse]
  */
-object TriggerBoxesExtractor : ResultExtractor<List<Trigger>> {
-    override fun extract(result: BatchedResponse<QueryOutputBox>): List<Trigger> {
-        return extractVec(result.cast<BatchedResponse.V1>().batchedResponseV1.batch) {
-            extractIdentifiable(it, IdentifiableBox.Trigger::trigger)
-        }
-    }
+object DomainExtractor : ResultExtractor<Domain> {
+    override fun extract(result: QueryResponse): Domain = DomainsExtractor.extract(result).first()
 }
 
 /**
- * Extract a list of trigger IDs from a query [result]
+ * Extract a domain from a [QueryResponse]
+ */
+object DomainOrNullExtractor : ResultExtractor<Domain?> {
+    override fun extract(result: QueryResponse): Domain? = DomainsExtractor.extract(result).firstOrNull()
+}
+
+/**
+ * Extract a lost of peers from a [QueryResponse]
+ */
+object PeersExtractor : ResultExtractor<List<PeerId>> {
+    override fun extract(result: QueryResponse): List<PeerId> =
+        extract(
+            result
+                .cast<QueryResponse.Iterable>()
+                .queryOutput.batch.tuple
+                .takeIf { it.size == 1 }!!
+                .first(),
+        )
+}
+
+/**
+ * Extract a trigger from a [QueryResponse]
+ */
+object TriggerExtractor : ResultExtractor<Trigger> {
+    override fun extract(result: QueryResponse): Trigger = TriggersExtractor.extract(result).first()
+}
+
+/**
+ * Extract a trigger from a [QueryResponse]
+ */
+object TriggerOrNullExtractor : ResultExtractor<Trigger?> {
+    override fun extract(result: QueryResponse): Trigger? = TriggersExtractor.extract(result).firstOrNull()
+}
+
+/**
+ * Extract a list of triggers from a [QueryResponse]
+ */
+object TriggersExtractor : ResultExtractor<List<Trigger>> {
+    override fun extract(result: QueryResponse): List<Trigger> =
+        extract(
+            result
+                .cast<QueryResponse.Iterable>()
+                .queryOutput.batch.tuple
+                .takeIf { it.size == 1 }!!
+                .first(),
+        )
+}
+
+/**
+ * Extract a list of trigger IDs from a [QueryResponse]
  */
 object TriggerIdsExtractor : ResultExtractor<List<TriggerId>> {
-    override fun extract(result: BatchedResponse<QueryOutputBox>): List<TriggerId> {
-        return extractVec(result.cast<BatchedResponse.V1>().batchedResponseV1.batch) {
-            extractValue(it, QueryOutputBox.Id::idBox).cast<IdBox.TriggerId>().triggerId
-        }
-    }
+    override fun extract(result: QueryResponse): List<TriggerId> =
+        extract(
+            result
+                .cast<QueryResponse.Iterable>()
+                .queryOutput.batch.tuple
+                .takeIf { it.size == 1 }!!
+                .first(),
+        )
 }
 
 /**
- * Extract a list of permission tokens from a query [result]
+ * Extract a list of permission tokens from a [QueryResponse]
  */
 object PermissionTokensExtractor : ResultExtractor<List<Permission>> {
-    override fun extract(result: BatchedResponse<QueryOutputBox>): List<Permission> {
-        return extractVec(result.cast<BatchedResponse.V1>().batchedResponseV1.batch) {
-            extractValue(it, QueryOutputBox.Permission::permission)
-        }
-    }
+    override fun extract(result: QueryResponse): List<Permission> =
+        extract(
+            result
+                .cast<QueryResponse.Iterable>()
+                .queryOutput.batch.tuple
+                .takeIf { it.size == 1 }!!
+                .first(),
+        )
 }
 
 /**
- * Extract a permission token schema from a query [result]
+ * Extract a list of commited transactions from a [QueryResponse]
  */
-object ExecutorDataModelExtractor : ResultExtractor<ExecutorDataModel> {
-    override fun extract(result: BatchedResponse<QueryOutputBox>): ExecutorDataModel {
-        return extractValue(result.cast<BatchedResponse.V1>().batchedResponseV1.batch, QueryOutputBox.ExecutorDataModel::executorDataModel)
-    }
-}
-
-/**
-* Extract a list of transaction values from a query [result]
-*/
-object TransactionValuesExtractor : ResultExtractor<List<TransactionQueryOutput>> {
-    override fun extract(result: BatchedResponse<QueryOutputBox>): List<TransactionQueryOutput> {
-        return extractVec(result.cast<BatchedResponse.V1>().batchedResponseV1.batch) {
-            extractValue(it, QueryOutputBox.Transaction::transactionQueryOutput)
-        }
-    }
-}
-
-/**
-* Extract a transaction value from a query [result]
-*/
-object TransactionValueExtractor : ResultExtractor<TransactionQueryOutput> {
-    override fun extract(result: BatchedResponse<QueryOutputBox>): TransactionQueryOutput {
-        return extractValue(result.cast<BatchedResponse.V1>().batchedResponseV1.batch, QueryOutputBox.Transaction::transactionQueryOutput)
-    }
+object TransactionsExtractor : ResultExtractor<List<CommittedTransaction>> {
+    override fun extract(result: QueryResponse): List<CommittedTransaction> =
+        extract(
+            result
+                .cast<QueryResponse.Iterable>()
+                .queryOutput.batch.tuple
+                .takeIf { it.size == 1 }!!
+                .first(),
+        )
 }
 
 object BlocksValueExtractor : ResultExtractor<List<SignedBlock>> {
-    override fun extract(result: BatchedResponse<QueryOutputBox>): List<SignedBlock> {
-        return extractVec(result.cast<BatchedResponse.V1>().batchedResponseV1.batch) {
-            extractValue(it, QueryOutputBox.Block::signedBlock)
-        }
-    }
+    override fun extract(result: QueryResponse): List<SignedBlock> =
+        extract(
+            result
+                .cast<QueryResponse.Iterable>()
+                .queryOutput.batch.tuple
+                .takeIf { it.size == 1 }!!
+                .first(),
+        )
 }
 
 object BlockHeadersExtractor : ResultExtractor<List<BlockHeader>> {
-    override fun extract(result: BatchedResponse<QueryOutputBox>): List<BlockHeader> {
-        return extractVec(result.cast<BatchedResponse.V1>().batchedResponseV1.batch) {
-            extractValue(it, QueryOutputBox.BlockHeader::blockHeader)
-        }
-    }
-}
-
-object BlockHeaderExtractor : ResultExtractor<BlockHeader> {
-    override fun extract(result: BatchedResponse<QueryOutputBox>): BlockHeader {
-        return extractValue(result.cast<BatchedResponse.V1>().batchedResponseV1.batch, QueryOutputBox.BlockHeader::blockHeader)
-    }
+    override fun extract(result: QueryResponse): List<BlockHeader> =
+        extract(
+            result
+                .cast<QueryResponse.Iterable>()
+                .queryOutput.batch.tuple
+                .takeIf { it.size == 1 }!!
+                .first(),
+        )
 }
 
 /**
- * Extract `String` from a query [result]
- */
-object StringExtractor : ResultExtractor<String> {
-    override fun extract(result: BatchedResponse<QueryOutputBox>): String {
-        return result.cast<BatchedResponse.V1>().batchedResponseV1.batch
-            .cast<QueryOutputBox.Metadata>().string
-            .fromJsonString()
-    }
-}
-
-/**
- * Extract a list of roles from a query [result]
+ * Extract a list of roles from a [QueryResponse]
  */
 object RolesExtractor : ResultExtractor<List<Role>> {
-    override fun extract(result: BatchedResponse<QueryOutputBox>): List<Role> {
-        return extractVec(result.cast<BatchedResponse.V1>().batchedResponseV1.batch) {
-            extractIdentifiable(it, IdentifiableBox.Role::role)
-        }
-    }
+    override fun extract(result: QueryResponse): List<Role> =
+        extract(
+            result
+                .cast<QueryResponse.Iterable>()
+                .queryOutput.batch.tuple
+                .takeIf { it.size == 1 }!!
+                .first(),
+        )
 }
 
 /**
- * Extract a role from a query [result]
- */
-object RoleExtractor : ResultExtractor<Role> {
-    override fun extract(result: BatchedResponse<QueryOutputBox>): Role {
-        return extractIdentifiable(result.cast<BatchedResponse.V1>().batchedResponseV1.batch, IdentifiableBox.Role::role)
-    }
-}
-
-/**
- * Extract a list of role IDs from a query [result]
+ * Extract a list of role IDs from a [QueryResponse]
  */
 object RoleIdsExtractor : ResultExtractor<List<RoleId>> {
-    override fun extract(result: BatchedResponse<QueryOutputBox>): List<RoleId> {
-        return extractVec(result.cast<BatchedResponse.V1>().batchedResponseV1.batch) {
-            extractValue(it, QueryOutputBox.Id::idBox).cast<IdBox.RoleId>().roleId
-        }
-    }
-}
-
-/**
- * Extract one of the [IdentifiableBox] objects from value
- *
- * @param downstream Type to extract
- */
-inline fun <reified I, R> extractIdentifiable(value: QueryOutputBox, downstream: (I) -> R): R {
-    return when (value) {
-        is QueryOutputBox.Identifiable -> when (val box = value.identifiableBox) {
-            is I -> downstream(box)
-            else -> throw QueryPayloadExtractionException(
-                "Expected `${I::class.qualifiedName}`, but got `${box::class.qualifiedName}`",
-            )
-        }
-
-        else -> throw QueryPayloadExtractionException(
-            "Expected `${QueryOutputBox.Identifiable::class.qualifiedName}`, but got `${value::class.qualifiedName}`",
+    override fun extract(result: QueryResponse): List<RoleId> =
+        extract(
+            result
+                .cast<QueryResponse.Iterable>()
+                .queryOutput.batch.tuple
+                .takeIf { it.size == 1 }!!
+                .first(),
         )
-    }
 }
 
 /**
  * Extract collection from `Value.Vec`
- *
- * @param downstream Type to extract
  */
-inline fun <reified R> extractVec(value: QueryOutputBox, downstream: (QueryOutputBox) -> R): List<R> {
+inline fun <reified R> extract(value: QueryOutputBatchBox): List<R> =
     when (value) {
-        is QueryOutputBox.Vec -> {
-            return value.vec.map { downstream(it) }
-        }
+        is QueryOutputBatchBox.Asset -> value.vec.cast<List<R>>()
+        is QueryOutputBatchBox.AssetDefinition -> value.vec.cast<List<R>>()
+        is QueryOutputBatchBox.Account -> value.vec.cast<List<R>>()
+        is QueryOutputBatchBox.Domain -> value.vec.cast<List<R>>()
+        is QueryOutputBatchBox.Peer -> value.vec.cast<List<R>>()
+        is QueryOutputBatchBox.Permission -> value.vec.cast<List<R>>()
+        is QueryOutputBatchBox.Block -> value.vec.cast<List<R>>()
+        is QueryOutputBatchBox.BlockHeader -> value.vec.cast<List<R>>()
+        is QueryOutputBatchBox.Trigger -> value.vec.cast<List<R>>()
+        is QueryOutputBatchBox.Role -> value.vec.cast<List<R>>()
+        is QueryOutputBatchBox.RoleId -> value.vec.cast<List<R>>()
+        is QueryOutputBatchBox.TriggerId -> value.vec.cast<List<R>>()
+        is QueryOutputBatchBox.CommittedTransaction -> value.vec.cast<List<R>>()
 
         else -> throw QueryPayloadExtractionException(
-            "Expected `${QueryOutputBox.Vec::class.qualifiedName}`, but got `${value::class.qualifiedName}`",
+            "Unexpected type `${value::class.qualifiedName}`",
         )
     }
-}
-
-/**
- * Extract value
- *
- * @param downstream Type to extract
- */
-inline fun <reified V, R> extractValue(value: QueryOutputBox, downstream: (V) -> R): R {
-    return when (value) {
-        is V -> downstream(value)
-        else -> throw QueryPayloadExtractionException(
-            "Expected `${V::class.qualifiedName}`, but got `${value::class.qualifiedName}`",
-        )
-    }
-}

@@ -25,21 +25,25 @@ public sealed class Level : ModelEnum {
      */
     public abstract fun discriminant(): Int
 
-    override fun equals(other: Any?): Boolean = when (this) {
-        is TRACE -> TRACE.equals(this, other)
-        is DEBUG -> DEBUG.equals(this, other)
-        is INFO -> INFO.equals(this, other)
-        is WARN -> WARN.equals(this, other)
-        is ERROR -> ERROR.equals(this, other)
-        else -> super.equals(other) }
+    override fun equals(other: Any?): Boolean =
+        when (this) {
+            is TRACE -> TRACE.equals(this, other)
+            is DEBUG -> DEBUG.equals(this, other)
+            is INFO -> INFO.equals(this, other)
+            is WARN -> WARN.equals(this, other)
+            is ERROR -> ERROR.equals(this, other)
+            else -> super.equals(other)
+        }
 
-    override fun hashCode(): Int = when (this) {
-        is TRACE -> TRACE.hashCode()
-        is DEBUG -> DEBUG.hashCode()
-        is INFO -> INFO.hashCode()
-        is WARN -> WARN.hashCode()
-        is ERROR -> ERROR.hashCode()
-        else -> super.hashCode() }
+    override fun hashCode(): Int =
+        when (this) {
+            is TRACE -> TRACE.hashCode()
+            is DEBUG -> DEBUG.hashCode()
+            is INFO -> INFO.hashCode()
+            is WARN -> WARN.hashCode()
+            is ERROR -> ERROR.hashCode()
+            else -> super.hashCode()
+        }
 
     /**
      * 'TRACE' variant
@@ -62,16 +66,20 @@ public sealed class Level : ModelEnum {
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.Level.TRACE,
-            ): Unit = try {
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            ): Unit =
+                try {
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
-            public fun equals(o1: jp.co.soramitsu.iroha2.generated.Level.TRACE, o2: Any?): Boolean = when
-                (o2) {
-                null -> false
-                else -> o2::class == o1::class
-            }
+            public fun equals(
+                o1: jp.co.soramitsu.iroha2.generated.Level.TRACE,
+                o2: Any?,
+            ): Boolean =
+                when (o2) {
+                    null -> false
+                    else -> o2::class == o1::class
+                }
 
             override fun hashCode(): Int = ".Level.TRACE".hashCode()
         }
@@ -98,16 +106,20 @@ public sealed class Level : ModelEnum {
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.Level.DEBUG,
-            ): Unit = try {
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            ): Unit =
+                try {
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
-            public fun equals(o1: jp.co.soramitsu.iroha2.generated.Level.DEBUG, o2: Any?): Boolean = when
-                (o2) {
-                null -> false
-                else -> o2::class == o1::class
-            }
+            public fun equals(
+                o1: jp.co.soramitsu.iroha2.generated.Level.DEBUG,
+                o2: Any?,
+            ): Boolean =
+                when (o2) {
+                    null -> false
+                    else -> o2::class == o1::class
+                }
 
             override fun hashCode(): Int = ".Level.DEBUG".hashCode()
         }
@@ -124,25 +136,30 @@ public sealed class Level : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.Level.INFO> {
             public const val DISCRIMINANT: Int = 2
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.Level.INFO = try {
-                INFO()
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.Level.INFO =
+                try {
+                    INFO()
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.Level.INFO,
-            ): Unit = try {
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            ): Unit =
+                try {
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
-            public fun equals(o1: jp.co.soramitsu.iroha2.generated.Level.INFO, o2: Any?): Boolean = when
-                (o2) {
-                null -> false
-                else -> o2::class == o1::class
-            }
+            public fun equals(
+                o1: jp.co.soramitsu.iroha2.generated.Level.INFO,
+                o2: Any?,
+            ): Boolean =
+                when (o2) {
+                    null -> false
+                    else -> o2::class == o1::class
+                }
 
             override fun hashCode(): Int = ".Level.INFO".hashCode()
         }
@@ -159,25 +176,30 @@ public sealed class Level : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.Level.WARN> {
             public const val DISCRIMINANT: Int = 3
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.Level.WARN = try {
-                WARN()
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.Level.WARN =
+                try {
+                    WARN()
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.Level.WARN,
-            ): Unit = try {
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            ): Unit =
+                try {
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
-            public fun equals(o1: jp.co.soramitsu.iroha2.generated.Level.WARN, o2: Any?): Boolean = when
-                (o2) {
-                null -> false
-                else -> o2::class == o1::class
-            }
+            public fun equals(
+                o1: jp.co.soramitsu.iroha2.generated.Level.WARN,
+                o2: Any?,
+            ): Boolean =
+                when (o2) {
+                    null -> false
+                    else -> o2::class == o1::class
+                }
 
             override fun hashCode(): Int = ".Level.WARN".hashCode()
         }
@@ -204,31 +226,40 @@ public sealed class Level : ModelEnum {
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.Level.ERROR,
-            ): Unit = try {
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            ): Unit =
+                try {
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
-            public fun equals(o1: jp.co.soramitsu.iroha2.generated.Level.ERROR, o2: Any?): Boolean = when
-                (o2) {
-                null -> false
-                else -> o2::class == o1::class
-            }
+            public fun equals(
+                o1: jp.co.soramitsu.iroha2.generated.Level.ERROR,
+                o2: Any?,
+            ): Boolean =
+                when (o2) {
+                    null -> false
+                    else -> o2::class == o1::class
+                }
 
             override fun hashCode(): Int = ".Level.ERROR".hashCode()
         }
     }
 
     public companion object : ScaleReader<Level>, ScaleWriter<Level> {
-        override fun read(reader: ScaleCodecReader): Level = when (val discriminant = reader.readUByte()) {
-            0 -> TRACE.read(reader)
-            1 -> DEBUG.read(reader)
-            2 -> INFO.read(reader)
-            3 -> WARN.read(reader)
-            4 -> ERROR.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+        override fun read(reader: ScaleCodecReader): Level =
+            when (val discriminant = reader.readUByte()) {
+                0 -> TRACE.read(reader)
+                1 -> DEBUG.read(reader)
+                2 -> INFO.read(reader)
+                3 -> WARN.read(reader)
+                4 -> ERROR.read(reader)
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: Level) {
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: Level,
+        ) {
             writer.directWrite(instance.discriminant())
             when (val discriminant = instance.discriminant()) {
                 0 -> TRACE.write(writer, instance as TRACE)
@@ -236,7 +267,8 @@ public sealed class Level : ModelEnum {
                 2 -> INFO.write(writer, instance as INFO)
                 3 -> WARN.write(writer, instance as WARN)
                 4 -> ERROR.write(writer, instance as ERROR)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

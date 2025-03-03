@@ -16,25 +16,34 @@ import kotlin.Unit
 /**
  * FindPeers
  *
- * Generated from 'FindPeers' regular structure
+ * Generated from 'FindPeers' tuple structure
  */
 public class FindPeers {
     public companion object : ScaleReader<FindPeers>, ScaleWriter<FindPeers> {
-        override fun read(reader: ScaleCodecReader): FindPeers = try {
-            FindPeers()
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): FindPeers =
+            try {
+                FindPeers()
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: FindPeers): Unit = try {
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: FindPeers,
+        ): Unit =
+            try {
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        public fun equals(o1: FindPeers, o2: Any?): Boolean = when (o2) {
-            null -> false
-            else -> o2::class == o1::class
-        }
+        public fun equals(
+            o1: FindPeers,
+            o2: Any?,
+        ): Boolean =
+            when (o2) {
+                null -> false
+                else -> o2::class == o1::class
+            }
 
         override fun hashCode(): Int = ".FindPeers".hashCode()
     }

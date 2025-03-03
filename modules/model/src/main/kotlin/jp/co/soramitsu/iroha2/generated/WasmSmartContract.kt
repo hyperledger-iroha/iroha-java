@@ -32,18 +32,23 @@ public data class WasmSmartContract(
     override fun hashCode(): Int = vecOfU8.contentHashCode()
 
     public companion object : ScaleReader<WasmSmartContract>, ScaleWriter<WasmSmartContract> {
-        override fun read(reader: ScaleCodecReader): WasmSmartContract = try {
-            WasmSmartContract(
-                reader.readByteArray(),
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): WasmSmartContract =
+            try {
+                WasmSmartContract(
+                    reader.readByteArray(),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: WasmSmartContract): Unit = try {
-            writer.writeAsList(instance.vecOfU8)
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: WasmSmartContract,
+        ): Unit =
+            try {
+                writer.writeAsList(instance.vecOfU8)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

@@ -20,20 +20,25 @@ public data class AccountRoleChanged(
     public val role: RoleId,
 ) {
     public companion object : ScaleReader<AccountRoleChanged>, ScaleWriter<AccountRoleChanged> {
-        override fun read(reader: ScaleCodecReader): AccountRoleChanged = try {
-            AccountRoleChanged(
-                AccountId.read(reader),
-                RoleId.read(reader),
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): AccountRoleChanged =
+            try {
+                AccountRoleChanged(
+                    AccountId.read(reader),
+                    RoleId.read(reader),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: AccountRoleChanged): Unit = try {
-            AccountId.write(writer, instance.account)
-            RoleId.write(writer, instance.role)
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: AccountRoleChanged,
+        ): Unit =
+            try {
+                AccountId.write(writer, instance.account)
+                RoleId.write(writer, instance.role)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

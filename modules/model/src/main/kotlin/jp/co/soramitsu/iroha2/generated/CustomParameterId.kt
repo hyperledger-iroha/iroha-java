@@ -19,18 +19,23 @@ public data class CustomParameterId(
     public val name: Name,
 ) {
     public companion object : ScaleReader<CustomParameterId>, ScaleWriter<CustomParameterId> {
-        override fun read(reader: ScaleCodecReader): CustomParameterId = try {
-            CustomParameterId(
-                Name.read(reader),
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): CustomParameterId =
+            try {
+                CustomParameterId(
+                    Name.read(reader),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: CustomParameterId): Unit = try {
-            Name.write(writer, instance.name)
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: CustomParameterId,
+        ): Unit =
+            try {
+                Name.write(writer, instance.name)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

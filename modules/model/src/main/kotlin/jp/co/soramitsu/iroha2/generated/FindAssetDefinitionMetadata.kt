@@ -22,20 +22,25 @@ public data class FindAssetDefinitionMetadata(
     public companion object :
         ScaleReader<FindAssetDefinitionMetadata>,
         ScaleWriter<FindAssetDefinitionMetadata> {
-        override fun read(reader: ScaleCodecReader): FindAssetDefinitionMetadata = try {
-            FindAssetDefinitionMetadata(
-                AssetDefinitionId.read(reader),
-                Name.read(reader),
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): FindAssetDefinitionMetadata =
+            try {
+                FindAssetDefinitionMetadata(
+                    AssetDefinitionId.read(reader),
+                    Name.read(reader),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: FindAssetDefinitionMetadata): Unit = try {
-            AssetDefinitionId.write(writer, instance.id)
-            Name.write(writer, instance.key)
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: FindAssetDefinitionMetadata,
+        ): Unit =
+            try {
+                AssetDefinitionId.write(writer, instance.id)
+                Name.write(writer, instance.key)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

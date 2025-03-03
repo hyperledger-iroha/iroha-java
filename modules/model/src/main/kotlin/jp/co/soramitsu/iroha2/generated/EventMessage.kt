@@ -19,18 +19,23 @@ public data class EventMessage(
     public val eventBox: EventBox,
 ) {
     public companion object : ScaleReader<EventMessage>, ScaleWriter<EventMessage> {
-        override fun read(reader: ScaleCodecReader): EventMessage = try {
-            EventMessage(
-                EventBox.read(reader),
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): EventMessage =
+            try {
+                EventMessage(
+                    EventBox.read(reader),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: EventMessage): Unit = try {
-            EventBox.write(writer, instance.eventBox)
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: EventMessage,
+        ): Unit =
+            try {
+                EventBox.write(writer, instance.eventBox)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

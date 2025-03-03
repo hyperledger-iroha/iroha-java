@@ -19,18 +19,23 @@ public data class TransactionSignature(
     public val signatureOfOfTransactionPayload: SignatureOf<TransactionPayload>,
 ) {
     public companion object : ScaleReader<TransactionSignature>, ScaleWriter<TransactionSignature> {
-        override fun read(reader: ScaleCodecReader): TransactionSignature = try {
-            TransactionSignature(
-                SignatureOf.read(reader) as SignatureOf<TransactionPayload>,
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): TransactionSignature =
+            try {
+                TransactionSignature(
+                    SignatureOf.read(reader) as SignatureOf<TransactionPayload>,
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: TransactionSignature): Unit = try {
-            SignatureOf.write(writer, instance.signatureOfOfTransactionPayload)
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: TransactionSignature,
+        ): Unit =
+            try {
+                SignatureOf.write(writer, instance.signatureOfOfTransactionPayload)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

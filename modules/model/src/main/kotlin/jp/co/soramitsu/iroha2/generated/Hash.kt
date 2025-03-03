@@ -32,18 +32,23 @@ public data class Hash(
     override fun hashCode(): Int = arrayOfU8.contentHashCode()
 
     public companion object : ScaleReader<Hash>, ScaleWriter<Hash> {
-        override fun read(reader: ScaleCodecReader): Hash = try {
-            Hash(
-                reader.readByteArray(32),
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): Hash =
+            try {
+                Hash(
+                    reader.readByteArray(32),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: Hash): Unit = try {
-            writer.writeByteArray(instance.arrayOfU8)
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: Hash,
+        ): Unit =
+            try {
+                writer.writeByteArray(instance.arrayOfU8)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

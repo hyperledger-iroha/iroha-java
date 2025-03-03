@@ -32,18 +32,23 @@ public data class Signature(
     override fun hashCode(): Int = payload.contentHashCode()
 
     public companion object : ScaleReader<Signature>, ScaleWriter<Signature> {
-        override fun read(reader: ScaleCodecReader): Signature = try {
-            Signature(
-                reader.readByteArray(),
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): Signature =
+            try {
+                Signature(
+                    reader.readByteArray(),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: Signature): Unit = try {
-            writer.writeAsList(instance.payload)
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: Signature,
+        ): Unit =
+            try {
+                writer.writeAsList(instance.payload)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

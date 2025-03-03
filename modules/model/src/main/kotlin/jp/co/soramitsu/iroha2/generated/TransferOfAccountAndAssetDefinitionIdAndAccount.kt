@@ -3,10 +3,13 @@
 //
 package jp.co.soramitsu.iroha2.generated
 
+import jp.co.soramitsu.iroha2.asInstructionBoxExt
 import jp.co.soramitsu.iroha2.codec.ScaleCodecReader
 import jp.co.soramitsu.iroha2.codec.ScaleCodecWriter
 import jp.co.soramitsu.iroha2.codec.ScaleReader
 import jp.co.soramitsu.iroha2.codec.ScaleWriter
+import jp.co.soramitsu.iroha2.generated.InstructionBox
+import jp.co.soramitsu.iroha2.transaction.Instruction
 import jp.co.soramitsu.iroha2.wrapException
 import kotlin.Unit
 
@@ -19,7 +22,9 @@ public data class TransferOfAccountAndAssetDefinitionIdAndAccount(
     public val source: AccountId,
     public val `object`: AssetDefinitionId,
     public val destination: AccountId,
-) {
+) : Instruction {
+    override fun asInstructionBox(): InstructionBox = asInstructionBoxExt()
+
     public companion object :
         ScaleReader<TransferOfAccountAndAssetDefinitionIdAndAccount>,
         ScaleWriter<TransferOfAccountAndAssetDefinitionIdAndAccount> {
@@ -37,12 +42,13 @@ public data class TransferOfAccountAndAssetDefinitionIdAndAccount(
         override fun write(
             writer: ScaleCodecWriter,
             instance: TransferOfAccountAndAssetDefinitionIdAndAccount,
-        ): Unit = try {
-            AccountId.write(writer, instance.source)
-            AssetDefinitionId.write(writer, instance.`object`)
-            AccountId.write(writer, instance.destination)
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        ): Unit =
+            try {
+                AccountId.write(writer, instance.source)
+                AssetDefinitionId.write(writer, instance.`object`)
+                AccountId.write(writer, instance.destination)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

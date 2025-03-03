@@ -22,20 +22,25 @@ public data class AccountPermissionChanged(
     public companion object :
         ScaleReader<AccountPermissionChanged>,
         ScaleWriter<AccountPermissionChanged> {
-        override fun read(reader: ScaleCodecReader): AccountPermissionChanged = try {
-            AccountPermissionChanged(
-                AccountId.read(reader),
-                Permission.read(reader),
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): AccountPermissionChanged =
+            try {
+                AccountPermissionChanged(
+                    AccountId.read(reader),
+                    Permission.read(reader),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: AccountPermissionChanged): Unit = try {
-            AccountId.write(writer, instance.account)
-            Permission.write(writer, instance.permission)
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: AccountPermissionChanged,
+        ): Unit =
+            try {
+                AccountId.write(writer, instance.account)
+                Permission.write(writer, instance.permission)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

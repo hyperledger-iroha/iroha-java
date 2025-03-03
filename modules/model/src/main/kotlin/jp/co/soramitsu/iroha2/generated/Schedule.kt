@@ -21,20 +21,25 @@ public data class Schedule(
     public val periodMs: BigInteger? = null,
 ) {
     public companion object : ScaleReader<Schedule>, ScaleWriter<Schedule> {
-        override fun read(reader: ScaleCodecReader): Schedule = try {
-            Schedule(
-                reader.readUint64(),
-                reader.readNullable(),
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): Schedule =
+            try {
+                Schedule(
+                    reader.readUint64(),
+                    reader.readNullable(),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: Schedule): Unit = try {
-            writer.writeUint64(instance.startMs)
-            writer.writeNullable(instance.periodMs)
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: Schedule,
+        ): Unit =
+            try {
+                writer.writeUint64(instance.startMs)
+                writer.writeNullable(instance.periodMs)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

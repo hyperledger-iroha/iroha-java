@@ -8,7 +8,9 @@ import java.math.BigInteger
 /**
  * SCALE codec reader for Java Big Integers encoded as unsigned SCALE values.
  */
-class UIntReader(private val bit: Int) : ScaleReader<BigInteger> {
+class UIntReader(
+    private val bit: Int,
+) : ScaleReader<BigInteger> {
     override fun read(reader: ScaleCodecReader): BigInteger {
         var result = BigInteger.ZERO
         result = result.add(BigInteger.valueOf(reader.readUByte().toLong()))

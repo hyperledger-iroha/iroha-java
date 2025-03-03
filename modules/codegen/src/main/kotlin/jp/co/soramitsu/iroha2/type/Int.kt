@@ -3,7 +3,9 @@ package jp.co.soramitsu.iroha2.type
 /**
  * Integer types
  */
-abstract class IntType(name: String) : Type(name)
+abstract class IntType(
+    name: String,
+) : Type(name)
 
 /**
  * 8-bit integers

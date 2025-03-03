@@ -19,18 +19,23 @@ public data class FindAccountsWithAsset(
     public val assetDefinition: AssetDefinitionId,
 ) {
     public companion object : ScaleReader<FindAccountsWithAsset>, ScaleWriter<FindAccountsWithAsset> {
-        override fun read(reader: ScaleCodecReader): FindAccountsWithAsset = try {
-            FindAccountsWithAsset(
-                AssetDefinitionId.read(reader),
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): FindAccountsWithAsset =
+            try {
+                FindAccountsWithAsset(
+                    AssetDefinitionId.read(reader),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: FindAccountsWithAsset): Unit = try {
-            AssetDefinitionId.write(writer, instance.assetDefinition)
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: FindAccountsWithAsset,
+        ): Unit =
+            try {
+                AssetDefinitionId.write(writer, instance.assetDefinition)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

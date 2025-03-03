@@ -21,22 +21,27 @@ public data class TransactionEvent(
     public val status: TransactionStatus,
 ) {
     public companion object : ScaleReader<TransactionEvent>, ScaleWriter<TransactionEvent> {
-        override fun read(reader: ScaleCodecReader): TransactionEvent = try {
-            TransactionEvent(
-                HashOf.read(reader) as HashOf<SignedTransaction>,
-                reader.readNullable(NonZeroOfu64) as NonZeroOfu64?,
-                TransactionStatus.read(reader),
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): TransactionEvent =
+            try {
+                TransactionEvent(
+                    HashOf.read(reader) as HashOf<SignedTransaction>,
+                    reader.readNullable(NonZeroOfu64) as NonZeroOfu64?,
+                    TransactionStatus.read(reader),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: TransactionEvent): Unit = try {
-            HashOf.write(writer, instance.hash)
-            writer.writeNullable(NonZeroOfu64, instance.blockHeight)
-            TransactionStatus.write(writer, instance.status)
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: TransactionEvent,
+        ): Unit =
+            try {
+                HashOf.write(writer, instance.hash)
+                writer.writeNullable(NonZeroOfu64, instance.blockHeight)
+                TransactionStatus.write(writer, instance.status)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

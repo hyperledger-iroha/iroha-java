@@ -20,20 +20,25 @@ public data class FindTriggerMetadata(
     public val key: Name,
 ) {
     public companion object : ScaleReader<FindTriggerMetadata>, ScaleWriter<FindTriggerMetadata> {
-        override fun read(reader: ScaleCodecReader): FindTriggerMetadata = try {
-            FindTriggerMetadata(
-                TriggerId.read(reader),
-                Name.read(reader),
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): FindTriggerMetadata =
+            try {
+                FindTriggerMetadata(
+                    TriggerId.read(reader),
+                    Name.read(reader),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: FindTriggerMetadata): Unit = try {
-            TriggerId.write(writer, instance.id)
-            Name.write(writer, instance.key)
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: FindTriggerMetadata,
+        ): Unit =
+            try {
+                TriggerId.write(writer, instance.id)
+                Name.write(writer, instance.key)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

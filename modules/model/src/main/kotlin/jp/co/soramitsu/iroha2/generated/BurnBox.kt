@@ -48,11 +48,12 @@ public sealed class BurnBox : ModelEnum {
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.BurnBox.Asset,
-            ): Unit = try {
-                BurnOfNumericAndAsset.write(writer, instance.burnOfNumericAndAsset)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            ): Unit =
+                try {
+                    BurnOfNumericAndAsset.write(writer, instance.burnOfNumericAndAsset)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
@@ -69,40 +70,45 @@ public sealed class BurnBox : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.BurnBox.TriggerRepetitions> {
             public const val DISCRIMINANT: Int = 1
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.BurnBox.TriggerRepetitions = try {
-                TriggerRepetitions(
-                    BurnOfu32AndTrigger.read(reader),
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.BurnBox.TriggerRepetitions =
+                try {
+                    TriggerRepetitions(
+                        BurnOfu32AndTrigger.read(reader),
+                    )
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.BurnBox.TriggerRepetitions,
-            ): Unit = try {
-                BurnOfu32AndTrigger.write(writer, instance.burnOfu32AndTrigger)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            ): Unit =
+                try {
+                    BurnOfu32AndTrigger.write(writer, instance.burnOfu32AndTrigger)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
     public companion object : ScaleReader<BurnBox>, ScaleWriter<BurnBox> {
-        override fun read(reader: ScaleCodecReader): BurnBox = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
-            0 -> Asset.read(reader)
-            1 -> TriggerRepetitions.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+        override fun read(reader: ScaleCodecReader): BurnBox =
+            when (val discriminant = reader.readUByte()) {
+                0 -> Asset.read(reader)
+                1 -> TriggerRepetitions.read(reader)
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: BurnBox) {
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: BurnBox,
+        ) {
             writer.directWrite(instance.discriminant())
             when (val discriminant = instance.discriminant()) {
                 0 -> Asset.write(writer, instance as Asset)
                 1 -> TriggerRepetitions.write(writer, instance as TriggerRepetitions)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

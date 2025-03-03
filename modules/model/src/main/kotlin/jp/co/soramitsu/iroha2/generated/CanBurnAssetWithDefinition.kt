@@ -3,6 +3,7 @@
 //
 package jp.co.soramitsu.iroha2.generated
 
+import jp.co.soramitsu.iroha2.ModelPermission
 import jp.co.soramitsu.iroha2.codec.ScaleCodecReader
 import jp.co.soramitsu.iroha2.codec.ScaleCodecWriter
 import jp.co.soramitsu.iroha2.codec.ScaleReader
@@ -17,22 +18,27 @@ import kotlin.Unit
  */
 public data class CanBurnAssetWithDefinition(
     public val assetDefinition: AssetDefinitionId,
-) {
+) : ModelPermission {
     public companion object :
         ScaleReader<CanBurnAssetWithDefinition>,
         ScaleWriter<CanBurnAssetWithDefinition> {
-        override fun read(reader: ScaleCodecReader): CanBurnAssetWithDefinition = try {
-            CanBurnAssetWithDefinition(
-                AssetDefinitionId.read(reader),
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): CanBurnAssetWithDefinition =
+            try {
+                CanBurnAssetWithDefinition(
+                    AssetDefinitionId.read(reader),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: CanBurnAssetWithDefinition): Unit = try {
-            AssetDefinitionId.write(writer, instance.assetDefinition)
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: CanBurnAssetWithDefinition,
+        ): Unit =
+            try {
+                AssetDefinitionId.write(writer, instance.assetDefinition)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

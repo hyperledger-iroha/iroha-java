@@ -20,20 +20,25 @@ public data class Asset(
     public val `value`: AssetValue,
 ) {
     public companion object : ScaleReader<Asset>, ScaleWriter<Asset> {
-        override fun read(reader: ScaleCodecReader): Asset = try {
-            Asset(
-                AssetId.read(reader),
-                AssetValue.read(reader),
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): Asset =
+            try {
+                Asset(
+                    AssetId.read(reader),
+                    AssetValue.read(reader),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: Asset): Unit = try {
-            AssetId.write(writer, instance.id)
-            AssetValue.write(writer, instance.`value`)
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: Asset,
+        ): Unit =
+            try {
+                AssetId.write(writer, instance.id)
+                AssetValue.write(writer, instance.`value`)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

@@ -14,14 +14,20 @@ import jp.co.soramitsu.iroha2.codegen.resolveKotlinType
  * Generator for [EnumVariantBlueprint]
  */
 object EnumVariantGenerator : AbstractGenerator<EnumVariantBlueprint>() {
-
-    override fun implKDoc(blueprint: EnumVariantBlueprint, clazz: TypeSpec.Builder) {
+    override fun implKDoc(
+        blueprint: EnumVariantBlueprint,
+        clazz: TypeSpec.Builder,
+    ) {
         clazz.addKdoc("'${blueprint.className}' variant")
     }
 
-    override fun implFunctions(blueprint: EnumVariantBlueprint, clazz: TypeSpec.Builder) {
+    override fun implFunctions(
+        blueprint: EnumVariantBlueprint,
+        clazz: TypeSpec.Builder,
+    ) {
         clazz.addFunction(
-            FunSpec.builder("discriminant")
+            FunSpec
+                .builder("discriminant")
                 .addModifiers(KModifier.OVERRIDE)
                 .returns(Int::class)
                 .addCode("return DISCRIMINANT")
@@ -29,19 +35,24 @@ object EnumVariantGenerator : AbstractGenerator<EnumVariantBlueprint>() {
         )
     }
 
-    override fun implConstructor(blueprint: EnumVariantBlueprint, clazz: TypeSpec.Builder) {
+    override fun implConstructor(
+        blueprint: EnumVariantBlueprint,
+        clazz: TypeSpec.Builder,
+    ) {
         if (blueprint.properties.isNotEmpty()) {
             val constructorBuilder = FunSpec.constructorBuilder()
             for (property in blueprint.properties) {
                 constructorBuilder.addParameter(
-                    ParameterSpec.builder(property.name, property.typeName)
+                    ParameterSpec
+                        .builder(property.name, property.typeName)
                         .build(),
                 )
                 clazz.addProperty(
-                    PropertySpec.builder(
-                        property.name,
-                        property.typeName,
-                    ).initializer(property.name)
+                    PropertySpec
+                        .builder(
+                            property.name,
+                            property.typeName,
+                        ).initializer(property.name)
                         .build(),
                 )
             }
@@ -52,27 +63,32 @@ object EnumVariantGenerator : AbstractGenerator<EnumVariantBlueprint>() {
     override fun implCompanions(
         blueprint: EnumVariantBlueprint,
         clazz: TypeSpec.Builder,
-    ): TypeSpec.Builder {
-        return super.implCompanions(blueprint, clazz)
+    ): TypeSpec.Builder =
+        super
+            .implCompanions(blueprint, clazz)
             .addProperty(
-                PropertySpec.builder("DISCRIMINANT", Int::class, KModifier.CONST)
+                PropertySpec
+                    .builder("DISCRIMINANT", Int::class, KModifier.CONST)
                     .initializer("%L", blueprint.discriminant)
                     .build(),
             )
-    }
 
-    override fun implSuperClasses(blueprint: EnumVariantBlueprint, clazz: TypeSpec.Builder) {
+    override fun implSuperClasses(
+        blueprint: EnumVariantBlueprint,
+        clazz: TypeSpec.Builder,
+    ) {
         super.implSuperClasses(blueprint, clazz)
 
         val className = ClassName(blueprint.parentBlueprint.packageName, blueprint.parentBlueprint.className)
         val generics = blueprint.parentBlueprint.source.generics
 
         if (generics.isNotEmpty()) {
-            className.parameterizedBy(
-                generics.map {
-                    resolveKotlinType(it.requireValue())
-                },
-            ).also { clazz.superclass(it) }
+            className
+                .parameterizedBy(
+                    generics.map {
+                        resolveKotlinType(it.requireValue())
+                    },
+                ).also { clazz.superclass(it) }
         } else {
             clazz.superclass(className)
         }

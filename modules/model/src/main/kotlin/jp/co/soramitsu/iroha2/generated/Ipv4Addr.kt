@@ -32,18 +32,23 @@ public data class Ipv4Addr(
     override fun hashCode(): Int = arrayOfU8.contentHashCode()
 
     public companion object : ScaleReader<Ipv4Addr>, ScaleWriter<Ipv4Addr> {
-        override fun read(reader: ScaleCodecReader): Ipv4Addr = try {
-            Ipv4Addr(
-                reader.readByteArray(4),
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): Ipv4Addr =
+            try {
+                Ipv4Addr(
+                    reader.readByteArray(4),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: Ipv4Addr): Unit = try {
-            writer.writeByteArray(instance.arrayOfU8)
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: Ipv4Addr,
+        ): Unit =
+            try {
+                writer.writeByteArray(instance.arrayOfU8)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

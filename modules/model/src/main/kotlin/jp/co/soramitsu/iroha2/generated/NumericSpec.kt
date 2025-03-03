@@ -20,18 +20,23 @@ public data class NumericSpec(
     public val scale: Long? = null,
 ) {
     public companion object : ScaleReader<NumericSpec>, ScaleWriter<NumericSpec> {
-        override fun read(reader: ScaleCodecReader): NumericSpec = try {
-            NumericSpec(
-                reader.readNullable(),
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): NumericSpec =
+            try {
+                NumericSpec(
+                    reader.readNullable(),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: NumericSpec): Unit = try {
-            writer.writeNullable(instance.scale)
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: NumericSpec,
+        ): Unit =
+            try {
+                writer.writeNullable(instance.scale)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

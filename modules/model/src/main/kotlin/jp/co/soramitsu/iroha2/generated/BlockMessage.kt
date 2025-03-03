@@ -19,18 +19,23 @@ public data class BlockMessage(
     public val signedBlock: SignedBlock,
 ) {
     public companion object : ScaleReader<BlockMessage>, ScaleWriter<BlockMessage> {
-        override fun read(reader: ScaleCodecReader): BlockMessage = try {
-            BlockMessage(
-                SignedBlock.read(reader),
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): BlockMessage =
+            try {
+                BlockMessage(
+                    SignedBlock.read(reader),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: BlockMessage): Unit = try {
-            SignedBlock.write(writer, instance.signedBlock)
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: BlockMessage,
+        ): Unit =
+            try {
+                SignedBlock.write(writer, instance.signedBlock)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

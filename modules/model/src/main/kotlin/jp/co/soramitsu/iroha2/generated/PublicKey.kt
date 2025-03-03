@@ -34,20 +34,25 @@ public data class PublicKey(
     override fun hashCode(): Int = algorithm.hashCode() * 31 + payload.contentHashCode()
 
     public companion object : ScaleReader<PublicKey>, ScaleWriter<PublicKey> {
-        override fun read(reader: ScaleCodecReader): PublicKey = try {
-            PublicKey(
-                Algorithm.read(reader),
-                reader.readByteArray(),
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): PublicKey =
+            try {
+                PublicKey(
+                    Algorithm.read(reader),
+                    reader.readByteArray(),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: PublicKey): Unit = try {
-            Algorithm.write(writer, instance.algorithm)
-            writer.writeAsList(instance.payload)
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: PublicKey,
+        ): Unit =
+            try {
+                Algorithm.write(writer, instance.algorithm)
+                writer.writeAsList(instance.payload)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

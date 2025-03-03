@@ -20,20 +20,25 @@ public data class FindAccountMetadata(
     public val key: Name,
 ) {
     public companion object : ScaleReader<FindAccountMetadata>, ScaleWriter<FindAccountMetadata> {
-        override fun read(reader: ScaleCodecReader): FindAccountMetadata = try {
-            FindAccountMetadata(
-                AccountId.read(reader),
-                Name.read(reader),
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): FindAccountMetadata =
+            try {
+                FindAccountMetadata(
+                    AccountId.read(reader),
+                    Name.read(reader),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: FindAccountMetadata): Unit = try {
-            AccountId.write(writer, instance.id)
-            Name.write(writer, instance.key)
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: FindAccountMetadata,
+        ): Unit =
+            try {
+                AccountId.write(writer, instance.id)
+                Name.write(writer, instance.key)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

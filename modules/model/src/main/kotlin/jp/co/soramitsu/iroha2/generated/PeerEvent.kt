@@ -36,22 +36,24 @@ public sealed class PeerEvent : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.PeerEvent.Added> {
             public const val DISCRIMINANT: Int = 0
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.PeerEvent.Added = try {
-                Added(
-                    PeerId.read(reader),
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.PeerEvent.Added =
+                try {
+                    Added(
+                        PeerId.read(reader),
+                    )
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.PeerEvent.Added,
-            ): Unit = try {
-                PeerId.write(writer, instance.peerId)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            ): Unit =
+                try {
+                    PeerId.write(writer, instance.peerId)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
@@ -68,40 +70,45 @@ public sealed class PeerEvent : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.PeerEvent.Removed> {
             public const val DISCRIMINANT: Int = 1
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.PeerEvent.Removed = try {
-                Removed(
-                    PeerId.read(reader),
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.PeerEvent.Removed =
+                try {
+                    Removed(
+                        PeerId.read(reader),
+                    )
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.PeerEvent.Removed,
-            ): Unit = try {
-                PeerId.write(writer, instance.peerId)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            ): Unit =
+                try {
+                    PeerId.write(writer, instance.peerId)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
     public companion object : ScaleReader<PeerEvent>, ScaleWriter<PeerEvent> {
-        override fun read(reader: ScaleCodecReader): PeerEvent = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
-            0 -> Added.read(reader)
-            1 -> Removed.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+        override fun read(reader: ScaleCodecReader): PeerEvent =
+            when (val discriminant = reader.readUByte()) {
+                0 -> Added.read(reader)
+                1 -> Removed.read(reader)
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: PeerEvent) {
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: PeerEvent,
+        ) {
             writer.directWrite(instance.discriminant())
             when (val discriminant = instance.discriminant()) {
                 0 -> Added.write(writer, instance as Added)
                 1 -> Removed.write(writer, instance as Removed)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

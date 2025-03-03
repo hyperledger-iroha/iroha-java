@@ -1,19 +1,20 @@
 dependencies {
-    api project(":client")
-    api project(":admin-client")
-    api project(":block")
+    implementation project(":admin-client")
+    implementation project(":block")
 
-    api "org.jetbrains.kotlin:kotlin-test:$kotlinVer"
-    api "org.jetbrains.kotlin:kotlin-test-junit5:$kotlinVer"
-    api "org.jetbrains.kotlin:kotlin-reflect:$kotlinVer"
-    api "org.testcontainers:testcontainers:$testContainersVer"
-    api "org.jetbrains.kotlin:kotlin-test-junit5:$kotlinVer"
+    implementation "org.testcontainers:testcontainers:$testContainersVer"
+
+    implementation "io.ktor:ktor-client-logging:$ktorVer"
+    implementation "org.jetbrains.kotlin:kotlin-test:$kotlinVer"
+    implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlinVer"
+    implementation "org.jetbrains.kotlin:kotlin-test-junit5:$kotlinVer"
 
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVer"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:$coroutinesVer"
     implementation "ch.qos.logback:logback-classic:$logbackVer"
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlinVer"
     implementation "org.yaml:snakeyaml:2.0"
+
+    implementation "com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonKotlinVer"
 
     testImplementation "org.jetbrains.kotlin:kotlin-test:$kotlinVer"
 }

@@ -22,18 +22,23 @@ public data class ConfigurationEventFilter(
     public companion object :
         ScaleReader<ConfigurationEventFilter>,
         ScaleWriter<ConfigurationEventFilter> {
-        override fun read(reader: ScaleCodecReader): ConfigurationEventFilter = try {
-            ConfigurationEventFilter(
-                reader.readUint32(),
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): ConfigurationEventFilter =
+            try {
+                ConfigurationEventFilter(
+                    reader.readUint32(),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: ConfigurationEventFilter): Unit = try {
-            writer.writeUint32(instance.eventSet)
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: ConfigurationEventFilter,
+        ): Unit =
+            try {
+                writer.writeUint32(instance.eventSet)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

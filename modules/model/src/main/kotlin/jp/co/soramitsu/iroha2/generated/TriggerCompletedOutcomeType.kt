@@ -25,15 +25,19 @@ public sealed class TriggerCompletedOutcomeType : ModelEnum {
      */
     public abstract fun discriminant(): Int
 
-    override fun equals(other: Any?): Boolean = when (this) {
-        is Success -> Success.equals(this, other)
-        is Failure -> Failure.equals(this, other)
-        else -> super.equals(other) }
+    override fun equals(other: Any?): Boolean =
+        when (this) {
+            is Success -> Success.equals(this, other)
+            is Failure -> Failure.equals(this, other)
+            else -> super.equals(other)
+        }
 
-    override fun hashCode(): Int = when (this) {
-        is Success -> Success.hashCode()
-        is Failure -> Failure.hashCode()
-        else -> super.hashCode() }
+    override fun hashCode(): Int =
+        when (this) {
+            is Success -> Success.hashCode()
+            is Failure -> Failure.hashCode()
+            else -> super.hashCode()
+        }
 
     /**
      * 'Success' variant
@@ -46,11 +50,12 @@ public sealed class TriggerCompletedOutcomeType : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.TriggerCompletedOutcomeType.Success> {
             public const val DISCRIMINANT: Int = 0
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.TriggerCompletedOutcomeType.Success = try {
-                Success()
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.TriggerCompletedOutcomeType.Success =
+                try {
+                    Success()
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             override fun write(
                 writer: ScaleCodecWriter,
@@ -64,10 +69,11 @@ public sealed class TriggerCompletedOutcomeType : ModelEnum {
             public fun equals(
                 o1: jp.co.soramitsu.iroha2.generated.TriggerCompletedOutcomeType.Success,
                 o2: Any?,
-            ): Boolean = when (o2) {
-                null -> false
-                else -> o2::class == o1::class
-            }
+            ): Boolean =
+                when (o2) {
+                    null -> false
+                    else -> o2::class == o1::class
+                }
 
             override fun hashCode(): Int = ".TriggerCompletedOutcomeType.Success".hashCode()
         }
@@ -84,11 +90,12 @@ public sealed class TriggerCompletedOutcomeType : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.TriggerCompletedOutcomeType.Failure> {
             public const val DISCRIMINANT: Int = 1
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.TriggerCompletedOutcomeType.Failure = try {
-                Failure()
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.TriggerCompletedOutcomeType.Failure =
+                try {
+                    Failure()
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             override fun write(
                 writer: ScaleCodecWriter,
@@ -102,10 +109,11 @@ public sealed class TriggerCompletedOutcomeType : ModelEnum {
             public fun equals(
                 o1: jp.co.soramitsu.iroha2.generated.TriggerCompletedOutcomeType.Failure,
                 o2: Any?,
-            ): Boolean = when (o2) {
-                null -> false
-                else -> o2::class == o1::class
-            }
+            ): Boolean =
+                when (o2) {
+                    null -> false
+                    else -> o2::class == o1::class
+                }
 
             override fun hashCode(): Int = ".TriggerCompletedOutcomeType.Failure".hashCode()
         }
@@ -114,20 +122,23 @@ public sealed class TriggerCompletedOutcomeType : ModelEnum {
     public companion object :
         ScaleReader<TriggerCompletedOutcomeType>,
         ScaleWriter<TriggerCompletedOutcomeType> {
-        override fun read(reader: ScaleCodecReader): TriggerCompletedOutcomeType = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
-            0 -> Success.read(reader)
-            1 -> Failure.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+        override fun read(reader: ScaleCodecReader): TriggerCompletedOutcomeType =
+            when (val discriminant = reader.readUByte()) {
+                0 -> Success.read(reader)
+                1 -> Failure.read(reader)
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: TriggerCompletedOutcomeType) {
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: TriggerCompletedOutcomeType,
+        ) {
             writer.directWrite(instance.discriminant())
             when (val discriminant = instance.discriminant()) {
                 0 -> Success.write(writer, instance as Success)
                 1 -> Failure.write(writer, instance as Failure)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

@@ -20,20 +20,25 @@ public data class QueryWithParams(
     public val params: QueryParams,
 ) {
     public companion object : ScaleReader<QueryWithParams>, ScaleWriter<QueryWithParams> {
-        override fun read(reader: ScaleCodecReader): QueryWithParams = try {
-            QueryWithParams(
-                QueryBox.read(reader),
-                QueryParams.read(reader),
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): QueryWithParams =
+            try {
+                QueryWithParams(
+                    QueryBox.read(reader),
+                    QueryParams.read(reader),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: QueryWithParams): Unit = try {
-            QueryBox.write(writer, instance.query)
-            QueryParams.write(writer, instance.params)
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: QueryWithParams,
+        ): Unit =
+            try {
+                QueryBox.write(writer, instance.query)
+                QueryParams.write(writer, instance.params)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

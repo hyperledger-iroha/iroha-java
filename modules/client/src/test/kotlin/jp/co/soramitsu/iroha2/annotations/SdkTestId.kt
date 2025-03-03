@@ -9,4 +9,6 @@ import java.lang.annotation.Inherited
 @Target(AnnotationTarget.FUNCTION)
 @LabelAnnotation(name = "sdk_test_id")
 @Repeatable
-annotation class SdkTestId(val value: String)
+annotation class SdkTestId(
+    val value: String,
+)

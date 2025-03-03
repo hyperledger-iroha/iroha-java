@@ -8,14 +8,16 @@ import java.io.ByteArrayOutputStream
  * @param <T> type </T>
  */
 interface ScaleWriter<T> {
-
     /**
      * Write SCALE value to the specified writer.
      *
      * @param writer writer with the data
      * @param instance the data to write
      */
-    fun write(writer: ScaleCodecWriter, instance: T)
+    fun write(
+        writer: ScaleCodecWriter,
+        instance: T,
+    )
 
     /**
      * Encode provided data as a SCALE value

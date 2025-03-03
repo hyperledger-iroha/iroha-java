@@ -36,22 +36,24 @@ public sealed class RevokeBox : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.RevokeBox.Permission> {
             public const val DISCRIMINANT: Int = 0
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.RevokeBox.Permission = try {
-                Permission(
-                    RevokeOfPermissionAndAccount.read(reader),
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.RevokeBox.Permission =
+                try {
+                    Permission(
+                        RevokeOfPermissionAndAccount.read(reader),
+                    )
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.RevokeBox.Permission,
-            ): Unit = try {
-                RevokeOfPermissionAndAccount.write(writer, instance.revokeOfPermissionAndAccount)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            ): Unit =
+                try {
+                    RevokeOfPermissionAndAccount.write(writer, instance.revokeOfPermissionAndAccount)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
@@ -80,11 +82,12 @@ public sealed class RevokeBox : ModelEnum {
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.RevokeBox.Role,
-            ): Unit = try {
-                RevokeOfRoleIdAndAccount.write(writer, instance.revokeOfRoleIdAndAccount)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            ): Unit =
+                try {
+                    RevokeOfRoleIdAndAccount.write(writer, instance.revokeOfRoleIdAndAccount)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
@@ -101,42 +104,47 @@ public sealed class RevokeBox : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.RevokeBox.RolePermission> {
             public const val DISCRIMINANT: Int = 2
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.RevokeBox.RolePermission = try {
-                RolePermission(
-                    RevokeOfPermissionAndRole.read(reader),
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.RevokeBox.RolePermission =
+                try {
+                    RolePermission(
+                        RevokeOfPermissionAndRole.read(reader),
+                    )
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.RevokeBox.RolePermission,
-            ): Unit = try {
-                RevokeOfPermissionAndRole.write(writer, instance.revokeOfPermissionAndRole)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            ): Unit =
+                try {
+                    RevokeOfPermissionAndRole.write(writer, instance.revokeOfPermissionAndRole)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
     public companion object : ScaleReader<RevokeBox>, ScaleWriter<RevokeBox> {
-        override fun read(reader: ScaleCodecReader): RevokeBox = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
-            0 -> Permission.read(reader)
-            1 -> Role.read(reader)
-            2 -> RolePermission.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+        override fun read(reader: ScaleCodecReader): RevokeBox =
+            when (val discriminant = reader.readUByte()) {
+                0 -> Permission.read(reader)
+                1 -> Role.read(reader)
+                2 -> RolePermission.read(reader)
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: RevokeBox) {
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: RevokeBox,
+        ) {
             writer.directWrite(instance.discriminant())
             when (val discriminant = instance.discriminant()) {
                 0 -> Permission.write(writer, instance as Permission)
                 1 -> Role.write(writer, instance as Role)
                 2 -> RolePermission.write(writer, instance as RolePermission)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

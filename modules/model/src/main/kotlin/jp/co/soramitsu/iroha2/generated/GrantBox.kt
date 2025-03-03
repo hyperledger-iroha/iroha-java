@@ -36,22 +36,24 @@ public sealed class GrantBox : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.GrantBox.Permission> {
             public const val DISCRIMINANT: Int = 0
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.GrantBox.Permission = try {
-                Permission(
-                    GrantOfPermissionAndAccount.read(reader),
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.GrantBox.Permission =
+                try {
+                    Permission(
+                        GrantOfPermissionAndAccount.read(reader),
+                    )
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.GrantBox.Permission,
-            ): Unit = try {
-                GrantOfPermissionAndAccount.write(writer, instance.grantOfPermissionAndAccount)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            ): Unit =
+                try {
+                    GrantOfPermissionAndAccount.write(writer, instance.grantOfPermissionAndAccount)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
@@ -80,11 +82,12 @@ public sealed class GrantBox : ModelEnum {
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.GrantBox.Role,
-            ): Unit = try {
-                GrantOfRoleIdAndAccount.write(writer, instance.grantOfRoleIdAndAccount)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            ): Unit =
+                try {
+                    GrantOfRoleIdAndAccount.write(writer, instance.grantOfRoleIdAndAccount)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
@@ -101,42 +104,47 @@ public sealed class GrantBox : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.GrantBox.RolePermission> {
             public const val DISCRIMINANT: Int = 2
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.GrantBox.RolePermission = try {
-                RolePermission(
-                    GrantOfPermissionAndRole.read(reader),
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.GrantBox.RolePermission =
+                try {
+                    RolePermission(
+                        GrantOfPermissionAndRole.read(reader),
+                    )
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.GrantBox.RolePermission,
-            ): Unit = try {
-                GrantOfPermissionAndRole.write(writer, instance.grantOfPermissionAndRole)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            ): Unit =
+                try {
+                    GrantOfPermissionAndRole.write(writer, instance.grantOfPermissionAndRole)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
     public companion object : ScaleReader<GrantBox>, ScaleWriter<GrantBox> {
-        override fun read(reader: ScaleCodecReader): GrantBox = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
-            0 -> Permission.read(reader)
-            1 -> Role.read(reader)
-            2 -> RolePermission.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+        override fun read(reader: ScaleCodecReader): GrantBox =
+            when (val discriminant = reader.readUByte()) {
+                0 -> Permission.read(reader)
+                1 -> Role.read(reader)
+                2 -> RolePermission.read(reader)
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: GrantBox) {
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: GrantBox,
+        ) {
             writer.directWrite(instance.discriminant())
             when (val discriminant = instance.discriminant()) {
                 0 -> Permission.write(writer, instance as Permission)
                 1 -> Role.write(writer, instance as Role)
                 2 -> RolePermission.write(writer, instance as RolePermission)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

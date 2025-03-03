@@ -16,25 +16,34 @@ import kotlin.Unit
 /**
  * FindBlockHeaders
  *
- * Generated from 'FindBlockHeaders' regular structure
+ * Generated from 'FindBlockHeaders' tuple structure
  */
 public class FindBlockHeaders {
     public companion object : ScaleReader<FindBlockHeaders>, ScaleWriter<FindBlockHeaders> {
-        override fun read(reader: ScaleCodecReader): FindBlockHeaders = try {
-            FindBlockHeaders()
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): FindBlockHeaders =
+            try {
+                FindBlockHeaders()
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: FindBlockHeaders): Unit = try {
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: FindBlockHeaders,
+        ): Unit =
+            try {
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        public fun equals(o1: FindBlockHeaders, o2: Any?): Boolean = when (o2) {
-            null -> false
-            else -> o2::class == o1::class
-        }
+        public fun equals(
+            o1: FindBlockHeaders,
+            o2: Any?,
+        ): Boolean =
+            when (o2) {
+                null -> false
+                else -> o2::class == o1::class
+            }
 
         override fun hashCode(): Int = ".FindBlockHeaders".hashCode()
     }

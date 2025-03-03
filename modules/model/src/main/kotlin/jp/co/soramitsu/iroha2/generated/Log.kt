@@ -21,20 +21,25 @@ public data class Log(
     public val msg: String,
 ) {
     public companion object : ScaleReader<Log>, ScaleWriter<Log> {
-        override fun read(reader: ScaleCodecReader): Log = try {
-            Log(
-                Level.read(reader),
-                reader.readString(),
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): Log =
+            try {
+                Log(
+                    Level.read(reader),
+                    reader.readString(),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: Log): Unit = try {
-            Level.write(writer, instance.level)
-            writer.writeAsList(instance.msg.toByteArray(Charsets.UTF_8))
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: Log,
+        ): Unit =
+            try {
+                Level.write(writer, instance.level)
+                writer.writeAsList(instance.msg.toByteArray(Charsets.UTF_8))
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

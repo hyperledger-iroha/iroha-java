@@ -20,20 +20,25 @@ public data class BlockEvent(
     public val status: BlockStatus,
 ) {
     public companion object : ScaleReader<BlockEvent>, ScaleWriter<BlockEvent> {
-        override fun read(reader: ScaleCodecReader): BlockEvent = try {
-            BlockEvent(
-                BlockHeader.read(reader),
-                BlockStatus.read(reader),
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): BlockEvent =
+            try {
+                BlockEvent(
+                    BlockHeader.read(reader),
+                    BlockStatus.read(reader),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: BlockEvent): Unit = try {
-            BlockHeader.write(writer, instance.`header`)
-            BlockStatus.write(writer, instance.status)
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: BlockEvent,
+        ): Unit =
+            try {
+                BlockHeader.write(writer, instance.`header`)
+                BlockStatus.write(writer, instance.status)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

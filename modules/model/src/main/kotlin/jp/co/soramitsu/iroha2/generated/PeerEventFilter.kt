@@ -21,20 +21,25 @@ public data class PeerEventFilter(
     public val eventSet: Long,
 ) {
     public companion object : ScaleReader<PeerEventFilter>, ScaleWriter<PeerEventFilter> {
-        override fun read(reader: ScaleCodecReader): PeerEventFilter = try {
-            PeerEventFilter(
-                reader.readNullable(PeerId) as PeerId?,
-                reader.readUint32(),
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): PeerEventFilter =
+            try {
+                PeerEventFilter(
+                    reader.readNullable(PeerId) as PeerId?,
+                    reader.readUint32(),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: PeerEventFilter): Unit = try {
-            writer.writeNullable(PeerId, instance.idMatcher)
-            writer.writeUint32(instance.eventSet)
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: PeerEventFilter,
+        ): Unit =
+            try {
+                writer.writeNullable(PeerId, instance.idMatcher)
+                writer.writeUint32(instance.eventSet)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

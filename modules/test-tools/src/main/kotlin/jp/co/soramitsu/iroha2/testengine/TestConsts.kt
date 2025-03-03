@@ -5,9 +5,16 @@ import jp.co.soramitsu.iroha2.asName
 import jp.co.soramitsu.iroha2.generated.AccountId
 import jp.co.soramitsu.iroha2.generated.AssetDefinitionId
 import jp.co.soramitsu.iroha2.generated.AssetId
+import jp.co.soramitsu.iroha2.generated.BlockParameters
+import jp.co.soramitsu.iroha2.generated.NonZeroOfu64
+import jp.co.soramitsu.iroha2.generated.Parameters
+import jp.co.soramitsu.iroha2.generated.SmartContractParameters
+import jp.co.soramitsu.iroha2.generated.SumeragiParameters
+import jp.co.soramitsu.iroha2.generated.TransactionParameters
 import jp.co.soramitsu.iroha2.keyPairFromHex
 import jp.co.soramitsu.iroha2.publicKeyFromHex
 import jp.co.soramitsu.iroha2.toIrohaPublicKey
+import java.math.BigInteger
 
 const val DEFAULT_DOMAIN = "wonderland"
 const val GENESIS_DOMAIN = "genesis"
@@ -20,11 +27,42 @@ val GENESIS_ACCOUNT = AccountId(GENESIS_DOMAIN.asDomainId(), publicKeyFromHex(GE
 @JvmField
 val DEFAULT_DOMAIN_ID = DEFAULT_DOMAIN.asDomainId()
 
+val DEFAULT_GENESIS_PARAMETERS =
+    Parameters(
+        sumeragi =
+            SumeragiParameters(
+                blockTimeMs = BigInteger.valueOf(2000),
+                commitTimeMs = BigInteger.valueOf(4000),
+                maxClockDriftMs = BigInteger.valueOf(1000),
+            ),
+        block =
+            BlockParameters(
+                maxTransactions = NonZeroOfu64(BigInteger.valueOf(4096)),
+            ),
+        smartContract =
+            SmartContractParameters(
+                fuel = NonZeroOfu64(BigInteger.valueOf(5500000000)),
+                memory = NonZeroOfu64(BigInteger.valueOf(55000000)),
+            ),
+        executor =
+            SmartContractParameters(
+                fuel = NonZeroOfu64(BigInteger.valueOf(5500000000)),
+                memory = NonZeroOfu64(BigInteger.valueOf(55000000)),
+            ),
+        transaction =
+            TransactionParameters(
+                maxInstructions = NonZeroOfu64(BigInteger.valueOf(4096)),
+                smartContractSize = NonZeroOfu64(BigInteger.valueOf(4194304)),
+            ),
+        custom = emptyMap(),
+    )
+
 @JvmField
-val ALICE_KEYPAIR = keyPairFromHex(
-    "CE7FA46C9DCE7EA4B125E2E36BDB63EA33073E7590AC92816AE1E861B7048B03",
-    "CCF31D85E3B32A4BEA59987CE0C78E3B8E2DB93881468AB2435FE45D5C9DCD53",
-)
+val ALICE_KEYPAIR =
+    keyPairFromHex(
+        "CE7FA46C9DCE7EA4B125E2E36BDB63EA33073E7590AC92816AE1E861B7048B03",
+        "CCF31D85E3B32A4BEA59987CE0C78E3B8E2DB93881468AB2435FE45D5C9DCD53",
+    )
 
 @JvmField
 val ALICE_PUBLIC_KEY = ALICE_KEYPAIR.public.toIrohaPublicKey()
@@ -33,10 +71,11 @@ val ALICE_PUBLIC_KEY = ALICE_KEYPAIR.public.toIrohaPublicKey()
 val ALICE_ACCOUNT_ID = AccountId(domain = DEFAULT_DOMAIN_ID, signatory = ALICE_PUBLIC_KEY)
 
 @JvmField
-val BOB_KEYPAIR = keyPairFromHex(
-    "04FF5B81046DDCCF19E2E451C45DFB6F53759D4EB30FA2EFA807284D1CC33016",
-    "AF3F96DEEF44348FEB516C057558972CEC4C75C4DB9C5B3AAC843668854BF828",
-)
+val BOB_KEYPAIR =
+    keyPairFromHex(
+        "04FF5B81046DDCCF19E2E451C45DFB6F53759D4EB30FA2EFA807284D1CC33016",
+        "AF3F96DEEF44348FEB516C057558972CEC4C75C4DB9C5B3AAC843668854BF828",
+    )
 
 @JvmField
 val BOB_PUBLIC_KEY = BOB_KEYPAIR.public.toIrohaPublicKey()

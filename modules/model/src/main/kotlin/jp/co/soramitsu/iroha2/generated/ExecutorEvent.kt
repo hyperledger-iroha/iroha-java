@@ -36,38 +36,43 @@ public sealed class ExecutorEvent : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.ExecutorEvent.Upgraded> {
             public const val DISCRIMINANT: Int = 0
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.ExecutorEvent.Upgraded = try {
-                Upgraded(
-                    ExecutorUpgrade.read(reader),
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.ExecutorEvent.Upgraded =
+                try {
+                    Upgraded(
+                        ExecutorUpgrade.read(reader),
+                    )
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.ExecutorEvent.Upgraded,
-            ): Unit = try {
-                ExecutorUpgrade.write(writer, instance.executorUpgrade)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            ): Unit =
+                try {
+                    ExecutorUpgrade.write(writer, instance.executorUpgrade)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
     public companion object : ScaleReader<ExecutorEvent>, ScaleWriter<ExecutorEvent> {
-        override fun read(reader: ScaleCodecReader): ExecutorEvent = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
-            0 -> Upgraded.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+        override fun read(reader: ScaleCodecReader): ExecutorEvent =
+            when (val discriminant = reader.readUByte()) {
+                0 -> Upgraded.read(reader)
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: ExecutorEvent) {
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: ExecutorEvent,
+        ) {
             writer.directWrite(instance.discriminant())
             when (val discriminant = instance.discriminant()) {
                 0 -> Upgraded.write(writer, instance as Upgraded)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

@@ -10,7 +10,10 @@ import java.math.BigInteger
  * SCALE codec writer for Java Integers to encode them as 32-bit integer SCALE value.
  */
 class Int32Writer : ScaleWriter<Int> {
-    override fun write(writer: ScaleCodecWriter, instance: Int) {
+    override fun write(
+        writer: ScaleCodecWriter,
+        instance: Int,
+    ) {
         require(Int.MIN_VALUE <= instance) { "Value is too small for I32: $instance" }
         require(instance <= Int.MAX_VALUE) { "Value is too big for I32: $instance" }
 
@@ -25,7 +28,10 @@ class Int32Writer : ScaleWriter<Int> {
  * SCALE codec writer for Java Long Integers to encode them as 64-bit integer SCALE value.
  */
 class Int64Writer : ScaleWriter<Long> {
-    override fun write(writer: ScaleCodecWriter, instance: Long) {
+    override fun write(
+        writer: ScaleCodecWriter,
+        instance: Long,
+    ) {
         require(Long.MIN_VALUE <= instance) { "Value is too small for I64: $instance" }
         require(instance <= Long.MAX_VALUE) { "Value is too big for I64: $instance" }
 
@@ -43,8 +49,13 @@ class Int64Writer : ScaleWriter<Long> {
 /**
  * SCALE codec writer for Java Big Integers to encode them as integer SCALE value.
  */
-class IntWriter(private val bit: Int) : ScaleWriter<BigInteger> {
-    override fun write(writer: ScaleCodecWriter, instance: BigInteger) {
+class IntWriter(
+    private val bit: Int,
+) : ScaleWriter<BigInteger> {
+    override fun write(
+        writer: ScaleCodecWriter,
+        instance: BigInteger,
+    ) {
         require(IntMin.intMinValue(bit) <= instance) { "Value is too small for I$bit: $instance" }
         require(instance <= IntMax.intMaxValue(bit)) { "Value is too big for I$bit: $instance" }
 

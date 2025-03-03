@@ -22,21 +22,26 @@ public data class EventSubscriptionRequest(
     public companion object :
         ScaleReader<EventSubscriptionRequest>,
         ScaleWriter<EventSubscriptionRequest> {
-        override fun read(reader: ScaleCodecReader): EventSubscriptionRequest = try {
-            EventSubscriptionRequest(
-                reader.readVec(reader.readCompactInt()) { EventFilterBox.read(reader) },
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
-
-        override fun write(writer: ScaleCodecWriter, instance: EventSubscriptionRequest): Unit = try {
-            writer.writeCompact(instance.vecOfEventFilterBox.size)
-            instance.vecOfEventFilterBox.forEach { value ->
-                EventFilterBox.write(writer, value)
+        override fun read(reader: ScaleCodecReader): EventSubscriptionRequest =
+            try {
+                EventSubscriptionRequest(
+                    reader.readVec(reader.readCompactInt()) { EventFilterBox.read(reader) },
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
             }
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: EventSubscriptionRequest,
+        ): Unit =
+            try {
+                writer.writeCompact(instance.vecOfEventFilterBox.size)
+                instance.vecOfEventFilterBox.forEach { value ->
+                    EventFilterBox.write(writer, value)
+                }
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

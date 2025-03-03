@@ -36,22 +36,24 @@ public sealed class SetKeyValueBox : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.SetKeyValueBox.Domain> {
             public const val DISCRIMINANT: Int = 0
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.SetKeyValueBox.Domain = try {
-                Domain(
-                    SetKeyValueOfDomain.read(reader),
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.SetKeyValueBox.Domain =
+                try {
+                    Domain(
+                        SetKeyValueOfDomain.read(reader),
+                    )
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.SetKeyValueBox.Domain,
-            ): Unit = try {
-                SetKeyValueOfDomain.write(writer, instance.setKeyValueOfDomain)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            ): Unit =
+                try {
+                    SetKeyValueOfDomain.write(writer, instance.setKeyValueOfDomain)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
@@ -68,22 +70,24 @@ public sealed class SetKeyValueBox : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.SetKeyValueBox.Account> {
             public const val DISCRIMINANT: Int = 1
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.SetKeyValueBox.Account = try {
-                Account(
-                    SetKeyValueOfAccount.read(reader),
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.SetKeyValueBox.Account =
+                try {
+                    Account(
+                        SetKeyValueOfAccount.read(reader),
+                    )
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.SetKeyValueBox.Account,
-            ): Unit = try {
-                SetKeyValueOfAccount.write(writer, instance.setKeyValueOfAccount)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            ): Unit =
+                try {
+                    SetKeyValueOfAccount.write(writer, instance.setKeyValueOfAccount)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
@@ -100,22 +104,24 @@ public sealed class SetKeyValueBox : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.SetKeyValueBox.AssetDefinition> {
             public const val DISCRIMINANT: Int = 2
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.SetKeyValueBox.AssetDefinition = try {
-                AssetDefinition(
-                    SetKeyValueOfAssetDefinition.read(reader),
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.SetKeyValueBox.AssetDefinition =
+                try {
+                    AssetDefinition(
+                        SetKeyValueOfAssetDefinition.read(reader),
+                    )
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.SetKeyValueBox.AssetDefinition,
-            ): Unit = try {
-                SetKeyValueOfAssetDefinition.write(writer, instance.setKeyValueOfAssetDefinition)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            ): Unit =
+                try {
+                    SetKeyValueOfAssetDefinition.write(writer, instance.setKeyValueOfAssetDefinition)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
@@ -132,22 +138,24 @@ public sealed class SetKeyValueBox : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.SetKeyValueBox.Asset> {
             public const val DISCRIMINANT: Int = 3
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.SetKeyValueBox.Asset = try {
-                Asset(
-                    SetKeyValueOfAsset.read(reader),
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.SetKeyValueBox.Asset =
+                try {
+                    Asset(
+                        SetKeyValueOfAsset.read(reader),
+                    )
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.SetKeyValueBox.Asset,
-            ): Unit = try {
-                SetKeyValueOfAsset.write(writer, instance.setKeyValueOfAsset)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            ): Unit =
+                try {
+                    SetKeyValueOfAsset.write(writer, instance.setKeyValueOfAsset)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
@@ -164,38 +172,42 @@ public sealed class SetKeyValueBox : ModelEnum {
             ScaleWriter<jp.co.soramitsu.iroha2.generated.SetKeyValueBox.Trigger> {
             public const val DISCRIMINANT: Int = 4
 
-            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.SetKeyValueBox.Trigger = try {
-                Trigger(
-                    SetKeyValueOfTrigger.read(reader),
-                )
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            override fun read(reader: ScaleCodecReader): jp.co.soramitsu.iroha2.generated.SetKeyValueBox.Trigger =
+                try {
+                    Trigger(
+                        SetKeyValueOfTrigger.read(reader),
+                    )
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
 
             override fun write(
                 writer: ScaleCodecWriter,
                 instance: jp.co.soramitsu.iroha2.generated.SetKeyValueBox.Trigger,
-            ): Unit = try {
-                SetKeyValueOfTrigger.write(writer, instance.setKeyValueOfTrigger)
-            } catch (ex: Exception) {
-                throw wrapException(ex)
-            }
+            ): Unit =
+                try {
+                    SetKeyValueOfTrigger.write(writer, instance.setKeyValueOfTrigger)
+                } catch (ex: Exception) {
+                    throw wrapException(ex)
+                }
         }
     }
 
     public companion object : ScaleReader<SetKeyValueBox>, ScaleWriter<SetKeyValueBox> {
-        override fun read(reader: ScaleCodecReader): SetKeyValueBox = when (
-            val discriminant =
-                reader.readUByte()
-        ) {
-            0 -> Domain.read(reader)
-            1 -> Account.read(reader)
-            2 -> AssetDefinition.read(reader)
-            3 -> Asset.read(reader)
-            4 -> Trigger.read(reader)
-            else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+        override fun read(reader: ScaleCodecReader): SetKeyValueBox =
+            when (val discriminant = reader.readUByte()) {
+                0 -> Domain.read(reader)
+                1 -> Account.read(reader)
+                2 -> AssetDefinition.read(reader)
+                3 -> Asset.read(reader)
+                4 -> Trigger.read(reader)
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: SetKeyValueBox) {
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: SetKeyValueBox,
+        ) {
             writer.directWrite(instance.discriminant())
             when (val discriminant = instance.discriminant()) {
                 0 -> Domain.write(writer, instance as Domain)
@@ -203,7 +215,8 @@ public sealed class SetKeyValueBox : ModelEnum {
                 2 -> AssetDefinition.write(writer, instance as AssetDefinition)
                 3 -> Asset.write(writer, instance as Asset)
                 4 -> Trigger.write(writer, instance as Trigger)
-                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant") }
+                else -> throw RuntimeException("Unresolved discriminant of the enum variant: $discriminant")
+            }
         }
     }
 }

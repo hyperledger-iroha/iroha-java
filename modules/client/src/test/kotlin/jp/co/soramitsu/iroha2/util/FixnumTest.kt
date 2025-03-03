@@ -12,7 +12,6 @@ import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 
 class FixnumTest {
-
     @Test
     fun `check there and back works for floating point numbers with fractional parts only`() {
         val random = SecureRandom()
@@ -52,7 +51,11 @@ class FixnumTest {
         test(1, 3) { BigDecimal.ONE.setScale(15) }
     }
 
-    private fun test(probes: Int = 20_000, scale: Int = DEFAULT_SCALE, generator: () -> BigDecimal) {
+    private fun test(
+        probes: Int = 20_000,
+        scale: Int = DEFAULT_SCALE,
+        generator: () -> BigDecimal,
+    ) {
         generateSequence { generator() }
             .take(probes)
             .forEachIndexed { iteration, expected ->

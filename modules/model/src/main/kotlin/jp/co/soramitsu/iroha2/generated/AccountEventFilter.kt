@@ -21,20 +21,25 @@ public data class AccountEventFilter(
     public val eventSet: Long,
 ) {
     public companion object : ScaleReader<AccountEventFilter>, ScaleWriter<AccountEventFilter> {
-        override fun read(reader: ScaleCodecReader): AccountEventFilter = try {
-            AccountEventFilter(
-                reader.readNullable(AccountId) as AccountId?,
-                reader.readUint32(),
-            )
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun read(reader: ScaleCodecReader): AccountEventFilter =
+            try {
+                AccountEventFilter(
+                    reader.readNullable(AccountId) as AccountId?,
+                    reader.readUint32(),
+                )
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
 
-        override fun write(writer: ScaleCodecWriter, instance: AccountEventFilter): Unit = try {
-            writer.writeNullable(AccountId, instance.idMatcher)
-            writer.writeUint32(instance.eventSet)
-        } catch (ex: Exception) {
-            throw wrapException(ex)
-        }
+        override fun write(
+            writer: ScaleCodecWriter,
+            instance: AccountEventFilter,
+        ): Unit =
+            try {
+                writer.writeNullable(AccountId, instance.idMatcher)
+                writer.writeUint32(instance.eventSet)
+            } catch (ex: Exception) {
+                throw wrapException(ex)
+            }
     }
 }

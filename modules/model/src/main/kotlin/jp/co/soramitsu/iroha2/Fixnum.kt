@@ -43,33 +43,35 @@ val POWERS_OF_10: Array<Long> by lazy {
  *
  * @see https://github.com/loyd/fixnum/blob/77860b04eb53a2e001b3b97fe3601833e18b01b9/src/lib.rs#L581
  */
-fun BigInteger.fromFixedPoint(scale: Int = DEFAULT_SCALE): BigDecimal = try {
-    BigDecimal(this)
-        .divide(BigDecimal(POWERS_OF_10[scale]))
-        .stripTrailingZeros()
-} catch (ex: Exception) {
-    throw FixedPointConversionException("Could not convert from fixed point", ex)
-}
+fun BigInteger.fromFixedPoint(scale: Int = DEFAULT_SCALE): BigDecimal =
+    try {
+        BigDecimal(this)
+            .divide(BigDecimal(POWERS_OF_10[scale]))
+            .stripTrailingZeros()
+    } catch (ex: Exception) {
+        throw FixedPointConversionException("Could not convert from fixed point", ex)
+    }
 
 /**
  * Convert [BigDecimal] to a fixed-point number
  *
  * @see https://github.com/loyd/fixnum/blob/77860b04eb53a2e001b3b97fe3601833e18b01b9/src/lib.rs#L688
  */
-fun BigDecimal.toFixedPoint(scale: Int = DEFAULT_SCALE): BigInteger = try {
-    val thisZeroStripped = this.stripTrailingZeros()
-    if (thisZeroStripped.scale() > scale) {
-        throw FixedPointConversionException(
-            "Scale of the original floating point number is ${thisZeroStripped.scale()}" +
-                " and it is greater than fixed point number scale: $scale. Need to decrease scale of the original floating point",
-        )
+fun BigDecimal.toFixedPoint(scale: Int = DEFAULT_SCALE): BigInteger =
+    try {
+        val thisZeroStripped = this.stripTrailingZeros()
+        if (thisZeroStripped.scale() > scale) {
+            throw FixedPointConversionException(
+                "Scale of the original floating point number is ${thisZeroStripped.scale()}" +
+                    " and it is greater than fixed point number scale: $scale. Need to decrease scale of the original floating point",
+            )
+        }
+        thisZeroStripped
+            .multiply(BigDecimal.valueOf(POWERS_OF_10[scale]))
+            .toBigIntegerExact()
+    } catch (ex: Exception) {
+        when (ex) {
+            is FixedPointConversionException -> throw ex
+            else -> throw FixedPointConversionException("Could not convert to fixed point number", ex)
+        }
     }
-    thisZeroStripped
-        .multiply(BigDecimal.valueOf(POWERS_OF_10[scale]))
-        .toBigIntegerExact()
-} catch (ex: Exception) {
-    when (ex) {
-        is FixedPointConversionException -> throw ex
-        else -> throw FixedPointConversionException("Could not convert to fixed point number", ex)
-    }
-}
