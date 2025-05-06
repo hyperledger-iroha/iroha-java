@@ -12,7 +12,7 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVer"
     implementation "ch.qos.logback:logback-classic:$logbackVer"
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlinVer"
-    implementation "org.yaml:snakeyaml:2.0"
+    implementation "org.yaml:snakeyaml:2.3"
 
     implementation "com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonKotlinVer"
 
