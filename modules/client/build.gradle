@@ -18,7 +18,7 @@ dependencies {
 
     testApi project(":test-tools")
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit5:$kotlinVer"
-    testImplementation("com.github.docker-java:docker-java:3.4.0")
+    testImplementation("com.github.docker-java:docker-java:3.5.1")
     testImplementation("io.qameta.allure:allure-testng:2.29.0")
     testImplementation "org.testcontainers:testcontainers:$testContainersVer"
 }
